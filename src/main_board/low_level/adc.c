@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdbool.h>
+#include "pico-sdk/src/rp2350/hardware_structs/include/hardware/structs/adc.h"
 
 typedef struct {
     uint8_t gpio_pin;

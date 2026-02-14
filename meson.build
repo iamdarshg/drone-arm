@@ -25,24 +25,7 @@ arm_args = [
 add_project_arguments(arm_args, language: 'c')
 add_project_link_arguments(arm_args, language: 'c')
 
-pico_sdk_inc = include_directories('include/pico-sdk/src/common/pico_stdlib/include')
-pico_platform_inc = include_directories('include/pico-sdk/src/common/pico_platform/include')
-pico_hw_inc = include_directories('include/pico-sdk/src/rp2_common/hardware_gpio/include')
-pico_adc_inc = include_directories('include/pico-sdk/src/rp2_common/hardware_adc/include')
-pico_pwm_inc = include_directories('include/pico-sdk/src/rp2_common/hardware_pwm/include')
-pico_spi_inc = include_directories('include/pico-sdk/src/rp2_common/hardware_spi/include')
-pico_i2c_inc = include_directories('include/pico-sdk/src/rp2_common/hardware_i2c/include')
-pico_uart_inc = include_directories('include/pico-sdk/src/rp2_common/hardware_uart/include')
-pico_timer_inc = include_directories('include/pico-sdk/src/rp2_common/hardware_timer/include')
-pico_dma_inc = include_directories('include/pico-sdk/src/rp2_common/hardware_dma/include')
-pico_pio_inc = include_directories('include/pico-sdk/src/rp2_common/hardware_pio/include')
-pico_irq_inc = include_directories('include/pico-sdk/src/rp2_common/hardware_irq/include')
-pico_clocks_inc = include_directories('include/pico-sdk/src/rp2_common/hardware_clocks/include')
-pico_resets_inc = include_directories('include/pico-sdk/src/rp2_common/hardware_resets/include')
-pico_flash_inc = include_directories('include/pico-sdk/src/rp2_common/hardware_flash/include')
-pico_sync_inc = include_directories('include/pico-sdk/src/common/pico_sync/include')
-pico_time_inc = include_directories('include/pico-sdk/src/common/pico_time/include')
-pico_util_inc = include_directories('include/pico-sdk/src/common/pico_util/include')
+pico_sdk_inc = include_directories('include')
 
 sdk_args = [
   '-DPICO_SDK_VERSION_MAJOR=2',
@@ -75,19 +58,12 @@ common_sources = [
   'src/common/watchdog.c',
 ]
 
-main_board_inc = include_directories('src/main_board')
+main_board_inc = include_directories('src/main_board', 'src/main_board/hardware_defs', 'src/main_board/low_level')
 
 main_board_sources = [
   'src/main_board/main.c',
   'src/main_board/init.c',
-  'src/main_board/gpio.c',
-  'src/main_board/uart.c',
-  'src/main_board/spi.c',
-  'src/main_board/i2c.c',
-  'src/main_board/pwm.c',
-  'src/main_board/adc.c',
   'src/main_board/irq.c',
-  'src/main_board/timer.c',
 ]
 
 esc_inc = include_directories('src/esc_controller')
