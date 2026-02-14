@@ -1,0 +1,34 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#SamacSys ECAD Model PE64906B-Z
+#/1209322/1773125/2.50/11/4/Integrated Circuit
+DEF PE64906B-Z IC 0 30 Y Y 1 F N
+F0 "IC" 1050 700 50 H V L CNN
+F1 "PE64906B-Z" 1050 600 50 H V L CNN
+F2 "QFN50P200X200X60-11N-D" 1050 500 50 H I L CNN
+F3 "http://www.psemi.com/pdf/datasheets/pe64906ds.pdf" 1050 400 50 H I L CNN
+F4 "IC RF DTC 100-3000MHZ 10QFN" 1050 300 50 H I L CNN "Description"
+F5 "0.6" 1050 200 50 H I L CNN "Height"
+F6 "Peregrine Semiconductor" 1050 100 50 H I L CNN "Manufacturer_Name"
+F7 "PE64906B-Z" 1050 0 50 H I L CNN "Manufacturer_Part_Number"
+F8 "81-PE64906B-Z" 1050 -100 50 H I L CNN "Mouser Part Number"
+F9 "https://www.mouser.co.uk/ProductDetail/pSemi/PE64906B-Z?qs=l7cgNqFNU1iSxoklLRhTNg%3D%3D" 1050 -200 50 H I L CNN "Mouser Price/Stock"
+F10 "" 1050 -300 50 H I L CNN "Arrow Part Number"
+F11 "" 1050 -400 50 H I L CNN "Arrow Price/Stock"
+DRAW
+X RF-_1 1 0 0 200 R 50 50 0 0 P
+X RF-_2 2 0 -100 200 R 50 50 0 0 P
+X GND_1 3 0 -200 200 R 50 50 0 0 P
+X VDD 4 0 -300 200 R 50 50 0 0 P
+X SCL 5 600 -900 200 U 50 50 0 0 P
+X RF+_2 9 1200 0 200 L 50 50 0 0 P
+X RF+_1 8 1200 -100 200 L 50 50 0 0 P
+X SDA 7 1200 -200 200 L 50 50 0 0 P
+X SEN 6 1200 -300 200 L 50 50 0 0 P
+X EP 11 500 700 200 D 50 50 0 0 P
+X GND_2 10 600 700 200 D 50 50 0 0 P
+P 5 0 1 6 200 500 1000 500 1000 -700 200 -700 200 500 N
+ENDDRAW
+ENDDEF
+#
+#End Library
