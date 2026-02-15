@@ -1,53 +1,116 @@
 #ifndef ADC_H
 #define ADC_H
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "../hardware_defs/adc_config.h"
-#include "../../../include/hardware/structs/adc.h"
-#include "../../../include/hardware/structs/dma.h"
-#include "../../../include/hardware/regs/addressmap.h"
+ #include <stdint.h>
+ #include <stdbool.h>
+ #include "../../../include/hardware/structs/adc.h"
+ #include "../../../include/hardware/structs/dma.h"
+ #include "../../../include/hardware/regs/addressmap.h"
+ #include "../hardware_defs/adc_config.h"
+
+/** @brief Standardized ADC initialization wrapper. */
+void init_adc(void);
+
+void adc_init(void);
 
 // ============================================================================
 // ADC Register Bit Definitions
 // ============================================================================
 
 // CS Register bits
+#ifndef ADC_CS_EN_BIT
 #define ADC_CS_EN_BIT           (1U << 0)
+#endif
+#ifndef ADC_CS_TS_EN_BIT
 #define ADC_CS_TS_EN_BIT        (1U << 1)
+#endif
+#ifndef ADC_CS_START_ONCE_BIT
 #define ADC_CS_START_ONCE_BIT   (1U << 2)
+#endif
+#ifndef ADC_CS_START_MANY_BIT
 #define ADC_CS_START_MANY_BIT   (1U << 3)
+#endif
+#ifndef ADC_CS_READY_BIT
 #define ADC_CS_READY_BIT        (1U << 8)
+#endif
+#ifndef ADC_CS_ERR_BIT
 #define ADC_CS_ERR_BIT          (1U << 9)
+#endif
+#ifndef ADC_CS_ERR_STICKY_BIT
 #define ADC_CS_ERR_STICKY_BIT   (1U << 10)
+#endif
+#ifndef ADC_CS_AINSEL_SHIFT
 #define ADC_CS_AINSEL_SHIFT     12
+#endif
+#ifndef ADC_CS_AINSEL_MASK
 #define ADC_CS_AINSEL_MASK      (0xFU << ADC_CS_AINSEL_SHIFT)
+#endif
+#ifndef ADC_CS_RROBIN_SHIFT
 #define ADC_CS_RROBIN_SHIFT     16
+#endif
+#ifndef ADC_CS_RROBIN_MASK
 #define ADC_CS_RROBIN_MASK      (0x1FFU << ADC_CS_RROBIN_SHIFT)
+#endif
 
 // FCS Register bits
+#ifndef ADC_FCS_EN_BIT
 #define ADC_FCS_EN_BIT          (1U << 0)
+#endif
+#ifndef ADC_FCS_SHIFT_BIT
 #define ADC_FCS_SHIFT_BIT       (1U << 1)
+#endif
+#ifndef ADC_FCS_ERR_BIT
 #define ADC_FCS_ERR_BIT         (1U << 2)
+#endif
+#ifndef ADC_FCS_DREQ_EN_BIT
 #define ADC_FCS_DREQ_EN_BIT     (1U << 3)
+#endif
+#ifndef ADC_FCS_EMPTY_BIT
 #define ADC_FCS_EMPTY_BIT       (1U << 8)
+#endif
+#ifndef ADC_FCS_FULL_BIT
 #define ADC_FCS_FULL_BIT        (1U << 9)
+#endif
+#ifndef ADC_FCS_UNDER_BIT
 #define ADC_FCS_UNDER_BIT       (1U << 10)
+#endif
+#ifndef ADC_FCS_OVER_BIT
 #define ADC_FCS_OVER_BIT        (1U << 11)
+#endif
+#ifndef ADC_FCS_LEVEL_SHIFT
 #define ADC_FCS_LEVEL_SHIFT     16
+#endif
+#ifndef ADC_FCS_LEVEL_MASK
 #define ADC_FCS_LEVEL_MASK      (0xFU << ADC_FCS_LEVEL_SHIFT)
+#endif
+#ifndef ADC_FCS_THRESH_SHIFT
 #define ADC_FCS_THRESH_SHIFT    24
+#endif
+#ifndef ADC_FCS_THRESH_MASK
 #define ADC_FCS_THRESH_MASK     (0xFU << ADC_FCS_THRESH_SHIFT)
+#endif
 
 // FIFO Register bits
+#ifndef ADC_FIFO_VAL_MASK
 #define ADC_FIFO_VAL_MASK       0xFFFU
+#endif
+#ifndef ADC_FIFO_ERR_BIT
 #define ADC_FIFO_ERR_BIT        (1U << 15)
+#endif
 
 // DIV Register shifts
+#ifndef ADC_DIV_FRAC_SHIFT
 #define ADC_DIV_FRAC_SHIFT      0
+#endif
+#ifndef ADC_DIV_FRAC_MASK
 #define ADC_DIV_FRAC_MASK       0xFFU
+#endif
+#ifndef ADC_DIV_INT_SHIFT
 #define ADC_DIV_INT_SHIFT       8
+#endif
+#ifndef ADC_DIV_INT_MASK
 #define ADC_DIV_INT_MASK        (0xFFFFU << ADC_DIV_INT_SHIFT)
+#endif
 
 // ============================================================================
 // DMA Configuration for ADC

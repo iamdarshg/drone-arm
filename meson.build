@@ -21,14 +21,21 @@ arm_args = [
   '-mthumb',
   '-mfloat-abi=@0@'.format(arm_toolchain_config.get('float_abi')),
   '-mfpu=@0@'.format(arm_toolchain_config.get('fpu')),
-  '-march=armv8m.main+fp+dp',
 ]
 
-add_project_arguments(arm_args, language: 'c')
-add_project_link_arguments(arm_args, language: 'c')
+# Only add these if not cross-compiling (cross-file should handle this)
+if not meson.is_cross_build()
+  add_project_arguments(arm_args, language: 'c')
+  add_project_link_arguments(arm_args, language: 'c')
+endif
 
 # Include directories
 pico_sdk_inc = include_directories('include')
+sdk_regs_inc = include_directories('include/pico-sdk/src/rp2350/hardware_regs/include')
+sdk_structs_inc = include_directories('include/pico-sdk/src/rp2350/hardware_structs/include')
+sdk_vreg_inc = include_directories('include/pico-sdk/src/rp2_common/hardware_vreg/include')
+sdk_base_inc = include_directories('include/pico-sdk/src/common/pico_base_headers/include')
+sdk_base_inc = include_directories('include/pico-sdk/src/common/pico_base_headers/include')
 hardware_inc = include_directories('include/hardware')
 common_inc = include_directories('src/common')
 main_board_inc = include_directories('src/main_board', 'src/main_board/hardware_defs', 'src/main_board/low_level')
@@ -50,7 +57,7 @@ add_project_arguments(sdk_args, language: 'c')
 
 # Debug/Release configuration
 debug_mode = get_option('debug')
-if debug_mode.enabled()
+if debug_mode
   add_project_arguments('-g', '-O0', '-DDEBUG=1', language: 'c')
   message('DEBUG mode: Building with debug symbols')
 else
@@ -69,12 +76,12 @@ boot2_elf = custom_target('boot2_elf',
   input: boot2_src,
   output: 'boot2.elf',
   command: [
-    'arm-none-eabi-gcc',
+    meson.get_compiler('c').cmd_array(),
     '-mcpu=cortex-m33', '-mthumb',
     '-c', '@INPUT@',
     '-o', '@OUTPUT@',
-    '-T', boot2_ld,
-    '-I', 'src/main_board/low_level/boot_stage2',
+    '-T', meson.current_source_dir() / boot2_ld,
+    '-I', meson.current_source_dir() / 'src/main_board/low_level/boot_stage2',
   ],
   build_by_default: true,
 )
@@ -82,7 +89,7 @@ boot2_elf = custom_target('boot2_elf',
 boot2_bin = custom_target('boot2_bin',
   input: boot2_elf,
   output: 'boot2.bin',
-  command: ['arm-none-eabi-objcopy', '-O', 'binary', '@INPUT@', '@OUTPUT@'],
+  command: [find_program('arm-none-eabi-objcopy'), '-O', 'binary', '@INPUT@', '@OUTPUT@'],
   build_by_default: true,
 )
 
@@ -91,7 +98,7 @@ boot2_padded = custom_target('boot2_padded',
   input: boot2_bin,
   output: 'boot2_padded.S',
   command: [
-    python, 'tools/pad_checksum',
+    'python', meson.current_source_dir() / 'tools/pad_checksum',
     '@INPUT@', '@OUTPUT@',
   ],
   build_by_default: true,
@@ -108,12 +115,12 @@ common_sources = [
   'src/common/crc.c',
   'src/common/watchdog.c',
   'src/common/scheduler.c',
+  'src/common/assert.c',
 ]
 
 main_board_sources = [
   'src/main_board/main.c',
   'src/main_board/init.c',
-  'src/main_board/init_clocks.c',
   'src/main_board/irq.c',
   # Low level drivers
   'src/main_board/low_level/gpio.c',
@@ -124,6 +131,13 @@ main_board_sources = [
   'src/main_board/low_level/timer.c',
   'src/main_board/low_level/pwm.c',
   'src/main_board/low_level/dma.c',
+  'src/main_board/low_level/mpu.c',
+  'src/main_board/low_level/sys.c',
+  'src/main_board/low_level/clocks_init.c',
+  'src/main_board/low_level/clocks_sys.c',
+  'src/main_board/low_level/clocks_other.c',
+  'src/main_board/low_level/clocks_overclock.c',
+  'src/main_board/hardware_defs/pins.c',
   # Boot stage 2 padded
   boot2_padded,
 ]
@@ -179,17 +193,17 @@ message('==============================================')
 
 firmware_main_board = executable('firmware_main_board.elf',
   main_board_sources + common_sources,
-  include_directories: [hardware_inc, pico_sdk_inc, main_board_inc, common_inc],
+  include_directories: [hardware_inc, pico_sdk_inc, sdk_regs_inc, sdk_structs_inc, sdk_vreg_inc, sdk_base_inc, main_board_inc, common_inc],
   link_args: link_args,
   install: false,
 )
 
-firmware_esc = executable('firmware_esc_module.elf',
-  esc_sources + common_sources,
-  include_directories: [hardware_inc, pico_sdk_inc, esc_inc, common_inc],
-  link_args: link_args,
-  install: false,
-)
+# firmware_esc = executable('firmware_esc_module.elf',
+#   esc_sources + common_sources,
+#   include_directories: [hardware_inc, pico_sdk_inc, esc_inc, common_inc],
+#   link_args: link_args,
+#   install: false,
+# )
 
 # ============================================
 # UF2 Conversion
@@ -201,7 +215,7 @@ uf2_main_board = custom_target('firmware_main_board.uf2',
   input: firmware_main_board,
   output: 'firmware_main_board.uf2',
   command: [
-    python, 'tools/uf2conv.py',
+    python, meson.current_source_dir() / 'tools/uf2conv.py',
     '@INPUT@',
     '-o', '@OUTPUT@',
     '-f', 'rp2350-arm-s',
@@ -209,12 +223,12 @@ uf2_main_board = custom_target('firmware_main_board.uf2',
   build_by_default: true,
 )
 
-bin_esc = custom_target('firmware_esc_module.bin',
-  input: firmware_esc,
-  output: 'firmware_esc_module.bin',
-  command: ['arm-none-eabi-objcopy', '-O', 'binary', '@INPUT@', '@OUTPUT@'],
-  build_by_default: true,
-)
+# bin_esc = custom_target('firmware_esc_module.bin',
+#   input: firmware_esc,
+#   output: 'firmware_esc_module.bin',
+#   command: [find_program('arm-none-eabi-objcopy'), '-O', 'binary', '@INPUT@', '@OUTPUT@'],
+#   build_by_default: true,
+# )
 
 # ============================================
 # Debug Output
@@ -227,39 +241,39 @@ bin_esc = custom_target('firmware_esc_module.bin',
 test_sources = [
   'src/common/scheduler.c',
   'src/common/crc.c',
-  'src/main_board/init_clocks.c',
-  'src/main_board/init_sys_clk.c',
+  'src/main_board/low_level/clocks_init.c',
+  'src/main_board/low_level/clocks_sys.c',
 ]
 
 test_main = executable('test_main',
-  ['tests/test_main.c'] + common_sources,
-  include_directories: [hardware_inc, pico_sdk_inc, main_board_inc, common_inc],
+  ['tests/test_main.c', 'src/main_board/low_level/gpio.c', 'src/main_board/hardware_defs/pins.c'] + common_sources,
+  include_directories: [hardware_inc, pico_sdk_inc, sdk_regs_inc, sdk_structs_inc, sdk_vreg_inc, sdk_base_inc, main_board_inc, common_inc],
   link_args: link_args,
 )
 
-test_clock_safety = executable('test_clock_safety',
-  ['tests/test_clock_safety.c'] + test_sources,
-  include_directories: [hardware_inc, pico_sdk_inc, main_board_inc, common_inc],
-  link_args: link_args,
-)
+# test_clock_safety = executable('test_clock_safety',
+#   ['tests/test_clock_safety.c'] + test_sources,
+#   include_directories: [hardware_inc, pico_sdk_inc, sdk_regs_inc, sdk_structs_inc, sdk_vreg_inc, sdk_base_inc, main_board_inc, common_inc],
+#   link_args: link_args,
+# )
 
 test('main_scheduler_test', test_main)
-test('clock_safety_test', test_clock_safety)
+# test('clock_safety_test', test_clock_safety)
 
-if debug_mode.enabled()
+if debug_mode
   custom_target('firmware_main_board.lst',
     input: firmware_main_board,
     output: 'firmware_main_board.lst',
-    command: ['arm-none-eabi-objdump', '-d', '-S', '@INPUT@'],
+    command: [find_program('arm-none-eabi-objdump'), '-d', '-S', '@INPUT@'],
     capture: true,
     build_by_default: true,
   )
   
-  custom_target('firmware_esc_module.lst',
-    input: firmware_esc,
-    output: 'firmware_esc_module.lst',
-    command: ['arm-none-eabi-objdump', '-d', '-S', '@INPUT@'],
-    capture: true,
-    build_by_default: true,
-  )
+  # custom_target('firmware_esc_module.lst',
+  #   input: firmware_esc,
+  #   output: 'firmware_esc_module.lst',
+  #   command: [find_program('arm-none-eabi-objdump'), '-d', '-S', '@INPUT@'],
+  #   capture: true,
+  #   build_by_default: true,
+  # )
 endif

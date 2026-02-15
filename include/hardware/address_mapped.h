@@ -16,6 +16,8 @@ typedef const volatile uint32_t io_ro_32;
 typedef const volatile uint16_t io_ro_16;
 typedef const volatile uint8_t  io_ro_8;
 
+typedef volatile uint32_t io_wo_32;
+
 // Atomic alias offsets
 #define REG_ALIAS_RW_BITS  (_u(0x0) << _u(12))
 #define REG_ALIAS_XOR_BITS (_u(0x1) << _u(12))

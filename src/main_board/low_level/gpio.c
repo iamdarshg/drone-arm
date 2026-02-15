@@ -6,30 +6,41 @@
 #include "errors.h"
 #include "pico-sdk/src/rp2350/hardware_structs/include/hardware/structs/sio.h"
 #include "pico-sdk/src/rp2350/hardware_structs/include/hardware/structs/pads_bank0.h"
-#include "pico-sdk/src/boards/include/boards/pico.h"
 #include "hardware/regs/addressmap.h"
 #include "../../common/assert.h"
 
-bool gpio_init_pin(uint8_t pin) {
-    ASSERT(pin < 48);
-    // Initialize the GPIO pin with the default function and pull-up/down configuration
-    uint8_t function = global_pin_func_map[pin];
-    uint32_t base = IO_BANK0_BASE;
-    uint32_t addr = base + 4 + (pin * 8); // Each GPIO has a status and control register, each 4 bytes apart
-    volatile uint32_t *ctrl_reg = (volatile uint32_t *)addr; 
-    *ctrl_reg = function;
-    
-    // Set pull-up/down configuration
-    uint8_t pd = global_pin_pullup[pin];
-    base = PADS_BANK0_BASE;
-    addr = base + 4 + (pin * 4); // Each GPIO has a pad control register, each 4 bytes apart
-    REG32_WRITE(addr, 1 | (use_schmidt_trigger<<2) | (1<<(pd+1)) | 48); // Enable input, set pull-up/down, and enable schmidt trigger if needed. Set drive stregnth to 12mA
-    
-    gpio_set_direction(pin); // Set the pin direction based on the global configuration
-    
-    ASSERT(global_pin_func_map[pin] == function);
-    return true;
+void GPIO_FAST_OP(int op, int mask) {
+    switch (op) {
+        case 0:
+            __asm__ volatile ("mcr p0, 0x0, %0, c4, c0, 0x0" : : "r" (mask));
+            break;
+        case 1:
+            __asm__ volatile ("mcr p0, 0x0, %0, c4, c0, 0x1" : : "r" (mask));
+            break;
+        case 2:
+            __asm__ volatile ("mcr p0, 0x0, %0, c4, c0, 0x2" : : "r" (mask));
+            break;
+        case 3:
+            __asm__ volatile ("mcr p0, 0x0, %0, c4, c0, 0x3" : : "r" (mask));
+            break;
+        case 4:
+            __asm__ volatile ("mcr p0, 0x0, %0, c4, c0, 0x4" : : "r" (mask));
+            break;
+        case 5:
+            __asm__ volatile ("mcr p0, 0x0, %0, c4, c0, 0x5" : : "r" (mask));
+            break;
+        case 6:
+            __asm__ volatile ("mcr p0, 0x0, %0, c4, c0, 0x6" : : "r" (mask));
+            break;
+        case 7:
+            __asm__ volatile ("mcr p0, 0x0, %0, c4, c0, 0x7" : : "r" (mask));
+            break;
+        default:
+            break;
+    }
 }
+
+// #define GPIO_FAST_OP(op, mask) __arm_mcr(0, 0, (mask), 0, 0, (op))
 
 void gpio_set_direction(uint8_t pin) {
     ASSERT(pin < 48);
@@ -60,6 +71,27 @@ void gpio_set_direction(uint8_t pin) {
     ASSERT(global_pin_direction[pin] == output);
 }
 
+bool gpio_init_pin(uint8_t pin) {
+    ASSERT(pin < 48);
+    // Initialize the GPIO pin with the default function and pull-up/down configuration
+    uint8_t function = global_pin_func_map[pin];
+    uint32_t base = IO_BANK0_BASE;
+    uint32_t addr = base + 4 + (pin * 8); // Each GPIO has a status and control register, each 4 bytes apart
+    volatile uint32_t *ctrl_reg = (volatile uint32_t *)addr; 
+    *ctrl_reg = function;
+    
+    // Set pull-up/down configuration
+    uint8_t pd = global_pin_pullup[pin];
+    base = PADS_BANK0_BASE;
+    addr = base + 4 + (pin * 4); // Each GPIO has a pad control register, each 4 bytes apart
+    REG32_WRITE(addr, 1 | (use_schmidt_trigger<<2) | (1<<(pd+1)) | 48); // Enable input, set pull-up/down, and enable schmidt trigger if needed. Set drive stregnth to 12mA
+    
+    gpio_set_direction(pin); // Set the pin direction based on the global configuration
+    
+    ASSERT(global_pin_func_map[pin] == function);
+    return true;
+}
+
 void gpio_init_all(void) {
     // Initialize GPIO pins as needed
     for (uint8_t i = 0; i < 48; i++) {
@@ -78,7 +110,7 @@ void gpio_init_all(void) {
     ASSERT(true); // Dummy assertion for Rule 5
 }
 
-inline void gpio_set(uint8_t pin, bool value) {
+void gpio_set(uint8_t pin, bool value) {
     ASSERT(pin < 48);
     if (global_pin_func_map[pin] != GPIO_FUNC_SIO) {
         char error_msg[100];
@@ -104,7 +136,7 @@ inline void gpio_set(uint8_t pin, bool value) {
     ASSERT(true); // Rule 5 compliance
 }
 
-inline void gpio_toggle(uint8_t pin) {
+void gpio_toggle(uint8_t pin) {
     ASSERT(pin < 48);
     if (global_pin_func_map[pin] != GPIO_FUNC_SIO) {
         char error_msg[100];
@@ -126,7 +158,7 @@ inline void gpio_toggle(uint8_t pin) {
     ASSERT(true); // Rule 5 compliance
 }
 
-inline bool gpio_get(uint8_t pin) {
+bool gpio_get(uint8_t pin) {
     ASSERT(pin < 48);
     if (global_pin_func_map[pin] != GPIO_FUNC_SIO) {
         char error_msg[100];

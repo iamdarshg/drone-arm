@@ -1,6 +1,6 @@
 #include "timer.h"
 #include <stdio.h>
-#include "common/errors.h"
+#include "errors.h"
 
 // ============================================================================
 // Alarm State Management
@@ -19,6 +19,10 @@ static volatile uint32_t alarm_mask = 0;
 // ============================================================================
 // Timer Initialization
 // ============================================================================
+
+void init_timer(void) {
+    timer_init();
+}
 
 void timer_init(void) {
     // Clear all alarms

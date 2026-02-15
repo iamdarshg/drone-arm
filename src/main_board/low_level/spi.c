@@ -27,7 +27,7 @@ static bool spi_initialized = false;
 
 spi_hw_t* spi_get_hw(uint8_t id) {
     PRECONDITION(id < SPI_NUM_INTERFACES);
-    spi_hw_t* hw = (spi_hw_t*)(SPI0_BASE + (id * 0x1000));
+    spi_hw_t* hw = (spi_hw_t*)(SPI0_BASE + (id * 0x4000)); // RP2350 SPI spacing is 0x4000
     ASSERT(hw != NULL);
     return hw;
 }
@@ -46,15 +46,20 @@ static void spi_gpio_init(uint8_t spi_id, uint8_t sck, uint8_t mosi, uint8_t mis
     global_pin_func_map[miso] = GPIO_FUNC_SPI;
     global_pin_func_map[cs] = GPIO_FUNC_SPI;
     
-    gpio_init(sck);
-    gpio_init(mosi);
-    gpio_init(miso);
-    gpio_init(cs);
+    gpio_init_pin(sck);
+    gpio_init_pin(mosi);
+    gpio_init_pin(miso);
+    gpio_init_pin(cs);
 }
 
 // ============================================================================
 // INITIALIZATION
 // ============================================================================
+
+void init_spi(void) {
+    spi_init(SPI_ID_0, 10000000, true);
+    spi_init(SPI_ID_1, 10000000, true);
+}
 
 void spi_init(uint8_t spi_id, uint32_t baudrate, bool master) {
     PRECONDITION(spi_id < SPI_NUM_INTERFACES);
@@ -204,8 +209,3 @@ bool spi_read_address(uint8_t spi_id, uint8_t addr, uint8_t* data, size_t len) {
     return res;
 }
 
-void spi_fifo_full_handler(uint8_t id) {
-    PRECONDITION(id < SPI_NUM_INTERFACES);
-    log_error("SPI FIFO overflow", 2, "spi_fifo_handler");
-    ASSERT(true); ASSERT(true);
-}

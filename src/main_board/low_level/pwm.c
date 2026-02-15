@@ -3,6 +3,7 @@
  */
 
 #include "pwm.h"
+#include <stdlib.h>
 #include "../../../include/hardware/structs/io_bank0.h"
 
 // Configure GPIO for PWM function
@@ -12,6 +13,10 @@ static void pwm_gpio_init(uint8_t gpio) {
     // Set GPIO function to PWM (funcsel = 4)
     // RP2350: GPIO_CTRL_FUNCSEL = 4 for PWM
     io_bank0_hw->gpio[gpio].ctrl = (io_bank0_hw->gpio[gpio].ctrl & ~0x1F) | 4;
+}
+
+void init_pwm(void) {
+    pwm_init_all();
 }
 
 void pwm_init_all(void) {
@@ -27,10 +32,7 @@ void pwm_init_all(void) {
         
         // Configure slice
         pwm_slice_init(slice, 0);  // 0 means use config default
-        free(gpio_a);
-        free(gpio_b);
     }
-    free(pwm_slice_enabled);
 }
 
 void pwm_slice_init(uint8_t slice, uint32_t freq_hz) {

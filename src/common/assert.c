@@ -2,10 +2,12 @@
  * Assertion Framework Implementation
  */
 
+#include <stddef.h>
 #include "assert.h"
 #include "errors.h"
 
 void assertion_failed(const char *file, int line, const char *condition, const char *message) {
+    (void)line;
     // Log the assertion failure
     if (message != NULL) {
         log_error(message, 2, file);

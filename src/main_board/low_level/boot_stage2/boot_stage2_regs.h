@@ -7,6 +7,10 @@
 // Address map
 #define REG_ALIAS_CLR_BITS      0x3000
 
+#define PADS_QSPI_BASE          0x40040000
+#define XIP_QMI_BASE            0x400d0000
+#define XIP_NOCACHE_NOALLOC_BASE 0x14000000
+
 // QMI base offsets
 #define QMI_DIRECT_CSR_OFFSET           0x00
 #define QMI_DIRECT_TX_OFFSET            0x04

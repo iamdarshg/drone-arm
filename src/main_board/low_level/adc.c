@@ -73,6 +73,10 @@ void adc_init_gpio(uint8_t gpio) {
     ASSERT(adc_gpio_to_channel[gpio] != 0xFF);
 }
 
+void init_adc(void) {
+    adc_init();
+}
+
 void adc_init(void) {
     adc_init_gpio(ADC_CHANNEL_1_PIN);
     adc_init_gpio(ADC_CHANNEL_3_PIN);
@@ -229,7 +233,7 @@ bool adc_dma_is_busy(void) {
 }
 
 void adc_dma_irq_handler(void) {
-    if (dma_hw->ints & (1U << ADC_DMA_CHANNEL)) {
+    if (dma_hw->intr & (1U << ADC_DMA_CHANNEL)) {
         dma_hw->intr = 1U << ADC_DMA_CHANNEL;
         adc_dma_stop();
         adc_dma_busy = false;

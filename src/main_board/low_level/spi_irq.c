@@ -4,7 +4,7 @@
  */
 #include "spi.h"
 #include "pico-sdk\src\rp2350\hardware_structs\include\hardware\structs\spi.h"
-#include "common/scheduler.h"
+#include "scheduler.h"
 
 // SPI FIFO status bits
 #define SPI_FIFO_RX_FULL    (1U << 3)   // RFF

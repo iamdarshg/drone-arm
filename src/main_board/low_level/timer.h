@@ -231,6 +231,9 @@ static inline void timer_wait_for_alarm(uint8_t alarm_num) {
 // Function Prototypes
 // ============================================================================
 
+/** @brief Standardized timer initialization wrapper. */
+void init_timer(void);
+
 void timer_init(void);
 void timer_deinit(void);
 

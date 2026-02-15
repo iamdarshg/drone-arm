@@ -1,6 +1,6 @@
 #include "i2c.h"
-#include "../../../include/hardware/structs/i2c.h"
-#include "../../../include/hardware/regs/addressmap.h"
+#include "hardware/regs/i2c.h"
+#include "hardware/regs/addressmap.h"
 #include "../../common/assert.h"
 #include "../../common/errors.h"
 #include "../hardware_defs/pins.h"
@@ -13,6 +13,8 @@
 
 #define I2C_MAX_TRANSFER_SIZE 32
 #define I2C_TIMEOUT_ITERATIONS 100000
+#define I2C_DATA_CMD_READ_BIT I2C_IC_DATA_CMD_CMD_BITS
+
 
 // ============================================================================
 // STATIC STATE (Pre-allocated at init time - no dynamic memory)
@@ -46,8 +48,8 @@ static void i2c_gpio_init(uint8_t i2c_id, uint8_t scl, uint8_t sda) {
     global_pin_direction[scl] = true;
     global_pin_direction[sda] = true;
     
-    gpio_init(scl);
-    gpio_init(sda);
+    gpio_init_pin(scl);
+    gpio_init_pin(sda);
     gpio_set_pull(scl, GPIO_PULL_UP);
     gpio_set_pull(sda, GPIO_PULL_UP);
 }
@@ -55,6 +57,15 @@ static void i2c_gpio_init(uint8_t i2c_id, uint8_t scl, uint8_t sda) {
 // ============================================================================
 // INITIALIZATION
 // ============================================================================
+
+void init_i2c(void) {
+    i2c_init(I2C_ID_0, 400000, true);
+    i2c_init(I2C_ID_1, 400000, true);
+    for(uint32_t i = 0; i < I2C_MAX_TRANSFER_SIZE; i++) {
+        i2c_tx_buffer[i] = 0;
+        i2c_rx_buffer[i] = 0;
+    }
+}
 
 void i2c_init(uint8_t i2c_id, uint32_t baudrate, bool master) {
     PRECONDITION(i2c_id < I2C_NUM_INTERFACES);

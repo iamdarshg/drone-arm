@@ -62,5 +62,9 @@
 
 // SIO (Single-cycle IO) base
 #define SIO_BASE                    _u(0xd0000000)
+#define SIO_NONSEC_BASE             _u(0xd0020000)
+#define PPB_BASE                    _u(0xe0000000)
+#define PPB_NONSEC_BASE             _u(0xe0020000)
+#define EPPB_BASE                   _u(0xe0080000)
 
 #endif // _ADDRESSMAP_H

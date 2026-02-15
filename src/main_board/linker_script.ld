@@ -42,10 +42,14 @@ SECTIONS {
     /* BSS */
     .bss : {
         _sbss = .;
+        __bss_start__ = .;
         *(.bss*)
         *(COMMON)
         . = ALIGN(4);
         _ebss = .;
+        __bss_end__ = .;
+        end = .;
+        __end__ = .;
     } > RAM
     
     /* Stack at end of RAM */

@@ -10,6 +10,7 @@
 // Helper macros
 #define _u(x) ((uint32_t)(x))
 #define _i(x) ((int32_t)(x))
+#define _REG_(x)
 
 // Static assert
 #ifndef static_assert

@@ -1,8 +1,12 @@
-#ifndef CLOCK_INTERNAL_H
-#define CLOCK_INTERNAL_H
+#ifndef CLOCKS_H
+#define CLOCKS_H
 
 #include <stdint.h>
 #include <stdbool.h>
+
+// ============================================================================
+// Types
+// ============================================================================
 
 // Clock configuration parameters
 typedef struct {
@@ -22,6 +26,20 @@ typedef struct {
 
 #define CLOCK_STATE_MAGIC 0x434C4B53 // 'CLKS'
 
+// ============================================================================
+// Public API
+// ============================================================================
+
+/**
+ * @brief Main clock initialization entry point.
+ */
+void init_clocks(void);
+
+/**
+ * @brief Get the current system clock frequency in Hz.
+ */
+uint32_t get_sys_clock_hz(void);
+
 /**
  * @brief Initialize the clock state management system.
  * @param sys_hz Initial system clock frequency in Hz.
@@ -36,8 +54,8 @@ void clock_state_init(uint32_t sys_hz, uint32_t vreg_mv);
 const clock_config_t* clock_get_config(void);
 
 /**
- * @brief Update the clock configuration safely.
- * @param config New clock configuration to apply.
+ * @brief Update the clock configuration safely in state storage.
+ * @param config New clock configuration.
  */
 void clock_set_config(const clock_config_t *config);
 
@@ -47,19 +65,26 @@ void clock_set_config(const clock_config_t *config);
  */
 bool clock_is_valid(void);
 
-// Function prototypes for modular clock components
+// ============================================================================
+// Internal Hardware Control API (used by clock modules)
+// ============================================================================
+
+void init_xosc(void);
+void init_usb_pll(void);
+void init_peripheral_clocks(uint32_t sys_freq);
+void init_adc_rtc_clocks(void);
+void init_sys_clk_ref(void);
+
 bool calculate_pll_params(uint32_t target_hz, clock_config_t *config);
 void set_vreg_voltage(uint32_t voltage_mv);
 void apply_clock_config(const clock_config_t *config);
 
+uint32_t find_max_clock_speed(void);
+
+// Stability tests
 bool test_flash_stability(void);
 bool test_adc_stability(void);
 bool test_spi_stability(void);
 bool test_i2c_stability(void);
 
-uint32_t find_max_clock_speed(void);
-
-void init_usb_pll(void);
-void init_xosc(void);
-
-#endif // CLOCK_INTERNAL_H
+#endif // CLOCKS_H

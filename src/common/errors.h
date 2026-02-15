@@ -1,9 +1,13 @@
 
+#ifndef ERRORS_H
+#define ERRORS_H
 
-void log_error(const char *message, int severity, const char *function) {
-    // TODO: Implement error logging, e.g., send message over UART or store in a buffer 
+static inline void log_error(const char *message, int severity, const char *function) {
+    (void)message;
+    (void)severity;
+    (void)function;
 }
-
+#endif
 // severity levels- 
 // 0: Info
 // 1: initialization error

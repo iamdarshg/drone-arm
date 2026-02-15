@@ -1,33 +1,41 @@
 #include <stdint.h>
 #include <stdbool.h>
-#include "pico-sdk/src/rp2350/hardware_structs/include/hardware/structs/accessctrl.h"
-#include "pico-sdk/src/rp2350/hardware_structs/include/hardware/structs/bootram.h"
-#include "pico-sdk/src/rp2350/hardware_structs/include/hardware/structs/clocks.h"
-#include "pico-sdk/src/rp2350/hardware_structs/include/hardware/structs/iobank0.h"
-#include "pico-sdk/src/rp2350/hardware_structs/include/hardware/structs/adc.h"
-#include "pico-sdk/src/rp2350/hardware_structs/include/hardware/structs/pwm.h"
-#include "pico-sdk/src/rp2350/hardware_structs/include/hardware/structs/spi.h"
-#include "pico-sdk/src/rp2350/hardware_structs/include/hardware/structs/timer.h"
-#include "pico-sdk/src/rp2350/hardware_structs/include/hardware/structs/m33.h"
-#include "pico-sdk/src/rp2350/hardware_structs/include/hardware/structs/pio.h"
-#include "pico-sdk/src/rp2350/hardware_structs/include/hardware/structs/i2c.h"
-#include "pico-sdk/src/rp2350/hardware_structs/include/hardware/structs/qmi.h"
-#include "pico-sdk/src/rp2350/hardware_structs/include/hardware/structs/usb.h"
-#include "pico-sdk/src/rp2350/hardware_structs/include/hardware/structs/syscfg.h"
-#include "pico-sdk/src/rp2350/hardware_structs/include/hardware/structs/syscfg.h"
-#include "pico-sdk/src/rp2350/hardware_structs/include/hardware/structs/xip.h"
-#include "pico-sdk/src/rp2350/hardware_structs/include/hardware/structs/xosc.h"
-#include "pico-sdk/src/rp2350/hardware_structs/include/hardware/structs/pll.h"
-#include "pico-sdk/src/rp2350/hardware_structs/include/hardware/structs/mpu.h"
-#include "pico-sdk/src/rp2350/hardware_structs/include/hardware/structs/dma.h"
-#include "pico-sdk/src/rp2350/hardware_structs/include/hardware/structs/glitch_detector.h"
-#include "pico-sdk/src/rp2350/hardware_structs/include/hardware/structs/watchdog.h"
-#include "pico-sdk/src/rp2350/hardware_structs/include/hardware/structs/nvic.h"
 
+#include "low_level/clocks.h"
+#include "low_level/adc.h"
+#include "low_level/pwm.h"
+#include "low_level/spi.h"
+#include "low_level/i2c.h"
+#include "low_level/timer.h"
+#include "low_level/dma.h"
+#include "low_level/mpu.h"
+#include "low_level/sys.h"
+#include "low_level/gpio.h"
+#include "scheduler.h"
 
+void loop_task(uint8_t task_id) {
+    (void)task_id;
+    gpio_toggle(25);
+    sched_sleep_ms(100);   
+}
 
 void main_board_init(void) {
+    init_nvic();
+    init_glitch_detector();
+    init_watchdog();
+    init_clocks();
+    init_scheduler();
+    init_adc();
+    init_pwm();
+    init_spi();
+    init_timer();
+    init_i2c();
+    init_mpu();
+    init_dma();
+    sched_init();
+    sched_create(loop_task);
 }
 
 void main_board_loop(void) {
+    sched_run();
 }

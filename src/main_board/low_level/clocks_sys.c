@@ -1,11 +1,19 @@
-#include "clock_internal.h"
+#include "clocks.h"
+#include "hardware/regs/addressmap.h"
 #include "hardware/structs/clocks.h"
 #include "hardware/structs/pll.h"
-#include "hardware/structs/vreg.h"
-#include "common/assert.h"
+#include "hardware/vreg.h"
+#include "../../common/assert.h"
 
 #define VREG_VOLTAGE_MIN    850
 #define VREG_VOLTAGE_MAX    1300
+
+void init_sys_clk_ref(void) {
+    // Reference clock: divide if system clock is very high
+    // (Consolidated from init_clocks.c)
+    (*(volatile uint32_t *)(0x40010000 + 0x30)) = (1u << 11) | (2u << 5) | (1u << 0);
+    (*(volatile uint32_t *)(0x40010000 + 0x34)) = 1 << 8;
+}
 
 bool calculate_pll_params(uint32_t target_hz, clock_config_t *config) {
     ASSERT(target_hz > 0);
@@ -21,7 +29,7 @@ bool calculate_pll_params(uint32_t target_hz, clock_config_t *config) {
                 uint32_t actual = (fbdiv * ref_freq) / (p1 * p2);
                 int32_t err = (int32_t)actual - (int32_t)target_hz;
                 if (err < 0) err = -err;
-                if (err < (target_hz >> 7)) {
+                if ((uint32_t)err < (target_hz >> 7)) {
                     config->pll_fbdiv = fbdiv;
                     config->pll_postdiv1 = p1;
                     config->pll_postdiv2 = p2;
@@ -31,7 +39,7 @@ bool calculate_pll_params(uint32_t target_hz, clock_config_t *config) {
             }
         }
     }
-    ASSERT(true); // Rule 5
+    ASSERT(true);
     return false;
 }
 
@@ -44,10 +52,13 @@ void set_vreg_voltage(uint32_t voltage_mv) {
     uint32_t wait = 10000;
     while (wait--) { ASSERT_TERMINATION(wait, 10001); }
     
-    clock_config_t cfg = *clock_get_config();
-    cfg.vreg_voltage_mv = voltage_mv;
-    clock_set_config(&cfg);
-    ASSERT(clock_get_config()->vreg_voltage_mv == voltage_mv);
+    const clock_config_t *current = clock_get_config();
+    if (current) {
+        clock_config_t cfg = *current;
+        cfg.vreg_voltage_mv = voltage_mv;
+        clock_set_config(&cfg);
+        ASSERT(clock_get_config()->vreg_voltage_mv == voltage_mv);
+    }
 }
 
 void apply_clock_config(const clock_config_t *config) {

@@ -1,13 +1,10 @@
-#include "clock_internal.h"
-#include "hardware/structs/clocks.h"
-#include "hardware/structs/pll.h"
-#include "common/assert.h"
+#include "clocks.h"
+#include <stddef.h>
+#include "../../common/assert.h"
 
 #define CLOCKS_BASE             0x40010000
-#define CLK_REF_CTRL            (*(volatile uint32_t *)(CLOCKS_BASE + 0x30))
-#define CLK_REF_DIV             (*(volatile uint32_t *)(CLOCKS_BASE + 0x34))
-#define CLK_USB_CTRL            (*(volatile uint32_t *)(CLOCKS_BASE + 0x54))
-#define CLK_USB_DIV             (*(volatile uint32_t *)(CLOCKS_BASE + 0x58))
+#define CLK_PERI_CTRL           (*(volatile uint32_t *)(CLOCKS_BASE + 0x48))
+#define CLK_PERI_DIV            (*(volatile uint32_t *)(CLOCKS_BASE + 0x4C))
 #define CLK_ADC_CTRL            (*(volatile uint32_t *)(CLOCKS_BASE + 0x60))
 #define CLK_ADC_DIV             (*(volatile uint32_t *)(CLOCKS_BASE + 0x64))
 #define CLK_RTC_CTRL            (*(volatile uint32_t *)(CLOCKS_BASE + 0x6C))
@@ -36,4 +33,18 @@ void init_xosc(void) {
     XOSC_STARTUP = 47;
     XOSC_CTRL = 0xAA0 | 0xFAB;
     while (!(XOSC_STATUS & (1u << 31))) { ASSERT(true); }
+}
+
+void init_peripheral_clocks(uint32_t sys_freq) {
+    // PERI clock: divide if system clock is very high
+    CLK_PERI_CTRL = (1u << 11) | (1u << 5) | (1u << 0);
+    CLK_PERI_DIV = (sys_freq > 150000000 ? 2 : 1) << 8;
+}
+
+void init_adc_rtc_clocks(void) {
+    // ADC/RTC setup consolidated from init_clocks.c
+    CLK_ADC_CTRL = (1u << 11) | (0u << 5) | (1u << 0);
+    CLK_ADC_DIV = 1 << 8;
+    CLK_RTC_CTRL = (1u << 11) | (2u << 5) | (1u << 0);
+    CLK_RTC_DIV = 12 << 8;
 }

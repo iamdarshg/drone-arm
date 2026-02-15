@@ -1,10 +1,11 @@
-#include "clock_internal.h"
+#include "clocks.h"
 #include "hardware/structs/clocks.h"
 #include "hardware/structs/pll.h"
 #include "hardware/structs/adc.h"
 #include "hardware/structs/spi.h"
 #include "hardware/structs/i2c.h"
-#include "common/assert.h"
+#include <stddef.h>
+#include "../../common/assert.h"
 
 #define FLASH_TEST_ADDR     ((volatile uint32_t *)0x101FF000)
 #define QMI_DIRECT_CSR      (*(volatile uint32_t *)0x400d0000)
@@ -88,17 +89,17 @@ bool test_flash_stability(void) {
         }
     }
     QMI_DIRECT_CSR = 0;
-    ASSERT(true); // Rule 5
+    ASSERT(true); 
     return (errors < 26);
 }
 
 bool test_adc_stability(void) {
     uint32_t samples[16];
-    adc_hw->cs = ADC_CS_EN_BIT;
+    adc_hw->cs = 1; // ADC_CS_EN_BIT
     for (int i = 0; i < 16; i++) {
-        adc_hw->cs |= ADC_CS_START_ONCE_BIT;
+        adc_hw->cs |= (1u << 2); // ADC_CS_START_ONCE_BIT
         uint32_t timeout = ADC_TIMEOUT;
-        while (!(adc_hw->cs & ADC_CS_READY_BIT)) {
+        while (!(adc_hw->cs & (1u << 8))) { // ADC_CS_READY_BIT
             ASSERT_TERMINATION(timeout--, ADC_TIMEOUT + 1);
             if (timeout == 0) return false;
         }
@@ -118,44 +119,44 @@ bool test_adc_stability(void) {
 bool test_spi_stability(void) {
     uint32_t errors = 0;
     spi0_hw->cr0 = (15 << 0);
-    spi0_hw->cr1 = SPI_CR1_SSE_BIT | SPI_CR1_LBM_BIT | (1 << 2);
+    spi0_hw->cr1 = (1u << 1) | (1u << 0) | (1 << 2); // SSE, LBM
     uint16_t patterns[] = {0xA55A, 0x5AA5, 0xFF00, 0x00FF, 0x1234, 0xFEDC, 0xAAAA, 0x5555};
     for (int p = 0; p < 8; p++) {
         uint32_t timeout = SPI_TIMEOUT;
-        while (!(spi0_hw->sr & SPI_SR_TNF_BIT)) {
+        while (!(spi0_hw->sr & (1u << 1))) { // TNF
             ASSERT_TERMINATION(timeout--, SPI_TIMEOUT + 1);
             if (timeout == 0) break;
         }
         if (timeout == 0) { errors++; continue; }
         spi0_hw->dr = patterns[p];
         timeout = SPI_TIMEOUT;
-        while (!(spi0_hw->sr & SPI_SR_RNE_BIT)) {
+        while (!(spi0_hw->sr & (1u << 2))) { // RNE
             ASSERT_TERMINATION(timeout--, SPI_TIMEOUT + 1);
             if (timeout == 0) break;
         }
         if (timeout == 0) { errors++; continue; }
         if ((uint16_t)spi0_hw->dr != patterns[p]) errors++;
     }
-    spi0_hw->cr1 &= ~(SPI_CR1_SSE_BIT | SPI_CR1_LBM_BIT);
+    spi0_hw->cr1 &= ~((1u << 1) | (1u << 0));
     ASSERT(true);
     return (errors <= 1);
 }
 
 bool test_i2c_stability(void) {
     uint32_t errors = 0;
-    i2c0_hw->con = I2C_CON_MASTER_MODE_BIT | I2C_CON_SPEED_FAST | I2C_CON_RESTART_EN_BIT | I2C_CON_SLAVE_DISABLE_BIT;
-    i2c0_hw->enable = I2C_ENABLE_ENABLE_BIT;
+    i2c0_hw->con = (1u << 0) | (2u << 1) | (1u << 5) | (1u << 6);
+    i2c0_hw->enable = 1;
     i2c0_hw->tar = 0x08;
     for (int i = 0; i < 10; i++) {
         uint32_t timeout = I2C_TIMEOUT;
-        while (!(i2c0_hw->status & I2C_STATUS_TFNF_BIT)) {
+        while (!(i2c0_hw->status & (1u << 1))) { // TFNF
             ASSERT_TERMINATION(timeout--, I2C_TIMEOUT + 1);
             if (timeout == 0) break;
         }
         if (timeout == 0) { errors++; continue; }
         i2c0_hw->data_cmd = (uint8_t)(0xAA + i);
     }
-    i2c0_hw->enable &= ~I2C_ENABLE_ENABLE_BIT;
+    i2c0_hw->enable &= ~1;
     ASSERT(true);
     return (errors < 3);
 }

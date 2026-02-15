@@ -68,6 +68,7 @@ static int test_sched_create(void) {
 static volatile int async_counter = 0;
 
 static void async_test_task(uint8_t task_id) {
+    (void)task_id;
     TASK_LOCAL_BEGIN;
     
     async_counter++;

@@ -20,6 +20,9 @@
  * Initialize all enabled PWM slices according to pwm_config.h
  * Configures GPIO, divider, TOP value, and initial state
  */
+/** @brief Standardized PWM initialization wrapper. */
+void init_pwm(void);
+
 void pwm_init_all(void);
 
 /**
