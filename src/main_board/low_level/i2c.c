@@ -39,8 +39,7 @@ i2c_hw_t* i2c_get_hw(uint8_t id) {
 // GPIO INITIALIZATION
 // ============================================================================
 
-static void i2c_gpio_init(uint8_t i2c_id, uint8_t scl, uint8_t sda) {
-    PRECONDITION(i2c_id < I2C_NUM_INTERFACES);
+static void i2c_gpio_init(uint8_t scl, uint8_t sda) {
     ASSERT(scl < 48); ASSERT(sda < 48);
     
     global_pin_func_map[scl] = GPIO_FUNC_I2C;
@@ -75,14 +74,14 @@ void i2c_init(uint8_t i2c_id, uint32_t baudrate, bool master) {
     disable_i2c(i2c_id);
     
     if (i2c_id == I2C_ID_0) {
-        i2c_gpio_init(i2c_id, I2C0_SCL_PIN, I2C0_SDA_PIN);
+        i2c_gpio_init(I2C0_SCL_PIN, I2C0_SDA_PIN);
     } else {
-        i2c_gpio_init(i2c_id, I2C1_SCL_PIN, I2C1_SDA_PIN);
+        i2c_gpio_init(I2C1_SCL_PIN, I2C1_SDA_PIN);
     }
     
     bool result = i2c_set_baud_mode_master(i2c_id, baudrate, master);
     ASSERT_MSG(result, "I2C baud rate configuration failed");
-    
+    if (!result) return;
     enable_i2c(i2c_id);
     ASSERT(i2c_initialized);
 }

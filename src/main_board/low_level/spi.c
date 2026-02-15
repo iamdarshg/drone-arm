@@ -36,11 +36,11 @@ spi_hw_t* spi_get_hw(uint8_t id) {
 // GPIO INITIALIZATION
 // ============================================================================
 
-static void spi_gpio_init(uint8_t spi_id, uint8_t sck, uint8_t mosi, uint8_t miso, uint8_t cs) {
+static void spi_gpio_init(uint8_t sck, uint8_t mosi, uint8_t miso, uint8_t cs) {
     PRECONDITION(spi_id < SPI_NUM_INTERFACES);
     ASSERT(sck < 48); ASSERT(mosi < 48);
     ASSERT(miso < 48); ASSERT(cs < 48);
-    
+    ASSERT(spi_id == SPI_ID_0 || spi_id == SPI_ID_1);
     global_pin_func_map[sck] = GPIO_FUNC_SPI;
     global_pin_func_map[mosi] = GPIO_FUNC_SPI;
     global_pin_func_map[miso] = GPIO_FUNC_SPI;
@@ -69,14 +69,14 @@ void spi_init(uint8_t spi_id, uint32_t baudrate, bool master) {
     disable_spi(spi_id);
     
     if (spi_id == SPI_ID_0) {
-        spi_gpio_init(spi_id, SPI0_SCK_PIN, SPI0_MOSI_PIN, SPI0_MISO_PIN, SPI0_CS0_PIN);
+        spi_gpio_init(SPI0_SCK_PIN, SPI0_MOSI_PIN, SPI0_MISO_PIN, SPI0_CS0_PIN);
     } else {
-        spi_gpio_init(spi_id, SPI1_SCK_PIN, SPI1_MOSI_PIN, SPI1_MISO_PIN, SPI1_CS0_PIN);
+        spi_gpio_init(SPI1_SCK_PIN, SPI1_MOSI_PIN, SPI1_MISO_PIN, SPI1_CS0_PIN);
     }
     
     bool result = spi_set_baud_format_mode(spi_id, baudrate, master);
     ASSERT_MSG(result, "SPI baud rate configuration failed");
-    
+    if (!result) return;
     enable_spi(spi_id);
     ASSERT(spi_initialized);
 }

@@ -56,7 +56,7 @@ sdk_args = [
 add_project_arguments(sdk_args, language: 'c')
 
 # Debug/Release configuration
-debug_mode = get_option('debug')
+debug_mode = false
 if debug_mode
   add_project_arguments('-g', '-O0', '-DDEBUG=1', language: 'c')
   message('DEBUG mode: Building with debug symbols')

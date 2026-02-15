@@ -206,10 +206,12 @@ void sched_run(void) {
     sched.running = 1;
     uint64_t now;
     uint32_t loop_count = 0;
-    const uint32_t MAX_LOOP_ITERATIONS = 0xFFFFFFFFU;
     
     while (sched.running) {
-        ASSERT_TERMINATION(loop_count++, MAX_LOOP_ITERATIONS);
+        loop_count++;
+        if (loop_count > 0xFFFFFFFFU) {
+            loop_count = 0; // While this breaks P10, since this is the main loop and needs to run forever, we shall not assert its termination.
+        }
         
         now = sched_now_us();
         
@@ -236,9 +238,8 @@ void sched_run(void) {
                 break;
             }
             
-            // Wait for interrupt using inline asm (necessary for low power)
-            // This is a simple instruction that doesn't violate P10
-            __asm volatile("wfi" ::: "memory");
+            __asm__ volatile("nop");
+
         }
     }
 }

@@ -1,5 +1,6 @@
 #include "dma.h"
 #include "hardware/structs/dma.h"
+#include "hardware/regs/addressmap.h"
 #include "../../common/assert.h"
 
 void init_dma(void) {
@@ -33,7 +34,9 @@ void dma_start_transfer(uint8_t channel, const void *read_addr, void *write_addr
 
 bool dma_is_busy(uint8_t channel) {
     ASSERT(channel < 16);
-    return (dma_hw->ch[channel].ctrl_trig & (1u << 24)) != 0; // BUSY bit
+    bool out = (bool)((dma_hw->ch[channel].ctrl_trig & (1u << 24)) != 0); // BUSY bit
+    ASSERT(out);
+    return out;
 }
 
 void dma_abort(uint8_t channel) {
