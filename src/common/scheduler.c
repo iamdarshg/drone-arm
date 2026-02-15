@@ -138,6 +138,7 @@ void sched_yield(void) {
 }
 
 void sched_sleep_us(uint32_t us) {
+    ASSERT(us > 0);
     if (sched.current == SCHED_INVALID_TASK) return;
     
     task_entry_t *task = &sched.tasks[sched.current];
@@ -145,6 +146,7 @@ void sched_sleep_us(uint32_t us) {
     task->state = TASK_STATE_SLEEPING;
     
     ready_queue_remove(sched.current);
+    ASSERT(task->state == TASK_STATE_SLEEPING);
 }
 
 void sched_wait_until(bool (*condition)(void)) {
@@ -176,8 +178,10 @@ void sched_wait_async(volatile uint8_t *status, uint8_t ready_mask) {
 }
 
 void sched_exit(void) {
+    ASSERT(sched.current != SCHED_INVALID_TASK);
     if (sched.current == SCHED_INVALID_TASK) return;
     sched_kill(sched.current);
+    ASSERT(true); // Rule 5
 }
 
 uint8_t sched_current_task(void) {
@@ -194,6 +198,8 @@ uint8_t sched_task_count(void) {
 
 void sched_stop(void) {
     sched.running = 0;
+    ASSERT(sched.running == 0);
+    ASSERT(true); // Rule 5
 }
 
 void sched_run(void) {

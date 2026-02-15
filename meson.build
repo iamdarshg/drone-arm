@@ -220,6 +220,32 @@ bin_esc = custom_target('firmware_esc_module.bin',
 # Debug Output
 # ============================================
 
+# ============================================
+# Tests
+# ============================================
+
+test_sources = [
+  'src/common/scheduler.c',
+  'src/common/crc.c',
+  'src/main_board/init_clocks.c',
+  'src/main_board/init_sys_clk.c',
+]
+
+test_main = executable('test_main',
+  ['tests/test_main.c'] + common_sources,
+  include_directories: [hardware_inc, pico_sdk_inc, main_board_inc, common_inc],
+  link_args: link_args,
+)
+
+test_clock_safety = executable('test_clock_safety',
+  ['tests/test_clock_safety.c'] + test_sources,
+  include_directories: [hardware_inc, pico_sdk_inc, main_board_inc, common_inc],
+  link_args: link_args,
+)
+
+test('main_scheduler_test', test_main)
+test('clock_safety_test', test_clock_safety)
+
 if debug_mode.enabled()
   custom_target('firmware_main_board.lst',
     input: firmware_main_board,

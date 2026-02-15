@@ -17,62 +17,22 @@
 
 // Core API - implemented in gpio.c
 void gpio_init_all(void);
-void gpio_init_pins(void);
 bool gpio_init_pin(uint8_t pin);
-void gpio_set_direction(uint8_t pin);
-void gpio_set_func(uint8_t pin, uint8_t func);
-void gpio_set_dir(uint8_t pin, bool output);
-void gpio_set_pull(uint8_t pin, uint8_t pull);
-void gpio_set_drive(uint8_t pin, uint8_t drive);
-void gpio_set_schmitt(uint8_t pin, bool enable);
-
-// Fast inline operations (always inlined for speed)
-// These use direct register access through sio_hw pointer
-static inline void gpio_set(uint8_t pin, bool value) {
-    if (pin >= GPIO_NUM_PINS) return;
-    
-    if (pin < 32) {
-        if (value) {
-            sio_hw->gpio_out_set = (1u << pin);
-        } else {
-            sio_hw->gpio_out_clr = (1u << pin);
-        }
-    } else {
-        if (value) {
-            sio_hw->gpio_hi_out_set = (1u << (pin - 32));
-        } else {
-            sio_hw->gpio_hi_out_clr = (1u << (pin - 32));
-        }
-    }
+static inline void gpio_set_dir(uint8_t pin, bool output){
+    global_pin_direction[pin]=output;
+    gpio_init_pin(pin);
 }
 
-static inline bool gpio_get(uint8_t pin) {
-    if (pin >= GPIO_NUM_PINS) return false;
-    
-    if (pin < 32) {
-        return (sio_hw->gpio_in & (1u << pin)) != 0;
-    } else {
-        return (sio_hw->gpio_hi_in & (1u << (pin - 32))) != 0;
-    }
+static inline void gpio_set_func(uint8_t pin, uint8_t function) {
+    global_pin_func_map[pin]=function;
+    gpio_init_pin(pin);
 }
-
-static inline void gpio_toggle(uint8_t pin) {
-    if (pin >= GPIO_NUM_PINS) return;
-    
-    if (pin < 32) {
-        sio_hw->gpio_out_xor = (1u << pin);
-    } else {
-        sio_hw->gpio_hi_out_xor = (1u << (pin - 32));
-    }
+static inline void  gpio_set_pull(uint8_t pin, uint8_t pull){
+    global_pin_pullup[pin]=pull;
+    gpio_init_pin(pin);
 }
-
-// Batch operations for efficiency
-void gpio_set_mask(uint32_t mask_low, uint32_t mask_high, bool value);
-void gpio_toggle_mask(uint32_t mask_low, uint32_t mask_high);
-uint32_t gpio_get_mask(uint32_t mask_low, uint32_t mask_high);
-
-// GPIO fast operations using direct register access
-void gpio_set_fast(uint8_t pin, bool value);
-void gpio_toggle_fast(uint8_t pin);
+bool gpio_get(uint8_t pin);
+void gpio_toggle(uint8_t pin);
+void gpio_set(uint8_t pin, bool value);
 
 #endif // GPIO_H
