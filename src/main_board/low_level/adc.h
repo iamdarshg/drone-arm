@@ -3,12 +3,10 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "hardware_defs/adc_config.h"
-#include "pico-sdk/src/rp2350/hardware_structs/include/hardware/structs/adc.h"
-#include "pico-sdk/src/rp2350/hardware_structs/include/hardware/structs/dma.h"
-#include "pico-sdk/src/rp2350/hardware_regs/include/hardware/regs/adc.h"
-#include "pico-sdk/src/rp2350/hardware_regs/include/hardware/regs/dma.h"
-#include "pico-sdk/src/rp2350/hardware_regs/include/hardware/regs/addressmap.h"
+#include "../hardware_defs/adc_config.h"
+#include "../../../include/hardware/structs/adc.h"
+#include "../../../include/hardware/structs/dma.h"
+#include "../../../include/hardware/regs/addressmap.h"
 
 // ============================================================================
 // ADC Register Bit Definitions

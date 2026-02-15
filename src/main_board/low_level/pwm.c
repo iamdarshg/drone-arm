@@ -27,7 +27,10 @@ void pwm_init_all(void) {
         
         // Configure slice
         pwm_slice_init(slice, 0);  // 0 means use config default
+        free(gpio_a);
+        free(gpio_b);
     }
+    free(pwm_slice_enabled);
 }
 
 void pwm_slice_init(uint8_t slice, uint32_t freq_hz) {

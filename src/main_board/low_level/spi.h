@@ -7,7 +7,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "hardware_defs/spi_config.h"
+#include "../hardware_defs/spi_config.h"
 
 // SPI register bit definitions
 #define SPI_CR0_DSS_SHIFT       0
@@ -33,11 +33,12 @@
 #define SPI_CPSR_MASK           0xFE
 
 // Hardware pointer (defined in spi.c)
-extern void* spi_get_hw(uint8_t id);
+#include "../../../include/hardware/structs/spi.h"
+extern spi_hw_t* spi_get_hw(uint8_t id);
 
 // Control functions
 void spi_init(uint8_t spi_id, uint32_t baudrate, bool master);
-void spi_set_baud_format_mode(uint8_t spi_id, uint32_t baudrate, bool master);
+bool spi_set_baud_format_mode(uint8_t spi_id, uint32_t baudrate, bool master);
 void spi_deinit(uint8_t spi_id);
 void disable_spi(uint8_t spi_id);
 void enable_spi(uint8_t spi_id);

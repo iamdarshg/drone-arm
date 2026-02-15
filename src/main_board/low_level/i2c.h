@@ -7,7 +7,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "hardware_defs/i2c_config.h"
+#include "../hardware_defs/i2c_config.h"
 
 // I2C register bit definitions
 #define I2C_CON_MASTER_MODE_BIT     (1U << 0)
@@ -39,11 +39,12 @@
 #define I2C_DATA_CMD_READ           (1U << 8)
 
 // Hardware pointer (defined in i2c.c)
-extern void* i2c_get_hw(uint8_t id);
+#include "../../../include/hardware/structs/i2c.h"
+extern i2c_hw_t* i2c_get_hw(uint8_t id);
 
 // Control functions
 void i2c_init(uint8_t i2c_id, uint32_t baudrate, bool master);
-void i2c_set_baud_mode_master(uint8_t i2c_id, uint32_t baudrate, bool master);
+bool i2c_set_baud_mode_master(uint8_t i2c_id, uint32_t baudrate, bool master);
 void i2c_deinit(uint8_t i2c_id);
 void disable_i2c(uint8_t i2c_id);
 void enable_i2c(uint8_t i2c_id);
