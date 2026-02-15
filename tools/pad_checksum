@@ -1,0 +1,65 @@
+#!/usr/bin/env python3
+"""
+pad_checksum.py - Pads and checksums boot2 binary for RP2350
+Based on pico-sdk/src/rp2350/boot_stage2/pad_checksum
+"""
+
+import argparse
+import struct
+import sys
+
+
+def pad_and_checksum(input_file, output_file, arch='arm'):
+    """Pad binary to 252 bytes and add checksum."""
+    with open(input_file, 'rb') as f:
+        data = f.read()
+    
+    # Maximum size is 252 bytes (256 - 4 for checksum)
+    if len(data) > 252:
+        print(f"Error: Binary too large ({len(data)} bytes, max 252)")
+        sys.exit(1)
+    
+    # Pad to 252 bytes with 0xff
+    padded = data + b'\xff' * (252 - len(data))
+    
+    # Calculate checksum: sum of all words, negated
+    checksum = 0
+    for i in range(0, len(padded), 4):
+        word = struct.unpack('<I', padded[i:i+4])[0]
+        checksum = (checksum + word) & 0xffffffff
+    
+    checksum = (-checksum) & 0xffffffff
+    
+    # Output as assembly
+    with open(output_file, 'w') as f:
+        f.write('// Auto-generated padded boot2 code\n')
+        f.write('.section .text\n')
+        f.write('.align 4\n')
+        f.write('.global boot2_data\n')
+        f.write('boot2_data:\n')
+        
+        # Write data as .word directives
+        for i in range(0, len(padded), 4):
+            word = struct.unpack('<I', padded[i:i+4])[0]
+            f.write(f'    .word 0x{word:08x}\n')
+        
+        # Write checksum
+        f.write(f'    .word 0x{checksum:08x}  // checksum\n')
+
+
+def main():
+    parser = argparse.ArgumentParser(description='Pad and checksum boot2 binary')
+    parser.add_argument('input', help='Input binary file')
+    parser.add_argument('output', help='Output assembly file')
+    parser.add_argument('-a', '--arch', default='arm', choices=['arm', 'riscv'],
+                       help='Architecture (default: arm)')
+    parser.add_argument('-s', '--start', type=lambda x: int(x, 0), default=0xffffffff,
+                       help='Start vector (default: 0xffffffff)')
+    
+    args = parser.parse_args()
+    
+    pad_and_checksum(args.input, args.output, args.arch)
+
+
+if __name__ == '__main__':
+    main()

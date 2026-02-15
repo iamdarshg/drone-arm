@@ -1,0 +1,24 @@
+[wokwi]
+version = 1
+firmware = "../../build/firmware_main_board.elf"
+elf = "../../build/firmware_main_board.elf"
+
+# GDB configuration for debugging
+gdbServerPort = 3333
+
+# Serial configuration
+serialMonitor = true
+serialMonitorPort = " uart"
+serialMonitorBaudRate = 115200
+
+# Performance profiling
+[pprof]
+enabled = true
+output = "profile.json"
+sampleRate = 1000  # samples per second
+
+# GPIO tracing for timing analysis
+[trace]
+gpio = [0, 1, 4, 5, 10, 11, 12, 13]
+spi = [0]
+i2c = [0]

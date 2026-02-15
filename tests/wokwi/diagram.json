@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "author": "Drone-Arm Project",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "board-pi-pico",
+      "id": "pico",
+      "top": 0,
+      "left": 0,
+      "attrs": { "builder": "pico-sdk" }
+    },
+    {
+      "type": "wokwi-mpu6050",
+      "id": "imu",
+      "top": -100,
+      "left": 200,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-ili9341",
+      "id": "display",
+      "top": 100,
+      "left": 200,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": 50,
+      "left": 100,
+      "attrs": { "value": "1000" }
+    }
+  ],
+  "connections": [
+    ["pico:GP0", "$serialMonitor:RX", "", []],
+    ["pico:GP1", "$serialMonitor:TX", "", []],
+    ["pico:GP4", "imu:SCL", "green", ["h0"]],
+    ["pico:GP5", "imu:SDA", "green", ["h0"]],
+    ["pico:3V3", "imu:VCC", "red", ["h0"]],
+    ["pico:GND", "imu:GND", "black", ["h0"]],
+    ["pico:GP10", "display:SCK", "blue", ["h0"]],
+    ["pico:GP11", "display:MOSI", "blue", ["h0"]],
+    ["pico:GP12", "display:MISO", "blue", ["h0"]],
+    ["pico:GP13", "display:CS", "blue", ["h0"]],
+    ["pico:GP14", "display:DC", "blue", ["h0"]],
+    ["pico:GP15", "display:RST", "blue", ["h0"]]
+  ],
+  "serialMonitor": { "display": "terminal", "newline": "lf" },
+  "dependencies": {}
+}
