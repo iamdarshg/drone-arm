@@ -1,4 +1,3 @@
-```toml
 [wokwi]
 version = 1
 firmware = "../../build/firmware_main_board.uf2"
@@ -23,4 +22,3 @@ sampleRate = 1000  # samples per second
 gpio = [0, 1, 4, 5, 10, 11, 12, 13]
 spi = [0]
 i2c = [0]
-```

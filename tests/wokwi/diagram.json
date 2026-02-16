@@ -8,7 +8,9 @@
       "id": "pico",
       "top": 0,
       "left": 0,
-      "attrs": { "builder": "pico-sdk" }
+      "attrs": {
+        "builder": "pico-sdk"
+      }
     },
     {
       "type": "wokwi-mpu6050",
@@ -18,34 +20,141 @@
       "attrs": {}
     },
     {
-      "type": "wokwi-ili9341",
-      "id": "display",
-      "top": 100,
+      "type": "wokwi-mpu6050",
+      "id": "lsm6",
+      "top": -200,
       "left": 200,
       "attrs": {}
     },
     {
-      "type": "wokwi-resistor",
-      "id": "r1",
-      "top": 50,
-      "left": 100,
-      "attrs": { "value": "1000" }
+      "type": "wokwi-mcp23017",
+      "id": "extender",
+      "top": -300,
+      "left": 200,
+      "attrs": {}
     }
   ],
   "connections": [
-    ["pico:GP0", "$serialMonitor:RX", "", []],
-    ["pico:GP1", "$serialMonitor:TX", "", []],
-    ["pico:GP4", "imu:SCL", "green", ["h0"]],
-    ["pico:GP5", "imu:SDA", "green", ["h0"]],
-    ["pico:3V3", "imu:VCC", "red", ["h0"]],
-    ["pico:GND", "imu:GND", "black", ["h0"]],
-    ["pico:GP10", "display:SCK", "blue", ["h0"]],
-    ["pico:GP11", "display:MOSI", "blue", ["h0"]],
-    ["pico:GP12", "display:MISO", "blue", ["h0"]],
-    ["pico:GP13", "display:CS", "blue", ["h0"]],
-    ["pico:GP14", "display:DC", "blue", ["h0"]],
-    ["pico:GP15", "display:RST", "blue", ["h0"]]
+    [
+      "pico:GP0",
+      "$serialMonitor:RX",
+      "",
+      []
+    ],
+    [
+      "pico:GP1",
+      "$serialMonitor:TX",
+      "",
+      []
+    ],
+    [
+      "pico:GP5",
+      "imu:SCL",
+      "green",
+      [
+        "h0"
+      ]
+    ],
+    [
+      "pico:GP4",
+      "imu:SDA",
+      "green",
+      [
+        "h0"
+      ]
+    ],
+    [
+      "pico:GP5",
+      "lsm6:SCL",
+      "green",
+      [
+        "h0"
+      ]
+    ],
+    [
+      "pico:GP4",
+      "lsm6:SDA",
+      "green",
+      [
+        "h0"
+      ]
+    ],
+    [
+      "pico:GP5",
+      "extender:SCL",
+      "green",
+      [
+        "h0"
+      ]
+    ],
+    [
+      "pico:GP4",
+      "extender:SDA",
+      "green",
+      [
+        "h0"
+      ]
+    ],
+    [
+      "pico:3V3",
+      "imu:VCC",
+      "red",
+      [
+        "h0"
+      ]
+    ],
+    [
+      "pico:GND",
+      "imu:GND",
+      "black",
+      [
+        "h0"
+      ]
+    ],
+    [
+      "pico:3V3",
+      "lsm6:VCC",
+      "red",
+      [
+        "h0"
+      ]
+    ],
+    [
+      "pico:GND",
+      "lsm6:GND",
+      "black",
+      [
+        "h0"
+      ]
+    ],
+    [
+      "pico:3V3",
+      "extender:VCC",
+      "red",
+      [
+        "h0"
+      ]
+    ],
+    [
+      "pico:GND",
+      "extender:GND",
+      "black",
+      [
+        "h0"
+      ]
+    ],
+    [
+      "pico:3V3",
+      "extender:RESET",
+      "red",
+      [
+        "h0"
+      ]
+    ]
   ],
-  "serialMonitor": { "display": "terminal", "newline": "lf" },
+  "serialMonitor": {
+    "display": "terminal",
+    "newline": "lf"
+  },
   "dependencies": {}
 }
