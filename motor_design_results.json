@@ -1,0 +1,20 @@
+{
+  "winding": {
+    "slot_area_mm2": 264.41738167714095,
+    "wire_area_mm2": 15.0,
+    "turns_per_slot": 17.0,
+    "R_dc_ohm": 0.039516783349002396,
+    "P_cu_cont_W": 569.0416802256347,
+    "P_cu_burst_W": 1280.3437805076776,
+    "wire_diameter_mm": 4.370193722368317
+  },
+  "magnetics": {
+    "Tem_avg": 11.755129529358328,
+    "Tem_rip": 0.04
+  },
+  "thermal": {
+    "T_max_winding_C": 298.80508028488816,
+    "T_max_C": 298.80508028488816,
+    "magnet_safe": false
+  }
+}
