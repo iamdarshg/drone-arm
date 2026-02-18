@@ -1,0 +1,48 @@
+{
+  "optimization_metadata": {
+    "iteration_count": 500,
+    "magnet_temp_limit_C": 120.0,
+    "convergence_threshold": 0.05
+  },
+  "winding": {
+    "slot_area_mm2": 370.18433434799726,
+    "wire_area_mm2": 15.0,
+    "turns_per_slot": 24.0,
+    "R_dc_ohm": 0.04926040002212102,
+    "P_cu_cont_W": 709.349760318543,
+    "P_cu_burst_W": 1596.036960716721,
+    "wire_diameter_mm": 4.370193722368317
+  },
+  "magnetics": {
+    "Tem_avg": 7.040505386567556,
+    "Tem_rip": 0.04
+  },
+  "thermal": {
+    "T_max_winding_C": 240.60876040636563,
+    "T_max_C": 240.60876040636563,
+    "magnet_safe": false,
+    "temp_margin_C": -120.60876040636563
+  },
+  "power": {
+    "electrical_power_W": 7224.0,
+    "copper_loss_W": 709.349760318543,
+    "mechanical_power_W": 6514.650239681457,
+    "efficiency": 0.9018065115838119
+  },
+  "performance": {
+    "torque_Nm": 7.040505386567556
+  },
+  "design_parameters": {
+    "magnet_thickness_mm": 4.5,
+    "motor_length_mm": 30.0,
+    "fill_factor": 0.7,
+    "pole_pairs": 9,
+    "stator_slots": 12,
+    "Rext_mm": 60.5,
+    "Rint_mm": 40.5,
+    "Rrotor_ext_mm": 40.0,
+    "voltage_dc_V": 60.2,
+    "I_continuous_A": 120.0,
+    "I_burst_A": 180.0
+  }
+}
