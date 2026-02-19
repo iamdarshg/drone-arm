@@ -56,7 +56,7 @@ sdk_args = [
 add_project_arguments(sdk_args, language: 'c')
 
 # Debug/Release configuration
-debug_mode = false
+debug_mode = true
 if debug_mode
   add_project_arguments('-g', '-O0', '-DDEBUG=1', language: 'c')
   message('DEBUG mode: Building with debug symbols')
@@ -138,6 +138,8 @@ main_board_sources = [
   'src/main_board/low_level/clocks_other.c',
   'src/main_board/low_level/clocks_overclock.c',
   'src/main_board/hardware_defs/pins.c',
+  'src/main_board/sensor_fusion/lsm6.c',
+  'src/main_board/sensor_fusion/ICP-42670.c',
   # Boot stage 2 padded
   boot2_padded,
 ]
@@ -150,6 +152,12 @@ esc_sources = [
   'src/esc_controller/current_sense.c',
   'src/esc_controller/config.c',
 ]
+
+# ============================================
+# Sensor Fusion Include Directories
+# ============================================
+
+sensor_fusion_inc = include_directories('src/main_board/sensor_fusion')
 
 # ============================================
 # Linker Script
@@ -193,7 +201,7 @@ message('==============================================')
 
 firmware_main_board = executable('firmware_main_board.elf',
   main_board_sources + common_sources,
-  include_directories: [hardware_inc, pico_sdk_inc, sdk_regs_inc, sdk_structs_inc, sdk_vreg_inc, sdk_base_inc, main_board_inc, common_inc],
+  include_directories: [hardware_inc, pico_sdk_inc, sdk_regs_inc, sdk_structs_inc, sdk_vreg_inc, sdk_base_inc, main_board_inc, sensor_fusion_inc, common_inc],
   link_args: link_args,
   install: false,
 )
@@ -268,7 +276,7 @@ if debug_mode
     capture: true,
     build_by_default: true,
   )
-  
+
   # custom_target('firmware_esc_module.lst',
   #   input: firmware_esc,
   #   output: 'firmware_esc_module.lst',

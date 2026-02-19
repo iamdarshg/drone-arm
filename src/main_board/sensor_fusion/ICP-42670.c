@@ -105,7 +105,20 @@ static const float gyro_scale_float[4] = {
 
 /*--------------------------- SIMD-Aligned Buffers ---------------------*/
 static uint8_t icp_fifo_buffer[ICP_FIFO_BUFFER_SIZE] __attribute__((aligned(16)));
-static icp_42670_read latest_icp[ICP_MAX_FIFO_SAMPLES] __attribute__((aligned(16)));
+
+/* Aligned sensor read structure - must match external definition */
+typedef struct __attribute__((aligned(16))) {
+    struct __attribute__((aligned(16))) {
+        float x;
+        float y;
+        float z;
+    } reading;
+    uint8_t fifo_len;
+    uint8_t fifo_full;
+    uint8_t padding[6];  /* 16-byte alignment */
+} icp_42670_read_aligned;
+
+static icp_42670_read_aligned latest_icp[ICP_MAX_FIFO_SAMPLES] __attribute__((aligned(16)));
 
 /*--------------------------- Device Context --------------------------*/
 typedef struct {
@@ -122,7 +135,10 @@ typedef struct {
 static icp_42670_dev icp_dev;
 
 /*--------------------------- Coprocessor Handles ---------------------*/
-static dma_handle_t icp_dma_handle;
+static uint8_t icp_dma_channel;
+
+/* I2C requires no chip select, but define a dummy for consistency */
+#define ICP_CS_DUMMY  0xFFU  /* No CS on I2C devices */
 
 /*--------------------------- Function Prototypes ----------------------*/
 static inline uint8_t icp_write_reg(icp_42670_dev *dev, uint8_t reg, const uint8_t *data, uint32_t len);
@@ -155,18 +171,18 @@ uint8_t ICP_init(void)
     i2c_set_baud_mode_master(icp_dev.i2c_id, 1000000U, true);
 
     /* Step 2: Initialize DMA for bulk transfers */
-    dma_init(&icp_dma_handle, DMA_CHANNEL_I2C0_RX);
+    icp_dma_channel = 1U; /* Use DMA channel 1 for I2C0 RX */
 
     /* Step 3: Configure CS pin */
     icp_configure_cs();
 
     /* Step 4: Verify WHO_AM_I register */
-    uint8_t who = 0U;
-    if (icp_read_reg(&icp_dev, REG_WHO_AM_I, &who, 1U) != 0U) {
+    /* Read WHO_AM_I register (2 bytes for atomic read) */
+    uint8_t who[2];
+    if (icp_read_reg(&icp_dev, REG_WHO_AM_I, who, 2U) != 0U) {
         return 1U;
     }
-
-    if (who != 0x67U) {
+    if (who[0] != 0x67U) {
         return 2U;  /* Unexpected device ID - ICM-42670-P should be 0x67 */
     }
 
@@ -356,55 +372,30 @@ uint8_t ICP_readSensor(void)
     		bytes = (uint16_t)icp_dev.fifo_capacity;
     	}
 
-    	/* Step 2: Perform DMA transfer for bulk data read (only if >= threshold) */
+    		/* Step 2: Perform DMA transfer for bulk data read (only if >= threshold) */
     		if (bytes >= DMA_THRESHOLD_BYTES) {
-    			/* DMA path for large transfers */
-    			dma_transfer_config_t dma_cfg = {
-    				.channel = DMA_CHANNEL_I2C0_RX,
-    				.src_addr = REG_FIFO_DATA_OUT,
-    				.dst_addr = (uint32_t)icp_dev.fifo_buf,
-    				.length = bytes,
-    				.burst_size = DMA_BURST_16_BYTES
-    			};
-
-    			if (dma_start_transfer(&icp_dma_handle, &dma_cfg) != 0U) {
-    				/* Fallback to blocking I2C if DMA setup fails */
-    				if (icp_read_reg(&icp_dev, REG_FIFO_DATA_OUT, icp_dev.fifo_buf, bytes) != 0U) {
-    					return 2U;
-    				}
-    			} else {
+			/* DMA path for large transfers */
+			dma_start_transfer(icp_dma_channel, 
+			                       (const void*)REG_FIFO_DATA_OUT, 
+			                       icp_dev.fifo_buf, 
+			                       bytes, 
+			                       0U);
     				/* Wait for DMA completion with timeout */
     				uint32_t timeout = 1000U; /* 1ms timeout */
-    				while (!dma_is_complete(&icp_dma_handle) && (timeout > 0U)) {
+    				while (dma_is_busy(icp_dma_channel) && (timeout > 0U)) {
     					timeout--;
     				}
 
     				if (timeout == 0U) {
-    					dma_abort(&icp_dma_handle);
+    					dma_abort(icp_dma_channel);
     					return 3U; /* DMA timeout */
     				}
-    			}
     		} else {
     			/* Blocking I2C path for small transfers (avoids DMA overhead) */
     			if (icp_read_reg(&icp_dev, REG_FIFO_DATA_OUT, icp_dev.fifo_buf, bytes) != 0U) {
     				return 2U;
     			}
     		}
-        if (icp_read_reg(&icp_dev, REG_FIFO_DATA_OUT, icp_dev.fifo_buf, bytes) != 0U) {
-            return 2U;
-        }
-    } else {
-        /* Wait for DMA completion with timeout */
-        uint32_t timeout = 1000U;  /* 1ms timeout */
-        while (!dma_is_complete(&icp_dma_handle) && (timeout > 0U)) {
-            timeout--;
-        }
-
-        if (timeout == 0U) {
-            dma_abort(&icp_dma_handle);
-            return 3U;  /* DMA timeout */
-        }
-    }
 
     /* Step 3: Parse packets using FPU for scaling */
     const uint32_t samples = bytes / ICP_FIFO_PACKET_SIZE;
@@ -412,16 +403,15 @@ uint8_t ICP_readSensor(void)
 
     register const float accel_inv_scale = 1.0f / icp_dev.accel_scale;
     register const float gyro_inv_scale = 1.0f / icp_dev.gyro_scale;
-    register float *fptr = (float*)latest_icp;
 
     /* Process all samples with FPU */
     for (register uint32_t i = 0U; i < clamped_samples; i++) {
         const uint8_t *p = icp_dev.fifo_buf + (i * ICP_FIFO_PACKET_SIZE);
 
         /* Parse accelerometer data and convert to g using FPU */
-        const int16_t ax_raw = (int16_t)(p[0] << 8) | p[1];
-        const int16_t ay_raw = (int16_t)(p[2] << 8) | p[3];
-        const int16_t az_raw = (int16_t)(p[4] << 8) | p[5];
+        const int16_t ax_raw = (int16_t)((p[0] << 8) | p[1]);
+        const int16_t ay_raw = (int16_t)((p[2] << 8) | p[3]);
+        const int16_t az_raw = (int16_t)((p[4] << 8) | p[5]);
 
         latest_icp[i].reading.x = (float)ax_raw * accel_inv_scale;
         latest_icp[i].reading.y = (float)ay_raw * accel_inv_scale;
@@ -495,7 +485,7 @@ uint8_t ICP_query_gyro_eul(Vec3 *euler)
  *  @param q: Output quaternion (float components)
  *  @return 0 on success
  *--------------------------------------------------------------------*/
-uint8_t ICP_query_gyro_q(Quarternion *q)
+uint8_t ICP_query_gyro_q(Quaternion *q)
 {
     ASSERT_NOT_NULL(q);
 
@@ -596,7 +586,8 @@ static inline uint8_t icp_write_reg(icp_42670_dev *dev, uint8_t reg,
         }
     }
 
-    return i2c_write_stream(dev->i2c_id, dev->address, tx_buf, 1U + len);
+    i2c_write_stream(dev->i2c_id, dev->address, tx_buf, 1U + len);
+    return 0U;
 }
 
 /*---------------------------------------------------------------------
@@ -626,7 +617,7 @@ static void icp_flush_fifo(icp_42670_dev *dev)
 {
     ASSERT_NOT_NULL(dev);
 
-    uint8_t cnt[2] = {0};
+    uint8_t cnt_h, cnt_l;
     icp_read_reg(dev, REG_FIFO_COUNTH, &cnt_h, 1U);
     icp_read_reg(dev, REG_FIFO_COUNTL, &cnt_l, 1U);
     
@@ -636,7 +627,7 @@ static void icp_flush_fifo(icp_42670_dev *dev)
         uint8_t dummy[ICP_FIFO_PACKET_SIZE];
         icp_read_reg(dev, REG_FIFO_DATA_OUT, dummy, ICP_FIFO_PACKET_SIZE);
 
-        icp_read_reg(dev, REG_FIFO_COUNT, cnt, 2U);
+        icp_read_reg(dev, REG_FIFO_COUNTH, cnt, 2U);
         remaining = (uint16_t)(((uint16_t)cnt[0] << 8) | cnt[1]);
     }
 }
@@ -673,7 +664,77 @@ static uint8_t icp_wait_mclk_ready(icp_42670_dev *dev)
 static inline void icp_configure_cs(void)
 {
     gpio_set_dir(ICP_CS_PIN, true);  /* Output */
-    gpio_put(ICP_CS_PIN, true);      /* Inactive high */
+    gpio_set(ICP_CS_PIN, true);      /* Inactive high */
+}
+
+/*---------------------------------------------------------------------
+ *  @brief Update scale factors based on full-scale selection
+ *--------------------------------------------------------------------*/
+static inline void icp_update_scale_factors(icp_42670_dev *dev)
+{
+    ASSERT_NOT_NULL(dev);
+    
+    /* Accelerometer scaling factors (g per LSB) */
+    switch (dev->accel_fs) {
+        case ACCEL_FSSEL_2G:
+            dev->accel_scale = 16384.0f;  /* 2g / 16384 LSB/g */
+            break;
+        case ACCEL_FSSEL_4G:
+            dev->accel_scale = 8192.0f;   /* 4g / 8192 LSB/g */
+            break;
+        case ACCEL_FSSEL_8G:
+            dev->accel_scale = 4096.0f;   /* 8g / 4096 LSB/g */
+            break;
+        case ACCEL_FSSEL_16G:
+            dev->accel_scale = 2048.0f;   /* 16g / 2048 LSB/g */
+            break;
+        default:
+            dev->accel_scale = 16384.0f;  /* Default 2g */
+            break;
+    }
+    
+    /* Gyroscope scaling factors (dps per LSB) */
+    switch (dev->gyro_fs) {
+        case GYRO_FSSEL_250DPS:
+            dev->gyro_scale = 131.0f;     /* 250dps / 131 LSB/dps */
+            break;
+        case GYRO_FSSEL_500DPS:
+            dev->gyro_scale = 65.5f;      /* 500dps / 65.5 LSB/dps */
+            break;
+        case GYRO_FSSEL_1000DPS:
+            dev->gyro_scale = 32.8f;      /* 1000dps / 32.8 LSB/dps */
+            break;
+        case GYRO_FSSEL_2000DPS:
+            dev->gyro_scale = 16.4f;      /* 2000dps / 16.4 LSB/dps */
+            break;
+        default:
+            dev->gyro_scale = 131.0f;     /* Default 250dps */
+            break;
+    }
+}
+
+/*---------------------------------------------------------------------
+ *  @brief Convert raw accelerometer data to g using FPU assembly
+ *--------------------------------------------------------------------*/
+static inline float icp_accel_to_float(int16_t raw, float scale)
+{
+    return (float)raw / scale;
+}
+
+/*---------------------------------------------------------------------
+ *  @brief Convert raw gyroscope data to dps using FPU assembly
+ *--------------------------------------------------------------------*/
+static inline float icp_gyro_to_float(int16_t raw, float scale)
+{
+    return (float)raw / scale;
+}
+
+/*---------------------------------------------------------------------
+ *  @brief Convert raw gyroscope data to rad/s using FPU assembly
+ *--------------------------------------------------------------------*/
+static inline float icp_gyro_to_rad_s(int16_t raw, float scale)
+{
+    return ((float)raw / scale) * (CONST_PI_FLOAT / 180.0f);
 }
 
 /* End of File */

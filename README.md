@@ -44,3 +44,52 @@ Current tests include:
 - `test_main`: Scheduler and basic async operations.
 - `test_clock_safety`: (New) Integrity protection for global clock state.
 The main software will run as two non-synchronised loops- the sensor loop and the PWM loop. The one loop will run at the speed of the ESCs and will provide the best estimate for what the thrust should be at any given time to the ESCs, 60Hz if communicating via PWM and 1 kHz if communicating via SPI. This rate will be configurable. This loop may also be offloaded to the PIO modules in the future. The other loop is reponsible for sensor measuerment and fusion.
+
+### Step 1. Rewrite the Expression
+
+We want to simplify:
+
+\[
+4 \sin(x) \cdot \sin\left(\frac{\pi + 3x}{3}\right) \cdot \sin\left(\frac{2\pi + 3x}{3}\right)
+\]
+
+Simplify the angles:
+
+- \(\frac{\pi + 3x}{3} = \frac{\pi}{3} + x\)
+- \(\frac{2\pi + 3x}{3} = \frac{2\pi}{3} + x\)
+
+So the expression becomes:
+
+\[
+4 \sin(x) \cdot \sin\left(\frac{\pi}{3} + x\right) \cdot \sin\left(\frac{2\pi}{3} + x\right)
+\]
+
+---
+
+### Step 2. Recognize a Trigonometric Identity
+
+There is a known identity:
+
+\[
+\sin(3\theta) = 4 \sin(\theta) \cdot \sin\left(\frac{\pi}{3} + \theta\right) \cdot \sin\left(\frac{2\pi}{3} + \theta\right)
+\]
+
+Letting \(\theta = x\), we see that our expression matches the right-hand side of this identity.
+
+---
+
+### Step 3. Apply the Identity
+
+Using the identity:
+
+\[
+4 \sin(x) \cdot \sin\left(\frac{\pi}{3} + x\right) \cdot \sin\left(\frac{2\pi}{3} + x\right) = \sin(3x)
+\]
+
+---
+
+### Final Answer
+
+\[
+\boxed{\sin(3x)}
+\]
