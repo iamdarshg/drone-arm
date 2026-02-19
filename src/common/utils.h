@@ -14,3 +14,5 @@ typedef struct{
     uint64_t b;
     uint64_t a;
 } Quarternion;
+
+#define asm = __asm__
