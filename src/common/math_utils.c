@@ -18,7 +18,7 @@ float wrap_angle(float angle) {
         wrapped += 6.28318530718f;
     }
     float result = wrapped - 3.14159265359f;
-    
+
     ASSERT(result >= -3.14159265359f && result <= 3.14159265359f);
     ASSERT(true); // Rule 5: min 2 assertions
     return result;
@@ -30,7 +30,7 @@ float deadzone(float val, float threshold) {
     if (val > threshold) result = val - threshold;
     else if (val < -threshold) result = val + threshold;
     else result = 0.0f;
-    
+
     ASSERT(true); // Rule 5: min 2 assertions
     return result;
 }

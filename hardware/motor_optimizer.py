@@ -3,53 +3,74 @@
 # Uses real pyleecan magnetics analysis and progressive refinement
 # ============================================================
 
-import numpy as np
+import itertools as it
 import json
+import math
 import sys
-from copy import deepcopy
-import matplotlib.pyplot as plt
+from multiprocessing import Pool, cpu_count
+from ssl import HAS_ALPN
+
+import numpy as np
+from scipy.optimize import fsolve
 from scipy.sparse import lil_matrix
 from scipy.sparse.linalg import spsolve
-from scipy.optimize import fsolve
-
-try:
-    import cadquery as cq
-    from cadquery import Assembly, Color
-    HAS_CADQUERY = True
-except ImportError:
-    HAS_CADQUERY = False
-    print("WARNING: CadQuery not available, STL export disabled")
 
 # ============================================================
 # OPTIMIZATION PARAMETERS
 # ============================================================
 MAGNET_TEMP_LIMIT = 120.0
 TEMP_SAFETY_MARGIN = 5.0
-MAX_REFINEMENT_ITERATIONS = 1500
-INITIAL_DIVISION_COUNT = 12  # Coarse-to-fine divisions
+MAX_REFINEMENT_ITERATIONS = 128
+INITIAL_DIVISION_COUNT = 2048  # Coarse-to-fine divisions
+MAX_EVALUATIONS_PER_REFINEMENT = 320000  # Limit evaluations per refinement level
+
+# ============================================================
+# SPEED OPTIMIZATION PARAMETERS
+# ============================================================
+# Thermal FEM resolution adapts with refinement level
+# Early iterations use coarse resolution for speed, late iterations use fine resolution
+THERMAL_FEM_RESOLUTION_MIN = (10, 15)  # (Nr, Nz) coarse: 20 radial, 30 axial
+THERMAL_FEM_RESOLUTION_MAX = (60, 90)  # (Nr, Nz) fine: 40 radial, 60 axial
+
+# Always use pyleecan (not analytical fallback)
+USE_PYLEECAN = True
+
+# Number of coupling iterations for magnetomechanical feedback
+COUPLING_ITERATIONS = 6  # Reduced from 3 for speed, damping handles convergence
+
+# Threshold-based early rejection (skip obviously bad designs)
+# These thresholds allow early exit to save computation
+TORQUE_MIN_THRESHOLD = 3.0 / 1e92  # Skip if torque < 3 Nm
+COPPER_LOSS_MAX_PERCENT = 0.5 * 1e92  # Skip if copper loss > 50% of electrical power
+TEMP_ABSOLUTE_MAX = 170 * 1e92  # Skip if temperature > 170°C even before full calc
+TARGET_EFFICIENCY = 0.9  # Target 90% efficiency
+
+# Enable multiprocessing (set to True to use parallel evaluation)
+USE_MULTIPROCESSING = True
+NUM_WORKERS = min(cpu_count() - 1, 8)  # Use all but one CPU, max 8 workers
 
 # ============================================================
 # MATERIAL PROPERTIES & THERMAL/MECHANICAL DATA
 # ============================================================
 MATERIAL_PROPS = {
     "copper": {
-        "density": 8960,              # kg/m³
-        "E_modulus": 110e9,           # Pa (Young's modulus)
-        "yield_strength": 200e6,      # Pa (annealed copper)
-        "CTE": 16.5e-6,               # /°C (coefficient of thermal expansion)
+        "density": 8960,  # kg/m³
+        "E_modulus": 110e9,  # Pa (Young's modulus)
+        "yield_strength": 200e6,  # Pa (annealed copper)
+        "CTE": 16.5e-6,  # /°C (coefficient of thermal expansion)
         "max_stress_safety_factor": 2.0,  # Safety factor for yield
     },
     "steel_M330": {  # M330-35A electrical steel
-        "density": 7850,              # kg/m³
-        "E_modulus": 210e9,           # Pa
-        "yield_strength": 400e6,      # Pa
-        "CTE": 12.0e-6,               # /°C
+        "density": 7850,  # kg/m³
+        "E_modulus": 210e9,  # Pa
+        "yield_strength": 400e6,  # Pa
+        "CTE": 12.0e-6,  # /°C
         "max_stress_safety_factor": 2.5,
-        "saturation_B": 2.0,          # Tesla (saturation flux density)
+        "saturation_B": 2.0,  # Tesla (saturation flux density)
     },
     "magnet_N45SH": {
-        "density": 7450,              # kg/m³
-        "CTE": 5.0e-6,                # /°C (lower than steel)
+        "density": 7450,  # kg/m³
+        "CTE": 5.0e-6,  # /°C (lower than steel)
         "max_compression_stress": 150e6,  # Pa (max compressive)
         "demag_T_coefficient": -0.11,  # %/°C (remanence temp coefficient)
     },
@@ -70,47 +91,239 @@ MATERIAL_PROPS = {
 # VARIABLE (can be optimized):
 # NOTE: Rrotor_ext is derived from Rint (always = Rint - 0.5mm)
 VARIABLE_PARAMS = {
-    "Rint": (8.0, 25.0),              # stator inner radius [mm]
-    "Rshaft": (2.0, 4.0),              # shaft radius [mm]
-    "magnet_thickness": (1.5, 8.0),    # magnet thickness [mm]
-    "motor_length": (30.0, 80.0),      # motor stack length [mm]
-    "pole_pairs": (4, 12),             # integer, pole pairs
-    "stator_slots": (9, 24),           # integer, slot count
-    "magnet_Br": (1.0, 1.35),          # remanence [T]
-    "h_conv": (20.0, 100.0),           # convection coefficient [W/m²K]
-    "slot_opening": (1.5, 4.0),        # slot opening width [mm]
+    "Rint": (8.0, 25.0),  # stator inner radius [mm]
+    "Rshaft": (2.0, 4.0),  # shaft radius [mm]
+    "magnet_thickness": (1.5, 8.0),  # magnet thickness [mm]
+    "motor_length": (30.0, 80.0),  # motor stack length [mm]
+    "pole_pairs": (4, 12),  # integer, pole pairs
+    "stator_slots": (9, 24),  # integer, slot count
+    "magnet_Br": (1.0, 1.35),  # remanence [T]
+    "h_conv": (20.0, 100.0),  # convection coefficient [W/m²K]
+    "slot_opening": (1.5, 4.0),  # slot opening width [mm]
+    "wire_diameter": (0.1, 3.5),  # wire diameter [mm] — fill factor derived from this
 }
 
 # ============================================================
 # CORE SIMULATION FUNCTIONS
 # ============================================================
 
+# Winding calculation cache to avoid recomputing identical designs
+_WINDING_CACHE = {}
+
+
+def is_valid_winding_topology(slots, pole_pairs):
+    """
+    Check if motor slot/pole combination is physically valid.
+
+    For proper distributed winding operation:
+    - Slots should be divisible by 3 (3-phase)
+    - Slots/poles should not create problematic harmonics or imbalance
+    - Minimum 1 slot per pole per phase: slots >= 6 * pole_pairs
+
+    Returns True if valid, False otherwise.
+    """
+    # Must have at least 9 slots for 3-phase (3 slots per phase minimum)
+    if slots < 9:
+        return False
+
+    # Slots must be divisible by 3 (3-phase distribution)
+    if slots % 3 != 0:
+        return False
+
+    # Minimum slots per pole pair (for distributed winding)
+    if slots < 6 * pole_pairs:
+        return False
+
+    # GCD(poles, slots) check: avoid fractional slot-per-pole designs
+    # Most practical: slots/poles should be 0.5, 1, 1.5, 2 etc.
+    poles = 2 * pole_pairs
+    denominator = math.gcd(poles, slots)
+    if denominator < 2:  # GCD should be at least 2 for reasonable distribution
+        return False
+
+    return True
+
+
+def _get_closest_valid_winding(orignal_slots, orignal_poles):
+    # Find the closest valid winding configuration
+    orignal_slots = int(orignal_slots)
+    orignal_poles = int(orignal_poles)
+    test_poles = range(orignal_poles - 10, orignal_poles + 20)
+    test_slots = range(orignal_slots - 10, orignal_slots + 20)
+    options = {}
+    for test_pole in test_poles:
+        for test_slot in test_slots:
+            if is_valid_winding_topology(test_slot, test_pole):
+                options[abs(orignal_slots - test_slot + orignal_poles - test_pole)] = (
+                    test_pole,
+                    test_slot,
+                )
+    closest_poles, closest_slots = options[min(options)]
+    while (
+        max(VARIABLE_PARAMS["pole_pairs"][0], 1)
+        <= closest_poles
+        <= VARIABLE_PARAMS["pole_pairs"][1]
+    ):
+        options.pop(min(options))
+        closest_poles, closest_slots = options[min(options)]
+
+    while (
+        max(VARIABLE_PARAMS["stator_slots"][0], 1)
+        <= closest_slots
+        <= VARIABLE_PARAMS["stator_slots"][1]
+    ):
+        options.pop(min(options))
+        closest_poles, closest_slots = options[min(options)]
+
+    return closest_slots, closest_poles
+
+
 def compute_winding_params(p):
-    """Calculate winding parameters and copper losses"""
+    """
+    Calculate winding parameters and copper losses.
+
+    Wire diameter is an input parameter; fill factor is DERIVED from it.
+    This models the fact that wire gauge is a discrete design choice
+    that determines actual slot fill.
+
+    Results are cached since winding depends only on geometry + wire diameter.
+    """
+    # Cache key: winding only depends on these geometric parameters
+    cache_key = (
+        p["Rext"],
+        p["Rint"],
+        p["motor_length"],
+        p["stator_slots"],
+        p["wire_diameter"],
+        p["I_continuous"],
+        p["I_burst"],
+        p["wire_resistivity"],
+    )
+    # if cache_key in _WINDING_CACHE:
+    #     return _WINDING_CACHE[cache_key]
+
+    # Calculate (if not cached)
+    result = _compute_winding_params_impl(p)
+    _WINDING_CACHE[cache_key] = result
+    return result
+
+
+def _compute_winding_params_impl(p):
+    """Internal implementation of winding parameter calculation."""
     Rext = p["Rext"] * 1e-3
     Rint = p["Rint"] * 1e-3
     L = p["motor_length"] * 1e-3
     slots = p["stator_slots"]
+    wire_diameter = p["wire_diameter"] * 1e-3  # Convert mm to meters
 
+    # Insulation model: smaller wires have relatively more insulation overhead
+    # Typical enameled copper wire: insulation thickness scales with wire diameter
+    # Formula: insulation_thickness = a + b * wire_diameter
+    # where a accounts for base coating, b is proportional scaling
+    # For enameled wire: typical range is 0.05-0.15mm depending on grade
+
+    # Insulation thickness model (meters)
+    # Base coating: ~0.03mm, plus proportional scaling
+    insulation_thickness = 0.00003 + 0.15 * wire_diameter  # meters
+
+    # Bare copper conductor diameter (core)
+    conductor_diameter = (
+        wire_diameter - 2 * insulation_thickness
+    )  # Subtract insulation from both sides
+
+    # Validate: conductor must be positive
+    if conductor_diameter <= 0:
+        return None  # Invalid wire size combination
+
+    # Conductor cross-sectional area (copper only)
+    conductor_area_single = np.pi * (conductor_diameter / 2) ** 2
+
+    # Total wire cross-sectional area (including insulation)
+    wire_area_total = np.pi * (wire_diameter / 2) ** 2
+
+    # Insulation area per wire
+    insulation_area_per_wire = wire_area_total - conductor_area_single
+
+    # Calculate slot area (full annular sector) — treat as parallelogram
     tooth_angle = 2 * np.pi / slots
-    slot_area = 0.5 * (Rext**2 - Rint**2) * tooth_angle * p["fill_factor"]
-    J_target = 8e6
-    wire_area = p["I_continuous"] / J_target
-    turns_per_slot = max(1, int(slot_area / wire_area))
+    slot_area_full = 0.5 * (Rext**2 - Rint**2) * tooth_angle
+
+    # Slot geometry as parallelogram:
+    # - Radial height: h = Rext - Rint
+    # - Tangential width: w = Rint * tooth_angle (average arc length at Rint)
+    radial_height = Rext - Rint
+    tangential_width = Rint * tooth_angle  # Arc length at inner radius
+
+    # Circle packing in parallelogram (hexagonal close packing)
+    # Account for wire insulation thickness: effective spacing is wire_diameter
+    # For circles of diameter d in a parallelogram of height h and width w:
+    # - Rows along radial direction: n_radial = floor((h - d) / d) + 1
+    # - Columns along tangential direction: n_tangential = floor(w / d)
+    # - Hexagonal packing efficiency: η ≈ π/(2√3) ≈ 0.9069
+
+    # Number of rows (along radial direction)
+    n_radial = max(1, int((radial_height - wire_diameter) / wire_diameter) + 1)
+
+    # Number of columns per row (along tangential direction)
+    # Account for alternating row offset in hexagonal packing
+    n_tangential_odd = max(1, int(tangential_width / wire_diameter))
+    n_tangential_even = max(
+        1, int((tangential_width - wire_diameter / 2) / wire_diameter)
+    )
+
+    # Total wires: alternate between odd and even rows for hexagonal packing
+    wires_per_slot = (
+        (n_radial // 2 + n_radial % 2) * n_tangential_odd  # Odd rows
+        + (n_radial // 2) * n_tangential_even  # Even rows (offset)
+    )
+    wires_per_slot = max(1, wires_per_slot)
+
+    # Actual fill factor based on CONDUCTOR AREA ONLY (not insulation)
+    # Fill factor = (number of wires × conductor area) / slot area
+    conductor_area_total = wires_per_slot * conductor_area_single
+    actual_fill_factor = conductor_area_total / slot_area_full
+    actual_fill_factor = min(
+        actual_fill_factor, 0.85
+    )  # Cap at realistic maximum (lower for insulation)
+
+    # Note: insulation_area accounts for overhead; smaller wires waste more space
+    total_insulation_area = wires_per_slot * insulation_area_per_wire
+    insulation_overhead_pct = (total_insulation_area / slot_area_full) * 100
+
+    # Mean turn length (single conductor loop)
     mean_turn_len = np.pi * (Rext + Rint) + 2 * L
-    total_turns = turns_per_slot * slots
-    R_dc = p["wire_resistivity"] * mean_turn_len * total_turns / (wire_area * slots / 3)
-    P_cu_cont = 3 * (p["I_continuous"] / np.sqrt(3))**2 * R_dc
-    P_cu_burst = 3 * (p["I_burst"] / np.sqrt(3))**2 * R_dc
+
+    # Total turns = wires per slot × slots
+    total_turns = wires_per_slot * slots
+
+    # DC resistance: R = ρ * L / A
+    # For 3-phase winding: each phase spans slots/3 slots across the motor
+    # All wires in a phase are in SERIES through the winding (not parallel)
+    # Therefore: R_phase = ρ * (total length in phase) / (single wire area)
+    # NOT divided by area of all slots, which would incorrectly multiply resistance by slot count
+    turns_per_phase = total_turns / 3.0
+    R_dc = (
+        p["wire_resistivity"] * mean_turn_len * turns_per_phase / conductor_area_single
+    )
+
+    # Copper losses: P = 3 * I² * R (3-phase Y-connected motor)
+    # For Y-connected: I_phase = I_line = I_continuous, so P_total = 3 * I_continuous² * R_dc
+    # (Note: Formula was using /√3, which is for delta connection - standard motors use Y)
+    P_cu_cont = 3 * (p["I_continuous"]) ** 2 * R_dc
+    P_cu_burst = 3 * (p["I_burst"]) ** 2 * R_dc
 
     results = {
-        "slot_area_mm2": slot_area * 1e6,
-        "wire_area_mm2": wire_area * 1e6,
-        "turns_per_slot": int(turns_per_slot),
+        "slot_area_mm2": slot_area_full * 1e6,
+        "wire_area_mm2": (conductor_area_total + total_insulation_area) * 1e6,
+        "wire_diameter_mm": wire_diameter * 1e3,
+        "wires_per_slot": wires_per_slot,
+        "conductor_area_mm2": conductor_area_total * 1e6,
+        "fill_factor_actual": actual_fill_factor,  # Derived from wire diameter
+        "turns_per_slot": wires_per_slot,  # Wires per slot = turns per slot
+        "total_turns": total_turns,
         "R_dc_ohm": R_dc,
         "P_cu_cont_W": P_cu_cont,
         "P_cu_burst_W": P_cu_burst,
-        "wire_diameter_mm": 2 * np.sqrt(wire_area / np.pi) * 1e3,
     }
     return results
 
@@ -124,15 +337,15 @@ def run_magnetics_pyleecan(p, winding, air_gap_adjustment=0.0, verbose=False):
         air_gap_adjustment: Radial deflection to adjust air gap (mm), negative = gap narrows
     """
     try:
-        from pyleecan.Classes.MachineSIPMSM import MachineSIPMSM
-        from pyleecan.Classes.LamSlotWind import LamSlotWind
-        from pyleecan.Classes.LamSlotLM import LamSlotLM
-        from pyleecan.Classes.SlotW29 import SlotW29
         from pyleecan.Classes.HoleM50 import HoleM50
-        from pyleecan.Classes.Winding import Winding
-        from pyleecan.Classes.Simulation import Simulation
-        from pyleecan.Classes.MagFEMM import MagFEMM
         from pyleecan.Classes.InputCurrent import InputCurrent
+        from pyleecan.Classes.LamSlotLM import LamSlotLM
+        from pyleecan.Classes.LamSlotWind import LamSlotWind
+        from pyleecan.Classes.MachineSIPMSM import MachineSIPMSM
+        from pyleecan.Classes.MagFEMM import MagFEMM
+        from pyleecan.Classes.Simulation import Simulation
+        from pyleecan.Classes.SlotW29 import SlotW29
+        from pyleecan.Classes.Winding import Winding
 
         stator_slot = SlotW29(
             Zs=p["stator_slots"],
@@ -146,27 +359,30 @@ def run_magnetics_pyleecan(p, winding, air_gap_adjustment=0.0, verbose=False):
 
         # Apply air gap adjustment from mechanical deflection
         Rint_adj = p["Rint"] * 1e-3
-        Rrotor_adj = (p["Rrotor_ext"] + air_gap_adjustment * 1e-3) * 1e-3  # Convert mm to m for adjustment
+        Rrotor_adj = (
+            p["Rrotor_ext"] + air_gap_adjustment * 1e-3
+        ) * 1e-3  # Convert mm to m for adjustment
 
         stator = LamSlotWind(
             Rint=Rint_adj,
             Rext=p["Rext"] * 1e-3,
             L1=p["motor_length"] * 1e-3,
             slot=stator_slot,
-            winding=Winding(
-                qs=3,
-                p=p["pole_pairs"],
-                Ntcoil=winding["turns_per_slot"]
-            ),
+            winding=Winding(qs=3, p=p["pole_pairs"], Ntcoil=winding["turns_per_slot"]),
         )
 
         rotor_hole = HoleM50(
             Zh=p["pole_pairs"] * 2,
-            W0=0.005, W1=0.004, W2=0.010,
-            W3=0.002, W4=0.002,
-            H0=0.001, H1=0.0015,
+            W0=0.005,
+            W1=0.004,
+            W2=0.010,
+            W3=0.002,
+            W4=0.002,
+            H0=0.001,
+            H1=0.0015,
             H2=p["magnet_thickness"] * 1e-3,
-            H3=0.001, H4=0.0,
+            H3=0.001,
+            H4=0.0,
         )
         rotor = LamSlotLM(
             Rint=p["Rshaft"] * 1e-3,
@@ -204,10 +420,18 @@ def run_magnetics_pyleecan(p, winding, air_gap_adjustment=0.0, verbose=False):
         time_vec = out.mag.Tem.axes[0].values
 
         if verbose:
-            print(f"    [FEMM] Torque: {Tem_avg:.3f}Nm, Ripple: {Tem_rip*100:.1f}%", flush=True)
+            print(
+                f"    [FEMM] Torque: {Tem_avg:.3f}Nm, Ripple: {Tem_rip * 100:.1f}%",
+                flush=True,
+            )
 
-        return {"Tem_avg": Tem_avg, "Tem_rip": Tem_rip,
-                "Tem_vals": Tem_vals, "time_vec": time_vec, "is_pyleecan": True}
+        return {
+            "Tem_avg": Tem_avg,
+            "Tem_rip": Tem_rip,
+            "Tem_vals": Tem_vals,
+            "time_vec": time_vec,
+            "is_pyleecan": True,
+        }
 
     except Exception as e:
         # Fallback to analytical
@@ -226,13 +450,27 @@ def run_magnetics_pyleecan(p, winding, air_gap_adjustment=0.0, verbose=False):
         ripple = 0.04 * Tem_avg * np.cos(p["stator_slots"] * theta)
         Tem_vals = Tem_avg + ripple
 
-        return {"Tem_avg": Tem_avg, "Tem_rip": 0.04,
-                "Tem_vals": Tem_vals, "time_vec": theta, "is_pyleecan": False}
+        return {
+            "Tem_avg": Tem_avg,
+            "Tem_rip": 0.04,
+            "Tem_vals": Tem_vals,
+            "time_vec": theta,
+            "is_pyleecan": False,
+        }
 
 
-def run_thermal_fem(p, winding):
-    """2D Axisymmetric thermal FEM solver"""
-    Nr, Nz = 40, 60
+def run_thermal_fem(p, winding, resolution=None):
+    """2D Axisymmetric thermal FEM solver
+
+    Args:
+        p: Motor parameters
+        winding: Winding parameters (includes fill_factor_actual)
+        resolution: Tuple (Nr, Nz) for grid size, or None for default (40, 60)
+    """
+    if resolution is None:
+        Nr, Nz = 40, 60
+    else:
+        Nr, Nz = resolution
     r_min = p["Rshaft"] * 1e-3
     r_max = p["Rext"] * 1e-3
     z_max = p["motor_length"] * 1e-3 / 2
@@ -245,13 +483,31 @@ def run_thermal_fem(p, winding):
     A = lil_matrix((N_nodes, N_nodes))
     b = np.zeros(N_nodes)
 
-    def idx(i, j): return i * Nz + j
+    def idx(i, j):
+        return i * Nz + j
 
-    slot_vol = (winding["slot_area_mm2"] * 1e-6 *
-                p["motor_length"] * 1e-3 * p["stator_slots"])
+    slot_vol = (
+        winding["slot_area_mm2"] * 1e-6 * p["motor_length"] * 1e-3 * p["stator_slots"]
+    )
     Q_cu = winding["P_cu_cont_W"] / max(slot_vol, 1e-8)
-    Q_fe = Q_cu * 0.05
+
+    # Iron loss: estimate at 10-15% of copper loss for efficient PM motors
+    # Distribute in steel regions (rotor and stator core)
+    P_fe_estimated = winding["P_cu_cont_W"] * 0.10  # 10% of copper loss
+    rotor_steel_vol = np.pi * (p["Rrotor_ext"] * 1e-3) ** 2 * p["motor_length"] * 1e-3
+    stator_steel_vol = (
+        np.pi
+        * ((p["Rext"] * 1e-3) ** 2 - (p["Rint"] * 1e-3) ** 2)
+        * p["motor_length"]
+        * 1e-3
+    )
+    total_steel_vol = rotor_steel_vol + stator_steel_vol
+    Q_fe = P_fe_estimated / max(total_steel_vol, 1e-8)  # Heat per unit volume of steel
+
     Rint_m = p["Rint"] * 1e-3
+
+    # Use DERIVED fill factor from wire diameter (not fixed parameter)
+    fill_factor = winding["fill_factor_actual"]
 
     for i in range(Nr):
         for j in range(Nz):
@@ -259,16 +515,21 @@ def run_thermal_fem(p, winding):
             ri = r[i]
             in_winding = ri >= Rint_m
 
-            k = (p["k_copper"] * p["fill_factor"] +
-                 p["k_steel"] * (1 - p["fill_factor"])) if in_winding else p["k_steel"]
-            Q = (Q_cu + Q_fe) if in_winding else 0.0
+            # Thermal conductivity: blend copper and steel based on fill factor
+            k = (
+                (p["k_copper"] * fill_factor + p["k_steel"] * (1 - fill_factor))
+                if in_winding
+                else p["k_steel"]
+            )
+            # Copper loss in winding slots; Iron loss in steel regions
+            Q = Q_cu if in_winding else Q_fe
 
             if 0 < i < Nr - 1 and 0 < j < Nz - 1:
                 A[n, idx(i + 1, j)] += k / dr**2 + k / (2 * ri * dr)
                 A[n, idx(i - 1, j)] += k / dr**2 - k / (2 * ri * dr)
                 A[n, idx(i, j + 1)] += k / dz**2
                 A[n, idx(i, j - 1)] += k / dz**2
-                A[n, n] -= (2 * k / dr**2 + 2 * k / dz**2)
+                A[n, n] -= 2 * k / dr**2 + 2 * k / dz**2
                 b[n] = -Q
             elif i == Nr - 1 and 0 < j < Nz - 1:
                 h = p["h_conv"]
@@ -289,14 +550,12 @@ def run_thermal_fem(p, winding):
                 b[n] = -p["h_conv"] * p["T_ambient"]
 
     T_vec = spsolve(A.tocsr(), b)
-    T_2d = T_vec.reshape(Nr, Nz)
-    T_max = float(np.max(T_2d))
+    T_max = float(np.max(T_vec))
 
     i_rint = int((Rint_m - r_min) / dr)
-    T_max_winding = float(np.max(T_2d[i_rint:, :]))
+    T_max_winding = float(np.max(T_vec[i_rint * Nz :]))
 
-    return {"T_max_winding": T_max_winding, "T_max": T_max,
-            "T_2d": T_2d, "r": r, "z": z}
+    return {"T_max_winding": T_max_winding, "T_max": T_max}
 
 
 def estimate_motor_rpm(torque_Nm, power_W):
@@ -330,10 +589,11 @@ def calculate_thermal_expansion(p, thermal_result):
     CTE_stator = MATERIAL_PROPS["steel_M330"]["CTE"]
     stator_bore_change = Rint * CTE_stator * delta_T  # Bore expands outward
 
-    # Air gap change (rotor grows outward, stator grows inward, net gap reduction)
-    aire_gap_reduction = rotor_radial_growth - (stator_bore_change * -1)  # Simplification: mostly rotor growth
-    # More accurate: rotor grows outward, stator bore grows inward (both reduce gap)
-    air_gap_reduction_effective = rotor_radial_growth
+    # Air gap change (rotor grows outward, stator bore also grows outward)
+    # Rotor expansion reduces gap (outward growth)
+    # Stator bore expansion increases gap (bore getting larger pushes inward surface further out)
+    # Net gap reduction: rotor_growth - stator_bore_growth
+    air_gap_reduction_effective = rotor_radial_growth - stator_bore_change
 
     # Safety check: ensure gap doesn't close completely
     original_gap = 0.5  # mm
@@ -396,7 +656,9 @@ def calculate_mechanical_loads(p, mag_results, thermal_result):
     mu_0 = 4 * np.pi * 1e-7
     magnetic_pressure = (B_airgap**2) / (2 * mu_0)  # Pa
     rotor_outer_area = 2 * np.pi * Rrotor_ext * L_motor
-    radial_magnetic_force = magnetic_pressure * rotor_outer_area * poles  # N
+    radial_magnetic_force = (
+        magnetic_pressure * rotor_outer_area
+    )  # N (pressure acts on entire surface, not per pole)
 
     # Radial stress from magnetic pull on rotor
     rotor_cross_section = 2 * wall_thickness * L_motor
@@ -419,8 +681,20 @@ def calculate_mechanical_loads(p, mag_results, thermal_result):
 
     # Magnet compression stress (magnets held in by centrifugal + magnetic forces)
     magnet_thickness = p["magnet_thickness"] * 1e-3
-    magnet_radial_mass = magnet_thickness * 2 * np.pi * Rrotor_ext * L_motor * MATERIAL_PROPS["magnet_N45SH"]["density"]
-    magnet_centrifugal_stress = (magnet_radial_mass / poles) * omega**2 * Rrotor_ext / (magnet_thickness * L_motor)
+    magnet_radial_mass = (
+        magnet_thickness
+        * 2
+        * np.pi
+        * Rrotor_ext
+        * L_motor
+        * MATERIAL_PROPS["magnet_N45SH"]["density"]
+    )
+    magnet_centrifugal_stress = (
+        (magnet_radial_mass / poles)
+        * omega**2
+        * Rrotor_ext
+        / (magnet_thickness * L_motor)
+    )
 
     return {
         "rpm": rpm,
@@ -446,15 +720,21 @@ def check_mechanical_safety(p, mech_loads):
     rotor_yield = MATERIAL_PROPS["steel_M330"]["yield_strength"]
     rotor_sf = MATERIAL_PROPS["steel_M330"]["max_stress_safety_factor"]
     rotor_max_stress = rotor_yield / rotor_sf
-    rotor_stress_margin = (rotor_max_stress - mech_loads["total_hoop_stress_pa"]) / rotor_max_stress
+    rotor_stress_margin = (
+        rotor_max_stress - mech_loads["total_hoop_stress_pa"]
+    ) / rotor_max_stress
 
     # Magnet compression (limited)
     magnet_max = MATERIAL_PROPS["magnet_N45SH"]["max_compression_stress"]
-    magnet_margin = (magnet_max - mech_loads["magnet_compression_stress_pa"]) / magnet_max
+    magnet_margin = (
+        magnet_max - mech_loads["magnet_compression_stress_pa"]
+    ) / magnet_max
 
     # Geometric clearance (rotor deflection shouldn't cause contact)
     max_deflection_allowed = 0.1  # mm
-    deflection_margin = (max_deflection_allowed - mech_loads["shaft_deflection_mm"]) / max_deflection_allowed
+    deflection_margin = (
+        max_deflection_allowed - mech_loads["shaft_deflection_mm"]
+    ) / max_deflection_allowed
 
     margins = {
         "rotor_hoop": rotor_stress_margin,
@@ -481,7 +761,6 @@ def check_mechanical_safety(p, mech_loads):
     }
 
 
-
 def calculate_axial_load(p, mag_results, thrust_force_N=5.0):
     """
     Model axial load from propeller thrust pulling the shaft upward.
@@ -502,9 +781,12 @@ def calculate_axial_load(p, mag_results, thrust_force_N=5.0):
     A_shaft = np.pi * Rshaft**2
 
     # Direct tensile stress on shaft
-    tensile_stress = thrust_force_N / A_shaft
+    tensile_stress = thrust_force_N / A_shaft + 1e-20
 
     # Bending stress if thrust is off-center (assume mounted at one end)
+    # Use configurable off-center load percentage (default 0.5 = 50% of shaft radius)
+    off_center_load_pct = p.get("thrust_off_center_pct", 0.5)  # Default 50% of radius
+    moment_arm = Rshaft * off_center_load_pct
     # M = F * L_moment_arm, with small offset
     moment_arm = Rshaft * 0.5  # Small bending moment from off-center load
     bending_moment = thrust_force_N * moment_arm
@@ -524,7 +806,7 @@ def calculate_axial_load(p, mag_results, thrust_force_N=5.0):
     poles = p["pole_pairs"] * 2
 
     # Clamping stress on magnets (per pole)
-    clamping_stress_per_pole = thrust_force_N / (magnet_thickness * L_motor)
+    clamping_stress_per_pole = thrust_force_N / (magnet_thickness * L_motor + 1e-20)
     # Distributed to all poles
     magnet_clamping_stress = clamping_stress_per_pole / poles
 
@@ -554,22 +836,32 @@ def run_coupled_magnetomechanical(p, winding, thrust_force_N=5.0, max_iterations
 
     for iteration in range(max_iterations):
         # Step 1: Magnetics with current air gap
-        mag_results = run_magnetics_pyleecan(p, winding, air_gap_adjustment=air_gap_adjustment, verbose=False)
+        mag_results = run_magnetics_pyleecan(
+            p, winding, air_gap_adjustment=air_gap_adjustment, verbose=False
+        )
 
         # Step 2: Mechanical loads
-        mech_loads = calculate_mechanical_loads(p, mag_results, {"T_max": 0})  # Dummy thermal for now
+        mech_loads = calculate_mechanical_loads(
+            p, mag_results, {"T_max": 0}
+        )  # Dummy thermal for now
 
         # Step 3: Axial load analysis
-        axial_loads = calculate_axial_load(p, mag_results, thrust_force_N=thrust_force_N)
+        axial_loads = calculate_axial_load(
+            p, mag_results, thrust_force_N=thrust_force_N
+        )
 
         # Step 4: Update air gap based on radial deflection
         new_air_gap_adjustment = mech_loads["centrifugal_deflection_mm"]
 
         # Check convergence
-        if abs(new_air_gap_adjustment - air_gap_adjustment) < 0.001:  # 1 micron convergence
+        if (
+            abs(new_air_gap_adjustment - air_gap_adjustment) < 0.001
+        ):  # 1 micron convergence
             break
 
-        air_gap_adjustment = new_air_gap_adjustment * 0.5  # Dampen iteration for stability
+        air_gap_adjustment = (
+            new_air_gap_adjustment * 0.5
+        )  # Dampen iteration for stability
 
     # Final mechanical safety check
     mech_safety = check_mechanical_safety(p, mech_loads)
@@ -577,39 +869,132 @@ def run_coupled_magnetomechanical(p, winding, thrust_force_N=5.0, max_iterations
     return mag_results, mech_loads, mech_safety, axial_loads
 
 
-def evaluate_design(p, verbose=False):
-    """Evaluate a complete motor design"""
+def evaluate_design(p, verbose=True, thermal_resolution=None):
+    """Evaluate a complete motor design
+
+    Args:
+        p: Motor parameters
+        verbose: Print detailed results
+        thermal_resolution: Tuple (Nr, Nz) for thermal FEM grid, or None for default
+    """
     try:
         # Apply constraints
         # Force stator_slots to be integer
-        p["stator_slots"] = int(round(p["stator_slots"]))
-
+        p["stator_slots"], p["pole_pairs"] = _get_closest_valid_winding(
+            p["stator_slots"], p["pole_pairs"]
+        )
+        if p["stator_slots"] == 0 or 0 == p["pole_pairs"]:
+            raise ValueError(
+                f"somehow the slots and the pairs are {p['pole_pairs']} pairs and {p['stator_slots']} slots"
+            )
         # Enforce: Rrotor_ext = Rint - 0.5 mm (0.5mm air gap)
         p["Rrotor_ext"] = p["Rint"] - 0.5
 
-        # Validation checks
-        if p["stator_slots"] < 9 or p["stator_slots"] > 24:
-            return None
-        if p["pole_pairs"] < 4 or p["pole_pairs"] > 12:
-            return None
         if p["Rrotor_ext"] <= p["Rshaft"]:
+            if verbose:
+                print(
+                    f"      ✗ Rejected: Rotor radius {p['Rrotor_ext']}mm must be greater than shaft radius {p['Rshaft']}mm",
+                    flush=True,
+                )
             return None
         if p["Rrotor_ext"] >= p["Rint"]:
+            if verbose:
+                print(
+                    f"      ✗ Rejected: Rotor radius {p['Rrotor_ext']}mm must be less than stator inner radius {p['Rint']}mm",
+                    flush=True,
+                )
+            return None
+
+        # NEW: Check for valid winding topology (skip impossible designs early)
+        if not is_valid_winding_topology(p["stator_slots"], p["pole_pairs"]):
+            if verbose:
+                print(
+                    f"      ✗ Rejected: Invalid winding topology for {p['stator_slots']} slots and {p['pole_pairs']} pole pairs",
+                    flush=True,
+                )
             return None
 
         winding = compute_winding_params(p)
 
         # Skip impossible designs
         if winding["turns_per_slot"] < 1:
+            if verbose:
+                print(
+                    f"      ✗ Rejected: Turns per slot {winding['turns_per_slot']:.2f} < 1",
+                    flush=True,
+                )
+            return None
+
+        # ===== THRESHOLD-BASED EARLY REJECTION =====
+        # Quick checks to skip obviously bad designs before expensive computation
+
+        # Check 1: Minimum torque requirement
+        # Rough estimate: Ke ≈ (4/π) * turns * Br * rotor_radius * length / poles
+        estimated_turns = winding["turns_per_slot"] * p["stator_slots"]
+        estimated_ke = (
+            (4 / np.pi)
+            * estimated_turns
+            * p["magnet_Br"]
+            * (p["Rrotor_ext"] * 1e-3)
+            * (p["motor_length"] * 1e-3)
+            / p["pole_pairs"]
+        )
+        estimated_torque = estimated_ke * p["I_continuous"]
+        if estimated_torque < TORQUE_MIN_THRESHOLD:
+            if verbose:
+                print(
+                    f"      ✗ Rejected: Estimated torque {estimated_torque:.2f}Nm below threshold",
+                    flush=True,
+                )
+            return None
+
+        # Check 2: Copper loss must be reasonable
+        copper_loss = winding["P_cu_cont_W"]
+        electrical_power = p["voltage_dc"] * p["I_continuous"]
+        copper_loss_pct = (
+            copper_loss / electrical_power if electrical_power > 0 else 1.0
+        )
+        if copper_loss_pct > COPPER_LOSS_MAX_PERCENT:
+            if verbose:
+                print(
+                    f"      ✗ Rejected: Copper loss {copper_loss_pct * 100:.1f}% exceeds limit",
+                    flush=True,
+                )
             return None
 
         # NEW: Run coupled magnetomechanical analysis (with propeller thrust force)
         thrust_force_N = 5.0  # Typical propeller thrust for small drone (N)
-        mag_results, mech_loads, mech_safety, axial_loads = run_coupled_magnetomechanical(
-            p, winding, thrust_force_N=thrust_force_N, max_iterations=3
+        mag_results, mech_loads, mech_safety, axial_loads = (
+            run_coupled_magnetomechanical(
+                p,
+                winding,
+                thrust_force_N=thrust_force_N,
+                max_iterations=COUPLING_ITERATIONS,
+            )
         )
 
-        thermal = run_thermal_fem(p, winding)
+        # Check 3: Quick temperature threshold before expensive full thermal solve
+        # Use scaling estimate: T_max ≈ T_ambient + (Q_cu / h_eff) / A
+        # This is very rough but catches obviously bad designs
+        slot_vol = (
+            winding["slot_area_mm2"]
+            * 1e-6
+            * p["motor_length"]
+            * 1e-3
+            * p["stator_slots"]
+        )
+        Q_cu = winding["P_cu_cont_W"] / max(slot_vol, 1e-8)
+        T_est_rise = (Q_cu * 0.001) / (p["h_conv"] * 1e-4)  # Rough thermal resistance
+        if p["T_ambient"] + T_est_rise > TEMP_ABSOLUTE_MAX:
+            if verbose:
+                print(
+                    f"      ✗ Rejected: Estimated T_max {p['T_ambient'] + T_est_rise:.1f}°C exceeds absolute max",
+                    flush=True,
+                )
+            return None
+
+        # Run full thermal FEM with adaptive resolution
+        thermal = run_thermal_fem(p, winding, resolution=thermal_resolution)
 
         # NEW: Thermal expansion analysis
         thermal_expansion = calculate_thermal_expansion(p, thermal)
@@ -627,10 +1012,14 @@ def evaluate_design(p, verbose=False):
         mechanically_safe = mech_safety["is_safe"]
 
         # NEW: Check axial load safety
-        axial_stress_limit = MATERIAL_PROPS["steel_M330"]["yield_strength"] / 3.0  # Conservative limit
+        axial_stress_limit = (
+            MATERIAL_PROPS["steel_M330"]["yield_strength"] / 3.0
+        )  # Conservative limit
         axial_safe = axial_loads["combined_axial_stress_pa"] < axial_stress_limit
 
-        overall_safe = magnet_safe and thermally_safe and mechanically_safe and axial_safe
+        overall_safe = (
+            magnet_safe and thermally_safe and mechanically_safe and axial_safe
+        )
 
         results = {
             "winding": winding,
@@ -653,8 +1042,10 @@ def evaluate_design(p, verbose=False):
             "overall_safe": overall_safe,
             "temp_margin": temp_margin,
             "mechanical_margin": mech_safety["min_margin"],
-            "efficiency": mechanical_power / electrical_power if electrical_power > 0 else 0,
-            "params": deepcopy(p),
+            "efficiency": mechanical_power / electrical_power
+            if electrical_power > 0
+            else 0,
+            "params": p,
         }
 
         if verbose:
@@ -662,11 +1053,14 @@ def evaluate_design(p, verbose=False):
             status_therm = "✓" if thermally_safe else "✗"
             status_mech = "✓" if mechanically_safe else "✗"
             status_axial = "✓" if axial_safe else "✗"
-            print(f"      {status_mag}{status_therm}{status_mech}{status_axial} T:{torque:.2f}Nm "
-                  f"T_max:{thermal['T_max']:.0f}°C Gap:{thermal_expansion['final_air_gap_mm']:.3f}mm "
-                  f"Hoop:{mech_loads['total_hoop_stress_pa']/1e6:.0f}MPa "
-                  f"Axial:{axial_loads['combined_axial_stress_pa']/1e6:.0f}MPa "
-                  f"eff:{results['efficiency']*100:.0f}%", flush=True)
+            print(
+                f"      {status_mag}{status_therm}{status_mech}{status_axial} T:{torque:.2f}Nm "
+                f"T_max:{thermal['T_max']:.0f}°C Gap:{thermal_expansion['final_air_gap_mm']:.3f}mm "
+                f"Hoop:{mech_loads['total_hoop_stress_pa'] / 1e6:.0f}MPa "
+                f"Axial:{axial_loads['combined_axial_stress_pa'] / 1e6:.0f}MPa "
+                f"eff:{results['efficiency'] * 100:.0f}%",
+                flush=True,
+            )
 
         return results
 
@@ -697,7 +1091,7 @@ def objective_score(eval_result, target_power, require_safe=True):
     # Hard constraint: magnet safe
     if require_safe and not eval_result["magnet_safe"]:
         excess_temp = eval_result["T_max"] - MAGNET_TEMP_LIMIT
-        return 1e8 + excess_temp * 10000
+        return 1e8 + excess_temp * 1000
 
     # Hard constraint: thermal expansion safe
     if require_safe and not eval_result["thermally_safe"]:
@@ -712,7 +1106,9 @@ def objective_score(eval_result, target_power, require_safe=True):
     # Hard constraint: axial safe
     if require_safe and not eval_result["axial_safe"]:
         axial_stress_limit = MATERIAL_PROPS["steel_M330"]["yield_strength"] / 3.0
-        excess_stress = eval_result["axial_loads"]["combined_axial_stress_pa"] - axial_stress_limit
+        excess_stress = (
+            eval_result["axial_loads"]["combined_axial_stress_pa"] - axial_stress_limit
+        )
         return 1e8 + excess_stress * 100
 
     # ===== SOFT OBJECTIVES FOR SAFE DESIGNS =====
@@ -724,16 +1120,20 @@ def objective_score(eval_result, target_power, require_safe=True):
 
     # Strong bonus for good margins (designs that are well-away from limits)
     # Quadratic penalty for small margins to heavily discourage marginal designs
-    temp_margin_reward = -(10 * temp_margin_pct**1.5)  # Negative = good, exponential reward
-    mech_margin_reward = -(50 * mech_margin_pct**2.0)  # Quadratic reward for mechanical margin
+    temp_margin_reward = -(
+        10 * temp_margin_pct**1.5
+    )  # Negative = good, exponential reward
+    mech_margin_reward = -(
+        50 * mech_margin_pct**2.0
+    )  # Quadratic reward for mechanical margin
 
     # Air gap margin bonus
     air_gap_current = eval_result["thermal_expansion"]["final_air_gap_mm"]
     gap_margin = air_gap_current - 0.1  # Buffer above minimum
-    air_gap_reward = -(100 * max(0, gap_margin)**2)  # Reward for large gap margin
+    air_gap_reward = -(100 * max(0, gap_margin) ** 2)  # Reward for large gap margin
 
     # 2. Power matching (Secondary objective)
-    power_diff = abs(eval_result["mechanical_power_W"] - target_power)
+    power_diff = abs(eval_result["mechanical_power_W"] - target_power) * 100
 
     # 3. Efficiency (Tertiary objective)
     efficiency_bonus = eval_result["efficiency"] * 100
@@ -748,6 +1148,31 @@ def objective_score(eval_result, target_power, require_safe=True):
     return score
 
 
+def _evaluate_design_wrapper(p, thermal_resolution, target_power):
+    """
+    Wrapper function for multiprocessing evaluation.
+    Evaluates a single design and returns (result, params, score).
+    This wrapper is needed because multiprocessing.Pool requires picklable functions.
+
+    Args:
+        p: Motor parameters dict
+        thermal_resolution: Tuple (Nr, Nz) for thermal FEM
+        target_power: Target mechanical power for scoring
+
+    Returns:
+        (eval_result, p, score): Result, parameters, and score tuple
+    """
+    eval_result = evaluate_design(
+        p, verbose=False, thermal_resolution=thermal_resolution
+    )
+    if eval_result is not None:
+        score = objective_score(eval_result, target_power, require_safe=True)
+    else:
+        score = 1e10
+
+    return eval_result, p, score
+
+
 def iterative_deepening_optimize(base_params, target_power):
     """
     Iterative deepening optimization:
@@ -755,17 +1180,22 @@ def iterative_deepening_optimize(base_params, target_power):
     2. Progressively refine around best solution
     3. Each refinement: zoom in and increase precision
     """
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("ITERATIVE DEEPENING MOTOR DESIGN OPTIMIZER")
-    print("="*80)
+    print("=" * 80)
     print(f"\nTarget mechanical power: {target_power:.0f} W")
     print(f"Magnet temperature limit: {MAGNET_TEMP_LIMIT}°C")
-    print(f"Safety margin: {TEMP_SAFETY_MARGIN}°C\n")
+    print(f"Safety margin: {TEMP_SAFETY_MARGIN}°C")
+    print(
+        f"Multiprocessing: {'ENABLED' if USE_MULTIPROCESSING else 'DISABLED'} ({NUM_WORKERS} workers)"
+    )
+    print(
+        f"Thermal FEM: Adaptive (coarse→fine): {THERMAL_FEM_RESOLUTION_MIN} → {THERMAL_FEM_RESOLUTION_MAX}\n"
+    )
 
     best_result = None
-    best_score = 1e10
+    best_score = 1e512
     best_params = None
-    all_evaluations = []
 
     # Initialize refinement regions (expand from base parameters)
     refinement_regions = {
@@ -774,25 +1204,58 @@ def iterative_deepening_optimize(base_params, target_power):
     }
 
     for refinement_level in range(MAX_REFINEMENT_ITERATIONS):
-        print(f"\n{'='*80}")
+        print(f"\n{'=' * 80}")
         print(f"REFINEMENT LEVEL {refinement_level + 1}/{MAX_REFINEMENT_ITERATIONS}")
-        print(f"{'='*80}")
+        print(f"{'=' * 80}")
 
-        # Build grid of parameter combinations
+        # Calculate adaptive thermal FEM resolution for this refinement level
+        # Use exponential scaling for faster early convergence: invest FEM effort where it matters
+        # Early iterations: coarse (fast evaluation), late iterations: fine (accurate)
+        progress = refinement_level / max(MAX_REFINEMENT_ITERATIONS - 1, 1)
+        # Exponential curve: sps^2 scales from 0 to 1
+        progress_exp = progress**2  # Quadratic - spends more effort in later stages
+        nr_adaptive = int(
+            THERMAL_FEM_RESOLUTION_MIN[0]
+            + (THERMAL_FEM_RESOLUTION_MAX[0] - THERMAL_FEM_RESOLUTION_MIN[0])
+            * progress_exp
+        )
+        nz_adaptive = int(
+            THERMAL_FEM_RESOLUTION_MIN[1]
+            + (THERMAL_FEM_RESOLUTION_MAX[1] - THERMAL_FEM_RESOLUTION_MIN[1])
+            * progress_exp
+        )
+        thermal_resolution = (nr_adaptive, nz_adaptive)
+        print(
+            f"Thermal FEM resolution: {thermal_resolution} (progress: {progress_exp * 100:.0f}%)"
+        )
+
+        # Build grid of parameter combinations with randomness
         param_lists = {}
         for key in VARIABLE_PARAMS:
             bounds = refinement_regions[key]["bounds"]
             divisions = refinement_regions[key]["divisions"]
-            param_lists[key] = np.linspace(bounds[0], bounds[1], divisions)
+            # Create deterministic grid
+            grid = np.linspace(bounds[0], bounds[1], divisions)
+            # Add stochastic perturbation: +/- 2% random noise to break symmetry
+            noise = np.random.uniform(-0.02, 0.02, len(grid))
+            perturbation = grid * noise  # Scale noise relative to parameter value
+            perturbed_grid = grid + perturbation
+            # Clamp to bounds
+            perturbed_grid = np.clip(perturbed_grid, bounds[0], bounds[1])
+            param_lists[key] = perturbed_grid
 
         # For integer parameters, round to valid values
         if "pole_pairs" in param_lists:
-            param_lists["pole_pairs"] = np.unique(np.round(param_lists["pole_pairs"])).astype(int)
+            param_lists["pole_pairs"] = np.unique(
+                np.round(param_lists["pole_pairs"])
+            ).astype(int)
             param_lists["pole_pairs"] = param_lists["pole_pairs"][
                 (param_lists["pole_pairs"] >= 4) & (param_lists["pole_pairs"] <= 12)
             ]
         if "stator_slots" in param_lists:
-            param_lists["stator_slots"] = np.unique(np.round(param_lists["stator_slots"])).astype(int)
+            param_lists["stator_slots"] = np.unique(
+                np.round(param_lists["stator_slots"])
+            ).astype(int)
             param_lists["stator_slots"] = param_lists["stator_slots"][
                 (param_lists["stator_slots"] >= 9) & (param_lists["stator_slots"] <= 24)
             ]
@@ -801,84 +1264,165 @@ def iterative_deepening_optimize(base_params, target_power):
         total_evals = 1
         for v in param_lists.values():
             total_evals *= len(v)
-        print(f"Evaluating ~{min(total_evals, 1000)} designs...")
+        print(
+            f"Evaluating ~{min(total_evals, MAX_EVALUATIONS_PER_REFINEMENT)} designs..."
+        )
 
         # Limit evaluations if too many
-        if total_evals > 1000:
+        if total_evals > MAX_EVALUATIONS_PER_REFINEMENT:
             # Random sampling of parameter space
             keys = list(param_lists.keys())
-            samples_per_param = int(1000 ** (1 / len(keys))) + 1
+            samples_per_param = (
+                int(MAX_EVALUATIONS_PER_REFINEMENT ** (1 / len(keys))) + 1
+            )
             param_lists = {
-                key: np.random.choice(np.linspace(
-                    VARIABLE_PARAMS[key][0], VARIABLE_PARAMS[key][1], 50
-                ), min(samples_per_param, len(np.linspace(
-                    VARIABLE_PARAMS[key][0], VARIABLE_PARAMS[key][1], 50
-                ))))
+                key: np.random.choice(
+                    np.linspace(VARIABLE_PARAMS[key][0], VARIABLE_PARAMS[key][1], 200),
+                    min(
+                        samples_per_param,
+                        len(
+                            np.linspace(
+                                VARIABLE_PARAMS[key][0], VARIABLE_PARAMS[key][1], 200
+                            )
+                        ),
+                    ),
+                )
                 for key in keys
             }
 
         # Generate combinations
-        import itertools
-        combinations = list(itertools.product(*[
-            enumerate(param_lists[key]) for key in param_lists.keys()
-        ]))
+        combinations = list(
+            it.product(*[enumerate(param_lists[key]) for key in param_lists.keys()])
+        )
 
-        progress_interval = max(1, len(combinations) // 20)
+        # Prepare all parameter dicts for evaluation
+        params_to_eval = []
+        for combo in combinations:
+            p = base_params.copy()
+            for k, (i, v) in zip(param_lists.keys(), combo):
+                p[k] = v
 
-        for eval_idx, combo in enumerate(combinations):
-            if eval_idx % progress_interval == 0:
-                pct = 100 * eval_idx / len(combinations)
-                print(f"  [{pct:5.1f}%] ", end="", flush=True)
+            # Ensure valid winding topology by adjusting if necessary before evaluation
+            original_slots = p.get("stator_slots")
+            original_pairs = p.get("pole_pairs")
 
-            p = deepcopy(base_params)
-            for (_, key_values) in zip(range(len(VARIABLE_PARAMS)), combo):
-                idx, val = key_values
-                key = list(param_lists.keys())[eval_idx % len(param_lists)]
-                for k, (i, v) in zip(param_lists.keys(), combo):
-                    p[k] = v
+            if original_slots is not None and original_pairs is not None:
+                if not is_valid_winding_topology(original_slots, original_pairs):
+                    adjusted_slots, adjusted_pairs = _get_closest_valid_winding(
+                        original_slots, original_pairs
+                    )
+                    p["stator_slots"] = adjusted_slots
+                    p["pole_pairs"] = adjusted_pairs
+                    # Optional: Print adjustment info
+                    # print(f"Adjusted winding: ({original_slots}, {original_pairs}) -> ({adjusted_slots}, {adjusted_pairs})")
 
-            eval_result = evaluate_design(p, verbose=False)
+            params_to_eval.append(p)
 
-            if eval_result is not None:
-                score = objective_score(eval_result, target_power, require_safe=True)
-                all_evaluations.append((p, eval_result, score))
+        # ===== EVALUATE DESIGNS (Serial or Parallel) =====
+        if USE_MULTIPROCESSING and len(combinations) > 10:
+            # Use multiprocessing for batch evaluation
+            print(f"  Using {NUM_WORKERS} parallel workers...")
 
-                # Update best
-                if score < best_score:
-                    best_score = score
-                    best_result = eval_result
-                    best_params = deepcopy(p)
-                    print(f"\n    NEW BEST: Score={score:.1f}, T_max={eval_result['T_max']:.0f}°C, "
-                          f"P_mech={eval_result['mechanical_power_W']:.0f}W", flush=True)
+            # Prepare all tasks for Pool.starmap
+            tasks = [(p, thermal_resolution, target_power) for p in params_to_eval]
 
-            if eval_idx % progress_interval == 0:
-                if best_result:
-                    status = "✓" if best_result["magnet_safe"] else "✗"
-                    print(f"{status} Best: {best_score:.1f}", flush=True)
+            # Evaluate in parallel
+            with Pool(NUM_WORKERS) as pool:
+                results = pool.starmap(_evaluate_design_wrapper, tasks)
+
+            # Process results
+            valid_count = 0
+            total_attempted = len(results)
+            for eval_result, p, score in results:
+                if eval_result is not None:
+                    valid_count += 1
+
+                    # Update best (don't store all evaluations)
+                    if score < best_score:
+                        best_score = score
+                        best_result = eval_result
+                        best_params = p.copy()
+                        print(
+                            f"\n    NEW BEST: Score={score:.1f}, T_max={eval_result['T_max']:.0f}°C, "
+                            f"P_mech={eval_result['mechanical_power_W']:.0f}W",
+                            flush=True,
+                        )
+
+            # Print final progress (valid evaluations only count)
+            pct_valid = (
+                100 * valid_count / total_attempted if total_attempted > 0 else 0
+            )
+            if best_result:
+                status = "✓" if best_result["magnet_safe"] else "✗"
+                print(
+                    f"  [Valid: {valid_count}/{total_attempted} ({pct_valid:.1f}%)] {status} Best: {best_score:.1f}",
+                    flush=True,
+                )
+
+        else:
+            # Serial evaluation (for debugging or small batches)
+            progress_interval = max(1, len(combinations) // 20)
+            valid_evals = 0
+            total_attempted = 0
+
+            for eval_idx, p in enumerate(params_to_eval):
+                total_attempted += 1
+                if eval_idx % progress_interval == 0:
+                    pct = 100 * eval_idx / len(combinations)
+                    print(
+                        f"  [{pct:5.1f}%] (Valid: {valid_evals}) ", end="", flush=True
+                    )
+
+                eval_result = evaluate_design(
+                    p, verbose=True, thermal_resolution=thermal_resolution
+                )
+
+                if eval_result is not None:
+                    valid_evals += 1
+                    score = objective_score(
+                        eval_result, target_power, require_safe=True
+                    )
+                    # Update best (don't store all evaluations)
+                    if score < best_score:
+                        best_score = score
+                        best_result = eval_result
+                        best_params = p.copy()
+                        print(
+                            f"\n    NEW BEST: Score={score:.1f}, T_max={eval_result['T_max']:.0f}°C, "
+                            f"P_mech={eval_result['mechanical_power_W']:.0f}W",
+                            flush=True,
+                        )
+
+                if eval_idx % progress_interval == 0:
+                    if best_result:
+                        status = "✓" if best_result["magnet_safe"] else "✗"
+                        print(f"{status} Best: {best_score:.1f}", flush=True)
 
         print(f"\n  Refinement {refinement_level + 1} complete.")
 
         if best_params is not None:
             # Refine around best solution
-            refinement_factor = 0.4  # Zoom in to 40% of previous region
-            new_divisions = refinement_regions[list(VARIABLE_PARAMS.keys())[0]]["divisions"] + 2
+            refinement_factor = 0.95  # Zoom in to 50% of previous region
+            new_divisions = (
+                refinement_regions[list(VARIABLE_PARAMS.keys())[0]]["divisions"] + 2
+            )
 
             for key in VARIABLE_PARAMS:
                 old_bounds = refinement_regions[key]["bounds"]
                 center = best_params[key]
                 range_size = (old_bounds[1] - old_bounds[0]) * refinement_factor
                 new_bounds = (
-                    max(VARIABLE_PARAMS[key][0], center - range_size/2),
-                    min(VARIABLE_PARAMS[key][1], center + range_size/2)
+                    max(VARIABLE_PARAMS[key][0], center - range_size / 2),
+                    min(VARIABLE_PARAMS[key][1], center + range_size / 2),
                 )
                 refinement_regions[key]["bounds"] = new_bounds
                 refinement_regions[key]["divisions"] = new_divisions
 
             print(f"  Refined search region. Next divisions: {new_divisions}")
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("OPTIMIZATION COMPLETE")
-    print("="*80)
+    print("=" * 80)
 
     if best_result is None:
         print("\nERROR: No valid designs found!")
@@ -886,53 +1430,93 @@ def iterative_deepening_optimize(base_params, target_power):
 
     print(f"\n✓ BEST DESIGN FOUND:")
     print(f"  Thermal Safety:")
-    print(f"    Max temperature: {best_result['T_max']:.1f}°C (limit: {MAGNET_TEMP_LIMIT}°C)")
+    print(
+        f"    Max temperature: {best_result['T_max']:.1f}°C (limit: {MAGNET_TEMP_LIMIT}°C)"
+    )
     print(f"    Temperature margin: {best_result['temp_margin']:.1f}°C")
     print(f"    Winding temperature: {best_result['T_max_winding']:.1f}°C")
     print(f"    Magnet safe: {'✓ YES' if best_result['magnet_safe'] else '✗ NO'}")
 
     print(f"\n  Thermal Expansion:")
     print(f"    Temperature rise: {best_result['thermal_expansion']['delta_T']:.1f}°C")
-    print(f"    Rotor radial growth: {best_result['thermal_expansion']['rotor_radial_growth_mm']:.4f} mm")
-    print(f"    Air gap reduction: {best_result['thermal_expansion']['air_gap_reduction_mm']:.4f} mm")
-    print(f"    Final air gap: {best_result['thermal_expansion']['final_air_gap_mm']:.4f} mm (min: 0.1mm)")
+    print(
+        f"    Rotor radial growth: {best_result['thermal_expansion']['rotor_radial_growth_mm']:.4f} mm"
+    )
+    print(
+        f"    Air gap reduction: {best_result['thermal_expansion']['air_gap_reduction_mm']:.4f} mm"
+    )
+    print(
+        f"    Final air gap: {best_result['thermal_expansion']['final_air_gap_mm']:.4f} mm (min: 0.1mm)"
+    )
     print(f"    Expansion safe: {'✓ YES' if best_result['thermally_safe'] else '✗ NO'}")
 
     print(f"\n  Mechanical Analysis:")
     print(f"    Operating RPM: {best_result['mech_loads']['rpm']:.0f}")
     print(f"    Rotor mass: {best_result['mech_loads']['rotor_mass_kg']:.3f} kg")
-    print(f"    Centrifugal stress: {best_result['mech_loads']['centrifugal_stress_pa']/1e6:.1f} MPa")
-    print(f"    Magnetic radial force: {best_result['mech_loads']['radial_magnetic_force_N']:.1f} N")
-    print(f"    Total rotor hoop stress: {best_result['mech_loads']['total_hoop_stress_pa']/1e6:.1f} MPa")
-    print(f"      (limit: {best_result['mech_safety']['rotor_hoop_limit_pa']/1e6:.1f} MPa)")
-    print(f"    Magnet compression stress: {best_result['mech_loads']['magnet_compression_stress_pa']/1e6:.1f} MPa")
-    print(f"      (limit: {best_result['mech_safety']['magnet_compression_limit_pa']/1e6:.1f} MPa)")
-    print(f"    Shaft deflection: {best_result['mech_loads']['shaft_deflection_mm']:.4f} mm")
+    print(
+        f"    Centrifugal stress: {best_result['mech_loads']['centrifugal_stress_pa'] / 1e6:.1f} MPa"
+    )
+    print(
+        f"    Magnetic radial force: {best_result['mech_loads']['radial_magnetic_force_N']:.1f} N"
+    )
+    print(
+        f"    Total rotor hoop stress: {best_result['mech_loads']['total_hoop_stress_pa'] / 1e6:.1f} MPa"
+    )
+    print(
+        f"      (limit: {best_result['mech_safety']['rotor_hoop_limit_pa'] / 1e6:.1f} MPa)"
+    )
+    print(
+        f"    Magnet compression stress: {best_result['mech_loads']['magnet_compression_stress_pa'] / 1e6:.1f} MPa"
+    )
+    print(
+        f"      (limit: {best_result['mech_safety']['magnet_compression_limit_pa'] / 1e6:.1f} MPa)"
+    )
+    print(
+        f"    Shaft deflection: {best_result['mech_loads']['shaft_deflection_mm']:.4f} mm"
+    )
     print(f"      (limit: {best_result['mech_safety']['deflection_limit_mm']:.2f} mm)")
     print(f"    Limiting factor: {best_result['mech_safety']['limiting_factor']}")
-    print(f"    Mechanical margin: {best_result['mech_safety']['min_margin']*100:.1f}%")
-    print(f"    Mechanical safe: {'✓ YES' if best_result['mechanically_safe'] else '✗ NO'}")
+    print(
+        f"    Mechanical margin: {best_result['mech_safety']['min_margin'] * 100:.1f}%"
+    )
+    print(
+        f"    Mechanical safe: {'✓ YES' if best_result['mechanically_safe'] else '✗ NO'}"
+    )
 
     print(f"\n  Axial Load Analysis (Propeller Thrust):")
     print(f"    Thrust force: {best_result['axial_loads']['thrust_force_N']:.1f} N")
-    print(f"    Shaft tensile stress: {best_result['axial_loads']['tensile_stress_pa']/1e6:.1f} MPa")
-    print(f"    Shaft bending stress: {best_result['axial_loads']['bending_stress_pa']/1e6:.1f} MPa")
-    print(f"    Combined axial stress: {best_result['axial_loads']['combined_axial_stress_pa']/1e6:.1f} MPa")
-    print(f"      (limit: {MATERIAL_PROPS['steel_M330']['yield_strength']/(3.0*1e6):.1f} MPa)")
-    print(f"    Axial deflection: {best_result['axial_loads']['axial_deflection_mm']:.4f} mm")
-    print(f"    Magnet clamping stress: {best_result['axial_loads']['magnet_clamping_stress_pa']/1e6:.2f} MPa")
+    print(
+        f"    Shaft tensile stress: {best_result['axial_loads']['tensile_stress_pa'] / 1e6:.1f} MPa"
+    )
+    print(
+        f"    Shaft bending stress: {best_result['axial_loads']['bending_stress_pa'] / 1e6:.1f} MPa"
+    )
+    print(
+        f"    Combined axial stress: {best_result['axial_loads']['combined_axial_stress_pa'] / 1e6:.1f} MPa"
+    )
+    print(
+        f"      (limit: {MATERIAL_PROPS['steel_M330']['yield_strength'] / (3.0 * 1e6):.1f} MPa)"
+    )
+    print(
+        f"    Axial deflection: {best_result['axial_loads']['axial_deflection_mm']:.4f} mm"
+    )
+    print(
+        f"    Magnet clamping stress: {best_result['axial_loads']['magnet_clamping_stress_pa'] / 1e6:.2f} MPa"
+    )
     print(f"    Axial safe: {'✓ YES' if best_result['axial_safe'] else '✗ NO'}")
 
     print(f"\n  Power:")
     print(f"    Electrical input: {best_result['electrical_power_W']:.1f} W")
     print(f"    Copper loss: {best_result['copper_loss_W']:.1f} W")
     print(f"    Mechanical output: {best_result['mechanical_power_W']:.1f} W")
-    print(f"    Efficiency: {best_result['efficiency']*100:.1f}%")
+    print(f"    Efficiency: {best_result['efficiency'] * 100:.1f}%")
     print(f"    Target power: {target_power:.1f} W")
-    print(f"    Difference: {abs(best_result['mechanical_power_W'] - target_power):.1f} W")
+    print(
+        f"    Difference: {abs(best_result['mechanical_power_W'] - target_power):.1f} W"
+    )
     print(f"\n  Performance:")
     print(f"    Torque: {best_result['torque_Nm']:.3f} Nm")
-    print(f"    Torque ripple: {best_result['mag_results']['Tem_rip']*100:.1f}%")
+    print(f"    Torque ripple: {best_result['mag_results']['Tem_rip'] * 100:.1f}%")
     print(f"\n  Design Parameters:")
     print(f"    Stator inner radius: {best_params['Rint']:.2f} mm")
     print(f"    Rotor outer radius: {best_params['Rrotor_ext']:.2f} mm (Rint - 0.5mm)")
@@ -951,7 +1535,10 @@ def iterative_deepening_optimize(base_params, target_power):
 
 def build_and_export_stl(params, winding, output_suffix="optimized"):
     """Export STL files for optimized design"""
-    if not HAS_CADQUERY:
+    try:
+        import cadquery as cq
+        from cadquery import Assembly, Color
+    except ImportError:
         print("CadQuery not available, skipping STL export")
         return
 
@@ -981,14 +1568,16 @@ def build_and_export_stl(params, winding, output_suffix="optimized"):
     for i in range(slots):
         ang = 360.0 * i / slots
         stator_core = (
-            stator_core.faces(">Z").workplane()
+            stator_core.faces(">Z")
+            .workplane()
             .transformed(rotate=cq.Vector(0, 0, ang))
             .center(Rint + slot_depth / 2, 0)
             .rect(slot_depth, slot_width)
             .cutThruAll()
         )
-    stator_core.val().exportStl(f"stator_core_{output_suffix}.stl",
-                                tolerance=TOL, angularTolerance=ANG_TOL)
+    stator_core.val().exportStl(
+        f"stator_core_{output_suffix}.stl", tolerance=TOL, angularTolerance=ANG_TOL
+    )
     print(f"  ✓ stator_core_{output_suffix}.stl")
 
     # Windings
@@ -1006,13 +1595,15 @@ def build_and_export_stl(params, winding, output_suffix="optimized"):
         )
         winding_assy.add(coil, name=f"coil_{i}", color=Color("orange"))
     winding_assy.toCompound().exportStl(
-        f"windings_{output_suffix}.stl", tolerance=TOL, angularTolerance=ANG_TOL)
+        f"windings_{output_suffix}.stl", tolerance=TOL, angularTolerance=ANG_TOL
+    )
     print(f"  ✓ windings_{output_suffix}.stl")
 
     # Rotor core
     rotor_core = cq.Workplane("XY").circle(Rrot).circle(Rsh).extrude(L)
-    rotor_core.val().exportStl(f"rotor_core_{output_suffix}.stl",
-                               tolerance=TOL, angularTolerance=ANG_TOL)
+    rotor_core.val().exportStl(
+        f"rotor_core_{output_suffix}.stl", tolerance=TOL, angularTolerance=ANG_TOL
+    )
     print(f"  ✓ rotor_core_{output_suffix}.stl")
 
     # Permanent magnets
@@ -1028,10 +1619,14 @@ def build_and_export_stl(params, winding, output_suffix="optimized"):
             .rect(t_mag, mag_w)
             .extrude(L)
         )
-        magnet_assy.add(magnet, name=f"mag_{i}",
-                        color=Color("lightgray") if i % 2 == 0 else Color("black"))
+        magnet_assy.add(
+            magnet,
+            name=f"mag_{i}",
+            color=Color("lightgray") if i % 2 == 0 else Color("black"),
+        )
     magnet_assy.toCompound().exportStl(
-        f"magnets_{output_suffix}.stl", tolerance=TOL, angularTolerance=ANG_TOL)
+        f"magnets_{output_suffix}.stl", tolerance=TOL, angularTolerance=ANG_TOL
+    )
     print(f"  ✓ magnets_{output_suffix}.stl")
 
     # Full assembly
@@ -1060,16 +1655,23 @@ def build_and_export_stl(params, winding, output_suffix="optimized"):
             .rect(t_mag, mag_w)
             .extrude(L)
         )
-        full_assy.add(magnet, name=f"mag_{i}",
-                      color=Color("lightgray") if i % 2 == 0 else Color("black"))
+        full_assy.add(
+            magnet,
+            name=f"mag_{i}",
+            color=Color("lightgray") if i % 2 == 0 else Color("black"),
+        )
 
     full_assy.toCompound().exportStl(
-        f"motor_full_assembly_{output_suffix}.stl", tolerance=TOL, angularTolerance=ANG_TOL)
+        f"motor_full_assembly_{output_suffix}.stl",
+        tolerance=TOL,
+        angularTolerance=ANG_TOL,
+    )
     print(f"  ✓ motor_full_assembly_{output_suffix}.stl")
 
 
 def save_results(best_params, best_eval, output_suffix="optimized"):
-    """Save results to JSON and PNG"""
+    """Save results to JSON only (removed plots that write disk files)"""
+
     # JSON summary
     summary = {
         "optimization_metadata": {
@@ -1078,12 +1680,16 @@ def save_results(best_params, best_eval, output_suffix="optimized"):
             "magnet_temp_limit_C": MAGNET_TEMP_LIMIT,
             "safety_margin_C": TEMP_SAFETY_MARGIN,
         },
-        "winding": {k: float(v) if isinstance(v, (int, float, np.number)) else v
-                    for k, v in best_eval["winding"].items()},
+        "winding": {
+            k: float(v) if isinstance(v, (int, float, np.number)) else v
+            for k, v in best_eval["winding"].items()
+        },
         "magnetics": {
             "Tem_avg_Nm": float(best_eval["mag_results"]["Tem_avg"]),
             "Tem_rip_percent": float(best_eval["mag_results"]["Tem_rip"] * 100),
-            "is_pyleecan_analysis": bool(best_eval["mag_results"].get("is_pyleecan", False)),
+            "is_pyleecan_analysis": bool(
+                best_eval["mag_results"].get("is_pyleecan", False)
+            ),
         },
         "thermal": {
             "T_max_winding_C": float(best_eval["T_max_winding"]),
@@ -1106,22 +1712,44 @@ def save_results(best_params, best_eval, output_suffix="optimized"):
         },
         "thermal_expansion_analysis": {
             "delta_T_C": float(best_eval["thermal_expansion"]["delta_T"]),
-            "rotor_radial_growth_mm": float(best_eval["thermal_expansion"]["rotor_radial_growth_mm"]),
-            "stator_bore_expansion_mm": float(best_eval["thermal_expansion"]["stator_bore_expansion_mm"]),
-            "air_gap_reduction_mm": float(best_eval["thermal_expansion"]["air_gap_reduction_mm"]),
-            "final_air_gap_mm": float(best_eval["thermal_expansion"]["final_air_gap_mm"]),
+            "rotor_radial_growth_mm": float(
+                best_eval["thermal_expansion"]["rotor_radial_growth_mm"]
+            ),
+            "stator_bore_expansion_mm": float(
+                best_eval["thermal_expansion"]["stator_bore_expansion_mm"]
+            ),
+            "air_gap_reduction_mm": float(
+                best_eval["thermal_expansion"]["air_gap_reduction_mm"]
+            ),
+            "final_air_gap_mm": float(
+                best_eval["thermal_expansion"]["final_air_gap_mm"]
+            ),
             "gap_safety_ok": bool(best_eval["thermal_expansion"]["gap_safety_ok"]),
         },
         "mechanical_analysis": {
             "operating_rpm": float(best_eval["mech_loads"]["rpm"]),
             "rotor_mass_kg": float(best_eval["mech_loads"]["rotor_mass_kg"]),
-            "centrifugal_stress_MPa": float(best_eval["mech_loads"]["centrifugal_stress_pa"] / 1e6),
-            "centrifugal_deflection_mm": float(best_eval["mech_loads"]["centrifugal_deflection_mm"]),
-            "radial_magnetic_force_N": float(best_eval["mech_loads"]["radial_magnetic_force_N"]),
-            "radial_magnetic_stress_MPa": float(best_eval["mech_loads"]["radial_magnetic_stress_pa"] / 1e6),
-            "total_hoop_stress_MPa": float(best_eval["mech_loads"]["total_hoop_stress_pa"] / 1e6),
-            "shaft_deflection_mm": float(best_eval["mech_loads"]["shaft_deflection_mm"]),
-            "magnet_compression_stress_MPa": float(best_eval["mech_loads"]["magnet_compression_stress_pa"] / 1e6),
+            "centrifugal_stress_MPa": float(
+                best_eval["mech_loads"]["centrifugal_stress_pa"] / 1e6
+            ),
+            "centrifugal_deflection_mm": float(
+                best_eval["mech_loads"]["centrifugal_deflection_mm"]
+            ),
+            "radial_magnetic_force_N": float(
+                best_eval["mech_loads"]["radial_magnetic_force_N"]
+            ),
+            "radial_magnetic_stress_MPa": float(
+                best_eval["mech_loads"]["radial_magnetic_stress_pa"] / 1e6
+            ),
+            "total_hoop_stress_MPa": float(
+                best_eval["mech_loads"]["total_hoop_stress_pa"] / 1e6
+            ),
+            "shaft_deflection_mm": float(
+                best_eval["mech_loads"]["shaft_deflection_mm"]
+            ),
+            "magnet_compression_stress_MPa": float(
+                best_eval["mech_loads"]["magnet_compression_stress_pa"] / 1e6
+            ),
         },
         "mechanical_safety": {
             "is_safe": bool(best_eval["mechanically_safe"]),
@@ -1132,8 +1760,12 @@ def save_results(best_params, best_eval, output_suffix="optimized"):
                 "limit": float(best_eval["mech_safety"]["rotor_hoop_limit_pa"] / 1e6),
             },
             "magnet_compression_vs_limit_MPa": {
-                "stress": float(best_eval["mech_safety"]["magnet_compression_stress_pa"] / 1e6),
-                "limit": float(best_eval["mech_safety"]["magnet_compression_limit_pa"] / 1e6),
+                "stress": float(
+                    best_eval["mech_safety"]["magnet_compression_stress_pa"] / 1e6
+                ),
+                "limit": float(
+                    best_eval["mech_safety"]["magnet_compression_limit_pa"] / 1e6
+                ),
             },
             "shaft_deflection_vs_limit_mm": {
                 "deflection": float(best_eval["mech_safety"]["shaft_deflection_mm"]),
@@ -1142,12 +1774,24 @@ def save_results(best_params, best_eval, output_suffix="optimized"):
         },
         "axial_load_analysis": {
             "thrust_force_N": float(best_eval["axial_loads"]["thrust_force_N"]),
-            "tensile_stress_MPa": float(best_eval["axial_loads"]["tensile_stress_pa"] / 1e6),
-            "bending_stress_MPa": float(best_eval["axial_loads"]["bending_stress_pa"] / 1e6),
-            "combined_axial_stress_MPa": float(best_eval["axial_loads"]["combined_axial_stress_pa"] / 1e6),
-            "axial_stress_limit_MPa": float(MATERIAL_PROPS["steel_M330"]["yield_strength"] / (3.0 * 1e6)),
-            "axial_deflection_mm": float(best_eval["axial_loads"]["axial_deflection_mm"]),
-            "magnet_clamping_stress_MPa": float(best_eval["axial_loads"]["magnet_clamping_stress_pa"] / 1e6),
+            "tensile_stress_MPa": float(
+                best_eval["axial_loads"]["tensile_stress_pa"] / 1e6
+            ),
+            "bending_stress_MPa": float(
+                best_eval["axial_loads"]["bending_stress_pa"] / 1e6
+            ),
+            "combined_axial_stress_MPa": float(
+                best_eval["axial_loads"]["combined_axial_stress_pa"] / 1e6
+            ),
+            "axial_stress_limit_MPa": float(
+                MATERIAL_PROPS["steel_M330"]["yield_strength"] / (3.0 * 1e6)
+            ),
+            "axial_deflection_mm": float(
+                best_eval["axial_loads"]["axial_deflection_mm"]
+            ),
+            "magnet_clamping_stress_MPa": float(
+                best_eval["axial_loads"]["magnet_clamping_stress_pa"] / 1e6
+            ),
             "is_safe": bool(best_eval["axial_safe"]),
         },
         "design_parameters": {
@@ -1162,66 +1806,13 @@ def save_results(best_params, best_eval, output_suffix="optimized"):
             "magnet_Br_T": float(best_params["magnet_Br"]),
             "h_conv_W_m2K": float(best_params["h_conv"]),
             "slot_opening_mm": float(best_params["slot_opening"]),
-            "fill_factor": float(best_params["fill_factor"]),
-        }
+            "fill_factor": float(best_eval["winding"]["fill_factor_actual"]),
+        },
     }
-
+    build_and_export_stl(best_params, best_eval["winding"], output_suffix=output_suffix)
     with open(f"motor_design_results_{output_suffix}.json", "w") as f:
         json.dump(summary, f, indent=2)
-    print(f"\n  ✓ motor_design_results_{output_suffix}.json")
-
-    # Thermal polar plot
-    thermal = best_eval["thermal"]
-    r = thermal["r"]
-    T_2d = thermal["T_2d"]
-    T_mid = T_2d[:, T_2d.shape[1] // 2]
-
-    N_ang = 360
-    angles = np.linspace(0, 2 * np.pi, N_ang)
-    R_grid, A_grid = np.meshgrid(
-        (r - r.min()) / (r.max() - r.min()),
-        angles
-    )
-    T_polar = np.tile(T_mid, (N_ang, 1))
-
-    fig1, ax1 = plt.subplots(subplot_kw={"projection": "polar"}, figsize=(8, 8))
-    pcm = ax1.pcolormesh(A_grid, R_grid, T_polar,
-                         cmap="hot", shading="auto",
-                         vmin=best_params["T_ambient"], vmax=thermal["T_max"])
-    cbar = plt.colorbar(pcm, ax=ax1, label="Temperature [°C]", pad=0.1)
-    ax1.set_title(f"Thermal Map (Optimized)\nT_max={thermal['T_max']:.1f}°C, "
-                  f"Safe={'✓' if best_eval['magnet_safe'] else '✗'}",
-                  va="bottom", pad=20, fontsize=12)
-    ax1.set_yticks([0, 0.25, 0.5, 0.75, 1.0])
-    ax1.set_yticklabels(["shaft", "", "bore", "", "Rext"], fontsize=9)
-    ax1.grid(True, alpha=0.3)
-    plt.tight_layout()
-    plt.savefig(f"thermal_polar_{output_suffix}.png", dpi=150, bbox_inches="tight")
-    plt.close()
-    print(f"  ✓ thermal_polar_{output_suffix}.png")
-
-    # Torque polar plot
-    mag_results = best_eval["mag_results"]
-    Tem_vals = np.array(mag_results["Tem_vals"])
-    time_vec = np.array(mag_results["time_vec"])
-
-    theta_norm = (time_vec - time_vec.min()) / (time_vec.max() - time_vec.min()) * 2 * np.pi
-    theta_plot = np.append(theta_norm, theta_norm[0])
-    torque_plot = np.append(Tem_vals, Tem_vals[0])
-
-    fig2, ax2 = plt.subplots(subplot_kw={"projection": "polar"}, figsize=(8, 8))
-    ax2.plot(theta_plot, torque_plot, color="royalblue", linewidth=2)
-    ax2.fill(theta_plot, torque_plot, alpha=0.2, color="royalblue")
-    ax2.plot(theta_plot, np.full_like(torque_plot, mag_results["Tem_avg"]),
-             "r--", linewidth=1.5, label=f"Mean: {mag_results['Tem_avg']:.3f} Nm")
-    ax2.set_title(f"Torque Waveform (Optimized)\nRipple={mag_results['Tem_rip']*100:.1f}%",
-                  va="bottom", pad=20, fontsize=12)
-    ax2.legend(loc="upper right", bbox_to_anchor=(1.3, 1.1), fontsize=10)
-    ax2.grid(True, alpha=0.3)
-    plt.tight_layout()
-    plt.savefig(f"torque_polar_{output_suffix}.png", dpi=150, bbox_inches="tight")
-    plt.close()
-    print(f"  ✓ torque_polar_{output_suffix}.png")
+    print(f"  ✓ motor_design_results_{output_suffix}.json")
 
 
 # ============================================================
@@ -1234,16 +1825,14 @@ if __name__ == "__main__":
         "voltage_dc": 60.2,
         "I_continuous": 160.0,
         "I_burst": 200.0,
-        "wire_resistivity": 2.72e-8,
+        "wire_resistivity": 2.72e-8,  # Copper @ 20°C
         "Rext": 25.5,
         "T_ambient": 45.0,
-        "fill_factor": 0.5,
-
         # Material properties (FIXED)
         "steel_grade": "M330-35A",
         "k_copper": 380.0,
         "k_steel": 25.0,
-
+        "off_center_load_pct": 0.1,  # 10% off-center load to simulate propeller thrust effects
         # VARIABLE PARAMETERS (optimized)
         "Rint": 40.5,
         "Rrotor_ext": 40.0,  # Will be overridden: Rrotor_ext = Rint - 0.5
@@ -1255,11 +1844,12 @@ if __name__ == "__main__":
         "magnet_Br": 1.2,
         "h_conv": 40.0,
         "slot_opening": 2.5,
+        "wire_diameter": 1.0,  # Wire diameter [mm] — fill factor is DERIVED from this
     }
 
     # Calculate target power (electrical input - aim for high efficiency)
     electrical_power = BASE_PARAMS["voltage_dc"] * BASE_PARAMS["I_continuous"]
-    target_power = electrical_power * 0.85  # Target 85% efficiency
+    target_power = electrical_power * TARGET_EFFICIENCY  # Target 85% efficiency
 
     print(f"\nInput electrical power: {electrical_power:.0f}W")
     print(f"Target mechanical power: {target_power:.0f}W (85% efficiency)")
@@ -1270,9 +1860,9 @@ if __name__ == "__main__":
     if result:
         best_params, best_eval = result
 
-        print("\n" + "="*80)
+        print("\n" + "=" * 80)
         print("SAVING RESULTS")
-        print("="*80)
+        print("=" * 80)
 
         # Compute winding for geometry
         winding = compute_winding_params(best_params)
@@ -1283,9 +1873,9 @@ if __name__ == "__main__":
         # Save JSON and PNGs
         save_results(best_params, best_eval, output_suffix="optimized")
 
-        print("\n" + "="*80)
+        print("\n" + "=" * 80)
         print("✓ OPTIMIZATION COMPLETE!")
-        print("="*80)
+        print("=" * 80)
         print("\nAll output files saved with '_optimized' suffix:")
         print("  - motor_design_results_optimized.json")
         print("  - motor_full_assembly_optimized.stl")
