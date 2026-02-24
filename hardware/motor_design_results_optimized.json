@@ -1,48 +1,105 @@
 {
   "optimization_metadata": {
-    "iteration_count": 500,
+    "refinement_iterations": 256,
+    "initial_divisions": 8192,
     "magnet_temp_limit_C": 120.0,
-    "convergence_threshold": 0.05
+    "safety_margin_C": 5.0
   },
   "winding": {
-    "slot_area_mm2": 370.18433434799726,
-    "wire_area_mm2": 15.0,
-    "turns_per_slot": 24.0,
-    "R_dc_ohm": 0.04926040002212102,
-    "P_cu_cont_W": 709.349760318543,
-    "P_cu_burst_W": 1596.036960716721,
-    "wire_diameter_mm": 4.370193722368317
+    "slot_area_mm2": 14.376746263015152,
+    "wire_area_mm2": 6.23067304771302,
+    "wire_diameter_mm": 2.8165829145728645,
+    "wires_per_slot": 1.0,
+    "conductor_area_mm2": 2.8700375467219885,
+    "fill_factor_actual": 0.199630534907978,
+    "turns_per_slot": 1.0,
+    "total_turns": 27.0,
+    "R_dc_ohm": 0.019343402730452066,
+    "P_cu_cont_W": 1485.5733296987187,
+    "P_cu_burst_W": 2321.208327654248
   },
   "magnetics": {
-    "Tem_avg": 7.040505386567556,
-    "Tem_rip": 0.04
+    "Tem_avg_Nm": 1.5860269469423711,
+    "Tem_rip_percent": 4.0,
+    "is_pyleecan_analysis": false
   },
   "thermal": {
-    "T_max_winding_C": 240.60876040636563,
-    "T_max_C": 240.60876040636563,
+    "T_max_winding_C": 466.986638627103,
+    "T_max_overall_C": 469.58232430019586,
+    "T_ambient_C": 45.0,
     "magnet_safe": false,
-    "temp_margin_C": -120.60876040636563
+    "temp_margin_C": -349.58232430019586
   },
-  "power": {
-    "electrical_power_W": 7224.0,
-    "copper_loss_W": 709.349760318543,
-    "mechanical_power_W": 6514.650239681457,
-    "efficiency": 0.9018065115838119
+  "power_analysis": {
+    "voltage_dc_V": 60.2,
+    "current_A": 160.0,
+    "electrical_power_W": 9632.0,
+    "copper_loss_W": 1485.5733296987187,
+    "mechanical_power_W": 8146.426670301282,
+    "efficiency_percent": 84.5766888527957
   },
   "performance": {
-    "torque_Nm": 7.040505386567556
+    "torque_Nm": 1.5860269469423711,
+    "torque_ripple_percent": 4.0
+  },
+  "thermal_expansion_analysis": {
+    "delta_T_C": 424.58232430019586,
+    "rotor_radial_growth_mm": 0.11438119801876132,
+    "stator_bore_expansion_mm": 0.1169286919645625,
+    "air_gap_reduction_mm": -0.0025474939458011853,
+    "final_air_gap_mm": 0.5025474939458012,
+    "gap_safety_ok": true
+  },
+  "mechanical_analysis": {
+    "operating_rpm": 57993.229490198726,
+    "rotor_mass_kg": 0.45822279913471,
+    "centrifugal_stress_MPa": 145.91651563088158,
+    "centrifugal_deflection_mm": 0.005199665259479648,
+    "radial_magnetic_force_N": 1095.0896572289246,
+    "radial_magnetic_stress_MPa": 0.7317592826200162,
+    "total_hoop_stress_MPa": 146.64827491350158,
+    "shaft_deflection_mm": 3.5642706296745983,
+    "magnet_compression_stress_MPa": 145.01725642880308
+  },
+  "mechanical_safety": {
+    "is_safe": false,
+    "limiting_factor": "deflection",
+    "min_margin_percent": -3464.270629674598,
+    "rotor_hoop_stress_vs_limit_MPa": {
+      "stress": 146.64827491350158,
+      "limit": 160.0
+    },
+    "magnet_compression_vs_limit_MPa": {
+      "stress": 145.01725642880308,
+      "limit": 150.0
+    },
+    "shaft_deflection_vs_limit_mm": {
+      "deflection": 3.5642706296745983,
+      "limit": 0.1
+    }
+  },
+  "axial_load_analysis": {
+    "thrust_force_N": 5.0,
+    "tensile_stress_MPa": 0.28052372756245203,
+    "bending_stress_MPa": 0.5610474549029778,
+    "combined_axial_stress_MPa": 0.8415711824654298,
+    "axial_stress_limit_MPa": 133.33333333333334,
+    "axial_deflection_mm": 4.980823303453922e-05,
+    "magnet_clamping_stress_MPa": 0.004890106280565479,
+    "is_safe": true
   },
   "design_parameters": {
-    "magnet_thickness_mm": 4.5,
-    "motor_length_mm": 30.0,
-    "fill_factor": 0.7,
-    "pole_pairs": 9,
-    "stator_slots": 12,
-    "Rext_mm": 60.5,
-    "Rint_mm": 40.5,
-    "Rrotor_ext_mm": 40.0,
-    "voltage_dc_V": 60.2,
-    "I_continuous_A": 120.0,
-    "I_burst_A": 180.0
+    "Rext_mm": 25.5,
+    "Rint_mm": 22.949748743718594,
+    "Rrotor_ext_mm": 22.449748743718594,
+    "Rshaft_mm": 2.3819095477386933,
+    "magnet_thickness_mm": 4.57035175879397,
+    "motor_length_mm": 37.28643216080402,
+    "pole_pairs": 3,
+    "stator_slots": 27,
+    "magnet_Br_T": 1.0334170854271356,
+    "h_conv_W_m2K": 61.005025125628144,
+    "slot_opening_mm": 3.648241206030151,
+    "fill_factor": 0.199630534907978
   }
 }

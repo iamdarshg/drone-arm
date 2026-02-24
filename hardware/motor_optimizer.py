@@ -20,8 +20,8 @@ from scipy.sparse.linalg import spsolve
 # ============================================================
 MAGNET_TEMP_LIMIT = 120.0
 TEMP_SAFETY_MARGIN = 5.0
-MAX_REFINEMENT_ITERATIONS = 128
-INITIAL_DIVISION_COUNT = 2048  # Coarse-to-fine divisions
+MAX_REFINEMENT_ITERATIONS = 256
+INITIAL_DIVISION_COUNT = 8192  # Coarse-to-fine divisions
 MAX_EVALUATIONS_PER_REFINEMENT = 320000  # Limit evaluations per refinement level
 
 # ============================================================
@@ -36,7 +36,7 @@ THERMAL_FEM_RESOLUTION_MAX = (60, 90)  # (Nr, Nz) fine: 40 radial, 60 axial
 USE_PYLEECAN = True
 
 # Number of coupling iterations for magnetomechanical feedback
-COUPLING_ITERATIONS = 6  # Reduced from 3 for speed, damping handles convergence
+COUPLING_ITERATIONS = 12  # Reduced from 3 for speed, damping handles convergence
 
 # Threshold-based early rejection (skip obviously bad designs)
 # These thresholds allow early exit to save computation
@@ -243,10 +243,10 @@ def _compute_winding_params_impl(p):
 
     # Insulation area per wire
     insulation_area_per_wire = wire_area_total - conductor_area_single
-
+    slots = 1 if slots == 0 else slots
     # Calculate slot area (full annular sector) — treat as parallelogram
     tooth_angle = 2 * np.pi / slots
-    slot_area_full = 0.5 * (Rext**2 - Rint**2) * tooth_angle
+    slot_area_full = 1e-20 + 0.5 * (Rext**2 - Rint**2) * tooth_angle
 
     # Slot geometry as parallelogram:
     # - Radial height: h = Rext - Rint
@@ -440,7 +440,7 @@ def run_magnetics_pyleecan(p, winding, air_gap_adjustment=0.0, verbose=False):
 
         Rrotor = p["Rrotor_ext"] * 1e-3
         L = p["motor_length"] * 1e-3
-        p_ = p["pole_pairs"]
+        p_ = p["pole_pairs"] if p["pole_pairs"] != 0 else 1
         N = winding["turns_per_slot"] * p["stator_slots"]
         Ke = (4 / np.pi) * N * p["magnet_Br"] * Rrotor * L / p_
         Tem_avg = Ke * p["I_continuous"]
@@ -471,11 +471,12 @@ def run_thermal_fem(p, winding, resolution=None):
         Nr, Nz = 40, 60
     else:
         Nr, Nz = resolution
+        # print(f"The resolution is- ({Nr}, {Nz})")
     r_min = p["Rshaft"] * 1e-3
     r_max = p["Rext"] * 1e-3
     z_max = p["motor_length"] * 1e-3 / 2
-    dr = (r_max - r_min) / (Nr - 1)
-    dz = z_max / (Nz - 1)
+    dr = (r_max - r_min) / (Nr - 1 + 1e-20)
+    dz = z_max / (Nz - 1 + 1e-20)
     r = np.linspace(r_min, r_max, Nr)
     z = np.linspace(0, z_max, Nz)
 
@@ -525,34 +526,34 @@ def run_thermal_fem(p, winding, resolution=None):
             Q = Q_cu if in_winding else Q_fe
 
             if 0 < i < Nr - 1 and 0 < j < Nz - 1:
-                A[n, idx(i + 1, j)] += k / dr**2 + k / (2 * ri * dr)
-                A[n, idx(i - 1, j)] += k / dr**2 - k / (2 * ri * dr)
-                A[n, idx(i, j + 1)] += k / dz**2
-                A[n, idx(i, j - 1)] += k / dz**2
-                A[n, n] -= 2 * k / dr**2 + 2 * k / dz**2
+                A[n, idx(i + 1, j)] += k / dr**2 + k + 1e-20 / (2 * ri * dr + 1e-20)
+                A[n, idx(i - 1, j)] += k / 1e-20 + dr**2 - k / (2 * ri * dr + 1e-20)
+                A[n, idx(i, j + 1)] += k / dz**2 + 1e-20
+                A[n, idx(i, j - 1)] += k / dz**2 + 1e-20
+                A[n, n] -= 2 * k / dr**2 + 2 * k + 1e-20 / dz**2 + 1e-20
                 b[n] = -Q
             elif i == Nr - 1 and 0 < j < Nz - 1:
                 h = p["h_conv"]
-                A[n, n] = -(k / dr + h)
-                A[n, idx(i - 1, j)] = k / dr
+                A[n, n] = -(k / dr + h + 1e-20)
+                A[n, idx(i - 1, j)] = k / dr + 1e-20
                 b[n] = -h * p["T_ambient"]
             elif i == 0 and 0 < j < Nz - 1:
-                A[n, n] = -k / dr
-                A[n, idx(i + 1, j)] = k / dr
-                b[n] = 0.0
+                A[n, n] = -k / dr + 1e-20
+                A[n, idx(i + 1, j)] = k / dr + 1e-20
+                b[n] = 0.0 + 1e-20
             elif j == 0:
-                A[n, n] = -k / dz
-                A[n, idx(i, j + 1)] = k / dz
-                b[n] = 0.0
+                A[n, n] = -k / dz + 1e-20
+                A[n, idx(i, j + 1)] = k / dz + 1e-20
+                b[n] = 0.0 + 1e-20
             elif j == Nz - 1:
-                A[n, n] = -(k / dz + p["h_conv"])
-                A[n, idx(i, j - 1)] = k / dz
-                b[n] = -p["h_conv"] * p["T_ambient"]
+                A[n, n] = -(k / dz + p["h_conv"] + 1e-20)
+                A[n, idx(i, j - 1)] = k / dz + 1e-20
+                b[n] = -p["h_conv"] * p["T_ambient"] + 1e-20
 
     T_vec = spsolve(A.tocsr(), b)
     T_max = float(np.max(T_vec))
 
-    i_rint = int((Rint_m - r_min) / dr)
+    i_rint = int((Rint_m - r_min) / dr + 1e-20)
     T_max_winding = float(np.max(T_vec[i_rint * Nz :]))
 
     return {"T_max_winding": T_max_winding, "T_max": T_max}
@@ -562,7 +563,7 @@ def estimate_motor_rpm(torque_Nm, power_W):
     """Estimate motor RPM from power and torque: P = T*ω"""
     if torque_Nm <= 0:
         return 0
-    rpm = (power_W / torque_Nm) * 60 / (2 * np.pi)
+    rpm = (power_W / torque_Nm) * 60 / (2 * np.pi) + 1e-20
     return rpm
 
 
@@ -593,11 +594,11 @@ def calculate_thermal_expansion(p, thermal_result):
     # Rotor expansion reduces gap (outward growth)
     # Stator bore expansion increases gap (bore getting larger pushes inward surface further out)
     # Net gap reduction: rotor_growth - stator_bore_growth
-    air_gap_reduction_effective = rotor_radial_growth - stator_bore_change
+    air_gap_reduction_effective = rotor_radial_growth - stator_bore_change + 1e-20
 
     # Safety check: ensure gap doesn't close completely
     original_gap = 0.5  # mm
-    final_gap = original_gap - air_gap_reduction_effective
+    final_gap = original_gap - air_gap_reduction_effective + 1e-20
 
     return {
         "delta_T": delta_T,
@@ -654,7 +655,7 @@ def calculate_mechanical_loads(p, mag_results, thermal_result):
     Br = p["magnet_Br"]
     B_airgap = Br * 0.7  # Approximate field in air gap (70% of remanence)
     mu_0 = 4 * np.pi * 1e-7
-    magnetic_pressure = (B_airgap**2) / (2 * mu_0)  # Pa
+    magnetic_pressure = (B_airgap**2) / (2 * mu_0 + 1e-20)  # Pa
     rotor_outer_area = 2 * np.pi * Rrotor_ext * L_motor
     radial_magnetic_force = (
         magnetic_pressure * rotor_outer_area
@@ -662,7 +663,7 @@ def calculate_mechanical_loads(p, mag_results, thermal_result):
 
     # Radial stress from magnetic pull on rotor
     rotor_cross_section = 2 * wall_thickness * L_motor
-    radial_magnetic_stress = radial_magnetic_force / rotor_cross_section
+    radial_magnetic_stress = radial_magnetic_force / rotor_cross_section + 1e-20
 
     # Total hoop stress in rotor rim
     total_hoop_stress = centrifugal_stress_pa + radial_magnetic_stress
@@ -676,8 +677,12 @@ def calculate_mechanical_loads(p, mag_results, thermal_result):
     # Stator tooth stress (winding in slots creates radial force)
     # Simplified: F ≈ 0.5 * B² * A / μ₀
     Rint = p["Rint"] * 1e-3
-    stator_bore_area = (2 * np.pi * Rint * L_motor) / p["stator_slots"]
-    tooth_stress = (B_airgap**2 * stator_bore_area) / (2 * mu_0 * wall_thickness)
+    stator_bore_area = (2 * np.pi * Rint * L_motor) / (
+        p["stator_slots"] if p["stator_slots"] != 0 else 1
+    )
+    tooth_stress = (B_airgap**2 * stator_bore_area) / (
+        2 * mu_0 * wall_thickness + 1e-20
+    )
 
     # Magnet compression stress (magnets held in by centrifugal + magnetic forces)
     magnet_thickness = p["magnet_thickness"] * 1e-3
@@ -690,10 +695,10 @@ def calculate_mechanical_loads(p, mag_results, thermal_result):
         * MATERIAL_PROPS["magnet_N45SH"]["density"]
     )
     magnet_centrifugal_stress = (
-        (magnet_radial_mass / poles)
+        (magnet_radial_mass / poles if poles != 0 else 1)
         * omega**2
         * Rrotor_ext
-        / (magnet_thickness * L_motor)
+        / (magnet_thickness * L_motor + 1e-20)
     )
 
     return {
@@ -719,16 +724,16 @@ def check_mechanical_safety(p, mech_loads):
     # Rotor hoop stress (steel limit)
     rotor_yield = MATERIAL_PROPS["steel_M330"]["yield_strength"]
     rotor_sf = MATERIAL_PROPS["steel_M330"]["max_stress_safety_factor"]
-    rotor_max_stress = rotor_yield / rotor_sf
+    rotor_max_stress = rotor_yield / rotor_sf + 1e-20
     rotor_stress_margin = (
         rotor_max_stress - mech_loads["total_hoop_stress_pa"]
-    ) / rotor_max_stress
+    ) / rotor_max_stress + 1e-20
 
     # Magnet compression (limited)
     magnet_max = MATERIAL_PROPS["magnet_N45SH"]["max_compression_stress"]
     magnet_margin = (
         magnet_max - mech_loads["magnet_compression_stress_pa"]
-    ) / magnet_max
+    ) / magnet_max + 1e-20
 
     # Geometric clearance (rotor deflection shouldn't cause contact)
     max_deflection_allowed = 0.1  # mm
@@ -808,7 +813,7 @@ def calculate_axial_load(p, mag_results, thrust_force_N=5.0):
     # Clamping stress on magnets (per pole)
     clamping_stress_per_pole = thrust_force_N / (magnet_thickness * L_motor + 1e-20)
     # Distributed to all poles
-    magnet_clamping_stress = clamping_stress_per_pole / poles
+    magnet_clamping_stress = clamping_stress_per_pole / poles if poles != 0 else 1
 
     return {
         "thrust_force_N": thrust_force_N,
@@ -832,7 +837,7 @@ def run_coupled_magnetomechanical(p, winding, thrust_force_N=5.0, max_iterations
 
     Returns: (mag_results, mech_loads, mech_safety, axial_loads)
     """
-    air_gap_adjustment = 0.0
+    air_gap_adjustment = 1e-20
 
     for iteration in range(max_iterations):
         # Step 1: Magnetics with current air gap
@@ -931,14 +936,9 @@ def evaluate_design(p, verbose=True, thermal_resolution=None):
         # Check 1: Minimum torque requirement
         # Rough estimate: Ke ≈ (4/π) * turns * Br * rotor_radius * length / poles
         estimated_turns = winding["turns_per_slot"] * p["stator_slots"]
-        estimated_ke = (
-            (4 / np.pi)
-            * estimated_turns
-            * p["magnet_Br"]
-            * (p["Rrotor_ext"] * 1e-3)
-            * (p["motor_length"] * 1e-3)
-            / p["pole_pairs"]
-        )
+        estimated_ke = (4 / np.pi) * estimated_turns * p["magnet_Br"] * (
+            p["Rrotor_ext"] * 1e-3
+        ) * (p["motor_length"] * 1e-3) / p["pole_pairs"] + 1e-20
         estimated_torque = estimated_ke * p["I_continuous"]
         if estimated_torque < TORQUE_MIN_THRESHOLD:
             if verbose:
@@ -1067,6 +1067,9 @@ def evaluate_design(p, verbose=True, thermal_resolution=None):
     except Exception as e:
         if verbose:
             print(f"      ✗ Error: {type(e).__name__}", flush=True)
+            import traceback
+
+            traceback.print_exc()
         return None
 
 
