@@ -2035,6 +2035,119 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "Connector_Generic:Conn_01x01"
+			(pin_names
+				(offset 1.016)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "J"
+				(at 0 2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "Conn_01x01"
+				(at 0 -2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "~"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "connector"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "Connector*:*_1x??_*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "Conn_01x01_1_1"
+				(rectangle
+					(start -1.27 1.27)
+					(end 1.27 -1.27)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(rectangle
+					(start -1.27 0.127)
+					(end 0 -0.127)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin passive line
+					(at -5.08 0 0)
+					(length 3.81)
+					(name "Pin_1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "Connector_Generic:Conn_01x09"
 			(pin_names
 				(offset 1.016)
@@ -9210,6 +9323,12 @@
 		(uuid "8a59e824-8601-4927-920f-7302726a380c")
 	)
 	(junction
+		(at 116.84 115.57)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "8b4fdc7a-4578-4525-a6b1-17c49251586a")
+	)
+	(junction
 		(at 427.99 234.95)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -9654,12 +9773,6 @@
 		(uuid "f9ab2fa7-3f0c-43fc-ba67-9d43e743292e")
 	)
 	(junction
-		(at 109.22 115.57)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "fa4a3a4d-b626-4eaa-abc9-3deefb019d63")
-	)
-	(junction
 		(at 476.25 118.11)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -9826,6 +9939,16 @@
 			(type default)
 		)
 		(uuid "0568fff1-6cd6-4cc8-ad08-873d378a9367")
+	)
+	(wire
+		(pts
+			(xy 226.06 138.43) (xy 226.06 139.7)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "057eeec3-f4ec-4022-87d1-9db23d0bcb1d")
 	)
 	(wire
 		(pts
@@ -10016,16 +10139,6 @@
 			(type default)
 		)
 		(uuid "0cae7c70-89bd-4b56-bb62-36a32ebe3cf5")
-	)
-	(wire
-		(pts
-			(xy 231.14 138.43) (xy 232.41 138.43)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0d593dd3-bb3b-4709-b913-250115f6fab9")
 	)
 	(wire
 		(pts
@@ -10279,6 +10392,16 @@
 	)
 	(wire
 		(pts
+			(xy 231.14 138.43) (xy 232.41 138.43)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "132303da-a9ba-41db-8f95-6907d43945e0")
+	)
+	(wire
+		(pts
 			(xy 241.3 220.98) (xy 172.72 220.98)
 		)
 		(stroke
@@ -10369,7 +10492,7 @@
 	)
 	(wire
 		(pts
-			(xy 105.41 115.57) (xy 109.22 115.57)
+			(xy 105.41 115.57) (xy 116.84 115.57)
 		)
 		(stroke
 			(width 0)
@@ -14809,6 +14932,16 @@
 	)
 	(wire
 		(pts
+			(xy 116.84 111.76) (xy 116.84 115.57)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "85908211-e3b3-4153-b11a-47e07a83b077")
+	)
+	(wire
+		(pts
 			(xy 388.62 234.95) (xy 398.78 234.95)
 		)
 		(stroke
@@ -15036,16 +15169,6 @@
 			(type default)
 		)
 		(uuid "8b99724b-be66-43b5-ba80-a1683ecd4672")
-	)
-	(wire
-		(pts
-			(xy 116.84 115.57) (xy 109.22 115.57)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "8bd7d95d-1d66-4e1c-8f7e-f4162f35ba1e")
 	)
 	(wire
 		(pts
@@ -15546,6 +15669,16 @@
 			(type default)
 		)
 		(uuid "9793cf0e-906d-49d1-a0a4-dd48862260f9")
+	)
+	(wire
+		(pts
+			(xy 259.08 245.11) (xy 259.08 257.81)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "97d3fd64-dc58-45cc-bedb-5296531e21f0")
 	)
 	(wire
 		(pts
@@ -17519,7 +17652,7 @@
 	)
 	(wire
 		(pts
-			(xy 109.22 110.49) (xy 109.22 115.57)
+			(xy 109.22 110.49) (xy 109.22 118.11)
 		)
 		(stroke
 			(width 0)
@@ -18239,6 +18372,16 @@
 	)
 	(wire
 		(pts
+			(xy 231.14 139.7) (xy 231.14 138.43)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e8b03a52-5be5-4c5a-8187-b44941f27ee1")
+	)
+	(wire
+		(pts
 			(xy 360.68 58.42) (xy 360.68 63.5)
 		)
 		(stroke
@@ -18696,16 +18839,6 @@
 			(type default)
 		)
 		(uuid "f5b81da6-bff8-4333-b520-90225328c64d")
-	)
-	(wire
-		(pts
-			(xy 109.22 115.57) (xy 109.22 118.11)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "f67af725-4c59-48b2-be5a-5b296428c79e")
 	)
 	(wire
 		(pts
@@ -19333,6 +19466,73 @@
 	)
 	(symbol
 		(lib_id "Device:C_Small")
+		(at 340.36 204.47 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "00c9f6d5-ae20-4c22-803b-122e50f79362")
+		(property "Reference" "C25"
+			(at 342.646 204.47 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "8pF"
+			(at 337.566 204.47 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+			(at 340.36 204.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 340.36 204.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Unpolarized capacitor, small symbol"
+			(at 340.36 204.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "2c0f8f5d-a008-46b8-afaf-8734f3e8a4c0")
+		)
+		(pin "2"
+			(uuid "7d879d14-b808-4d57-8cad-c91d3a5fc939")
+		)
+		(instances
+			(project "main"
+				(path "/75591082-b990-4488-aadd-789d6fd456f5"
+					(reference "C25")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C_Small")
 		(at 490.22 210.82 180)
 		(unit 1)
 		(exclude_from_sim no)
@@ -19426,7 +19626,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 330.2 204.47 0)
 			(effects
 				(font
@@ -20142,73 +20342,6 @@
 			(project "main"
 				(path "/75591082-b990-4488-aadd-789d6fd456f5"
 					(reference "#PWR074")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C_Small")
-		(at 370.84 144.78 180)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "082ba20e-7d43-4957-92c7-71cd0ed7f5fd")
-		(property "Reference" "C28"
-			(at 370.84 140.716 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "0.1uF"
-			(at 370.84 149.098 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 370.84 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 370.84 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Unpolarized capacitor, small symbol"
-			(at 370.84 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "c7bcbbb9-c7d9-4f7e-9042-aad3a5483cfa")
-		)
-		(pin "2"
-			(uuid "d8a9305e-fac8-4412-852e-82236ba4c13d")
-		)
-		(instances
-			(project "main"
-				(path "/75591082-b990-4488-aadd-789d6fd456f5"
-					(reference "C28")
 					(unit 1)
 				)
 			)
@@ -21220,7 +21353,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0201_0603Metric"
 			(at 297.18 124.46 0)
 			(effects
 				(font
@@ -21489,7 +21622,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0201_0603Metric"
 			(at 304.8 167.64 0)
 			(effects
 				(font
@@ -22807,6 +22940,76 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:C_Small")
+		(at 233.68 140.97 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "2c2274e5-a6ee-4b49-97f5-a2a0cb8bd151")
+		(property "Reference" "C7"
+			(at 236.22 139.7062 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "10uF"
+			(at 236.22 142.2462 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
+			(at 233.68 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 233.68 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Unpolarized capacitor, small symbol"
+			(at 233.68 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "7f3c8807-8f67-42aa-85e3-39261275f4e7")
+		)
+		(pin "2"
+			(uuid "5f546bf6-c6c8-4eb3-8058-fe70355cab31")
+		)
+		(instances
+			(project "main"
+				(path "/75591082-b990-4488-aadd-789d6fd456f5"
+					(reference "C7")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:+3V3")
 		(at 171.45 323.85 180)
 		(unit 1)
@@ -23225,7 +23428,7 @@
 				)
 			)
 		)
-		(property "Value" "100nF"
+		(property "Value" "0.1uF"
 			(at 316.23 208.788 0)
 			(effects
 				(font
@@ -23233,7 +23436,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0201_0603Metric"
 			(at 316.23 204.47 0)
 			(effects
 				(font
@@ -23501,7 +23704,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 299.72 157.48 0)
 			(effects
 				(font
@@ -24344,6 +24547,73 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector_Generic:Conn_01x01")
+		(at 259.08 240.03 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "57738625-b032-4a97-ab6f-e0bb6b28bed7")
+		(property "Reference" "J6"
+			(at 261.62 238.7599 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "Conn_01x01"
+			(at 261.62 241.2999 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Connector_Wire:SolderWire-0.5sqmm_1x01_D0.9mm_OD2.3mm"
+			(at 259.08 240.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 259.08 240.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 259.08 240.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "c778bdcd-dd69-48a2-a05a-bacd7cd141ed")
+		)
+		(instances
+			(project ""
+				(path "/75591082-b990-4488-aadd-789d6fd456f5"
+					(reference "J6")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Connector:Conn_01x03_Pin")
 		(at 80.01 199.39 0)
 		(unit 1)
@@ -24671,7 +24941,7 @@
 				)
 			)
 		)
-		(property "Value" "100nF"
+		(property "Value" "0.1uF"
 			(at 324.866 191.77 90)
 			(effects
 				(font
@@ -24679,7 +24949,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0201_0603Metric"
 			(at 327.66 191.77 0)
 			(effects
 				(font
@@ -26262,7 +26532,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Inductor_SMD:L_Changjiang_FTC201612S"
 			(at 132.08 113.03 0)
 			(effects
 				(font
@@ -26365,6 +26635,74 @@
 			(project "main"
 				(path "/75591082-b990-4488-aadd-789d6fd456f5"
 					(reference "#PWR0104")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C_Small")
+		(at 73.66 187.96 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "7bbf4a63-8464-4d85-9078-f69299446f39")
+		(property "Reference" "C5"
+			(at 73.6663 181.61 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "18pF"
+			(at 73.6663 184.15 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+			(at 73.66 187.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 73.66 187.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Unpolarized capacitor, small symbol"
+			(at 73.66 187.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "51b1c538-70c5-4ba8-9a00-32db2ac36572")
+		)
+		(pin "1"
+			(uuid "1593c6f0-39a9-4201-9b86-9027b63dc64e")
+		)
+		(instances
+			(project "main"
+				(path "/75591082-b990-4488-aadd-789d6fd456f5"
+					(reference "C5")
 					(unit 1)
 				)
 			)
@@ -26682,7 +27020,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Inductor_SMD:L_1210_3225Metric_Pad1.42x2.65mm_HandSolder"
 			(at 185.42 130.81 0)
 			(effects
 				(font
@@ -27462,73 +27800,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:C_Small")
-		(at 340.36 204.47 180)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "8c5cf299-ff55-484a-82e9-1413ebf9a58c")
-		(property "Reference" "C25"
-			(at 342.646 204.47 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "8pF"
-			(at 337.566 204.47 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 340.36 204.47 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 340.36 204.47 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Unpolarized capacitor, small symbol"
-			(at 340.36 204.47 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "46ba61f7-9be0-4cb6-9d51-8cbc6c3dfbf4")
-		)
-		(pin "2"
-			(uuid "4b5e55db-17f5-44b3-a5f7-dc66b23ed5d6")
-		)
-		(instances
-			(project "main"
-				(path "/75591082-b990-4488-aadd-789d6fd456f5"
-					(reference "C25")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Connector:Conn_01x08_Pin")
 		(at 66.04 163.83 0)
 		(unit 1)
@@ -27762,76 +28033,6 @@
 			(project ""
 				(path "/75591082-b990-4488-aadd-789d6fd456f5"
 					(reference "#PWR093")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C_Small")
-		(at 233.68 140.97 180)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "929dfd92-63d4-42d3-840f-40666716cd2b")
-		(property "Reference" "C7"
-			(at 236.22 139.6935 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Value" "10uF"
-			(at 236.22 142.2335 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Footprint" ""
-			(at 233.68 140.97 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 233.68 140.97 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Unpolarized capacitor, small symbol"
-			(at 233.68 140.97 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "e4e4d825-6c6c-429f-baa7-dcf92a55dd83")
-		)
-		(pin "2"
-			(uuid "27b126db-8514-495f-bc4e-26a192d28af5")
-		)
-		(instances
-			(project "main"
-				(path "/75591082-b990-4488-aadd-789d6fd456f5"
-					(reference "C7")
 					(unit 1)
 				)
 			)
@@ -28907,7 +29108,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 177.8 124.46 0)
 			(effects
 				(font
@@ -31983,32 +32184,32 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:L_Small")
-		(at 228.6 138.43 270)
+		(lib_id "Device:C_Small")
+		(at 370.84 144.78 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "c869470a-62d5-4eb7-a746-917e4f5ee278")
-		(property "Reference" "L2"
-			(at 228.6 142.24 90)
+		(uuid "ca9e2ca1-0bf6-4407-84a6-480ec4cc3306")
+		(property "Reference" "C28"
+			(at 368.554 144.78 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Value" "3.3uH"
-			(at 228.6 140.462 90)
+		(property "Value" "0.1uF"
+			(at 373.634 144.78 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Footprint" ""
-			(at 228.6 138.43 0)
+		(property "Footprint" "Capacitor_SMD:C_0201_0603Metric"
+			(at 370.84 144.78 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -32017,7 +32218,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 228.6 138.43 0)
+			(at 370.84 144.78 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -32025,8 +32226,8 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Inductor, small symbol"
-			(at 228.6 138.43 0)
+		(property "Description" "Unpolarized capacitor, small symbol"
+			(at 370.84 144.78 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -32035,15 +32236,15 @@
 			)
 		)
 		(pin "1"
-			(uuid "84208a40-46fa-4451-9cff-012b6cb9f5ee")
+			(uuid "40549972-6b0b-4060-b2c3-f93611ebb77a")
 		)
 		(pin "2"
-			(uuid "3b2b6f18-cfc4-4439-b326-6ff0a9d13ae0")
+			(uuid "5d4f5bda-ea61-4efd-8700-229568f0ab2c")
 		)
 		(instances
 			(project "main"
 				(path "/75591082-b990-4488-aadd-789d6fd456f5"
-					(reference "L2")
+					(reference "C28")
 					(unit 1)
 				)
 			)
@@ -32477,7 +32678,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 78.74 180.34 0)
 			(effects
 				(font
@@ -33922,6 +34123,72 @@
 			(project "main"
 				(path "/75591082-b990-4488-aadd-789d6fd456f5"
 					(reference "#PWR056")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+3V3")
+		(at 116.84 111.76 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "de9e06a0-0ecb-4699-b43e-4462c009e18c")
+		(property "Reference" "#PWR0117"
+			(at 116.84 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+3V3"
+			(at 116.84 107.95 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 116.84 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 116.84 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+3V3\""
+			(at 116.84 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "a27b9367-f496-49d9-969d-305570b5b688")
+		)
+		(instances
+			(project "main"
+				(path "/75591082-b990-4488-aadd-789d6fd456f5"
+					(reference "#PWR0117")
 					(unit 1)
 				)
 			)
@@ -35419,6 +35686,73 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:L_Small")
+		(at 228.6 139.7 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "f49ba9d1-683b-429a-bc2d-878e2f95dc8d")
+		(property "Reference" "L14"
+			(at 228.6 143.51 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "3.3uH"
+			(at 228.6 141.732 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Inductor_SMD:L_1210_3225Metric_Pad1.42x2.65mm_HandSolder"
+			(at 228.6 139.7 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 228.6 139.7 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Inductor, small symbol"
+			(at 228.6 139.7 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "f888eb36-c7b7-4e2f-9353-a122ddc25ad5")
+		)
+		(pin "2"
+			(uuid "4c9fab78-a5cc-40e2-a137-f8414bbb9603")
+		)
+		(instances
+			(project "main"
+				(path "/75591082-b990-4488-aadd-789d6fd456f5"
+					(reference "L14")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:+3V3")
 		(at 431.8 142.24 90)
 		(unit 1)
@@ -35679,74 +36013,6 @@
 			(project "main"
 				(path "/75591082-b990-4488-aadd-789d6fd456f5"
 					(reference "L6")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C_Small")
-		(at 73.66 187.96 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "f9acaa28-b0e5-4dc7-b0d7-7a70b928d217")
-		(property "Reference" "C5"
-			(at 73.6536 181.61 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "18pF"
-			(at 73.6536 184.15 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 73.66 187.96 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 73.66 187.96 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Unpolarized capacitor, small symbol"
-			(at 73.66 187.96 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "3b95d2b7-7afb-4d3e-8319-90e94a335af4")
-		)
-		(pin "1"
-			(uuid "ca880f45-2f7d-4195-a6e8-3263331342be")
-		)
-		(instances
-			(project "main"
-				(path "/75591082-b990-4488-aadd-789d6fd456f5"
-					(reference "C5")
 					(unit 1)
 				)
 			)
