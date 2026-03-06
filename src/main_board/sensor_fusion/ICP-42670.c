@@ -252,7 +252,7 @@ uint8_t ICP_init(void)
     if (icp_read_reg(&icp_dev, REG_TEMP_DATA0, &temp_data[1], 1U) != 0U) {
         return 14U;
     }
-    
+
     const int16_t temp_raw = (int16_t)(temp_data[0] << 8) | temp_data[1];
     const float temp_c = (temp_raw / 132.48f) + 25.0f;  /* Conversion per datasheet */
     if ((temp_c < -40.0f) || (temp_c > 85.0f)) {
@@ -375,10 +375,10 @@ uint8_t ICP_readSensor(void)
     		/* Step 2: Perform DMA transfer for bulk data read (only if >= threshold) */
     		if (bytes >= DMA_THRESHOLD_BYTES) {
 			/* DMA path for large transfers */
-			dma_start_transfer(icp_dma_channel, 
-			                       (const void*)REG_FIFO_DATA_OUT, 
-			                       icp_dev.fifo_buf, 
-			                       bytes, 
+			dma_start_transfer(icp_dma_channel,
+			                       (const void*)REG_FIFO_DATA_OUT,
+			                       icp_dev.fifo_buf,
+			                       bytes,
 			                       0U);
     				/* Wait for DMA completion with timeout */
     				uint32_t timeout = 1000U; /* 1ms timeout */
@@ -452,16 +452,16 @@ uint8_t ICP_query_gyro_eul(Vec3 *euler)
     	asm volatile ("vmul.f32 %0, %1, %1" : "=t"(ay2) : "t"(ay));
     	asm volatile ("vmul.f32 %0, %1, %1" : "=t"(az2) : "t"(az));
     	asm volatile ("vadd.f32 %0, %1, %2" : "=t"(sum2) : "t"(ay2), "t"(az2));
-    	
+
     	/* sqrtf using VSQRT assembler instruction */
     	register float sqrt_sum;
     	asm volatile ("vsqrt.f32 %0, %1" : "=t"(sqrt_sum) : "t"(sum2));
-    	
+
     	/* atan2f for pitch: atan2(-ax, sqrt_sum) */
     	register float neg_ax;
     	asm volatile ("vneg.f32 %0, %1" : "=t"(neg_ax) : "t"(ax));
     	const float pitch_rad = atan2f(neg_ax, sqrt_sum);
-    	
+
     	/* atan2f for roll: atan2(ay, az) */
     	const float roll_rad = atan2f(ay, az);
 
@@ -470,7 +470,7 @@ uint8_t ICP_query_gyro_eul(Vec3 *euler)
     	register float pitch_deg, roll_deg;
     	asm volatile ("vmul.f32 %0, %1, %2" : "=t"(pitch_deg) : "t"(pitch_rad), "t"(rad_to_deg));
     	asm volatile ("vmul.f32 %0, %1, %2" : "=t"(roll_deg) : "t"(roll_rad), "t"(rad_to_deg));
-    	
+
     	euler->x = pitch_deg;
     	euler->y = roll_deg;
     	euler->z = 0.0f; /* Yaw not derivable from accelerometer alone */
@@ -505,7 +505,7 @@ uint8_t ICP_query_gyro_q(Quaternion *q)
     	register float gx_f = (float)gx_raw;
     	register float gy_f = (float)gy_raw;
     	register float gz_f = (float)gz_raw;
-    	
+
     	asm volatile ("vmul.f32 %0, %1, %2" : "=t"(wx) : "t"(gx_f), "t"(scale_factor));
     	asm volatile ("vmul.f32 %0, %1, %2" : "=t"(wy) : "t"(gy_f), "t"(scale_factor));
     	asm volatile ("vmul.f32 %0, %1, %2" : "=t"(wz) : "t"(gz_f), "t"(scale_factor));
@@ -521,7 +521,7 @@ uint8_t ICP_query_gyro_q(Quaternion *q)
     	asm volatile ("vmul.f32 %0, %1, %2" : "=t"(qb) : "t"(wx), "t"(half_dt));
     	asm volatile ("vmul.f32 %0, %1, %2" : "=t"(qc) : "t"(wy), "t"(half_dt));
     	asm volatile ("vmul.f32 %0, %1, %2" : "=t"(qd) : "t"(wz), "t"(half_dt));
-    	
+
     	q->a = qa;
     	q->b = qb;
     	q->c = qc;
@@ -533,22 +533,22 @@ uint8_t ICP_query_gyro_q(Quaternion *q)
     	asm volatile ("vmul.f32 %0, %1, %1" : "=t"(b2) : "t"(qb));
     	asm volatile ("vmul.f32 %0, %1, %1" : "=t"(c2) : "t"(qc));
     	asm volatile ("vmul.f32 %0, %1, %1" : "=t"(d2) : "t"(qd));
-    	
+
     	register float sum1, sum2, norm;
     	asm volatile ("vadd.f32 %0, %1, %2" : "=t"(sum1) : "t"(a2), "t"(b2));
     	asm volatile ("vadd.f32 %0, %1, %2" : "=t"(sum2) : "t"(c2), "t"(d2));
     	asm volatile ("vadd.f32 %0, %1, %2" : "=t"(norm) : "t"(sum1), "t"(sum2));
-    	
+
     	/* VSQRT for square root */
     	register float norm_sqrt;
     	asm volatile ("vsqrt.f32 %0, %1" : "=t"(norm_sqrt) : "t"(norm));
-    	
+
     	/* Check norm > 0 and compute inverse using VDIV */
     	if (norm_sqrt > 0.0f) {
     		register float one = 1.0f;
     		register float inv_norm;
     		asm volatile ("vdiv.f32 %0, %1, %2" : "=t"(inv_norm) : "t"(one), "t"(norm_sqrt));
-    		
+
     		/* Normalize: q *= inv_norm using VMUL */
     		asm volatile ("vmul.f32 %0, %1, %2" : "=t"(q->a) : "t"(qa), "t"(inv_norm));
     		asm volatile ("vmul.f32 %0, %1, %2" : "=t"(q->b) : "t"(qb), "t"(inv_norm));
@@ -620,15 +620,15 @@ static void icp_flush_fifo(icp_42670_dev *dev)
     uint8_t cnt_h, cnt_l;
     icp_read_reg(dev, REG_FIFO_COUNTH, &cnt_h, 1U);
     icp_read_reg(dev, REG_FIFO_COUNTL, &cnt_l, 1U);
-    
+
     uint16_t remaining = (uint16_t)((cnt_h << 8) | cnt_l);
 
     while (remaining > 0U) {
         uint8_t dummy[ICP_FIFO_PACKET_SIZE];
         icp_read_reg(dev, REG_FIFO_DATA_OUT, dummy, ICP_FIFO_PACKET_SIZE);
 
-        icp_read_reg(dev, REG_FIFO_COUNTH, cnt, 2U);
-        remaining = (uint16_t)(((uint16_t)cnt[0] << 8) | cnt[1]);
+        icp_read_reg(dev, REG_FIFO_COUNTH, remaining, 2U);
+        remaining = (uint16_t)(((uint16_t)cnt_h << 8) | cnt_l);
     }
 }
 
@@ -673,7 +673,7 @@ static inline void icp_configure_cs(void)
 static inline void icp_update_scale_factors(icp_42670_dev *dev)
 {
     ASSERT_NOT_NULL(dev);
-    
+
     /* Accelerometer scaling factors (g per LSB) */
     switch (dev->accel_fs) {
         case ACCEL_FSSEL_2G:
@@ -692,7 +692,7 @@ static inline void icp_update_scale_factors(icp_42670_dev *dev)
             dev->accel_scale = 16384.0f;  /* Default 2g */
             break;
     }
-    
+
     /* Gyroscope scaling factors (dps per LSB) */
     switch (dev->gyro_fs) {
         case GYRO_FSSEL_250DPS:
