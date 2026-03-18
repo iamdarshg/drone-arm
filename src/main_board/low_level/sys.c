@@ -35,3 +35,11 @@ void init_scheduler(void) {
 }
 
 
+void global_irq_enable(void) {
+    __asm volatile ("cpsie i" : : : "memory");
+}
+
+// Disable all interrupts (set PRIMASK)
+void global_irq_disable(void) {
+    __asm volatile ("cpsid i" : : : "memory");
+}

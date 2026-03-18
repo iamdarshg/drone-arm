@@ -32,7 +32,7 @@
 #define LSM_SPI_MISO_PIN      8U   /* SPI MISO - Master In Slave Out */
 #define LSM_SPI_SCK_PIN       9U   /* SPI Clock */
 #define LSM_SPI_MOSI_PIN      10U  /* SPI MOSI - Master Out Slave In */
-#define LSM_SPI_CS_PIN        11U  /* Chip Select (active low) */
+#define LSM_SPI_CS_PIN        0U  /* Chip Select (active low) */
 
 /*--------------------------- SPI Transaction Macros --------------------*/
 #define SPI_READ_BIT          0x80U  /* Bit 7 set for read operations */
@@ -48,7 +48,7 @@
 #define REG_FIFO_CTRL2        0x09U  /* FIFO control 2 */
 #define REG_FIFO_CTRL3        0x0AU  /* FIFO control 3 */
 #define REG_FIFO_CTRL4        0x0BU  /* FIFO control 4 */
-#define REG_FIFO_WTM          0x07U  /* FIFO watermark threshold */
+// #define REG_FIFO_WTM          0x07U  /* FIFO watermark threshold */
 #define REG_FIFO_STATUS1      0x3AU  /* FIFO status 1 (num unread words) */
 #define REG_FIFO_STATUS2      0x3BU  /* FIFO status 2 (watermark, overrun) */
 #define REG_OUT_TEMP_L        0x20U  /* Temperature low byte */
@@ -238,7 +238,7 @@ uint8_t LSM6_init(uint8_t spi_id)
 
     /* Initialize device context */
     lsm_dev.spi_id = spi_id;
-    lsm_dev.cs_pin = cs_pin;
+    lsm_dev.cs_pin = LSM_SPI_CS_PIN;
     lsm_dev.fifo_buf = lsm_fifo_buffer;
     lsm_dev.fifo_capacity = LSM_FIFO_BUFFER_SIZE;
     lsm_dev.accel_fs = ACCEL_FSSEL_2G;
@@ -247,7 +247,7 @@ uint8_t LSM6_init(uint8_t spi_id)
     lsm_dev.gyro_scale = gyro_scale_float[GYRO_FSSEL_250DPS];
 
     /* Step 1: Configure SPI at 10 MHz (max for LSM6DSO32) */
-    spi_init(spi_id, 10000000U, SPI_MODE_0, SPI_MSB_FIRST);
+    spi_init(spi_id, 10000000U, True, LSM_SPI_CS_PIN); // making sure we are in master mode
 
     /* Step 2: Initialize DMA for bulk transfers (SPI_RX) */
     lsm_dma_channel = 2U; /* Use DMA channel 2 for SPI0 RX */
@@ -472,7 +472,7 @@ uint8_t LSM6_readSensor(void)
     const float temp_c = (temp_raw / 256.0f) + 25.0f;  /* Datasheet formula */
 
     /* Parse samples with FPU scaling */
-    const uint32_t samples = 1;  /* We read one sample */
+    // const uint32_t samples = 1;  /* We read one sample */
     const float accel_inv_scale = 1.0f / lsm_dev.accel_scale;
     const float gyro_inv_scale = 1.0f / lsm_dev.gyro_scale;
 
@@ -651,21 +651,12 @@ static inline uint8_t lsm_write_reg(lsm6_dev *dev, uint8_t reg, const uint8_t *d
     ASSERT_NOT_NULL(data);
     ASSERT(len > 0U);
 
-    /* SPI transaction: [WRITE_CMD | reg_addr] [data_bytes...] */
-    uint8_t tx_buf[32];
-    tx_buf[0] = reg & ~SPI_READ_BIT;  /* Write operation */
-
-    register uint32_t i;
-    for (i = 0U; i < len; i++) {
-        tx_buf[1U + i] = data[i];
-    }
-
     /* Critical section: ensure CS atomicity */
-    irq_disable();
-    gpio_put(dev->cs_pin, false);  /* Assert CS (active low) */
-    const uint8_t result = spi_write_read(dev->spi_id, tx_buf, 1U + len, NULL, 0U);
+    global_irq_enable();
+    gpio_put(dev->cs_pin, false);  /* Assert CS */
+    const uint8_t result= spi_write_address(dev->spi, reg, data, len);
     gpio_put(dev->cs_pin, true);   /* Deassert CS - always */
-    irq_enable();
+    global_irq_disable();
 
     return result;
 }
@@ -683,12 +674,10 @@ static inline uint8_t lsm_read_reg(lsm6_dev *dev, uint8_t reg, uint8_t *data, ui
         return 0U;
     }
 
-    const uint8_t read_cmd = reg | SPI_READ_BIT;  /* Read operation */
-
     /* Critical section: ensure CS atomicity */
     irq_disable();
     gpio_put(dev->cs_pin, false);  /* Assert CS */
-    const uint8_t result = spi_write_read(dev->spi_id, &read_cmd, 1U, data, len);
+    const uint8_t result = spi_read_address(dev->spi_id, reg, data, len);
     gpio_put(dev->cs_pin, true);   /* Deassert CS - always */
     irq_enable();
 

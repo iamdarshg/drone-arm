@@ -113,9 +113,14 @@ typedef struct __attribute__((aligned(16))) {
         float y;
         float z;
     } reading;
+    struct __attribute__((aligned(16))) {
+        float x;
+        float y;
+        float z;
+    } gyro;
     uint8_t fifo_len;
     uint8_t fifo_full;
-    uint8_t padding[6];  /* 16-byte alignment */
+    uint8_t padding[2];  /* 16-byte alignment adjustment */
 } icp_42670_read_aligned;
 
 static icp_42670_read_aligned latest_icp[ICP_MAX_FIFO_SAMPLES] __attribute__((aligned(16)));
@@ -413,6 +418,17 @@ uint8_t ICP_readSensor(void)
         const int16_t ay_raw = (int16_t)((p[2] << 8) | p[3]);
         const int16_t az_raw = (int16_t)((p[4] << 8) | p[5]);
 
+        /* Parse gyroscope data and convert to dps using FPU */
+        const int16_t gx_raw = (int16_t)((p[6] << 8) | p[7]);
+        const int16_t gy_raw = (int16_t)((p[8] << 8) | p[9]);
+        const int16_t gz_raw = (int16_t)((p[10] << 8) | p[11]);
+
+        /* Store gyroscope data in separate gyro field */
+        latest_icp[i].gyro.x = (float)gx_raw * gyro_inv_scale;
+        latest_icp[i].gyro.y = (float)gy_raw * gyro_inv_scale;
+        latest_icp[i].gyro.z = (float)gz_raw * gyro_inv_scale;
+
+         /* Store accelerometer data in separate reading field */
         latest_icp[i].reading.x = (float)ax_raw * accel_inv_scale;
         latest_icp[i].reading.y = (float)ay_raw * accel_inv_scale;
         latest_icp[i].reading.z = (float)az_raw * accel_inv_scale;
@@ -425,6 +441,9 @@ uint8_t ICP_readSensor(void)
         latest_icp[i].reading.x = 0.0f;
         latest_icp[i].reading.y = 0.0f;
         latest_icp[i].reading.z = 0.0f;
+        latest_icp[i].gyro.x = 0.0f;
+        latest_icp[i].gyro.y = 0.0f;
+        latest_icp[i].gyro.z = 0.0f;
         latest_icp[i].fifo_len = 0U;
         latest_icp[i].fifo_full = 0U;
     }
@@ -621,14 +640,14 @@ static void icp_flush_fifo(icp_42670_dev *dev)
     icp_read_reg(dev, REG_FIFO_COUNTH, &cnt_h, 1U);
     icp_read_reg(dev, REG_FIFO_COUNTL, &cnt_l, 1U);
 
-    uint16_t remaining = (uint16_t)((cnt_h << 8) | cnt_l);
+    uint8_t remaining = (uint8_t)((cnt_h << 8) | cnt_l);
 
     while (remaining > 0U) {
         uint8_t dummy[ICP_FIFO_PACKET_SIZE];
         icp_read_reg(dev, REG_FIFO_DATA_OUT, dummy, ICP_FIFO_PACKET_SIZE);
 
         icp_read_reg(dev, REG_FIFO_COUNTH, remaining, 2U);
-        remaining = (uint16_t)(((uint16_t)cnt_h << 8) | cnt_l);
+        remaining = (uint8_t)(((uint8_t)cnt_h << 8) | cnt_l);
     }
 }
 

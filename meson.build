@@ -56,7 +56,7 @@ sdk_args = [
 add_project_arguments(sdk_args, language: 'c')
 
 # Debug/Release configuration
-debug_mode = true
+debug_mode = false
 if debug_mode
   add_project_arguments('-g', '-O0', '-DDEBUG=1', language: 'c')
   message('DEBUG mode: Building with debug symbols')
@@ -139,7 +139,6 @@ main_board_sources = [
   'src/main_board/low_level/clocks_overclock.c',
   'src/main_board/hardware_defs/pins.c',
   'src/main_board/sensor_fusion/lsm6.c',
-  'src/main_board/sensor_fusion/ICP-42670.c',
   # Boot stage 2 padded
   boot2_padded,
 ]

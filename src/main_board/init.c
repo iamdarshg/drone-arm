@@ -13,14 +13,18 @@
 #include "low_level/gpio.h"
 #include "scheduler.h"
 #include "sensor_fusion/lsm6.h"
-#include "sensor_fusion/ICP-42670.h"
+// #include "sensor_fusion/ICP-42670.h"
 
-
-
+int n = 0;
+int k = 0.01f;
 void loop_task(uint8_t task_id) {
     (void)task_id;
-    gpio_toggle(25);
+    pwm_set_duty(n);
     sched_sleep_ms(100);
+    n+=k;
+    if(n>=1.0f){
+        k=k*-1;
+    }
 }
 
 void main_board_init(void) {
@@ -36,9 +40,10 @@ void main_board_init(void) {
     init_i2c();
     init_mpu();
     init_dma();
-    ICP_init();
+    // ICP_init();
     LSM6_init(0);
     sched_init();
+    pwm_slice_init(4, 0x4000000);
     sched_create(loop_task);
 }
 

@@ -25,7 +25,7 @@ meson setup build
 
 To enable **Debug Mode** (includes assembly output and `-O0`):
 ```bash
-meson setup build -Ddebug=enabled
+meson setup build -Ddebug=enabled 
 ```
 
 ### Building

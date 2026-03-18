@@ -1,11 +1,11 @@
 /**
  * PWM Configuration for Main Controller Board (RP2350B)
- * 
+ *
  * This header provides easy configuration for:
  * - PWM frequency settings
  * - Active slice selection
  * - GPIO pin mapping
- * 
+ *
  * Usage:
  *   1. Uncomment PWM_SLICE_x_ENABLED to enable specific slices
  *   2. Set PWM_FREQ_HZ for desired frequency (default: 20 kHz)
@@ -60,9 +60,9 @@
 #define PWM_SLICE_3_GPIO_A   6
 #define PWM_SLICE_3_GPIO_B   7
 
-#define PWM_SLICE_4_ENABLED  0
+#define PWM_SLICE_4_ENABLED  1
 #define PWM_SLICE_4_GPIO_A   8
-#define PWM_SLICE_4_GPIO_B   9
+#define PWM_SLICE_4_GPIO_B   25
 
 #define PWM_SLICE_5_ENABLED  0
 #define PWM_SLICE_5_GPIO_A   10

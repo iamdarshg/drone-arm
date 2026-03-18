@@ -10,4 +10,8 @@ void init_watchdog(void);
 /** @brief Initialize Task Scheduler. */
 void init_scheduler(void);
 
+void global_irq_enable(void);
+void global_irq_disable(void);
+
+
 #endif // SYS_H

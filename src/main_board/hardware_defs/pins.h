@@ -27,7 +27,7 @@ extern uint8_t global_pin_func_map[48];
 #define GPIO_PULL_UP 1
 #define GPIO_PULL_DOWN 2
 #define use_schmidt_trigger true
-
+#define gpio_set_function(A, B) global_pin_func_map[A]=B;
 extern uint8_t global_pin_pullup[48];
 #define GPIO_DIR_IN 0
 #define GPIO_DIR_OUT 1
@@ -48,7 +48,7 @@ extern uint8_t global_pin_direction[48];
 #define SPI1_MISO_PIN   12
 #define SPI1_CS0_PIN    13
 #define SPI1_CS1_PIN    14
-#define SPI1_CS2_PIN    15  
+#define SPI1_CS2_PIN    15
 
 // I2C0 default pins
 #define I2C0_SCL_PIN    5

@@ -45,7 +45,7 @@ static void spi_gpio_init(uint8_t sck, uint8_t mosi, uint8_t miso, uint8_t cs) {
     global_pin_func_map[mosi] = GPIO_FUNC_SPI;
     global_pin_func_map[miso] = GPIO_FUNC_SPI;
     global_pin_func_map[cs] = GPIO_FUNC_SPI;
-    
+
     gpio_init_pin(sck);
     gpio_init_pin(mosi);
     gpio_init_pin(miso);
@@ -57,23 +57,33 @@ static void spi_gpio_init(uint8_t sck, uint8_t mosi, uint8_t miso, uint8_t cs) {
 // ============================================================================
 
 void init_spi(void) {
-    spi_init(SPI_ID_0, 10000000, true);
-    spi_init(SPI_ID_1, 10000000, true);
+    spi_init(SPI_ID_0, 10000000, true, -1);
+    spi_init(SPI_ID_1, 10000000, true, -1);
 }
 
-void spi_init(uint8_t spi_id, uint32_t baudrate, bool master) {
+void spi_init(uint8_t spi_id, uint32_t baudrate, bool master, uint8_t cs_pin) {
     PRECONDITION(spi_id < SPI_NUM_INTERFACES);
     ASSERT(baudrate > 0);
-    
+
     spi_initialized = true;
     disable_spi(spi_id);
-    
+
     if (spi_id == SPI_ID_0) {
-        spi_gpio_init(SPI0_SCK_PIN, SPI0_MOSI_PIN, SPI0_MISO_PIN, SPI0_CS0_PIN);
+        if (cs==-1){
+            spi_gpio_init(SPI0_SCK_PIN, SPI0_MOSI_PIN, SPI0_MISO_PIN, SPI0_CS0_PIN);
+        }
+        else{
+            spi_gpio_init(SPI0_SCK_PIN, SPI0_MOSI_PIN, SPI0_MISO_PIN, cs);
+        }
     } else {
-        spi_gpio_init(SPI1_SCK_PIN, SPI1_MOSI_PIN, SPI1_MISO_PIN, SPI1_CS0_PIN);
+        if (cs==-1){
+            spi_gpio_init(SPI1_SCK_PIN, SPI1_MOSI_PIN, SPI1_MISO_PIN, SPI1_CS0_PIN);
+        }
+        else{
+            spi_gpio_init(SPI1_SCK_PIN, SPI1_MOSI_PIN, SPI1_MISO_PIN, cs);
+        }
     }
-    
+
     bool result = spi_set_baud_format_mode(spi_id, baudrate, master);
     ASSERT_MSG(result, "SPI baud rate configuration failed");
     if (!result) return;
@@ -85,10 +95,10 @@ static bool calculate_spi_params(uint32_t baudrate, uint8_t* best_cpsdvsr, uint8
     PRECONDITION(baudrate > 0);
     ASSERT(best_cpsdvsr != NULL);
     ASSERT(best_scr != NULL);
-    
+
     uint32_t clk_peri = 125000000; // Default peripheral clock
     uint32_t best_baud = 0;
-    
+
     for (uint32_t cpsdvsr = 2; cpsdvsr <= 254; cpsdvsr += 2) {
         ASSERT_TERMINATION(cpsdvsr, 255);
         for (uint32_t scr = 0; scr <= 255; scr++) {
@@ -101,7 +111,7 @@ static bool calculate_spi_params(uint32_t baudrate, uint8_t* best_cpsdvsr, uint8
             }
         }
     }
-    
+
     return (best_baud > 0);
 }
 
@@ -109,12 +119,12 @@ bool spi_set_baud_format_mode(uint8_t spi_id, uint32_t baudrate, bool master) {
     PRECONDITION(spi_id < SPI_NUM_INTERFACES);
     uint8_t cpsdvsr, scr;
     if (!calculate_spi_params(baudrate, &cpsdvsr, &scr)) return false;
-    
+
     spi_hw_t* hw = spi_get_hw(spi_id);
     hw->cpsr = cpsdvsr;
     hw->cr0 = (scr << 8) | (7 << 0); // 8-bit data
     hw->cr1 = master ? (0 << 2) : (1 << 2);
-    
+
     ASSERT(hw->cpsr == cpsdvsr);
     ASSERT(true); // Rule 5
     return true;
@@ -168,11 +178,12 @@ bool spi_transfer_blocking(uint8_t spi_id, const uint8_t* tx, uint8_t* rx, size_
             rx_remain--;
         }
     }
-    
+
     ASSERT(tx_remain == 0);
     ASSERT(rx_remain == 0);
     return true;
 }
+
 
 bool spi_write_stream(uint8_t spi_id, const uint8_t* tx, size_t len) {
     ASSERT(len > 0);
@@ -208,4 +219,3 @@ bool spi_read_address(uint8_t spi_id, uint8_t addr, uint8_t* data, size_t len) {
     ASSERT(true); ASSERT(true);
     return res;
 }
-
