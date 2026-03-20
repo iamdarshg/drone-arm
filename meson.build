@@ -36,10 +36,12 @@ sdk_structs_inc = include_directories('include/pico-sdk/src/rp2350/hardware_stru
 sdk_vreg_inc = include_directories('include/pico-sdk/src/rp2_common/hardware_vreg/include')
 sdk_base_inc = include_directories('include/pico-sdk/src/common/pico_base_headers/include')
 sdk_base_inc = include_directories('include/pico-sdk/src/common/pico_base_headers/include')
+pico_vendor_inc = include_directories('include/pico-vendor')
 hardware_inc = include_directories('include/hardware')
 common_inc = include_directories('src/common')
 main_board_inc = include_directories('src/main_board', 'src/main_board/hardware_defs', 'src/main_board/low_level')
 esc_inc = include_directories('src/esc_controller')
+include_inc = include_directories('include')
 
 # SDK version defines
 sdk_args = [
@@ -121,6 +123,7 @@ common_sources = [
 main_board_sources = [
   'src/main_board/main.c',
   'src/main_board/init.c',
+  'src/main_board/ramfunc_copy.c',
   'src/main_board/irq.c',
   # Low level drivers
   'src/main_board/low_level/gpio.c',
@@ -200,7 +203,7 @@ message('==============================================')
 
 firmware_main_board = executable('firmware_main_board.elf',
   main_board_sources + common_sources,
-  include_directories: [hardware_inc, pico_sdk_inc, sdk_regs_inc, sdk_structs_inc, sdk_vreg_inc, sdk_base_inc, main_board_inc, sensor_fusion_inc, common_inc],
+  include_directories: [hardware_inc, pico_vendor_inc, pico_sdk_inc, sdk_regs_inc, sdk_structs_inc, sdk_vreg_inc, sdk_base_inc, main_board_inc, sensor_fusion_inc, common_inc, include_inc],
   link_args: link_args,
   install: false,
 )
@@ -254,7 +257,7 @@ test_sources = [
 
 test_main = executable('test_main',
   ['tests/test_main.c', 'src/main_board/low_level/gpio.c', 'src/main_board/hardware_defs/pins.c'] + common_sources,
-  include_directories: [hardware_inc, pico_sdk_inc, sdk_regs_inc, sdk_structs_inc, sdk_vreg_inc, sdk_base_inc, main_board_inc, common_inc],
+  include_directories: [hardware_inc, pico_vendor_inc, pico_sdk_inc, sdk_regs_inc, sdk_structs_inc, sdk_vreg_inc, sdk_base_inc, main_board_inc, common_inc],
   link_args: link_args,
 )
 

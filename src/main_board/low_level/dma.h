@@ -13,7 +13,7 @@ void init_dma(void);
 /**
  * @brief Configure and start a DMA transfer.
  */
-void dma_start_transfer(uint8_t channel, const void *read_addr, void *write_addr, uint32_t count, uint32_t ctrl);
+uint8_t dma_start_transfer(uint8_t channel, const void *read_addr, void *write_addr, uint32_t count, uint32_t ctrl);
 
 /**
  * @brief Check if a DMA channel is busy.

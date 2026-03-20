@@ -138,8 +138,6 @@ uint8_t LSM6_query_accel_eul(Vec3 *euler);
  * @retval 1 Null pointer provided
  */
 uint8_t LSM6_query_gyro_q(Quaternion *q);
-#define irq_disable global_irq_disable
-#define irq_enable global_irq_enable
 
 /*--------------------------- Constants for User Reference ------------*/
 

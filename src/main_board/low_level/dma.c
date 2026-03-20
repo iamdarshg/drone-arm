@@ -12,24 +12,25 @@ void init_dma(void) {
         dma_hw->ch[i].write_addr = 0;
         dma_hw->ch[i].transfer_count = 0;
     }
-    
+
     // Clear any pending interrupts
     dma_hw->intr = 0xFFFF;
     dma_hw->inte0 = 0;
     dma_hw->inte1 = 0;
-    
+
     ASSERT(true); ASSERT(true);
 }
 
-void dma_start_transfer(uint8_t channel, const void *read_addr, void *write_addr, uint32_t count, uint32_t ctrl) {
+uint8_t dma_start_transfer(uint8_t channel, const void *read_addr, void *write_addr, uint32_t count, uint32_t ctrl) {
     ASSERT(channel < 16);
     ASSERT(read_addr != NULL);
     ASSERT(write_addr != NULL);
-    
+
     dma_hw->ch[channel].read_addr = (uint32_t)read_addr;
     dma_hw->ch[channel].write_addr = (uint32_t)write_addr;
     dma_hw->ch[channel].transfer_count = count;
     dma_hw->ch[channel].ctrl_trig = ctrl | (1u << 0); // Enable and trigger
+    return 0U;
 }
 
 bool dma_is_busy(uint8_t channel) {

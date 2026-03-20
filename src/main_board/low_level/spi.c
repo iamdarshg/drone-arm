@@ -57,11 +57,11 @@ static void spi_gpio_init(uint8_t sck, uint8_t mosi, uint8_t miso, uint8_t cs) {
 // ============================================================================
 
 void init_spi(void) {
-    spi_init(SPI_ID_0, 10000000, true, -1);
-    spi_init(SPI_ID_1, 10000000, true, -1);
+    spi_init(SPI_ID_0, 10000000, true, 100);
+    spi_init(SPI_ID_1, 10000000, true, 100);
 }
 
-void spi_init(uint8_t spi_id, uint32_t baudrate, bool master, uint8_t cs_pin) {
+void spi_init(uint8_t spi_id, uint32_t baudrate, bool master, int cs) {
     PRECONDITION(spi_id < SPI_NUM_INTERFACES);
     ASSERT(baudrate > 0);
 
@@ -69,14 +69,14 @@ void spi_init(uint8_t spi_id, uint32_t baudrate, bool master, uint8_t cs_pin) {
     disable_spi(spi_id);
 
     if (spi_id == SPI_ID_0) {
-        if (cs==-1){
+        if (cs==100){
             spi_gpio_init(SPI0_SCK_PIN, SPI0_MOSI_PIN, SPI0_MISO_PIN, SPI0_CS0_PIN);
         }
         else{
             spi_gpio_init(SPI0_SCK_PIN, SPI0_MOSI_PIN, SPI0_MISO_PIN, cs);
         }
     } else {
-        if (cs==-1){
+        if (cs==100){
             spi_gpio_init(SPI1_SCK_PIN, SPI1_MOSI_PIN, SPI1_MISO_PIN, SPI1_CS0_PIN);
         }
         else{
@@ -188,6 +188,14 @@ bool spi_transfer_blocking(uint8_t spi_id, const uint8_t* tx, uint8_t* rx, size_
 bool spi_write_stream(uint8_t spi_id, const uint8_t* tx, size_t len) {
     ASSERT(len > 0);
     bool result = spi_transfer_blocking(spi_id, tx, NULL, len);
+    ASSERT(result || !result);
+    return result;
+}
+
+bool spi_read_stream(uint8_t spi_id, uint8_t* rx, size_t len) {
+    ASSERT(len > 0);
+    ASSERT(rx != NULL);
+    bool result = spi_transfer_blocking(spi_id, NULL, rx, len);
     ASSERT(result || !result);
     return result;
 }

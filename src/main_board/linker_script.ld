@@ -51,6 +51,26 @@ SECTIONS {
         end = .;
         __end__ = .;
     } > RAM
+
+    /* Functions explicitly placed to run from RAM. They are stored in flash and
+       copied to RAM at startup via AT > FLASH semantics. Place into RAM for
+       execution to reduce flash wait states for critical code. */
+    .ramfunc : {
+        __sramfunc_load = LOADADDR(.ramfunc);
+        __sramfunc_start = .;
+        *(.ramfunc*)
+        . = ALIGN(4);
+        __sramfunc_end = .;
+    } > RAM AT > FLASH
+
+    /* Flash-resident storage area for logs, large tables, and other non-executable
+       data that should remain in flash rather than consume RAM. */
+    .flash_storage : {
+        __sflash_storage = .;
+        KEEP(*(.flash_storage*))
+        . = ALIGN(4);
+        __eflash_storage = .;
+    } > FLASH
     
     /* Stack at end of RAM */
     __stack_top = ORIGIN(RAM) + LENGTH(RAM);

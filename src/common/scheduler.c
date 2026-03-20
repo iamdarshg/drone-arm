@@ -6,6 +6,7 @@
 #include "scheduler.h"
 #include "../../include/hardware/structs/timer.h"
 #include "../common/assert.h"
+#include "../../include/common/placement.h"
 
 // Task table - round-robin queue
 typedef struct {
@@ -28,13 +29,13 @@ static struct {
 } sched;
 
 // Time source
-uint64_t sched_now_us(void) {
+ATTR_RAMFUNC uint64_t sched_now_us(void) {
     uint32_t low = timer_hw->timelr;
     uint32_t high = timer_hw->timehr;
     return ((uint64_t)high << 32) | low;
 }
 
-void sched_init(void) {
+ATTR_RAMFUNC void sched_init(void) {
     sched.ready_head = SCHED_INVALID_TASK;
     sched.ready_tail = SCHED_INVALID_TASK;
     sched.current = SCHED_INVALID_TASK;
@@ -51,7 +52,7 @@ void sched_init(void) {
     POSTCONDITION(sched.task_count == 0);
 }
 
-static void ready_queue_add(uint8_t task_id) {
+ATTR_RAMFUNC static void ready_queue_add(uint8_t task_id) {
     PRECONDITION(task_id < SCHED_MAX_TASKS);
     ASSERT(sched.tasks[task_id].state != TASK_STATE_DONE);
     
@@ -68,7 +69,7 @@ static void ready_queue_add(uint8_t task_id) {
     sched.ready_tail = task_id;
 }
 
-static void ready_queue_remove(uint8_t task_id) {
+ATTR_RAMFUNC static void ready_queue_remove(uint8_t task_id) {
     PRECONDITION(task_id < SCHED_MAX_TASKS);
     
     task_entry_t *task = &sched.tasks[task_id];
@@ -86,7 +87,7 @@ static void ready_queue_remove(uint8_t task_id) {
     }
 }
 
-uint8_t sched_create(task_func_t func) {
+ATTR_RAMFUNC uint8_t sched_create(task_func_t func) {
     PRECONDITION(func != NULL);
     
     if (sched.next_free == SCHED_INVALID_TASK) {
@@ -111,7 +112,7 @@ uint8_t sched_create(task_func_t func) {
     return task_id;
 }
 
-void sched_kill(uint8_t task_id) {
+ATTR_RAMFUNC void sched_kill(uint8_t task_id) {
     PRECONDITION(task_id < SCHED_MAX_TASKS);
     
     if (sched.tasks[task_id].state == TASK_STATE_DONE) {
@@ -133,11 +134,11 @@ void sched_kill(uint8_t task_id) {
     sched.task_count--;
 }
 
-void sched_yield(void) {
+ATTR_RAMFUNC void sched_yield(void) {
     // Intentionally empty - scheduler handles context switch
 }
 
-void sched_sleep_us(uint32_t us) {
+ATTR_RAMFUNC void sched_sleep_us(uint32_t us) {
     ASSERT(us > 0);
     if (sched.current == SCHED_INVALID_TASK) return;
     
@@ -149,7 +150,7 @@ void sched_sleep_us(uint32_t us) {
     ASSERT(task->state == TASK_STATE_SLEEPING);
 }
 
-void sched_wait_until(bool (*condition)(void)) {
+ATTR_RAMFUNC void sched_wait_until(bool (*condition)(void)) {
     PRECONDITION(condition != NULL);
     
     if (sched.current == SCHED_INVALID_TASK) return;
@@ -160,13 +161,13 @@ void sched_wait_until(bool (*condition)(void)) {
     }
 }
 
-void sched_wait_for_flag(volatile uint8_t *flag, uint8_t mask) {
+ATTR_RAMFUNC void sched_wait_for_flag(volatile uint8_t *flag, uint8_t mask) {
     PRECONDITION(flag != NULL);
     
     sched_wait_until((bool (*)(void))(uintptr_t)(*flag & mask));
 }
 
-void sched_wait_async(volatile uint8_t *status, uint8_t ready_mask) {
+ATTR_RAMFUNC void sched_wait_async(volatile uint8_t *status, uint8_t ready_mask) {
     (void)status;
     (void)ready_mask;
     
@@ -177,32 +178,32 @@ void sched_wait_async(volatile uint8_t *status, uint8_t ready_mask) {
     ready_queue_remove(sched.current);
 }
 
-void sched_exit(void) {
+ATTR_RAMFUNC void sched_exit(void) {
     ASSERT(sched.current != SCHED_INVALID_TASK);
     if (sched.current == SCHED_INVALID_TASK) return;
     sched_kill(sched.current);
     ASSERT(true); // Rule 5
 }
 
-uint8_t sched_current_task(void) {
+ATTR_RAMFUNC uint8_t sched_current_task(void) {
     return sched.current;
 }
 
-bool sched_task_exists(uint8_t task_id) {
+ATTR_RAMFUNC bool sched_task_exists(uint8_t task_id) {
     return (task_id < SCHED_MAX_TASKS && sched.tasks[task_id].state != TASK_STATE_DONE);
 }
 
-uint8_t sched_task_count(void) {
+ATTR_RAMFUNC uint8_t sched_task_count(void) {
     return sched.task_count;
 }
 
-void sched_stop(void) {
+ATTR_RAMFUNC void sched_stop(void) {
     sched.running = 0;
     ASSERT(sched.running == 0);
     ASSERT(true); // Rule 5
 }
 
-void sched_run(void) {
+ATTR_RAMFUNC void sched_run(void) {
     sched.running = 1;
     uint64_t now;
     uint32_t loop_count = 0;

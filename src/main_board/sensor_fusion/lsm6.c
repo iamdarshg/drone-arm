@@ -22,12 +22,14 @@
 
 #include <stdint.h>
 #include <math.h>
+#include <stdbool.h>
 #include "assert.h"
 #include "utils.h"
 #include "low_level/spi.h"
 #include "low_level/gpio.h"
 #include "low_level/dma.h"
-
+#include "low_level/sys.h"
+#include "../common/scheduler.h"
 /*--------------------------- Pin Definitions ---------------------------*/
 #define LSM_SPI_MISO_PIN      8U   /* SPI MISO - Master In Slave Out */
 #define LSM_SPI_SCK_PIN       9U   /* SPI Clock */
@@ -217,12 +219,15 @@ static inline uint8_t lsm_read_reg_with_burst_dma(lsm6_dev *dev, uint8_t reg, ui
 static void lsm_flush_fifo(lsm6_dev *dev);
 static inline void lsm_configure_spi(void);
 static inline void lsm_configure_cs(void);
-static inline float lsm_accel_to_float(int16_t raw, float scale);
-static inline float lsm_gyro_to_rad_s(int16_t raw, float scale);
+
 
 /*======================================================================
  *  Public API - All return uint8_t exit code (0 = success)
  *======================================================================*/
+
+#define irq_disable global_irq_disable
+#define irq_enable global_irq_enable
+#define gpio_put gpio_set
 
 /*----------------------------------------------------------------------
  *  @brief Initialize LSM6DSO32 sensor with SPI, DMA, and hardware FPU
@@ -247,7 +252,7 @@ uint8_t LSM6_init(uint8_t spi_id)
     lsm_dev.gyro_scale = gyro_scale_float[GYRO_FSSEL_250DPS];
 
     /* Step 1: Configure SPI at 10 MHz (max for LSM6DSO32) */
-    spi_init(spi_id, 10000000U, True, LSM_SPI_CS_PIN); // making sure we are in master mode
+    spi_init(spi_id, 10000000U, true, LSM_SPI_CS_PIN); // making sure we are in master mode
 
     /* Step 2: Initialize DMA for bulk transfers (SPI_RX) */
     lsm_dma_channel = 2U; /* Use DMA channel 2 for SPI0 RX */
@@ -323,7 +328,7 @@ uint8_t LSM6_init(uint8_t spi_id)
 
     /* Step 12: Setup FIFO for stream mode */
     const uint8_t fifo_wtm = 10U;  /* Watermark at 10 samples */
-    if (lsm_write_reg(&lsm_dev, REG_FIFO_WTM, &fifo_wtm, 1U) != 0U) {
+    if (lsm_write_reg(&lsm_dev, REG_FIFO_CTRL1, &fifo_wtm, 1U) != 0U) {
         return 11U;
     }
 
@@ -332,6 +337,7 @@ uint8_t LSM6_init(uint8_t spi_id)
     if (lsm_write_reg(&lsm_dev, REG_FIFO_CTRL4, &fifo_ctrl4_stream, 1U) != 0U) {
         return 12U;
     }
+    lsm_flush_fifo(&lsm_dev);
 
     return 0U;  /* Initialization successful */
 }
@@ -654,7 +660,7 @@ static inline uint8_t lsm_write_reg(lsm6_dev *dev, uint8_t reg, const uint8_t *d
     /* Critical section: ensure CS atomicity */
     global_irq_enable();
     gpio_put(dev->cs_pin, false);  /* Assert CS */
-    const uint8_t result= spi_write_address(dev->spi, reg, data, len);
+    const uint8_t result= spi_write_address(dev->spi_id, reg, data, len);
     gpio_put(dev->cs_pin, true);   /* Deassert CS - always */
     global_irq_disable();
 
@@ -698,25 +704,10 @@ static inline uint8_t lsm_read_reg_with_burst(lsm6_dev *dev, uint8_t reg, uint8_
         return 0U;
     }
 
-    /* Ensure IF_INC is set for auto-increment */
-    uint8_t ctrl3;
-    if (lsm_read_reg(dev, REG_CTRL3_C, &ctrl3, 1U) != 0U) {
-        return 1U;
-    }
-
-    if ((ctrl3 & IF_INC_BIT) == 0U) {
-        ctrl3 |= IF_INC_BIT;
-        if (lsm_write_reg(dev, REG_CTRL3_C, &ctrl3, 1U) != 0U) {
-            return 2U;
-        }
-    }
-
-    /* Perform burst read with CS assertion only during transaction */
-    const uint8_t read_cmd = reg | SPI_READ_BIT;
 
     irq_disable();
     gpio_put(dev->cs_pin, false);  /* Assert CS */
-    const uint8_t result = spi_write_read(dev->spi_id, &read_cmd, 1U, data, len);
+    const uint8_t result = spi_read_address(dev->spi_id, reg, data, len);
     gpio_put(dev->cs_pin, true);   /* Deassert CS - always */
     irq_enable();
 
@@ -772,17 +763,20 @@ static inline uint8_t lsm_read_reg_with_burst_dma(lsm6_dev *dev, uint8_t reg, ui
         return 3U;  /* DMA setup failed */
     }
 
-    /* Wait for DMA completion with timeout */
-    uint32_t timeout = 1000U;  /* 1ms timeout */
-    while (dma_is_busy(lsm_dma_channel) && (timeout > 0U)) {
-        timeout--;
-    }
-
-    /* Always release CS and re-enable interrupts */
+    /* Always release CS */
     gpio_put(dev->cs_pin, true);
+    /* Wait for DMA completion with timeout */
+    uint64_t time = 1000U + sched_now_us();  /* 1ms timeout */
+    bool waitfunc(){
+        return dma_is_busy(lsm_dma_channel) | (sched_now_us()>=time);
+    }
+    sched_wait_until(waitfunc);
+
+    /* Re-enable interrupts */
+
     irq_enable();
 
-    if (timeout == 0U) {
+    if (dma_is_busy(lsm_dma_channel)) {
         dma_abort(lsm_dma_channel);
         return 4U;  /* DMA timeout */
     }

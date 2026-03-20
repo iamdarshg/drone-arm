@@ -15,16 +15,17 @@
 #include "sensor_fusion/lsm6.h"
 // #include "sensor_fusion/ICP-42670.h"
 
-int n = 0;
-int k = 0.01f;
+float n = 0;
+float k = 0.01f;
 void loop_task(uint8_t task_id) {
     (void)task_id;
-    pwm_set_duty(n);
+    // pwm_set_duty(4,n);
+    gpio_toggle(25);
     sched_sleep_ms(100);
-    n+=k;
-    if(n>=1.0f){
-        k=k*-1;
-    }
+    // n+=k;
+    // if(n>=1.0f){
+    //     k=k*-1;
+    // }
 }
 
 void main_board_init(void) {
@@ -41,9 +42,10 @@ void main_board_init(void) {
     init_mpu();
     init_dma();
     // ICP_init();
-    LSM6_init(0);
+    // LSM6_init(0);
     sched_init();
     pwm_slice_init(4, 0x4000000);
+    gpio_init_pin(25);
     sched_create(loop_task);
 }
 

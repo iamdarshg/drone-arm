@@ -76,7 +76,7 @@ extern spi_hw_t* spi_get_hw(uint8_t id);
 /** @brief Standardized SPI initialization wrapper. */
 void init_spi(void);
 
-void spi_init(uint8_t spi_id, uint32_t baudrate, bool master);
+void spi_init(uint8_t spi_id, uint32_t baudrate, bool master, int pin);
 bool spi_set_baud_format_mode(uint8_t spi_id, uint32_t baudrate, bool master);
 void spi_deinit(uint8_t spi_id);
 void disable_spi(uint8_t spi_id);
@@ -86,6 +86,7 @@ void enable_spi(uint8_t spi_id);
 // Transfer functions
 bool spi_transfer_blocking(uint8_t spi_id, const uint8_t *tx_buf, uint8_t *rx_buf, size_t len);
 bool spi_write_stream(uint8_t spi_id, const uint8_t *tx_buf, size_t len);
+bool spi_read_stream(uint8_t spi_id, uint8_t* rx, size_t len);
 bool spi_write_address(uint8_t spi_id, uint8_t address, const uint8_t *data, size_t len);
 bool spi_read_address(uint8_t spi_id, uint8_t address, uint8_t *data, size_t len);
 

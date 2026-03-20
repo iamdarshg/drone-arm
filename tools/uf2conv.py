@@ -26,6 +26,7 @@ FAMILY_IDS = {
 UF2_BLOCK_SIZE = 512
 UF2_DATA_SIZE = 476
 FLASH_START_ADDR = 0x10000000
+FLASH_END_ADDR = 0x20000000
 
 
 def read_elf_sections(elf_path):
@@ -63,31 +64,37 @@ def read_elf_sections(elf_path):
 
         # PT_LOAD = 1, loadable segment
         if p_type == 1 and p_filesz > 0:
-            # Only handle flash addresses
-            if p_paddr >= FLASH_START_ADDR:
+            # Prefer program virtual address (p_vaddr) for placement; fallback to p_paddr
+            load_addr = p_vaddr if p_vaddr != 0 else p_paddr
+            # Only handle flash addresses (exclude RAM/other regions)
+            if FLASH_START_ADDR <= load_addr < FLASH_END_ADDR:
                 section_data = data[p_offset : p_offset + p_filesz]
-                sections.append(
-                    {"addr": p_paddr, "data": section_data, "size": p_filesz}
-                )
+                sections.append({"addr": load_addr, "data": section_data, "size": p_filesz})
 
     return sections, e_entry
 
 
-def create_uf2_block(data, target_addr, block_no, num_blocks, family_id):
-    """Create a single UF2 block."""
+def create_uf2_block(data, target_addr, block_no, num_blocks, family_id, payload_size=None):
+    """Create a single UF2 block.
+
+    `data` should be exactly UF2_DATA_SIZE bytes (padded if necessary).
+    `payload_size` is the number of meaningful bytes in `data` (<= UF2_DATA_SIZE).
+    """
     block = bytearray(UF2_BLOCK_SIZE)
 
     # Header (32 bytes)
     struct.pack_into("<I", block, 0, UF2_MAGIC_START0)
     struct.pack_into("<I", block, 4, UF2_MAGIC_START1)
-    struct.pack_into("<I", block, 8, 0x00002000)  # Flags: family ID present
+    # Flags: set family ID present if a non-zero family_id is given
+    flags = 0x00002000 if family_id else 0
+    struct.pack_into("<I", block, 8, flags)
     struct.pack_into("<I", block, 12, target_addr)
-    struct.pack_into("<I", block, 16, len(data))
+    struct.pack_into("<I", block, 16, payload_size if payload_size is not None else len(data))
     struct.pack_into("<I", block, 20, block_no)
     struct.pack_into("<I", block, 24, num_blocks)
-    struct.pack_into("<I", block, 28, family_id)
+    struct.pack_into("<I", block, 28, family_id if family_id else 0)
 
-    # Data (up to 476 bytes)
+    # Data (up to 476 bytes) - `data` is already padded to UF2_DATA_SIZE
     block[32 : 32 + len(data)] = data
 
     # Magic end (4 bytes)
@@ -103,32 +110,25 @@ def elf_to_uf2(elf_path, uf2_path, family_id):
     if not sections:
         raise ValueError("No loadable sections found in ELF file")
 
-    # Flatten all sections into one contiguous block
-    # Find min and max addresses
-    min_addr = min(s["addr"] for s in sections)
-    max_addr = max(s["addr"] + s["size"] for s in sections)
-
-    # Create flat memory image
-    total_size = max_addr - min_addr
-    image = bytearray(total_size)
-
+    # Create UF2 blocks per-section to avoid creating huge images for sparse addresses.
+    chunks = []
     for section in sections:
-        offset = section["addr"] - min_addr
-        image[offset : offset + section["size"]] = section["data"]
+        addr = section["addr"]
+        data = section["data"]
+        for off in range(0, len(data), UF2_DATA_SIZE):
+            piece = data[off : off + UF2_DATA_SIZE]
+            payload_size = len(piece)
+            if payload_size < UF2_DATA_SIZE:
+                piece = piece + bytes(UF2_DATA_SIZE - payload_size)
+            chunks.append({"addr": addr + off, "data": piece, "size": payload_size})
 
-    # Create UF2 blocks
+    # Sort chunks by target address and create UF2 blocks
+    chunks.sort(key=lambda c: c["addr"])  # ascending addresses
     blocks = []
-    num_blocks = (len(image) + UF2_DATA_SIZE - 1) // UF2_DATA_SIZE
+    num_blocks = len(chunks)
 
-    for i in range(num_blocks):
-        offset = i * UF2_DATA_SIZE
-        chunk = image[offset : offset + UF2_DATA_SIZE]
-
-        # Pad last block
-        if len(chunk) < UF2_DATA_SIZE:
-            chunk = chunk + bytes(UF2_DATA_SIZE - len(chunk))
-
-        block = create_uf2_block(chunk, min_addr + offset, i, num_blocks, family_id)
+    for i, c in enumerate(chunks):
+        block = create_uf2_block(c["data"], c["addr"], i, num_blocks, family_id, payload_size=c["size"])
         blocks.append(block)
 
     # Write UF2 file
