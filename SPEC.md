@@ -11,7 +11,7 @@ Toolchain: arm-none-eabi-gcc (cross), host GCC/Python for tests
 - ❌ Not yet implemented
 - 📝 Spec defined, not implemented
 
-## 1. Build System ✅
+## 1. Build System 🔧
 
 ### 1.1 Toolchain and build architecture
 This firmware is built with Meson + Ninja and targets RP2350B directly in a clean-room approach, with no SDK code copied into the tree.
@@ -73,7 +73,7 @@ Tests:
 meson test -C builddir
 ```
 
-## 2. Memory Map ✅
+## 2. Memory Map 🔧
 
 Core memory regions used by this design:
 - ROM: `0x00000000`
@@ -96,7 +96,7 @@ Linker section model:
 - `.bss` zeroed during reset.
 - `.ramfunc` copied to RAM for optional low-latency paths.
 
-## 3. Startup Sequence ✅
+## 3. Startup Sequence 🔧
 
 Reset path summary:
 1. ROM boots and validates stage-2 boot code.
@@ -117,10 +117,11 @@ Boot2 responsibilities in this project:
 - Return control to ROM/startup path cleanly.
 
 Current status:
-- pipeline and placement are defined
+- build pipeline generates `boot2.bin` and `boot2_padded.S`
+- `tools/pad_checksum` pads to 252 bytes and appends CRC32 word
 - hardware timing validation across flash variants is pending
 
-## 5. Clock Tree ✅
+## 5. Clock Tree 🔧
 
 Configured baseline:
 - External crystal path brought up.
@@ -130,7 +131,7 @@ Configured baseline:
 Known improvements:
 - dynamic scaling and measured lock-time instrumentation are future work.
 
-## 6. GPIO ✅
+## 6. GPIO 🔧
 
 GPIO control combines:
 - IO bank function select
@@ -141,7 +142,7 @@ Policy:
 - explicit pin-range checks (`pin < 48`)
 - explicit direction and pull configuration per init call
 
-## 7. I2C ✅
+## 7. I2C 🔧
 
 Controller mode:
 - DW APB I2C style programming model
@@ -155,7 +156,7 @@ Future enhancements:
 - abort source decoding and retry strategy
 - bus clear and recovery flow
 
-## 8. SPI ✅
+## 8. SPI 🔧
 
 Controller mode:
 - master
@@ -169,7 +170,7 @@ Future enhancements:
 - DMA-backed full-duplex bursts
 - interrupt-driven low-latency queueing
 
-## 9. UART ✅
+## 9. UART 🔧
 
 Baseline mode:
 - PL011-style programming model
@@ -195,7 +196,7 @@ Pending:
 - ring mode
 - peripheral pacing maps as configurable policy
 
-## 11. Multicore ✅
+## 11. Multicore 🔧
 
 Synchronization hardware:
 - SIO FIFO for inter-core messaging
@@ -205,7 +206,7 @@ Launch model:
 - core0 prepares and triggers core1 startup handshake
 - both cores join scheduler runtime
 
-## 12. Scheduler ✅
+## 12. Scheduler 🔧
 
 Scheduler type:
 - cooperative, bounded task table
@@ -217,7 +218,7 @@ Core features:
 - per-core queues
 - simple stats collection
 
-## 13. Compilation Pipeline ✅
+## 13. Compilation Pipeline 🔧
 
 Pipeline:
 1. C/ASM compile to objects
@@ -227,7 +228,7 @@ Pipeline:
 
 Boot2 pipeline is integrated as pre-link generated assembly.
 
-## 14. Board Configuration ✅
+## 14. Board Configuration 🔧
 
 Board profile defines pin mapping for:
 - SPI0 and SPI1

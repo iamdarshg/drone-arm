@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-"""
-UF2 Converter for RP2350
-Converts ELF files to UF2 format for drag-and-drop programming
-Supports RP2350 ARM-S (0xe48bff59) and RP2040 (0xe48bff56) family IDs
-"""
+"""UF2 converter for RP2040/RP2350 ELF artifacts."""
 
 import struct
 import sys
@@ -18,6 +14,7 @@ UF2_MAGIC_END = 0x0AB16F30
 # Family IDs
 FAMILY_IDS = {
     "rp2040": 0xE48BFF56,
+    "rp2350-arm": 0xE48BFF57,
     "rp2350-arm-s": 0xE48BFF59,
     "rp2350-riscv": 0xE48BFF5A,
     "rp2350-arm-ns": 0xE48BFF5B,
@@ -146,7 +143,7 @@ def main():
     parser.add_argument(
         "-f",
         "--family",
-        default="rp2350-arm-s",
+        default="rp2350-arm",
         choices=list(FAMILY_IDS.keys()),
         help="Target family (default: rp2350-arm-s)",
     )
