@@ -85,6 +85,10 @@ void assertion_failed(const char *file, int line, const char *condition, const c
         ASSERT_MSG((counter) < (limit), "Loop termination failure")
 #endif
 
+// Aliases used in multicore and low-level drivers
+#define PRECONDITION_NOT_NULL(ptr)           ASSERT_NOT_NULL(ptr)
+#define PRECONDITION_RANGE(val, min, max)    ASSERT_RANGE(val, min, max)
+
 // Static assertions for compile-time checks
 #define STATIC_ASSERT(cond, msg) _Static_assert(cond, msg)
 
