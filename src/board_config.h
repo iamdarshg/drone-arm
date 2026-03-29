@@ -1,0 +1,16 @@
+#ifndef BOARD_CONFIG_H
+#define BOARD_CONFIG_H
+
+enum {
+    BOARD_LED_PIN = 25,
+    BOARD_UART0_TX_PIN = 0,
+    BOARD_UART0_RX_PIN = 1,
+    BOARD_I2C0_SDA_PIN = 4,
+    BOARD_I2C0_SCL_PIN = 5,
+    BOARD_SPI0_TX_PIN = 19,
+    BOARD_SPI0_RX_PIN = 16,
+    BOARD_SPI0_SCK_PIN = 18,
+    BOARD_SPI0_CS_PIN = 17,
+};
+
+#endif

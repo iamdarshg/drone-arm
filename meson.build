@@ -1,289 +1,105 @@
 project('drone-arm', 'c',
-  version: '0.1.0',
+  version: '0.2.0',
   default_options: [
     'c_std=c11',
-    'warning_level=2',
+    'warning_level=3',
     'werror=true',
   ]
 )
 
-# ARM toolchain configuration
-arm_toolchain_config = configuration_data()
-arm_toolchain_config.set('arch', 'arm')
-arm_toolchain_config.set('cpu', 'cortex-m33')
-arm_toolchain_config.set('fpu', 'fpv5-d16')
-arm_toolchain_config.set('float_abi', 'hard')
-arm_toolchain_config.set('thumb', true)
+src_inc = include_directories('src')
+py = find_program('python3', required: true)
 
-# ARM compiler flags
-arm_args = [
-  '-mcpu=@0@'.format(arm_toolchain_config.get('cpu')),
-  '-mthumb',
-  '-mfloat-abi=@0@'.format(arm_toolchain_config.get('float_abi')),
-  '-mfpu=@0@'.format(arm_toolchain_config.get('fpu')),
+common_c_args = [
+  '-Wall',
+  '-Wextra',
+  '-Werror',
 ]
 
-# Only add these if not cross-compiling (cross-file should handle this)
-if not meson.is_cross_build()
-  add_project_arguments(arm_args, language: 'c')
-  add_project_link_arguments(arm_args, language: 'c')
-endif
-
-# Include directories
-pico_sdk_inc = include_directories('include')
-sdk_regs_inc = include_directories('include/pico-sdk/src/rp2350/hardware_regs/include')
-sdk_structs_inc = include_directories('include/pico-sdk/src/rp2350/hardware_structs/include')
-sdk_vreg_inc = include_directories('include/pico-sdk/src/rp2_common/hardware_vreg/include')
-sdk_base_inc = include_directories('include/pico-sdk/src/common/pico_base_headers/include')
-sdk_base_inc = include_directories('include/pico-sdk/src/common/pico_base_headers/include')
-pico_vendor_inc = include_directories('include/pico-vendor')
-hardware_inc = include_directories('include/hardware')
-common_inc = include_directories('src/common')
-main_board_inc = include_directories('src/main_board', 'src/main_board/hardware_defs', 'src/main_board/low_level')
-esc_inc = include_directories('src/esc_controller')
-include_inc = include_directories('include')
-
-# SDK version defines
-sdk_args = [
-  '-DPICO_SDK_VERSION_MAJOR=2',
-  '-DPICO_SDK_VERSION_MINOR=1',
-  '-DPICO_SDK_VERSION_REVISION=0',
-  '-DPICO_SDK_VERSION_STRING="2.1.0"',
-  '-DRP2350',
-  '-DPICO_RP2350A',
-  '-DPICO_RP2350B',
-  '-DPICO_SDK',
-  '-DPICO_ON_DEVICE=1',
-]
-add_project_arguments(sdk_args, language: 'c')
-
-# Debug/Release configuration
-debug_mode = false
-if debug_mode
-  add_project_arguments('-g', '-O0', '-DDEBUG=1', language: 'c')
-  message('DEBUG mode: Building with debug symbols')
-else
-  add_project_arguments('-O2', '-DNDEBUG=1', language: 'c')
-endif
-
-# ============================================
-# Boot Stage 2 Assembly
-# ============================================
-
-boot2_src = 'src/main_board/low_level/boot_stage2/boot2_w25q080.S'
-boot2_ld = 'src/main_board/low_level/boot_stage2/boot_stage2.ld'
-
-# Build boot stage 2 as binary
-boot2_elf = custom_target('boot2_elf',
-  input: boot2_src,
-  output: 'boot2.elf',
-  command: [
-    meson.get_compiler('c').cmd_array(),
-    '-mcpu=cortex-m33', '-mthumb',
-    '-c', '@INPUT@',
-    '-o', '@OUTPUT@',
-    '-T', meson.current_source_dir() / boot2_ld,
-    '-I', meson.current_source_dir() / 'src/main_board/low_level/boot_stage2',
-  ],
-  build_by_default: true,
-)
-
-boot2_bin = custom_target('boot2_bin',
-  input: boot2_elf,
-  output: 'boot2.bin',
-  command: [find_program('arm-none-eabi-objcopy'), '-O', 'binary', '@INPUT@', '@OUTPUT@'],
-  build_by_default: true,
-)
-
-# Pad and add checksum to boot2
-boot2_padded = custom_target('boot2_padded',
-  input: boot2_bin,
-  output: 'boot2_padded.S',
-  command: [
-    'python', meson.current_source_dir() / 'tools/pad_checksum',
-    '@INPUT@', '@OUTPUT@',
-  ],
-  build_by_default: true,
-)
-
-# ============================================
-# Source Files
-# ============================================
-
-common_sources = [
-  'src/common/math_utils.c',
-  'src/common/filter.c',
-  'src/common/ring_buffer.c',
-  'src/common/crc.c',
-  'src/common/watchdog.c',
-  'src/common/scheduler.c',
-  'src/common/assert.c',
-]
-
-main_board_sources = [
-  'src/main_board/main.c',
-  'src/main_board/init.c',
-  'src/main_board/ramfunc_copy.c',
-  'src/main_board/irq.c',
-  # Low level drivers
-  'src/main_board/low_level/gpio.c',
-  'src/main_board/low_level/spi.c',
-  'src/main_board/low_level/i2c.c',
-  'src/main_board/low_level/spi_irq.c',
-  'src/main_board/low_level/adc.c',
-  'src/main_board/low_level/timer.c',
-  'src/main_board/low_level/pwm.c',
-  'src/main_board/low_level/dma.c',
-  'src/main_board/low_level/mpu.c',
-  'src/main_board/low_level/sys.c',
-  'src/main_board/low_level/clocks_init.c',
-  'src/main_board/low_level/clocks_sys.c',
-  'src/main_board/low_level/clocks_other.c',
-  'src/main_board/low_level/clocks_overclock.c',
-  'src/main_board/hardware_defs/pins.c',
-  'src/main_board/sensor_fusion/lsm6.c',
-  # Boot stage 2 padded
-  boot2_padded,
-]
-
-esc_sources = [
-  'src/esc_controller/esc.c',
-  'src/esc_controller/foc.c',
-  'src/esc_controller/pwm.c',
-  'src/esc_controller/encoder.c',
-  'src/esc_controller/current_sense.c',
-  'src/esc_controller/config.c',
-]
-
-# ============================================
-# Sensor Fusion Include Directories
-# ============================================
-
-sensor_fusion_inc = include_directories('src/main_board/sensor_fusion')
-
-# ============================================
-# Linker Script
-# ============================================
-
-link_script = meson.current_source_dir() / 'src/main_board/linker_script.ld'
-
-link_args = [
-  '--specs=nosys.specs',
-  '--specs=nano.specs',
-  '-T' + link_script,
-  '-lc',
-  '-lm',
-  '-lnosys',
-]
-
-# ============================================
-# Build Messages
-# ============================================
-
-message('==============================================')
-message('Drone Arm Build System')
-message('==============================================')
-message('Target: RP2354B (Cortex-M33 @ 150MHz+)')
-message('Compiler: arm-none-eabi-gcc')
-message('')
-message('Features:')
-message('  - Boot Stage 2 (W25Q080 flash support)')
-message('  - Auto-overclocking to 95% max stable freq')
-message('  - Cooperative scheduler with async/await')
-message('  - SPI/I2C with FIFO interrupt handling')
-message('')
-message('Output targets:')
-message('  1. firmware_main_board.uf2 - Main control board')
-message('  2. firmware_esc_module.bin - ESC controller')
-message('==============================================')
-
-# ============================================
-# Executables
-# ============================================
-
-firmware_main_board = executable('firmware_main_board.elf',
-  main_board_sources + common_sources,
-  include_directories: [hardware_inc, pico_vendor_inc, pico_sdk_inc, sdk_regs_inc, sdk_structs_inc, sdk_vreg_inc, sdk_base_inc, main_board_inc, sensor_fusion_inc, common_inc, include_inc],
-  link_args: link_args,
+test_uf2 = executable('test_uf2',
+  ['tests/test_uf2.c', 'src/hal/uf2.c'],
+  include_directories: [src_inc],
+  c_args: common_c_args + ['-DTEST_HOST=1', '-DNDEBUG', '-O0', '-g'],
+  native: true,
   install: false,
 )
 
-# firmware_esc = executable('firmware_esc_module.elf',
-#   esc_sources + common_sources,
-#   include_directories: [hardware_inc, pico_sdk_inc, esc_inc, common_inc],
-#   link_args: link_args,
-#   install: false,
-# )
+test('uf2_struct_test', test_uf2)
 
-# ============================================
-# UF2 Conversion
-# ============================================
-
-python = find_program('python3', 'python')
-
-uf2_main_board = custom_target('firmware_main_board.uf2',
-  input: firmware_main_board,
-  output: 'firmware_main_board.uf2',
-  command: [
-    python, meson.current_source_dir() / 'tools/uf2conv.py',
-    '@INPUT@',
-    '-o', '@OUTPUT@',
-    '-f', 'rp2350-arm-s',
-  ],
-  build_by_default: true,
+test('pad_checksum_test', py,
+  args: [meson.project_source_root() + '/tests/test_pad_checksum.py'],
 )
 
-# bin_esc = custom_target('firmware_esc_module.bin',
-#   input: firmware_esc,
-#   output: 'firmware_esc_module.bin',
-#   command: [find_program('arm-none-eabi-objcopy'), '-O', 'binary', '@INPUT@', '@OUTPUT@'],
-#   build_by_default: true,
-# )
-
-# ============================================
-# Debug Output
-# ============================================
-
-# ============================================
-# Tests
-# ============================================
-
-test_sources = [
-  'src/common/scheduler.c',
-  'src/common/crc.c',
-  'src/main_board/low_level/clocks_init.c',
-  'src/main_board/low_level/clocks_sys.c',
-]
-
-test_main = executable('test_main',
-  ['tests/test_main.c', 'src/main_board/low_level/gpio.c', 'src/main_board/hardware_defs/pins.c'] + common_sources,
-  include_directories: [hardware_inc, pico_vendor_inc, pico_sdk_inc, sdk_regs_inc, sdk_structs_inc, sdk_vreg_inc, sdk_base_inc, main_board_inc, common_inc],
-  link_args: link_args,
+test('uf2_artifact_test', py,
+  args: [meson.project_source_root() + '/tests/test_build_artifacts.py'],
 )
 
-# test_clock_safety = executable('test_clock_safety',
-#   ['tests/test_clock_safety.c'] + test_sources,
-#   include_directories: [hardware_inc, pico_sdk_inc, sdk_regs_inc, sdk_structs_inc, sdk_vreg_inc, sdk_base_inc, main_board_inc, common_inc],
-#   link_args: link_args,
-# )
+if meson.is_cross_build()
+  boot2 = executable('boot2.elf',
+    'src/boot2.S',
+    c_args: common_c_args,
+    link_args: [
+      '-nostdlib',
+      '-Wl,--build-id=none',
+      '-T' + meson.project_source_root() + '/src/boot2.ld',
+    ],
+    install: false,
+  )
 
-test('main_scheduler_test', test_main)
-# test('clock_safety_test', test_clock_safety)
-
-if debug_mode
-  custom_target('firmware_main_board.lst',
-    input: firmware_main_board,
-    output: 'firmware_main_board.lst',
-    command: [find_program('arm-none-eabi-objdump'), '-d', '-S', '@INPUT@'],
-    capture: true,
+  boot2_bin = custom_target('boot2.bin',
+    input: boot2,
+    output: 'boot2.bin',
+    command: ['arm-none-eabi-objcopy', '-O', 'binary', '@INPUT@', '@OUTPUT@'],
     build_by_default: true,
   )
 
-  # custom_target('firmware_esc_module.lst',
-  #   input: firmware_esc,
-  #   output: 'firmware_esc_module.lst',
-  #   command: [find_program('arm-none-eabi-objdump'), '-d', '-S', '@INPUT@'],
-  #   capture: true,
-  #   build_by_default: true,
-  # )
+  boot2_padded = custom_target('boot2_padded.S',
+    input: boot2_bin,
+    output: 'boot2_padded.S',
+    command: [py, meson.project_source_root() + '/tools/pad_checksum', '@INPUT@', '@OUTPUT@'],
+    build_by_default: true,
+  )
+
+  firmware = executable('firmware.elf',
+    [
+      'src/startup.S',
+      'src/main.c',
+      'src/board.c',
+      'src/drivers/clock.c',
+      'src/drivers/gpio.c',
+      'src/drivers/uart.c',
+      'src/drivers/i2c.c',
+      'src/drivers/spi.c',
+      'src/drivers/dma.c',
+      'src/system/multicore.c',
+      'src/kernel/scheduler.c',
+      'src/kernel/assert.c',
+      boot2_padded,
+    ],
+    include_directories: [src_inc],
+    c_args: common_c_args + ['-ffunction-sections', '-fdata-sections', '-fno-builtin'],
+    link_args: [
+      '-nostdlib',
+      '--specs=nosys.specs',
+      '--specs=nano.specs',
+      '-Wl,--gc-sections',
+      '-Wl,--build-id=none',
+      '-T' + meson.project_source_root() + '/src/linker.ld',
+    ],
+    install: false,
+  )
+
+  firmware_bin = custom_target('firmware.bin',
+    input: firmware,
+    output: 'firmware.bin',
+    command: ['arm-none-eabi-objcopy', '-O', 'binary', '@INPUT@', '@OUTPUT@'],
+    build_by_default: true,
+  )
+
+  custom_target('firmware.uf2',
+    input: firmware,
+    output: 'firmware.uf2',
+    command: [py, meson.project_source_root() + '/tools/uf2conv.py', '@INPUT@', '-o', '@OUTPUT@', '-f', 'rp2350-arm'],
+    build_by_default: true,
+  )
 endif

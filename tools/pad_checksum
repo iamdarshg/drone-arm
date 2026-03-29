@@ -1,16 +1,20 @@
 #!/usr/bin/env python3
-"""
-pad_checksum.py - Pads and checksums boot2 binary for RP2350
-Based on pico-sdk/src/rp2350/boot_stage2/pad_checksum
-"""
+"""Pad boot2 binary to 252 bytes and append RP2350 ROM CRC32."""
 
 import argparse
+import binascii
 import struct
 import sys
 
 
+def rp2350_crc32(data):
+    """Compute IEEE CRC32 over bytes with explicit init/final XOR."""
+    crc = binascii.crc32(data, 0xFFFFFFFF) ^ 0xFFFFFFFF
+    return crc & 0xFFFFFFFF
+
+
 def pad_and_checksum(input_file, output_file, arch='arm'):
-    """Pad binary to 252 bytes and add checksum."""
+    """Pad binary to 252 bytes and append CRC32 checksum."""
     with open(input_file, 'rb') as f:
         data = f.read()
     
@@ -22,18 +26,12 @@ def pad_and_checksum(input_file, output_file, arch='arm'):
     # Pad to 252 bytes with 0xff
     padded = data + b'\xff' * (252 - len(data))
     
-    # Calculate checksum: sum of all words, negated
-    checksum = 0
-    for i in range(0, len(padded), 4):
-        word = struct.unpack('<I', padded[i:i+4])[0]
-        checksum = (checksum + word) & 0xffffffff
-    
-    checksum = (-checksum) & 0xffffffff
+    checksum = rp2350_crc32(padded)
     
     # Output as assembly
     with open(output_file, 'w') as f:
         f.write('// Auto-generated padded boot2 code\n')
-        f.write('.section .text\n')
+        f.write('.section .boot2, "ax", %progbits\n')
         f.write('.align 4\n')
         f.write('.global boot2_data\n')
         f.write('boot2_data:\n')
@@ -44,7 +42,7 @@ def pad_and_checksum(input_file, output_file, arch='arm'):
             f.write(f'    .word 0x{word:08x}\n')
         
         # Write checksum
-        f.write(f'    .word 0x{checksum:08x}  // checksum\n')
+        f.write(f'    .word 0x{checksum:08x}  // crc32\n')
 
 
 def main():
