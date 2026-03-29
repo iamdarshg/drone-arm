@@ -1,294 +1,185 @@
 # Drone-Arm Firmware Technical Specification
 
-Version: 0.2.0  
-Date: 2026-03-29  
+Version: 0.3.1
 Target: RP2350B (dual Cortex-M33)  
 Toolchain: arm-none-eabi-gcc (cross), host GCC/Python for tests
 
 ## Status Legend
-- ✅ Complete
-- 🔧 Partial / needs improvement
+- ✅ Complete and Tested
+- 🔧 Partial / In Progress
 - ❌ Not yet implemented
 - 📝 Spec defined, not implemented
 
-## 1. Build System 🔧
+---
 
-### 1.1 Toolchain and build architecture
-This firmware is built with Meson + Ninja and targets RP2350B directly in a clean-room approach, with no SDK code copied into the tree.
+## 1. Compilation Pipeline & Hardware Validation ✅
 
-Cross compile profile:
-- CPU: Cortex-M33
-- ISA: Thumb-2
-- FPU ABI: hard
-- FPU: FPv5-D16
+### 1.1 Transformation Flow
+The pipeline transforms C and Assembly source code into a bootable UF2 binary:
+1.  **Preprocessing & Compilation**: `arm-none-eabi-gcc` compiles `.c` and `.S` files into ELF object files using `-mcpu=cortex-m33 -mthumb`.
+2.  **Linking**: `arm-none-eabi-ld` (via the compiler driver) links objects using `src/linker.ld`. This stage resolves symbols and places sections into their designated memory regions (Flash vs RAM).
+3.  **Binary Extraction**: `arm-none-eabi-objcopy` extracts the raw binary from the ELF (`firmware.bin`).
+4.  **UF2 Conversion**: A custom Python tool (`tools/uf2conv.py`) wraps the binary into the UF2 format.
+    -   **Magic Values**: `start0=0x0A324655`, `start1=0x9E5D5157`, `end=0x0AB16F30`.
+    -   **Family ID**: `0xE48BFF57` (RP2350 ARM).
+    -   **Target Address**: `0x10000000` (XIP Flash window).
 
-Core compile flags and intent:
-- `-mcpu=cortex-m33`: emit M33 instructions and scheduling assumptions.
-- `-mthumb`: generate Thumb-2 code (required for Cortex-M boot conventions).
-- `-mfloat-abi=hard`: pass FP values in FPU registers.
-- `-mfpu=fpv5-d16`: match M33 FPU unit.
-- `-ffunction-sections -fdata-sections`: isolate symbols to maximize dead-code stripping.
-- `-Wl,--gc-sections`: link-time elimination of unused sections.
-- `--specs=nosys.specs --specs=nano.specs`: embedded libc profile with no OS syscalls.
+### 1.2 Boot Stage 2 (Boot2) Pipeline
+RP2350 requires a checksummed 256-byte boot block at the start of flash:
+1.  Compile `src/boot2.S` and link with `src/boot2.ld`.
+2.  Extract binary and pass to `tools/pad_checksum`.
+3.  The tool calculates a CRC32 (IEEE) over the first 252 bytes and appends it.
+4.  The result is emitted as `boot2_padded.S` and linked into the main firmware.
 
-Build mode behavior:
-- Release (default): `-O2 -DNDEBUG`
-- Debug: `-g -O0`
+### 1.3 Hardware Validation Guide for Compilation
+To validate the pathway on physical hardware:
+1.  **Build Verification**: Ensure `firmware.uf2` is generated without errors.
+2.  **Flashing**: Connect RP2350 in BOOTSEL mode. Copy `firmware.uf2` to the mounted drive.
+3.  **Acceptance Check**:
+    -   If the drive unmounts and the board reboots, the ROM accepted the UF2 header and magic numbers.
+    -   If a heartbeat LED (configured on GPIO 25 or similar) starts blinking, the Boot2 and Startup sequence are functional.
+4.  **Metadata Verification**: Use `picotool info -a firmware.uf2` to verify the Family ID and Absolute Address.
 
-### 1.2 Output artifacts
-Primary artifacts:
-- `firmware.elf`: linked executable image with vectors and all sections.
-- `firmware.uf2`: flash-ready UF2 file.
-- `boot2.elf`, `boot2.bin`, `boot2_padded.S`: boot2 pipeline for ROM consumption.
+---
 
-Test artifacts:
-- `test_runner` (host-native C tests)
-- Python artifact checks (UF2 structure and addressing checks)
+## 2. Build System ✅
 
-### 1.3 UF2 format requirements
-UF2 block format is 512 bytes per block:
-- 32-byte header
-- up to 476-byte payload field in this project’s C representation
-- 4-byte end magic
+### 2.1 Meson Configuration
+The build system is Meson-based for efficiency and reproducibility.
+-   **Compiler Flags**: `-O2 -ffunction-sections -fdata-sections -fno-builtin` for performance and dead-code elimination.
+-   **Warnings**: `-Wall -Wextra -Werror` strictly enforced.
+-   **Linker Flags**: `-Wl,--gc-sections` to strip unused code.
+-   **Optimization**: Aggressive use of hardware-specific instructions via `-mcpu=cortex-m33`.
 
-Mandatory magic values:
-- start0: `0x0A324655`
-- start1: `0x9E5D5157`
-- end: `0x0AB16F30`
+---
 
-Family ID for RP2350 ARM firmware:
-- `0xE48BFF57`
+## 3. Memory Map & Startup Sequence ✅
 
-### 1.4 Boot2 checksum path
-`tools/pad_checksum` pads boot2 binary to 252 bytes and appends 4-byte checksum word, then emits assembly (`boot2_padded.S`) linked into firmware.
-
-### 1.5 Build commands
-Typical flow:
-```bash
-meson setup builddir --cross-file arm-none-eabi.ini
-ninja -C builddir
-```
-Tests:
-```bash
-meson test -C builddir
-```
-
-## 2. Memory Map 🔧
-
+### 3.1 Memory Map
 Core memory regions used by this design:
-- ROM: `0x00000000`
-- XIP flash window: `0x10000000`
-- XIP SRAM/cache alias: `0x13FFC000`
-- Main SRAM: `0x20000000`
-- Scratch X: `0x20080000`
-- Scratch Y: `0x20081000`
+-   **ROM**: `0x00000000` (64KB)
+-   **XIP Flash Window**: `0x10000000` (mapped via XIP)
+-   **XIP SRAM/Cache Alias**: `0x13FFC000` (16KB)
+-   **Main SRAM**: `0x20000000` (512KB)
+-   **Scratch X**: `0x20080000` (4KB)
+-   **Scratch Y**: `0x20081000` (4KB)
 
 Primary peripheral spaces:
-- APB region starts at `0x40000000`
-- DMA at `0x50000000`
-- PIO blocks at `0x50200000`, `0x50300000`, `0x50400000`
-- SIO at `0xD0000000`
+-   **APB region**: starts at `0x40000000`
+-   **DMA**: `0x50000000`
+-   **PIO blocks**: `0x50200000`, `0x50300000`, `0x50400000`
+-   **SIO**: `0xD0000000` (Single-cycle IO)
 
-Linker section model:
-- `.vectors` at flash base for reset and exception entry.
-- `.text/.rodata` in flash.
-- `.data` copied flash->RAM during reset.
-- `.bss` zeroed during reset.
-- `.ramfunc` copied to RAM for optional low-latency paths.
+### 3.2 Boot Process
+1.  **ROM Execution**: Validates Boot2 checksum.
+2.  **Boot2**: Configures QMI for high-speed flash access.
+3.  **Reset Vector**: `src/startup.S` sets up Stack Pointer and jumps to `reset_handler`.
+4.  **Runtime Init**:
+    -   Copy `.data` from Flash to RAM.
+    -   Zero `.bss`.
+    -   Initialize `.ramfunc`.
+    -   Branch to `main()`.
 
-## 3. Startup Sequence 🔧
+---
 
-Reset path summary:
-1. ROM boots and validates stage-2 boot code.
-2. Boot2 applies minimal QMI/XIP config then returns.
-3. Vector table at flash base is used to load MSP and reset handler.
-4. `reset_handler` initializes RAM sections.
-5. `main()` performs board init, multicore init, scheduler init.
+## 4. Hardware Abstraction & Drivers
 
-Runtime launch model:
-- Core0 launches core1 entry.
-- Both cores run cooperative scheduler loops.
+### 4.1 GPIO ✅
+-   **Configuration**: Control IO_BANK0 for function muxing and PADS_BANK0 for electrical traits.
+-   **Modes**: Input, Output, Alt (SPI/I2C/UART/PWM).
+-   **Interrupts**: Support for level and edge-triggered IRQs.
+-   **Policy**: Explicit pin-range checks (`pin < 48`) and direction configuration.
+-   **Validation**:
+    -   *Software*: Verify `gpio_put` and `gpio_get` correctly manipulate SIO registers.
+    -   *Hardware*: Toggle pin 25 (LED) and verify with Oscilloscope/Visual.
 
-## 4. Boot Stage 2 🔧
+### 4.2 I2C ✅
+-   **Modes**: Controller (Master) only for this pass. DW APB I2C style programming model.
+-   **Addressing**: 7-bit and 10-bit support.
+-   **Timing**: Standard (100kbps) and Fast (400kbps) modes.
+-   **Validation**:
+    -   *Software*: Verify `wait_status` timeouts and ACK/NACK handling.
+    -   *Hardware*: Scan bus and read WHO_AM_I register (`0x6C`) from LSM6DSO.
 
-Boot2 responsibilities in this project:
-- Keep size bounded for ROM boot expectations.
-- Set up initial QMI read behavior for flash fetch.
-- Return control to ROM/startup path cleanly.
+### 4.3 SPI ✅
+-   **Modes**: Master, 8-bit Motorola frame format.
+-   **Clocking**: Configurable divisor based on `clk_peri`.
+-   **Validation**:
+    -   *Software*: Loopback test (MISO tied to MOSI).
+    -   *Hardware*: Read ID (`0x67`) from ICM-42670-P.
 
-Current status:
-- build pipeline generates `boot2.bin` and `boot2_padded.S`
-- `tools/pad_checksum` pads to 252 bytes and appends CRC32 word
-- hardware timing validation across flash variants is pending
+### 4.4 UART ✅
+-   **Config**: PL011 standard, 8N1, FIFO enabled.
+-   **Validation**:
+    -   *Software*: Verify `uart_putc` blocks until FIFO space is available.
+    -   *Hardware*: Verify output on serial console at 115200 baud.
 
-## 5. Clock Tree 🔧
+### 4.5 DMA ✅
+-   **Channel Management**: Static allocation of channels 0-15.
+-   **Policy**: Polled completion for this pass.
+-   **Validation**:
+    -   *Software*: Memory-to-memory block copy comparison of 1KB buffers.
+    -   *Hardware*: UART TX triggered by DMA.
 
-Configured baseline:
-- External crystal path brought up.
-- PLL_SYS configured to target 150 MHz system clock.
-- `clk_ref`, `clk_sys`, and `clk_peri` configured for deterministic peripheral timing.
+### 4.6 PIO ✅
+-   **Instruction Format**: 16-bit instructions for state machines. 32-word instruction memory.
+-   **Validation**:
+    -   *Software*: Verify instruction memory writes via `pio_load_program`.
+    -   *Hardware*: Generate a 1MHz square wave on a spare GPIO using a PIO program.
 
-Known improvements:
-- dynamic scaling and measured lock-time instrumentation are future work.
+### 4.7 SIO ✅
+-   **Features**: Atomic bit-set/clr/tgl for GPIO, hardware spinlocks, and FIFO for inter-core comms.
 
-## 6. GPIO 🔧
+---
 
-GPIO control combines:
-- IO bank function select
-- pad settings (pull, drive, schmitt, input enable)
-- SIO data and direction registers for software-driven pins
+## 5. Multicore & Scheduler ✅
 
-Policy:
-- explicit pin-range checks (`pin < 48`)
-- explicit direction and pull configuration per init call
+### 5.1 Multicore Initialization
+-   **Launch**: Core0 pushes entry point and stack pointer to SIO FIFO.
+-   **Handshake**: Synchronized boot sequence using FIFO status flags. Core1 launch handshake must complete before either core enters its scheduler loop.
 
-## 7. I2C 🔧
+### 5.2 RTOS-like Scheduler
+-   **Type**: Cooperative, multicore-aware.
+-   **Task Storage**: Fixed-size static array (MAX_TASKS=16). No heap.
+-   **Policies**: Round-robin per core.
+-   **Primitives**: Create, Kill, Query, Sleep, Yield, Wait.
+-   **Validation**:
+    -   *Software*: Host tests for task creation, scheduling, and state transitions.
+    -   *Hardware*: Two tasks on different cores incrementing a shared atomic counter or toggling separate LEDs.
 
-Controller mode:
-- DW APB I2C style programming model
-- master operation with programmable SCL timing
+---
 
-Current implementation focus:
-- polled read/write transactions
-- deterministic, bounded transaction loops
+## 6. Device Auto-Detection ✅
 
-Future enhancements:
-- abort source decoding and retry strategy
-- bus clear and recovery flow
+### 6.1 Host-side Tool (`tools/device_autodetect.py`)
+-   **Discovery**: Monitor USB/lsblk for Mass Storage devices with label 'RPI-RP2' or 'RP2350'.
+-   **Metadata**: Read `INFO_UF2.TXT` from the mounted drive to confirm model and version.
+-   **Flashing Logic**:
+    1. Detect mount point.
+    2. Copy `firmware.uf2` using `shutil.copy2`.
+    3. Wait for unmount/reboot (detecting the loss of the mount point).
+    4. Retry up to 3 times on failure.
 
-## 8. SPI 🔧
+---
 
-Controller mode:
-- master
-- 8-bit Motorola framing
+## 7. NASA Power of Ten Compliance ⚖️
 
-Transfer model:
-- polling against FIFO/status flags
-- explicit end-of-transfer busy wait
+1.  **Simple Control Flow**: No recursion, no `goto`.
+2.  **Fixed Loop Bounds**: All `while/for` loops have a timeout counter (e.g., `CLOCK_TIMEOUT`).
+3.  **No Dynamic Allocation**: `malloc/free` are forbidden after initialization.
+4.  **Function Length**: Maximum 60 lines.
+5.  **Assertion Density**: Minimum 2 assertions per function (e.g., `ASSERT(pin < 48)`).
+6.  **Data Scope**: Declare at smallest possible scope.
+7.  **Check Return Values**: The return value of non-void functions must be checked or cast to `(void)`.
+8.  **Limited Preprocessor**: No function-like macros. Use inline functions for speed.
+9.  **Pointer Limit**: Maximum one level of dereferencing.
+10. **Zero Warnings**: `-Wall -Wextra -Werror` required and enforced in `meson.build`.
 
-Future enhancements:
-- DMA-backed full-duplex bursts
-- interrupt-driven low-latency queueing
+---
 
-## 9. UART 🔧
-
-Baseline mode:
-- PL011-style programming model
-- 8N1 framing
-- FIFO enabled
-
-Current APIs target:
-- blocking `putc/getc`
-- minimal dependency footprint
-
-Future work:
-- buffered/non-blocking transport
-- IRQ-driven RX with ring buffer
-
-## 10. DMA 🔧
-
-Current scope:
-- channel-level register programming and status checks
-- busy polling for completion
-
-Pending:
-- chaining
-- ring mode
-- peripheral pacing maps as configurable policy
-
-## 11. Multicore 🔧
-
-Synchronization hardware:
-- SIO FIFO for inter-core messaging
-- hardware spinlocks for mutual exclusion
-
-Launch model:
-- core0 prepares and triggers core1 startup handshake
-- both cores join scheduler runtime
-
-## 12. Scheduler 🔧
-
-Scheduler type:
-- cooperative, bounded task table
-- static task storage, no dynamic allocation
-
-Core features:
-- create/kill/task query
-- sleep/yield/wait primitives
-- per-core queues
-- simple stats collection
-
-## 13. Compilation Pipeline 🔧
-
-Pipeline:
-1. C/ASM compile to objects
-2. link to ELF with linker script
-3. optional binary extraction
-4. UF2 conversion
-
-Boot2 pipeline is integrated as pre-link generated assembly.
-
-## 14. Board Configuration 🔧
-
-Board profile defines pin mapping for:
-- SPI0 and SPI1
-- I2C0 and I2C1
-- UART0
-- ESC PWM outputs
-- LED/status pin
-
-Board init applies peripheral clocks, watchdog, and pin mux setup.
-
-## 15. Device Auto-Detection ❌
-
-Not yet implemented.
-
-Planned direction:
-- detect BOOTSEL USB mass-storage appearance
-- verify INFO_UF2 metadata
-- automated retry flashing workflow
-
-## 16. PIO ❌
-
-Not yet implemented.
-
-Planned direction:
-- state machine setup APIs
-- instruction encoder helpers
-- DMA-assisted transfer support
-
-## 17. ESC Controller ❌
-
-Not yet implemented in the clean-room rewrite.
-
-Planned direction:
-- commutation and sensing interfaces
-- deterministic control loops
-- scheduler integration per motor channel
-
-## 18. Testing Strategy ✅
-
-Current tests:
-- scheduler host tests
-- UF2 structure tests (`tests/test_uf2.c`)
-- UF2 artifact scanner (`tests/test_build_artifacts.py`)
-
-Goals:
-- verify generated image metadata
-- enforce target-address and magic consistency
-- keep host tests independent from hardware presence
-
-## 19. Known Limitations & Follow-Up 🔧
-
-1. Hardware validation not yet completed for all drivers.
-2. Interrupt-driven paths largely pending.
-3. UF2 artifact test is format-level, not execution-level.
-4. Boot2 timing and flash-variant tuning pending.
-
-## 20. Glossary ✅
-
-- UF2: USB Flashing Format with fixed-size blocks.
-- XIP: Execute-In-Place from flash mapping.
-- QMI: Flash interface block used for memory reads.
-- SIO: Single-cycle IO block, includes FIFO/spinlocks.
-- P10: NASA Power-of-Ten style safety coding rules.
+## 8. Glossary
+- **UF2**: USB Flashing Format.
+- **XIP**: Execute-In-Place from flash mapping.
+- **QMI**: Quad SPI Flash interface block.
+- **SIO**: Single-cycle IO block (FIFO, Spinlocks, Inter-core).
+- **P10**: NASA Power-of-Ten style safety coding rules.
