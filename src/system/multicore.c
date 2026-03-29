@@ -66,8 +66,7 @@ void multicore_spinlock_release(uint32_t lock_num) {
     REG_RW(addr) = 1u;
 }
 
-bool multicore_launch_core1(core_entry_t entry) {
-    (void)entry;
+bool multicore_launch_core1(void) {
     if (!multicore_fifo_push_blocking(CORE1_READY_TOKEN)) {
         return false;
     }

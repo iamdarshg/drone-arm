@@ -145,7 +145,7 @@ def main():
         "--family",
         default="rp2350-arm",
         choices=list(FAMILY_IDS.keys()),
-        help="Target family (default: rp2350-arm-s)",
+        help="Target family (default: rp2350-arm)",
     )
 
     args = parser.parse_args()

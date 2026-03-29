@@ -1,6 +1,7 @@
 #include "kernel/assert.h"
 #include <stdbool.h>
 #include <stdint.h>
+#include <stddef.h>
 
 #include "kernel/scheduler.h"
 
@@ -27,9 +28,9 @@ void scheduler_init(void) {
     uint32_t i;
     for (i = 0u; i < MAX_TASKS; ++i) {
         g_tasks[i].used = false;
-        g_tasks[i].fn = 0;
+        g_tasks[i].fn = NULL;
         g_tasks[i].sleep_ticks = 0u;
-        g_tasks[i].wait_addr = 0;
+        g_tasks[i].wait_addr = NULL;
         g_tasks[i].wait_expected = 0u;
         g_tasks[i].core = 0u;
     }
@@ -41,14 +42,14 @@ void scheduler_init(void) {
 uint8_t scheduler_create(uint8_t core_id, task_fn_t fn) {
     uint8_t i;
     ASSERT(core_id < MAX_CORES);
-    ASSERT(fn != 0);
+    ASSERT(fn != NULL);
     for (i = 0u; i < MAX_TASKS; ++i) {
         if (!g_tasks[i].used) {
             g_tasks[i].used = true;
             g_tasks[i].core = core_id;
             g_tasks[i].fn = fn;
             g_tasks[i].sleep_ticks = 0u;
-            g_tasks[i].wait_addr = 0;
+            g_tasks[i].wait_addr = NULL;
             g_tasks[i].wait_expected = 0u;
             g_stats.creates++;
             return i;
@@ -69,7 +70,7 @@ bool scheduler_kill(uint8_t task_id) {
 
 bool scheduler_query(uint8_t task_id, bool *alive) {
     ASSERT(task_id < MAX_TASKS);
-    ASSERT(alive != 0);
+    ASSERT(alive != NULL);
     *alive = g_tasks[task_id].used;
     return true;
 }
@@ -86,7 +87,7 @@ bool scheduler_sleep(uint8_t task_id, uint32_t ticks) {
 
 bool scheduler_wait(uint8_t task_id, volatile uint32_t *addr, uint32_t expected) {
     ASSERT(task_id < MAX_TASKS);
-    ASSERT(addr != 0);
+    ASSERT(addr != NULL);
     if (!g_tasks[task_id].used) {
         return false;
     }
@@ -106,11 +107,11 @@ static bool task_ready(uint8_t id) {
         g_tasks[id].sleep_ticks--;
         return false;
     }
-    if (g_tasks[id].wait_addr != 0) {
+    if (g_tasks[id].wait_addr != NULL) {
         if (*(g_tasks[id].wait_addr) != g_tasks[id].wait_expected) {
             return false;
         }
-        g_tasks[id].wait_addr = 0;
+        g_tasks[id].wait_addr = NULL;
     }
     return true;
 }

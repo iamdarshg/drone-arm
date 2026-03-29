@@ -16,7 +16,7 @@ def parse_words(asm_path):
 
 
 def test_pad_checksum_crc32_reference():
-    repo = '/home/runner/work/drone-arm/drone-arm'
+    repo = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     tool = os.path.join(repo, 'tools', 'pad_checksum')
     with tempfile.TemporaryDirectory() as td:
         inp = os.path.join(td, 'boot2.bin')

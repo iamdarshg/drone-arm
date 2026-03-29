@@ -25,11 +25,6 @@ static void board_config_pins(void) {
     gpio_set_function(BOARD_SPI0_CS_PIN, 1u);
 }
 
-static void core1_entry(void) {
-    for (;;) {
-    }
-}
-
 void board_init(void) {
     bool launched;
     clock_init();
@@ -38,6 +33,6 @@ void board_init(void) {
     uart_init(115200u);
     i2c_init(100000u);
     spi_init(1000000u);
-    launched = multicore_launch_core1(core1_entry);
+    launched = multicore_launch_core1();
     ASSERT(launched);
 }
