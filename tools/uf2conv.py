@@ -5,9 +5,9 @@ Converts ELF files to UF2 format for drag-and-drop programming
 Supports RP2350 ARM-S (0xe48bff59) and RP2040 (0xe48bff56) family IDs
 """
 
+import argparse
 import struct
 import sys
-import argparse
 from pathlib import Path
 
 # UF2 constants
@@ -69,12 +69,16 @@ def read_elf_sections(elf_path):
             # Only handle flash addresses (exclude RAM/other regions)
             if FLASH_START_ADDR <= load_addr < FLASH_END_ADDR:
                 section_data = data[p_offset : p_offset + p_filesz]
-                sections.append({"addr": load_addr, "data": section_data, "size": p_filesz})
+                sections.append(
+                    {"addr": load_addr, "data": section_data, "size": p_filesz}
+                )
 
     return sections, e_entry
 
 
-def create_uf2_block(data, target_addr, block_no, num_blocks, family_id, payload_size=None):
+def create_uf2_block(
+    data, target_addr, block_no, num_blocks, family_id, payload_size=None
+):
     """Create a single UF2 block.
 
     `data` should be exactly UF2_DATA_SIZE bytes (padded if necessary).
@@ -89,7 +93,9 @@ def create_uf2_block(data, target_addr, block_no, num_blocks, family_id, payload
     flags = 0x00002000 if family_id else 0
     struct.pack_into("<I", block, 8, flags)
     struct.pack_into("<I", block, 12, target_addr)
-    struct.pack_into("<I", block, 16, payload_size if payload_size is not None else len(data))
+    struct.pack_into(
+        "<I", block, 16, payload_size if payload_size is not None else len(data)
+    )
     struct.pack_into("<I", block, 20, block_no)
     struct.pack_into("<I", block, 24, num_blocks)
     struct.pack_into("<I", block, 28, family_id if family_id else 0)
@@ -103,9 +109,29 @@ def create_uf2_block(data, target_addr, block_no, num_blocks, family_id, payload
     return block
 
 
-def elf_to_uf2(elf_path, uf2_path, family_id):
-    """Convert ELF to UF2 format."""
+def elf_to_uf2(elf_path, uf2_path, family_id, boot2_path=None):
+    """Convert ELF to UF2 format.
+    If `boot2_path` is provided, the boot2 binary is read and its contents
+    are converted into UF2 chunks placed starting at FLASH_START_ADDR before
+    the ELF's loadable sections. This allows producing a UF2 file that
+    includes the board's boot2 as the first flash data region.
+    """
     sections, entry = read_elf_sections(elf_path)
+
+    # Prepare optional boot2 chunks (placed at FLASH_START_ADDR).
+    boot_chunks = []
+    if boot2_path:
+        # Read boot2 binary and slice into UF2-sized pieces.
+        with open(boot2_path, "rb") as bf:
+            bdata = bf.read()
+        for off in range(0, len(bdata), UF2_DATA_SIZE):
+            piece = bdata[off : off + UF2_DATA_SIZE]
+            payload_size = len(piece)
+            if payload_size < UF2_DATA_SIZE:
+                piece = piece + bytes(UF2_DATA_SIZE - payload_size)
+            boot_chunks.append(
+                {"addr": FLASH_START_ADDR + off, "data": piece, "size": payload_size}
+            )
 
     if not sections:
         raise ValueError("No loadable sections found in ELF file")
@@ -122,13 +148,21 @@ def elf_to_uf2(elf_path, uf2_path, family_id):
                 piece = piece + bytes(UF2_DATA_SIZE - payload_size)
             chunks.append({"addr": addr + off, "data": piece, "size": payload_size})
 
+    # If boot_chunks were prepared, merge them with the ELF-derived chunks
+    # so they are included in the final UF2. Afterwards, sort by address.
+    if boot_chunks:
+        chunks = boot_chunks + chunks
+
     # Sort chunks by target address and create UF2 blocks
     chunks.sort(key=lambda c: c["addr"])  # ascending addresses
     blocks = []
+
     num_blocks = len(chunks)
 
     for i, c in enumerate(chunks):
-        block = create_uf2_block(c["data"], c["addr"], i, num_blocks, family_id, payload_size=c["size"])
+        block = create_uf2_block(
+            c["data"], c["addr"], i, num_blocks, family_id, payload_size=c["size"]
+        )
         blocks.append(block)
 
     # Write UF2 file
@@ -150,6 +184,17 @@ def main():
         choices=list(FAMILY_IDS.keys()),
         help="Target family (default: rp2350-arm-s)",
     )
+    parser.add_argument(
+        "--no-family",
+        action="store_true",
+        help="Do not set the UF2 family field (zero the family id and omit family flag)",
+    )
+    parser.add_argument(
+        "-b",
+        "--boot2",
+        default=None,
+        help="Optional boot2 binary to prepend to the UF2 (placed at FLASH_START_ADDR)",
+    )
 
     args = parser.parse_args()
 
@@ -164,12 +209,22 @@ def main():
         uf2_path = elf_path.with_suffix(".uf2")
 
     family_id = FAMILY_IDS[args.family]
+    # If the user requested no-family, zero the family id so blocks are emitted
+    # without the family-present flag and with family id == 0.
+    family_id_to_use = 0 if args.no_family else family_id
 
     try:
-        num_blocks = elf_to_uf2(elf_path, uf2_path, family_id)
+        # Pass optional boot2 path into the conversion routine so the UF2 will
+        # include the boot2 binary (if provided) at the flash base address.
+        num_blocks = elf_to_uf2(elf_path, uf2_path, family_id_to_use, args.boot2)
         print(f"Converted {elf_path} -> {uf2_path}")
-        print(f"  Family: {args.family} (0x{family_id:08x})")
+        if args.no_family:
+            print(f"  Family: none (family field zeroed)")
+        else:
+            print(f"  Family: {args.family} (0x{family_id:08x})")
         print(f"  Blocks: {num_blocks}")
+        if args.boot2:
+            print(f"  Boot2 included: {args.boot2}")
     except Exception as e:
         print(f"Error: {e}")
         sys.exit(1)
