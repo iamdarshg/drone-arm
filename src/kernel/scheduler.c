@@ -47,7 +47,12 @@ enum {
     MPU_RBAR      = 0x0Cu,
     MPU_RLAR      = 0x10u,
     MPU_MAIR0     = 0x30u,
+    MPU_REGION_ALIGN_MASK = 0x1Fu,
+    MPU_RLAR_ATTRINDX_SHIFT = 1u,
+    MPU_RLAR_ENABLE = 1u,
+    MPU_MAX_REGIONS = 8u,
 };
+static const uint32_t MPU_MAIR_NORMAL_NONCACHEABLE = 0x44u;
 #endif
 
 static bool region_contains(const memory_region_t *r, uintptr_t addr, size_t size) {
@@ -304,22 +309,30 @@ static void scheduler_mpu_apply_task(uint8_t task_id) {
      * region0 = current task private window, following regions = shared windows.
      * Attribute/memory-type policy is intentionally minimal for now. */
     REG_RW(MPU_BASE_ADDR + MPU_CTRL) = 0u;
-    /* AttrIdx0 in MAIR0 = 0x44 => Normal memory, Inner/Outer non-cacheable. */
-    REG_RW(MPU_BASE_ADDR + MPU_MAIR0) = 0x44u;
+    /* AttrIdx0 in MAIR0 => Normal memory, Inner/Outer non-cacheable. */
+    REG_RW(MPU_BASE_ADDR + MPU_MAIR0) = MPU_MAIR_NORMAL_NONCACHEABLE;
     if (g_task_regions[task_id].used) {
-        uintptr_t base = g_task_regions[task_id].base & ~(uintptr_t)0x1Fu;
-        uintptr_t limit = (g_task_regions[task_id].base + g_task_regions[task_id].size - 1u) & ~(uintptr_t)0x1Fu;
+        uintptr_t base = g_task_regions[task_id].base & ~(uintptr_t)MPU_REGION_ALIGN_MASK;
+        uintptr_t limit = (g_task_regions[task_id].base + g_task_regions[task_id].size - 1u) &
+                          ~(uintptr_t)MPU_REGION_ALIGN_MASK;
         REG_RW(MPU_BASE_ADDR + MPU_RNR) = region++;
         REG_RW(MPU_BASE_ADDR + MPU_RBAR) = (uint32_t)base;
-        REG_RW(MPU_BASE_ADDR + MPU_RLAR) = ((uint32_t)limit & ~0x1Fu) | (0u << 1) | 1u;
+        REG_RW(MPU_BASE_ADDR + MPU_RLAR) =
+            ((uint32_t)limit & ~MPU_REGION_ALIGN_MASK) |
+            (0u << MPU_RLAR_ATTRINDX_SHIFT) |
+            MPU_RLAR_ENABLE;
     }
-    for (i = 0u; i < MAX_SHARED_REGIONS && region < 8u; ++i) {
+    for (i = 0u; i < MAX_SHARED_REGIONS && region < MPU_MAX_REGIONS; ++i) {
         if (g_shared_regions[i].used) {
-            uintptr_t base = g_shared_regions[i].base & ~(uintptr_t)0x1Fu;
-            uintptr_t limit = (g_shared_regions[i].base + g_shared_regions[i].size - 1u) & ~(uintptr_t)0x1Fu;
+            uintptr_t base = g_shared_regions[i].base & ~(uintptr_t)MPU_REGION_ALIGN_MASK;
+            uintptr_t limit = (g_shared_regions[i].base + g_shared_regions[i].size - 1u) &
+                              ~(uintptr_t)MPU_REGION_ALIGN_MASK;
             REG_RW(MPU_BASE_ADDR + MPU_RNR) = region++;
             REG_RW(MPU_BASE_ADDR + MPU_RBAR) = (uint32_t)base;
-            REG_RW(MPU_BASE_ADDR + MPU_RLAR) = ((uint32_t)limit & ~0x1Fu) | (0u << 1) | 1u;
+            REG_RW(MPU_BASE_ADDR + MPU_RLAR) =
+                ((uint32_t)limit & ~MPU_REGION_ALIGN_MASK) |
+                (0u << MPU_RLAR_ATTRINDX_SHIFT) |
+                MPU_RLAR_ENABLE;
         }
     }
     REG_RW(MPU_BASE_ADDR + MPU_CTRL) = 1u; /* enable MPU */
