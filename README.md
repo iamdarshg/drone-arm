@@ -80,6 +80,11 @@ Current test groups include:
 - `pwm_output_test` (`tests/test_pwm_output.c`)
 - `driver_math_test` (`tests/test_driver_math.c`)
 
+Coverage for recently added functionality:
+- `driver_math_test`: UART/SPI/I2C math plus DMA DREQ and I2C DMA command-format checks.
+- `scheduler_test`: task memory-region ownership/shared-access policy checks.
+- `state_vector_test`: async IMU/GPS registration/readiness and shared state-vector surface checks.
+
 ## Device Auto-Detection and Flashing
 
 Tool: `tools/device_autodetect.py`

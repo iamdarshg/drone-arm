@@ -200,6 +200,8 @@ Peripheral Base Addresses:
 -   **Validation**:
     -   *Software*: Host tests in `tests/test_scheduler.c` covering `scheduler_create`, `scheduler_kill`, `scheduler_query`, `scheduler_yield`, `scheduler_sleep`, `scheduler_wait`, `scheduler_run_once`, core affinity, and table-full behaviour (55 assertions, all passing).
     -   *Hardware*: Core0 runs Task A (LED Blink), Core1 runs Task B (UART Heartbeat).
+-   **Known limitation**:
+    -   The async task-style macros used by older examples (`TASK_LOCAL_BEGIN`, `AWAIT`, `SLEEP_MS`) are coroutine-like and rely on function-static state; they are not task-ID re-entrant. They should not be shared by multiple concurrent task instances of the same function without per-task state refactoring.
 
 ### 7.3 Task Memory Protection (MPU-backed) 🔧
 -   **Goal**: Only the currently running task may access its own task-private memory plus explicitly scheduler-registered shared regions.
