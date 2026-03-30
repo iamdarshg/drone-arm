@@ -62,10 +62,10 @@ static bool region_contains(const memory_region_t *r, uintptr_t addr, size_t siz
     if (!r->used || size == 0u) {
         return false;
     }
-    if (size > (size_t)(UINTPTR_MAX - addr)) {
+    if (r->size > (size_t)(UINTPTR_MAX - r->base)) {
         return false;
     }
-    if (r->size > (size_t)(UINTPTR_MAX - r->base)) {
+    if (size > (size_t)(UINTPTR_MAX - addr)) {
         return false;
     }
     end = addr + size;
@@ -289,14 +289,12 @@ bool scheduler_clock_management_supported(void) {
     return false;
 }
 
-static bool scheduler_mpu_hw_present(void) {
 #if defined(__ARM_ARCH) || defined(__thumb__) || defined(__arm__)
+static bool scheduler_mpu_hw_present(void) {
     uint32_t type = REG_RO(MPU_BASE_ADDR + MPU_TYPE);
     return ((type >> 8u) & 0xFFu) != 0u;
-#else
-    return false;
-#endif
 }
+#endif
 
 static void scheduler_mpu_apply_task(uint8_t task_id) {
 #if defined(__ARM_ARCH) || defined(__thumb__) || defined(__arm__)
@@ -336,10 +334,11 @@ static void scheduler_mpu_apply_task(uint8_t task_id) {
         }
     }
     REG_RW(MPU_BASE_ADDR + MPU_CTRL) = 1u; /* enable MPU */
+    /* Data Synchronization Barrier: ensure MPU writes complete. */
     __dsb();
+    /* Instruction Synchronization Barrier: MPU state visible to fetch/decode. */
     __isb();
 #else
-    (void)scheduler_mpu_hw_present();
     (void)task_id;
 #endif
 }
