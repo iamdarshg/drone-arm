@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #include "drivers/clock.h"
+#include "drivers/dma.h"
 #include "drivers/spi.h"
 #include "hal/platform.h"
 
@@ -110,5 +111,35 @@ bool spi_transfer(const uint8_t *tx, uint8_t *rx, size_t len) {
         if (rx != NULL) { rx[i] = (uint8_t)out; }
     }
     if (!wait_sr(SPI_SR_BSY, false)) { return false; }
+    return wait_sr(SPI_SR_TFE, true);
+}
+
+bool spi_transfer_dma(uint32_t tx_channel, uint32_t rx_channel,
+                      const uint8_t *tx, uint8_t *rx, size_t len) {
+    uint32_t base = spi_base();
+    static uint8_t g_tx_dummy = 0xFFu;
+    static uint8_t g_rx_sink;
+    uintptr_t tx_src;
+    uintptr_t rx_dst;
+    ASSERT(len > 0u);
+    tx_src = (tx != NULL) ? (uintptr_t)tx : (uintptr_t)&g_tx_dummy;
+    rx_dst = (rx != NULL) ? (uintptr_t)rx : (uintptr_t)&g_rx_sink;
+
+    dma_channel_start(rx_channel,
+                      (uintptr_t)(base + SPI_SSPDR), rx_dst, len,
+                      DMA_SIZE_BYTE, false, (rx != NULL), DREQ_SPI0_RX);
+    dma_channel_start(tx_channel,
+                      tx_src, (uintptr_t)(base + SPI_SSPDR), len,
+                      DMA_SIZE_BYTE, (tx != NULL), false, DREQ_SPI0_TX);
+
+    if (!dma_channel_wait(tx_channel)) {
+        return false;
+    }
+    if (!dma_channel_wait(rx_channel)) {
+        return false;
+    }
+    if (!wait_sr(SPI_SR_BSY, false)) {
+        return false;
+    }
     return wait_sr(SPI_SR_TFE, true);
 }

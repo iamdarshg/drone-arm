@@ -76,6 +76,7 @@ test('pwm_output_test', test_pwm_output)
 test_driver_math = executable('test_driver_math',
   [
     'tests/test_driver_math.c',
+    'src/drivers/dma.c',
     'src/drivers/uart.c',
     'src/drivers/spi.c',
     'src/drivers/i2c.c',

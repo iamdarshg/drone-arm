@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #include "drivers/clock.h"
+#include "drivers/dma.h"
 #include "drivers/i2c.h"
 #include "hal/platform.h"
 
@@ -168,4 +169,87 @@ bool i2c_read(uint8_t addr, uint8_t *data, size_t len) {
         data[i] = (uint8_t)REG_RO(base + I2C_DATA_CMD);
     }
     return true;
+}
+
+size_t i2c_format_write_cmds(const uint8_t *data, size_t len, uint16_t *cmd_buf, size_t cap) {
+    size_t i;
+    ASSERT((data != NULL) || (len == 0u));
+    ASSERT((cmd_buf != NULL) || (cap == 0u));
+    if (cap < len) {
+        return 0u;
+    }
+    for (i = 0u; i < len; ++i) {
+        uint16_t cmd = data[i];
+        if (i + 1u == len) {
+            cmd |= (uint16_t)I2C_DATA_CMD_STOP;
+        }
+        cmd_buf[i] = cmd;
+    }
+    return len;
+}
+
+size_t i2c_format_read_cmds(size_t len, uint16_t *cmd_buf, size_t cap) {
+    size_t i;
+    ASSERT((cmd_buf != NULL) || (cap == 0u));
+    if (cap < len) {
+        return 0u;
+    }
+    for (i = 0u; i < len; ++i) {
+        uint16_t cmd = (uint16_t)I2C_DATA_CMD_READ;
+        if (i + 1u == len) {
+            cmd |= (uint16_t)I2C_DATA_CMD_STOP;
+        }
+        cmd_buf[i] = cmd;
+    }
+    return len;
+}
+
+bool i2c_write_dma(uint32_t tx_channel, uint8_t addr, const uint8_t *data, size_t len) {
+    uint32_t base = i2c_base();
+    static uint16_t g_cmds[256];
+    size_t cmd_count;
+    ASSERT((data != NULL) || (len == 0u));
+    if (len == 0u) {
+        return true;
+    }
+    if (len > 256u) {
+        return false;
+    }
+    REG_RW(base + I2C_TAR) = addr;
+    cmd_count = i2c_format_write_cmds(data, len, g_cmds, 256u);
+    if (cmd_count != len) {
+        return false;
+    }
+    dma_channel_start(tx_channel,
+                      (uintptr_t)g_cmds, (uintptr_t)(base + I2C_DATA_CMD),
+                      cmd_count, DMA_SIZE_HWORD, true, false, DREQ_I2C0_TX);
+    return dma_channel_wait(tx_channel);
+}
+
+bool i2c_read_dma(uint32_t tx_channel, uint32_t rx_channel, uint8_t addr, uint8_t *data, size_t len) {
+    uint32_t base = i2c_base();
+    static uint16_t g_cmds[256];
+    size_t cmd_count;
+    ASSERT((data != NULL) || (len == 0u));
+    if (len == 0u) {
+        return true;
+    }
+    if (len > 256u) {
+        return false;
+    }
+    REG_RW(base + I2C_TAR) = addr;
+    cmd_count = i2c_format_read_cmds(len, g_cmds, 256u);
+    if (cmd_count != len) {
+        return false;
+    }
+    dma_channel_start(rx_channel,
+                      (uintptr_t)(base + I2C_DATA_CMD), (uintptr_t)data,
+                      len, DMA_SIZE_BYTE, false, true, DREQ_I2C0_RX);
+    dma_channel_start(tx_channel,
+                      (uintptr_t)g_cmds, (uintptr_t)(base + I2C_DATA_CMD),
+                      cmd_count, DMA_SIZE_HWORD, true, false, DREQ_I2C0_TX);
+    if (!dma_channel_wait(tx_channel)) {
+        return false;
+    }
+    return dma_channel_wait(rx_channel);
 }

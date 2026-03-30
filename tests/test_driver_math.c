@@ -21,6 +21,7 @@
 #include "drivers/clock.h"
 uint32_t clock_get_hz(clock_id_t id) { (void)id; return 150000000u; }
 
+#include "drivers/dma.h"
 #include "drivers/uart.h"
 #include "drivers/spi.h"
 #include "drivers/i2c.h"
@@ -182,6 +183,35 @@ static void test_i2c_floor_clamp(void) {
     ASSERT_RANGE(lcnt, 8u, 8192u);
 }
 
+/* ===== DMA + command formatting tests ==================================== */
+
+static void test_dma_dreq_constants(void) {
+    ASSERT_EQ(DREQ_SPI0_TX, 24u);
+    ASSERT_EQ(DREQ_SPI0_RX, 25u);
+    ASSERT_EQ(DREQ_I2C0_TX, 44u);
+    ASSERT_EQ(DREQ_I2C0_RX, 45u);
+    ASSERT_EQ(DREQ_PERMANENT, 63u);
+}
+
+static void test_i2c_format_write_cmds(void) {
+    uint8_t data[3] = {0xAAu, 0xBBu, 0xCCu};
+    uint16_t cmds[3] = {0u, 0u, 0u};
+    size_t n = i2c_format_write_cmds(data, 3u, cmds, 3u);
+    ASSERT_EQ(n, 3u);
+    ASSERT_EQ(cmds[0], 0x00AAu);
+    ASSERT_EQ(cmds[1], 0x00BBu);
+    ASSERT_EQ(cmds[2], (uint16_t)(0x00CCu | 0x0200u));
+}
+
+static void test_i2c_format_read_cmds(void) {
+    uint16_t cmds[3] = {0u, 0u, 0u};
+    size_t n = i2c_format_read_cmds(3u, cmds, 3u);
+    ASSERT_EQ(n, 3u);
+    ASSERT_EQ(cmds[0], 0x0100u);
+    ASSERT_EQ(cmds[1], 0x0100u);
+    ASSERT_EQ(cmds[2], 0x0300u); /* READ | STOP */
+}
+
 /* ===== main =============================================================== */
 
 int main(void) {
@@ -206,10 +236,13 @@ int main(void) {
     test_i2c_100khz();
     test_i2c_400khz();
     test_i2c_floor_clamp();
+    printf("-- DMA + I2C DMA formatting --\n");
+    test_dma_dreq_constants();
+    test_i2c_format_write_cmds();
+    test_i2c_format_read_cmds();
 
     printf("\n========================================\n");
     printf("Results: %d passed, %d failed\n", g_passed, g_failed);
     printf("========================================\n");
     return (g_failed > 0) ? 1 : 0;
 }
-

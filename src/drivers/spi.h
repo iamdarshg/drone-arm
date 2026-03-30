@@ -7,6 +7,8 @@
 
 void spi_init(uint32_t bitrate_hz);
 bool spi_transfer(const uint8_t *tx, uint8_t *rx, size_t len);
+bool spi_transfer_dma(uint32_t tx_channel, uint32_t rx_channel,
+                      const uint8_t *tx, uint8_t *rx, size_t len);
 
 /* Pure-computation helper exposed for host tests. */
 void spi_calc_divisors(uint32_t clk_hz, uint32_t bitrate_hz,
