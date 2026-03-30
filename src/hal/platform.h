@@ -55,9 +55,68 @@ typedef volatile uint32_t io_wo_32;
 #define REG_SET(addr, val) (REG_RW((addr) + 0x2000UL) = (val))
 #define REG_CLR(addr, val) (REG_RW((addr) + 0x3000UL) = (val))
 
+/*
+ * Memory barriers – on ARM these emit dedicated barrier instructions; on the
+ * host (x86) they reduce to a compiler-only ordering barrier.
+ */
+#if defined(__ARM_ARCH) || defined(__thumb__) || defined(__arm__)
 static inline void __dsb(void) { __asm__ volatile("dsb" ::: "memory"); }
 static inline void __dmb(void) { __asm__ volatile("dmb" ::: "memory"); }
 static inline void __isb(void) { __asm__ volatile("isb" ::: "memory"); }
+static inline void __sev(void)  { __asm__ volatile("sev" ::: "memory"); }
+static inline void __wfe(void)  { __asm__ volatile("wfe" ::: "memory"); }
+#else
+/* Host / x86 – compiler barriers only. */
+static inline void __dsb(void) { __asm__ volatile("" ::: "memory"); }
+static inline void __dmb(void) { __asm__ volatile("" ::: "memory"); }
+static inline void __isb(void) { __asm__ volatile("" ::: "memory"); }
+static inline void __sev(void)  { __asm__ volatile("" ::: "memory"); }
+static inline void __wfe(void)  { __asm__ volatile("" ::: "memory"); }
+#endif
+
+/* Cortex-M33 Coprocessor Access Control Register – used to enable the FPU. */
+#define CPACR  0xE000ED88UL
+
+/*
+ * RESETS peripheral – bit positions in the RESET / RESET_DONE registers.
+ * (RP2350 TRM, §4.2 – RESETS)
+ */
+#define RESETS_RESET      0x00u
+#define RESETS_RESET_DONE 0x08u
+
+#define RESETS_BIT_ADC        (1u << 0)
+#define RESETS_BIT_BUSCTRL    (1u << 1)
+#define RESETS_BIT_DMA        (1u << 2)
+#define RESETS_BIT_HSTX       (1u << 3)
+#define RESETS_BIT_I2C0       (1u << 4)
+#define RESETS_BIT_I2C1       (1u << 5)
+#define RESETS_BIT_IO_BANK0   (1u << 6)
+#define RESETS_BIT_IO_QSPI    (1u << 7)
+#define RESETS_BIT_JTAG       (1u << 8)
+#define RESETS_BIT_OTP        (1u << 9)
+#define RESETS_BIT_PADS_BANK0 (1u << 10)
+#define RESETS_BIT_PADS_QSPI  (1u << 11)
+#define RESETS_BIT_PIO0       (1u << 12)
+#define RESETS_BIT_PIO1       (1u << 13)
+#define RESETS_BIT_PIO2       (1u << 14)
+#define RESETS_BIT_PLL_SYS    (1u << 15)
+#define RESETS_BIT_PLL_USB    (1u << 16)
+#define RESETS_BIT_PWM        (1u << 17)
+#define RESETS_BIT_SHA256     (1u << 18)
+#define RESETS_BIT_SPI0       (1u << 19)
+#define RESETS_BIT_SPI1       (1u << 20)
+#define RESETS_BIT_SYSCFG     (1u << 21)
+#define RESETS_BIT_SYSINFO    (1u << 22)
+#define RESETS_BIT_TBMAN      (1u << 23)
+#define RESETS_BIT_TIMER0     (1u << 24)
+#define RESETS_BIT_TIMER1     (1u << 25)
+#define RESETS_BIT_TRNG       (1u << 26)
+#define RESETS_BIT_UART0      (1u << 27)
+#define RESETS_BIT_UART1      (1u << 28)
+#define RESETS_BIT_USBCTRL    (1u << 29)
+
+/* SCB – System Control Block base address (Cortex-M33). */
+#define SCB_VTOR 0xE000ED08UL
 
 #define ATTR_RAMFUNC __attribute__((section(".ramfunc")))
 

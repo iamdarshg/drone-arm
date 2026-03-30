@@ -34,6 +34,71 @@ test('uf2_artifact_test', py,
   args: [meson.project_source_root() + '/tests/test_build_artifacts.py'],
 )
 
+test_scheduler = executable('test_scheduler',
+  ['tests/test_scheduler.c', 'src/kernel/scheduler.c'],
+  include_directories: [src_inc],
+  c_args: common_c_args + ['-DNDEBUG', '-O0', '-g'],
+  native: true,
+  install: false,
+)
+
+test('scheduler_test', test_scheduler)
+
+test_state_vector = executable('test_state_vector',
+  ['tests/test_state_vector.c', 'src/sensors/state_vector.c', 'src/kernel/scheduler.c'],
+  include_directories: [src_inc],
+  c_args: common_c_args + ['-DNDEBUG', '-O0', '-g'],
+  native: true,
+  install: false,
+)
+
+test('state_vector_test', test_state_vector)
+
+test_clock_safety_sources = [
+  'tests/test_clock_safety.c',
+  'src/drivers/clock.c',
+]
+
+test_clock_safety = executable('test_clock_safety',
+  test_clock_safety_sources,
+  include_directories: [src_inc],
+  c_args: common_c_args + ['-DNDEBUG', '-O0', '-g'],
+  native: true,
+  install: false,
+)
+
+test('clock_safety_test', test_clock_safety)
+
+test_pwm_output = executable('test_pwm_output',
+  [
+    'tests/test_pwm_output.c',
+    'src/pwm_output.c',
+    'tests/gpio_stub.c',
+  ],
+  include_directories: [src_inc],
+  c_args: common_c_args + ['-DTEST_HOST=1', '-DNDEBUG', '-O0', '-g'],
+  native: true,
+  install: false,
+)
+
+test('pwm_output_test', test_pwm_output)
+
+test_driver_math = executable('test_driver_math',
+  [
+    'tests/test_driver_math.c',
+    'src/drivers/dma.c',
+    'src/drivers/uart.c',
+    'src/drivers/spi.c',
+    'src/drivers/i2c.c',
+  ],
+  include_directories: [src_inc],
+  c_args: common_c_args + ['-DNDEBUG', '-O0', '-g'],
+  native: true,
+  install: false,
+)
+
+test('driver_math_test', test_driver_math)
+
 if meson.is_cross_build()
   boot2 = executable('boot2.elf',
     'src/boot2.S',
@@ -75,6 +140,8 @@ if meson.is_cross_build()
       'src/kernel/scheduler.c',
       'src/kernel/assert.c',
       'src/pio.c',
+      'src/pwm_output.c',
+      'src/sensors/state_vector.c',
       boot2_padded,
     ],
     include_directories: [src_inc],

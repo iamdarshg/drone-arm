@@ -40,6 +40,17 @@ __vectors:
 .section .text.reset_handler, "ax", %progbits
 .thumb_func
 reset_handler:
+    /* ---------------------------------------------------------------
+     * Enable the FPU (Cortex-M33, CPACR at 0xE000ED88).
+     * Set CP10 and CP11 to full access (bits [23:20] = 0xF).
+     * Must happen before any .data copy that might contain float statics.
+     * --------------------------------------------------------------- */
+    ldr  r0, =0xE000ED88
+    ldr  r1, [r0]
+    orr  r1, r1, #(0xF << 20)
+    str  r1, [r0]
+    dsb
+    isb
     ldr r0, =_sidata
     ldr r1, =_sdata
     ldr r2, =_edata
