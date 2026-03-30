@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include "clock_internal.h"
-#include "common/assert.h"
+#include "drivers/clock_internal.h"
 
 // Simple test framework
 typedef struct {
@@ -85,7 +84,7 @@ int main(void) {
     
     RUN_TEST("clock_init", test_clock_init);
     RUN_TEST("clock_update", test_clock_update);
-    // RUN_TEST("clock_corruption", test_clock_corruption);
+    RUN_TEST("clock_corruption", test_clock_corruption);
     
     printf("\n");
     printf("========================================\n");

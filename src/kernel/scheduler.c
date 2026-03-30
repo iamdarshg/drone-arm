@@ -99,6 +99,7 @@ bool scheduler_wait(uint8_t task_id, volatile uint32_t *addr, uint32_t expected)
 
 void scheduler_yield(uint8_t task_id) {
     ASSERT(task_id < MAX_TASKS);
+    (void)task_id;
     g_stats.yields++;
 }
 

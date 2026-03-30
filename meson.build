@@ -34,6 +34,31 @@ test('uf2_artifact_test', py,
   args: [meson.project_source_root() + '/tests/test_build_artifacts.py'],
 )
 
+test_scheduler = executable('test_scheduler',
+  ['tests/test_scheduler.c', 'src/kernel/scheduler.c'],
+  include_directories: [src_inc],
+  c_args: common_c_args + ['-DNDEBUG', '-O0', '-g'],
+  native: true,
+  install: false,
+)
+
+test('scheduler_test', test_scheduler)
+
+test_clock_safety_sources = [
+  'tests/test_clock_safety.c',
+  'src/drivers/clock.c',
+]
+
+test_clock_safety = executable('test_clock_safety',
+  test_clock_safety_sources,
+  include_directories: [src_inc],
+  c_args: common_c_args + ['-DNDEBUG', '-O0', '-g'],
+  native: true,
+  install: false,
+)
+
+test('clock_safety_test', test_clock_safety)
+
 if meson.is_cross_build()
   boot2 = executable('boot2.elf',
     'src/boot2.S',

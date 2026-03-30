@@ -160,6 +160,12 @@ Peripheral Base Addresses:
 -   **Logic**: 32-instruction shared memory, 4 state machines per block.
 -   **Validation**: Load a simple square-wave generator program and verify frequency on GPIO.
 
+### 6.7 ESC Controller ✅
+-   **Interface**: `src/esc_controller.h` / `src/esc_controller.c`.
+-   **Signal**: Standard RC-PWM 1000–2000 µs at 50/400 Hz, 4-motor X-frame layout.
+-   **Functions**: `esc_init`, `esc_set_throttle`, `esc_set_all`, `esc_disarm`, `esc_get_throttle`.
+-   **Note**: Uses SIO bit-bang GPIO; replace with PIO hardware PWM for precise timing.
+
 ---
 
 ## 7. Multicore & Scheduler ✅
@@ -168,12 +174,12 @@ Peripheral Base Addresses:
 -   **Hardware**: SIO FIFO (8-entry deep).
 -   **Spinlocks**: 32 hardware spinlocks for mutual exclusion.
 
-### 7.2 Scheduler Logic
+### 7.2 Scheduler Logic ✅
 -   **Type**: Cooperative Multicore Scheduler.
 -   **Storage**: Static task table, no heap usage.
 -   **Policy**: Priority-based round-robin.
 -   **Validation**:
-    -   *Software*: Host tests for `scheduler_create`, `scheduler_yield`, `scheduler_sleep`.
+    -   *Software*: Host tests in `tests/test_scheduler.c` covering `scheduler_create`, `scheduler_kill`, `scheduler_query`, `scheduler_yield`, `scheduler_sleep`, `scheduler_wait`, `scheduler_run_once`, core affinity, and table-full behaviour (55 assertions, all passing).
     -   *Hardware*: Core0 runs Task A (LED Blink), Core1 runs Task B (UART Heartbeat).
 
 ---
@@ -183,11 +189,22 @@ Peripheral Base Addresses:
 ### 8.1 Discovery Mechanism
 -   Detects RP2350 USB Mass Storage Class.
 -   Reads `INFO_UF2.TXT` for hardware metadata.
+-   **Host tool**: `tools/device_autodetect.py` – retries flashing if the device unmounts prematurely.
+-   **Firmware helper**: `src/device_autodetect.c` – `device_was_usb_boot()` / `device_is_app_running()` read the ROM boot-type word from Scratch X SRAM.
 -   **Validation**: Host tool retries flashing if the device unmounts prematurely or fails to reboot.
 
 ---
 
-## 9. Glossary
+## 9. Clock Safety ✅
+
+### 9.1 Internal State Tracking
+-   `src/drivers/clock_internal.h` exposes `clock_config_t`, `clock_state_init`, `clock_is_valid`, `clock_get_config`, `clock_set_config`.
+-   A magic-number guard detects uninitialised / corrupted clock state.
+-   **Validation**: Host test `tests/test_clock_safety.c` verifies init, config update, and post-corruption state (3 tests, all passing).
+
+---
+
+## 10. Glossary
 - **XIP**: Execute-In-Place.
 - **UF2**: USB Flashing Format.
 - **QMI**: Quad SPI Mask Interface.

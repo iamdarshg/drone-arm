@@ -2,6 +2,7 @@
 #include <stdint.h>
 
 #include "drivers/clock.h"
+#include "drivers/clock_internal.h"
 #include "hal/platform.h"
 
 enum {
@@ -64,4 +65,42 @@ uint32_t clock_get_hz(clock_id_t id) {
         return g_sys_hz;
     }
     return g_peri_hz;
+}
+
+/* ---------- internal state-tracking API (testable without hardware) ---------- */
+
+#define CLOCK_STATE_MAGIC 0xC10CC10Cu
+
+typedef struct {
+    uint32_t magic;
+    clock_config_t cfg;
+} clock_state_t;
+
+static clock_state_t g_clock_state;
+
+void clock_state_init(uint32_t sys_hz, uint32_t vreg_mv) {
+    ASSERT(sys_hz > 0u);
+    ASSERT(vreg_mv > 0u);
+    g_clock_state.cfg.sys_clk_hz = sys_hz;
+    g_clock_state.cfg.vreg_voltage_mv = vreg_mv;
+    g_clock_state.magic = CLOCK_STATE_MAGIC;
+}
+
+bool clock_is_valid(void) {
+    return g_clock_state.magic == CLOCK_STATE_MAGIC;
+}
+
+const clock_config_t *clock_get_config(void) {
+    if (g_clock_state.magic != CLOCK_STATE_MAGIC) {
+        return NULL;
+    }
+    return &g_clock_state.cfg;
+}
+
+void clock_set_config(const clock_config_t *cfg) {
+    ASSERT(cfg != NULL);
+    ASSERT(cfg->sys_clk_hz > 0u);
+    ASSERT(cfg->vreg_voltage_mv > 0u);
+    g_clock_state.cfg = *cfg;
+    g_clock_state.magic = CLOCK_STATE_MAGIC;
 }
