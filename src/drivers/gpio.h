@@ -10,5 +10,6 @@ void gpio_set_pulls(uint32_t pin, bool pull_up, bool pull_down);
 void gpio_set_dir(uint32_t pin, bool is_output);
 void gpio_put(uint32_t pin, bool value);
 bool gpio_get(uint32_t pin);
+void gpio_toggle(uint32_t pin);
 
 #endif

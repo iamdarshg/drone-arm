@@ -1,6 +1,6 @@
 # Drone-Arm Firmware Technical Specification
 
-Version: 0.3.2
+Version: 0.4.0
 Target: RP2350B (dual Cortex-M33)  
 Toolchain: arm-none-eabi-gcc (cross), host GCC/Python for tests
 
@@ -115,17 +115,19 @@ Peripheral Base Addresses:
 ## 5. Startup & Reset Sequence ✅
 
 ### 5.1 Reset Handler (`src/startup.S`)
-1.  Initialize Stack Pointer from vector table.
+1.  **FPU Enable**: Before any data copies, enable the Cortex-M33 FPU by setting CPACR bits [23:20] = 0xF and issuing DSB+ISB.
 2.  **Data Copy**: Copy `.data` from Flash (LMA) to SRAM (VMA).
 3.  **BSS Zeroing**: Initialize `.bss` region in SRAM to zero.
 4.  **Ramfunc Copy**: Copy `.ramfunc` code to SRAM for low-latency execution.
 5.  **Main Entry**: Branch to `main()`.
 
 ### 5.2 Board Initialization (`src/board.c`)
-1.  **Clocks**: Bring up XOSC and PLL_SYS (150MHz).
-2.  **Resets**: Release peripherals from reset.
-3.  **GPIO**: Configure pin muxing for UART, I2C, SPI.
-4.  **Multicore**: Launch Core1 and perform handshake.
+1.  **Clocks**: Bring up XOSC (12 MHz), switch CLK_REF to XOSC, configure PLL_SYS (VCO=1500 MHz, POSTDIV1=5, POSTDIV2=2 → 150 MHz), switch CLK_SYS + CLK_PERI to PLL_SYS output.
+2.  **Resets**: Release IO_BANK0, PADS_BANK0, UART0, I2C0, SPI0, DMA, PIO0-2 from RESETS block before any driver accesses registers.
+3.  **GPIO**: `gpio_init()` sets all pins to SIO function with input-enable; `board_config_pins()` applies UART/I2C/SPI/LED muxing.
+4.  **Peripherals**: UART0 (115200 baud), I2C0 (100 kHz), SPI0 (1 MHz) initialised with computed divisors.
+5.  **Banner**: `uart_puts("Board Init Complete\r\n")` confirms peripheral stack is alive.
+6.  **Multicore**: Core1 is launched via the RP2350 ROM 6-step FIFO boot protocol; Core1 runs `core1_main()` (scheduler loop for core affinity = 1).
 
 ---
 
@@ -133,26 +135,38 @@ Peripheral Base Addresses:
 
 ### 6.1 GPIO ✅
 -   **Registers**: IO_BANK0 (Mux), PADS_BANK0 (Electrical), SIO (Data).
--   **Functionality**: `gpio_set_function`, `gpio_set_dir`, `gpio_put`, `gpio_get`.
+-   **Functions**: `gpio_init` (resets all pins to SIO function with IE), `gpio_set_function`, `gpio_set_dir`, `gpio_set_pulls`, `gpio_put`, `gpio_get`, `gpio_toggle` (atomic XOR via REG_XOR alias).
 -   **Validation**: Assert `pin < 48`. Toggle LED pin and observe.
 
 ### 6.2 UART ✅
 -   **Controller**: PL011.
 -   **Configuration**: 8N1, FIFO enabled, programmable baudrate.
--   **Validation**: Loopback test on UART0. Verify output on serial terminal.
+-   **Baudrate formula**: `div = 8×UARTCLK/baud; IBRD = div>>7; FBRD = ((div & 0x7F)+1)>>1` (correct ARM TRM §2.6 rounding; previous code had ×2 IBRD error).
+-   **Functions**: `uart_init`, `uart_putc`, `uart_getc`, `uart_puts`, `uart_calc_ibrd`, `uart_calc_fbrd`.
+-   **Validation**: `uart_calc_ibrd(150MHz, 115200)` → 81; `uart_calc_ibrd(150MHz, 9600)` → 976; `uart_puts` used in board startup banner.
+-   **Host tests**: `tests/test_driver_math.c` – 3 UART assertions.
 
 ### 6.3 I2C ✅
 -   **Controller**: DW_apb_i2c.
--   **Mode**: Master, Standard/Fast speed.
+-   **Mode**: Master, Standard (100 kHz) or Fast (400 kHz) – selected automatically by bitrate.
+-   **Timing**: `i2c_calc_scl_counts(peri_clk, bitrate, &hcnt, &lcnt)` derives SCL high/low counts using `period×3/5` split; both counts clamped to ≥ 8 (DW hard limit).
+-   **SDA hold**: TX hold time set to 300 ns (std) / 100 ns (fast) from peri clock.
 -   **Validation**: Read WHO_AM_I register from LSM6DSO IMU (Address `0x6A/0x6B`, ID `0x6C`).
+-   **Host tests**: `tests/test_driver_math.c` – 3 I2C assertions.
 
 ### 6.4 SPI ✅
 -   **Controller**: PrimeCell SSP (PL022).
--   **Mode**: Master, 8-bit Motorola frame.
+-   **Mode**: Master, 8-bit Motorola frame (CPOL=0, CPHA=0).
+-   **Baudrate**: `spi_calc_divisors(clk, bitrate, &cpsdvsr, &scr)` computes CPSDVSR (min even, 2-254) and SCR (0-255) to match requested rate; previously the bitrate parameter was silently ignored and the output was hardcoded to 75 MHz.
 -   **Validation**: Read WHO_AM_I from ICM-42670-P (Address `0x67`).
+-   **Host tests**: `tests/test_driver_math.c` – 4 SPI assertions.
 
 ### 6.5 DMA ✅
 -   **Channels**: 0-11 (Basic), 12-15 (Lite).
+-   **Functions**:
+    -   `dma_memcpy(ch, dst, src, bytes)` – byte-granularity, any alignment.
+    -   `dma_memcpy32(ch, dst, src, words)` – 32-bit word transfers (4× throughput); requires word-aligned buffers.
+-   **DATA_SIZE field**: `0`=byte, `1`=half-word, `2`=word in CTRL bits [3:2].
 -   **Validation**: Memory-to-memory copy with 32-bit words, verify integrity.
 
 ### 6.6 PIO ✅
@@ -177,6 +191,7 @@ Peripheral Base Addresses:
 ### 7.1 Inter-Core Communication
 -   **Hardware**: SIO FIFO (8-entry deep).
 -   **Spinlocks**: 32 hardware spinlocks for mutual exclusion.
+-   **Core1 launch**: RP2350 ROM 6-step FIFO boot protocol – drain FIFO + SEV, push `{0, 0, 1, VTOR, SP, entry}`, verify each echo; Core1 gets its own 1 KB stack (`g_core1_stack[256]`) and enters `core1_main()`. Previous implementation used a simple token ping-pong which never actually vectored Core1 to user code.
 
 ### 7.2 Scheduler Logic ✅
 -   **Type**: Cooperative Multicore Scheduler.

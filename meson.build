@@ -73,6 +73,21 @@ test_pwm_output = executable('test_pwm_output',
 
 test('pwm_output_test', test_pwm_output)
 
+test_driver_math = executable('test_driver_math',
+  [
+    'tests/test_driver_math.c',
+    'src/drivers/uart.c',
+    'src/drivers/spi.c',
+    'src/drivers/i2c.c',
+  ],
+  include_directories: [src_inc],
+  c_args: common_c_args + ['-DNDEBUG', '-O0', '-g'],
+  native: true,
+  install: false,
+)
+
+test('driver_math_test', test_driver_math)
+
 if meson.is_cross_build()
   boot2 = executable('boot2.elf',
     'src/boot2.S',
