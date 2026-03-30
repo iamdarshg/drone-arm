@@ -15,6 +15,9 @@
 
 /* The RP2350 ROM stores a boot-type value at a fixed address in SRAM after
  * the boot stage completes.  A value of 1 indicates USB MSC boot (BOOTSEL). */
+/* The RP2350 ROM writes a boot-type byte into the first word of Scratch X
+ * SRAM (SRAM_SCRATCH_X_BASE, 0x20080000) before transferring control to the
+ * application.  See hal/platform.h for the address definition. */
 #define BOOT_TYPE_ADDR   SRAM_SCRATCH_X_BASE
 #define BOOT_TYPE_USB_MSC 1u
 

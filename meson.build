@@ -59,6 +59,20 @@ test_clock_safety = executable('test_clock_safety',
 
 test('clock_safety_test', test_clock_safety)
 
+test_pwm_output = executable('test_pwm_output',
+  [
+    'tests/test_pwm_output.c',
+    'src/pwm_output.c',
+    'tests/gpio_stub.c',
+  ],
+  include_directories: [src_inc],
+  c_args: common_c_args + ['-DTEST_HOST=1', '-DNDEBUG', '-O0', '-g'],
+  native: true,
+  install: false,
+)
+
+test('pwm_output_test', test_pwm_output)
+
 if meson.is_cross_build()
   boot2 = executable('boot2.elf',
     'src/boot2.S',
@@ -100,6 +114,7 @@ if meson.is_cross_build()
       'src/kernel/scheduler.c',
       'src/kernel/assert.c',
       'src/pio.c',
+      'src/pwm_output.c',
       boot2_padded,
     ],
     include_directories: [src_inc],

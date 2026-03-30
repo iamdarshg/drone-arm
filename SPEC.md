@@ -160,11 +160,15 @@ Peripheral Base Addresses:
 -   **Logic**: 32-instruction shared memory, 4 state machines per block.
 -   **Validation**: Load a simple square-wave generator program and verify frequency on GPIO.
 
-### 6.7 ESC Controller ✅
--   **Interface**: `src/esc_controller.h` / `src/esc_controller.c`.
--   **Signal**: Standard RC-PWM 1000–2000 µs at 50/400 Hz, 4-motor X-frame layout.
--   **Functions**: `esc_init`, `esc_set_throttle`, `esc_set_all`, `esc_disarm`, `esc_get_throttle`.
--   **Note**: Uses SIO bit-bang GPIO; replace with PIO hardware PWM for precise timing.
+### 6.7 PWM Output Controller ✅
+-   **Interface**: `src/pwm_output.h` / `src/pwm_output.c`.
+-   **Signal**: User-defined RC-PWM frequency (e.g. 50 Hz servo, 400 Hz fast-ESC); pulse range and neutral position configurable at init time via `pwm_output_config_t`.
+-   **Period**: Derived automatically as `period_us = 1 000 000 / freq_hz`.
+-   **Channels**: 1 – 8 (controlled by `num_channels`), each assigned its own GPIO pin.
+-   **Functions**: `pwm_output_init`, `pwm_output_set_pulse`, `pwm_output_set_all`, `pwm_output_reset`, `pwm_output_get_pulse`, `pwm_output_get_period_us`, `pwm_output_update`.
+-   **Convenience macros**: `PWM_OUTPUT_CFG_ESC_DEFAULTS` (1000–2000 µs, 400 Hz) and `PWM_OUTPUT_CFG_SERVO_DEFAULTS` (500–2500 µs, 50 Hz).
+-   **Note**: `src/esc_controller.h` / `src/esc_controller.c` are forwarding stubs kept for reference; all new code should use `pwm_output`.
+-   **Validation**: Host test `tests/test_pwm_output.c` – 35 assertions covering ESC and servo configs, user-defined frequencies, clamping, set_all, reset, and uninitialised-safe return values (all passing).
 
 ---
 
