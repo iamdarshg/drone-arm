@@ -201,6 +201,32 @@ Peripheral Base Addresses:
     -   *Software*: Host tests in `tests/test_scheduler.c` covering `scheduler_create`, `scheduler_kill`, `scheduler_query`, `scheduler_yield`, `scheduler_sleep`, `scheduler_wait`, `scheduler_run_once`, core affinity, and table-full behaviour (55 assertions, all passing).
     -   *Hardware*: Core0 runs Task A (LED Blink), Core1 runs Task B (UART Heartbeat).
 
+### 7.3 Task Memory Protection (MPU-backed) 🔧
+-   **Goal**: Only the currently running task may access its own task-private memory plus explicitly scheduler-registered shared regions.
+-   **Current implementation**:
+    -   Software ownership checks via `scheduler_memory_access_allowed*`.
+    -   RP2350/Cortex-M33 MPU programming stubs added in scheduler context switch path (`scheduler_mpu_apply_task`) to install task region + shared regions each dispatch.
+-   **Status**: Partial. Region attributes/permissions and full multi-region policy are intentionally incomplete and require hardware bring-up validation.
+
+### 7.4 Scheduler Clock Management (Auto Scaling) 📝
+-   **Goal**: Raise clocks during high-throughput task windows and reduce clocks during low-load windows.
+-   **Current implementation**:
+    -   Stub APIs only:
+      -   `scheduler_clock_policy_hint(task_id, throughput_hint)`
+      -   `scheduler_clock_manager_tick()`
+      -   `scheduler_clock_management_supported()`
+-   **Status**: Stubbed/incomplete by design; pending integration with clock/vreg policy controls.
+
+---
+
+## 11. Sensor State Vectors (Shared, Asynchronous) 🔧
+-   **Goal**: Maintain live IMU/GPS outputs in shared memory for fast lookup by scheduler-managed tasks/cores.
+-   **Current implementation**:
+    -   `src/sensors/state_vector.c/.h` provides async trigger + readiness masks + read APIs.
+    -   New shared-memory surface `state_vector_shared()` exposes continuously updated `state_vector_shared_t`.
+    -   `state_vector_register_shared_region_with_scheduler()` registers the shared state-vector block with scheduler shared-memory policy.
+-   **Status**: Partial async framework complete; hardware-specific high-rate DMA sensor pipelines remain to be implemented per concrete IMU/GPS drivers.
+
 ---
 
 ## 8. Device Auto-Detection ✅

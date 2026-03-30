@@ -45,7 +45,7 @@ test_scheduler = executable('test_scheduler',
 test('scheduler_test', test_scheduler)
 
 test_state_vector = executable('test_state_vector',
-  ['tests/test_state_vector.c', 'src/sensors/state_vector.c'],
+  ['tests/test_state_vector.c', 'src/sensors/state_vector.c', 'src/kernel/scheduler.c'],
   include_directories: [src_inc],
   c_args: common_c_args + ['-DNDEBUG', '-O0', '-g'],
   native: true,

@@ -4,6 +4,7 @@
 #include <stddef.h>
 
 #include "kernel/scheduler.h"
+#include "hal/platform.h"
 
 enum {
     MAX_TASKS = 16u,
@@ -33,9 +34,25 @@ static sched_stats_t g_stats;
 static uint8_t g_current_task[MAX_CORES];
 static memory_region_t g_task_regions[MAX_TASKS];
 static memory_region_t g_shared_regions[MAX_SHARED_REGIONS];
+static uint32_t g_clock_throughput_hints[MAX_TASKS];
+
+static void scheduler_mpu_apply_task(uint8_t task_id);
+
+#if defined(__ARM_ARCH) || defined(__thumb__) || defined(__arm__)
+enum {
+    MPU_BASE_ADDR = 0xE000ED90u,
+    MPU_TYPE      = 0x00u,
+    MPU_CTRL      = 0x04u,
+    MPU_RNR       = 0x08u,
+    MPU_RBAR      = 0x0Cu,
+    MPU_RLAR      = 0x10u,
+    MPU_MAIR0     = 0x30u,
+};
+#endif
 
 static bool region_contains(const memory_region_t *r, uintptr_t addr, size_t size) {
     uintptr_t end;
+    uintptr_t rend;
     ASSERT(r != NULL);
     if (!r->used || size == 0u) {
         return false;
@@ -43,8 +60,12 @@ static bool region_contains(const memory_region_t *r, uintptr_t addr, size_t siz
     if (size > (size_t)(UINTPTR_MAX - addr)) {
         return false;
     }
+    if (r->size > (size_t)(UINTPTR_MAX - r->base)) {
+        return false;
+    }
     end = addr + size;
-    return addr >= r->base && end <= (r->base + r->size);
+    rend = r->base + r->size;
+    return addr >= r->base && end <= rend;
 }
 
 void scheduler_init(void) {
@@ -70,6 +91,9 @@ void scheduler_init(void) {
         g_shared_regions[i].used = false;
         g_shared_regions[i].base = 0u;
         g_shared_regions[i].size = 0u;
+    }
+    for (i = 0u; i < MAX_TASKS; ++i) {
+        g_clock_throughput_hints[i] = 0u;
     }
     g_stats = (sched_stats_t){0};
 }
@@ -167,6 +191,7 @@ void scheduler_run_once(uint8_t core_id) {
         id = (uint8_t)((start + n) % MAX_TASKS);
         if (g_tasks[id].used && g_tasks[id].core == core_id && task_ready(id)) {
             g_current_task[core_id] = id;
+            scheduler_mpu_apply_task(id);
             g_tasks[id].fn(id);
             g_rr[core_id] = (uint8_t)((id + 1u) % MAX_TASKS);
             g_stats.runs++;
@@ -243,4 +268,65 @@ bool scheduler_memory_access_allowed_current(uint8_t core_id, uintptr_t addr, si
         return false;
     }
     return scheduler_memory_access_allowed(tid, addr, size);
+}
+
+void scheduler_clock_policy_hint(uint8_t task_id, uint32_t throughput_hint) {
+    ASSERT(task_id < MAX_TASKS);
+    g_clock_throughput_hints[task_id] = throughput_hint;
+}
+
+void scheduler_clock_manager_tick(void) {
+    /* Stub only: future implementation should aggregate throughput hints
+     * and tune SYS/PERI clocks + voltage through clock driver policies. */
+}
+
+bool scheduler_clock_management_supported(void) {
+    return false;
+}
+
+static bool scheduler_mpu_hw_present(void) {
+#if defined(__ARM_ARCH) || defined(__thumb__) || defined(__arm__)
+    uint32_t type = REG_RO(MPU_BASE_ADDR + MPU_TYPE);
+    return ((type >> 8u) & 0xFFu) != 0u;
+#else
+    return false;
+#endif
+}
+
+static void scheduler_mpu_apply_task(uint8_t task_id) {
+#if defined(__ARM_ARCH) || defined(__thumb__) || defined(__arm__)
+    uint8_t i;
+    uint32_t region = 0u;
+    if (!scheduler_mpu_hw_present() || task_id >= MAX_TASKS) {
+        return;
+    }
+    /* Minimal MPU programming stub for RP2350/Cortex-M33:
+     * region0 = current task private window, following regions = shared windows.
+     * Attribute/memory-type policy is intentionally minimal for now. */
+    REG_RW(MPU_BASE_ADDR + MPU_CTRL) = 0u;
+    /* AttrIdx0 in MAIR0 = 0x44 => Normal memory, Inner/Outer non-cacheable. */
+    REG_RW(MPU_BASE_ADDR + MPU_MAIR0) = 0x44u;
+    if (g_task_regions[task_id].used) {
+        uintptr_t base = g_task_regions[task_id].base & ~(uintptr_t)0x1Fu;
+        uintptr_t limit = (g_task_regions[task_id].base + g_task_regions[task_id].size - 1u) & ~(uintptr_t)0x1Fu;
+        REG_RW(MPU_BASE_ADDR + MPU_RNR) = region++;
+        REG_RW(MPU_BASE_ADDR + MPU_RBAR) = (uint32_t)base;
+        REG_RW(MPU_BASE_ADDR + MPU_RLAR) = ((uint32_t)limit & ~0x1Fu) | (0u << 1) | 1u;
+    }
+    for (i = 0u; i < MAX_SHARED_REGIONS && region < 8u; ++i) {
+        if (g_shared_regions[i].used) {
+            uintptr_t base = g_shared_regions[i].base & ~(uintptr_t)0x1Fu;
+            uintptr_t limit = (g_shared_regions[i].base + g_shared_regions[i].size - 1u) & ~(uintptr_t)0x1Fu;
+            REG_RW(MPU_BASE_ADDR + MPU_RNR) = region++;
+            REG_RW(MPU_BASE_ADDR + MPU_RBAR) = (uint32_t)base;
+            REG_RW(MPU_BASE_ADDR + MPU_RLAR) = ((uint32_t)limit & ~0x1Fu) | (0u << 1) | 1u;
+        }
+    }
+    REG_RW(MPU_BASE_ADDR + MPU_CTRL) = 1u; /* enable MPU */
+    __dsb();
+    __isb();
+#else
+    (void)scheduler_mpu_hw_present();
+    (void)task_id;
+#endif
 }

@@ -38,6 +38,11 @@ void scheduler_clear_shared_regions(void);
 bool scheduler_memory_access_allowed(uint8_t task_id, uintptr_t addr, size_t size);
 bool scheduler_memory_access_allowed_current(uint8_t core_id, uintptr_t addr, size_t size);
 
+/* Clock management policy stubs (incomplete by design for now). */
+void scheduler_clock_policy_hint(uint8_t task_id, uint32_t throughput_hint);
+void scheduler_clock_manager_tick(void);
+bool scheduler_clock_management_supported(void);
+
 #define SCHED_INVALID_TASK ((uint8_t)0xFFu)
 
 #endif

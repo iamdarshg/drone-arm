@@ -32,6 +32,12 @@ typedef struct {
     uint32_t gps_ready_mask;
 } state_vector_ready_t;
 
+typedef struct {
+    volatile imu_state_vector_t imu[8];
+    volatile gps_state_vector_t gps[4];
+    volatile state_vector_ready_t ready;
+} state_vector_shared_t;
+
 void state_vector_init(void);
 bool state_vector_register_imu(uint8_t bus, uint8_t addr_or_cs);
 bool state_vector_register_gps(uint8_t bus, uint8_t addr_or_cs);
@@ -39,5 +45,7 @@ bool state_vector_request_all_async(void);
 bool state_vector_poll_ready(state_vector_ready_t *ready);
 bool state_vector_read_imu(uint8_t index, imu_state_vector_t *out);
 bool state_vector_read_gps(uint8_t index, gps_state_vector_t *out);
+const volatile state_vector_shared_t *state_vector_shared(void);
+bool state_vector_register_shared_region_with_scheduler(void);
 
 #endif
