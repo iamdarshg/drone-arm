@@ -200,6 +200,24 @@ static void test_max_tasks(void) {
     TEST_ASSERT(reused != SCHED_INVALID_TASK);
 }
 
+static void test_memory_regions_and_sharing(void) {
+    static uint8_t task0_mem[64];
+    static uint8_t task1_mem[64];
+    static uint8_t shared_mem[64];
+    scheduler_init();
+    uint8_t t0 = scheduler_create(0u, counting_task);
+    uint8_t t1 = scheduler_create(1u, counting_task);
+    TEST_ASSERT(t0 != SCHED_INVALID_TASK);
+    TEST_ASSERT(t1 != SCHED_INVALID_TASK);
+    TEST_ASSERT(scheduler_set_task_region(t0, (uintptr_t)task0_mem, sizeof(task0_mem)));
+    TEST_ASSERT(scheduler_set_task_region(t1, (uintptr_t)task1_mem, sizeof(task1_mem)));
+    TEST_ASSERT(scheduler_add_shared_region((uintptr_t)shared_mem, sizeof(shared_mem)));
+
+    TEST_ASSERT(scheduler_memory_access_allowed(t0, (uintptr_t)&task0_mem[4], 4u));
+    TEST_ASSERT(!scheduler_memory_access_allowed(t0, (uintptr_t)&task1_mem[4], 4u));
+    TEST_ASSERT(scheduler_memory_access_allowed(t0, (uintptr_t)&shared_mem[4], 4u));
+}
+
 /* ---------- main ----------------------------------------------------------- */
 
 int main(void) {
@@ -217,6 +235,7 @@ int main(void) {
     RUN_TEST("scheduler_wait",            test_wait);
     RUN_TEST("scheduler_yield",           test_yield);
     RUN_TEST("scheduler_max_tasks",       test_max_tasks);
+    RUN_TEST("scheduler_memory_regions",  test_memory_regions_and_sharing);
 
     printf("\n========================================\n");
     printf("Results: %d passed, %d failed\n", g_tests_passed, g_tests_failed);

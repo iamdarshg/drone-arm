@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <stddef.h>
 
 typedef void (*task_fn_t)(uint8_t task_id);
 
@@ -24,6 +25,18 @@ bool scheduler_wait(uint8_t task_id, volatile uint32_t *addr, uint32_t expected)
 void scheduler_yield(uint8_t task_id);
 void scheduler_run_once(uint8_t core_id);
 const sched_stats_t *scheduler_stats(void);
+
+/*
+ * MPU-style task memory ownership model:
+ * - Each task can register one private region.
+ * - Shared regions are globally registered and accessible by all tasks.
+ * - Access is permitted only to {task-private ∪ shared}.
+ */
+bool scheduler_set_task_region(uint8_t task_id, uintptr_t base, size_t size);
+bool scheduler_add_shared_region(uintptr_t base, size_t size);
+void scheduler_clear_shared_regions(void);
+bool scheduler_memory_access_allowed(uint8_t task_id, uintptr_t addr, size_t size);
+bool scheduler_memory_access_allowed_current(uint8_t core_id, uintptr_t addr, size_t size);
 
 #define SCHED_INVALID_TASK ((uint8_t)0xFFu)
 

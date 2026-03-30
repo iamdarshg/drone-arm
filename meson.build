@@ -44,6 +44,16 @@ test_scheduler = executable('test_scheduler',
 
 test('scheduler_test', test_scheduler)
 
+test_state_vector = executable('test_state_vector',
+  ['tests/test_state_vector.c', 'src/sensors/state_vector.c'],
+  include_directories: [src_inc],
+  c_args: common_c_args + ['-DNDEBUG', '-O0', '-g'],
+  native: true,
+  install: false,
+)
+
+test('state_vector_test', test_state_vector)
+
 test_clock_safety_sources = [
   'tests/test_clock_safety.c',
   'src/drivers/clock.c',
@@ -131,6 +141,7 @@ if meson.is_cross_build()
       'src/kernel/assert.c',
       'src/pio.c',
       'src/pwm_output.c',
+      'src/sensors/state_vector.c',
       boot2_padded,
     ],
     include_directories: [src_inc],
