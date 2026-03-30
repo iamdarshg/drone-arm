@@ -74,6 +74,7 @@ if meson.is_cross_build()
       'src/system/multicore.c',
       'src/kernel/scheduler.c',
       'src/kernel/assert.c',
+      'src/pio.c',
       boot2_padded,
     ],
     include_directories: [src_inc],
