@@ -206,7 +206,7 @@ size_t i2c_format_read_cmds(size_t len, uint16_t *cmd_buf, size_t cap) {
 
 bool i2c_write_dma(uint32_t tx_channel, uint8_t addr, const uint8_t *data, size_t len) {
     uint32_t base = i2c_base();
-    static uint16_t g_cmds[256];
+    uint16_t cmd_buf[256];
     size_t cmd_count;
     ASSERT((data != NULL) || (len == 0u));
     if (len == 0u) {
@@ -216,19 +216,19 @@ bool i2c_write_dma(uint32_t tx_channel, uint8_t addr, const uint8_t *data, size_
         return false;
     }
     REG_RW(base + I2C_TAR) = addr;
-    cmd_count = i2c_format_write_cmds(data, len, g_cmds, 256u);
+    cmd_count = i2c_format_write_cmds(data, len, cmd_buf, 256u);
     if (cmd_count != len) {
         return false;
     }
     dma_channel_start(tx_channel,
-                      (uintptr_t)g_cmds, (uintptr_t)(base + I2C_DATA_CMD),
+                      (uintptr_t)cmd_buf, (uintptr_t)(base + I2C_DATA_CMD),
                       cmd_count, DMA_SIZE_HWORD, true, false, DREQ_I2C0_TX);
     return dma_channel_wait(tx_channel);
 }
 
 bool i2c_read_dma(uint32_t tx_channel, uint32_t rx_channel, uint8_t addr, uint8_t *data, size_t len) {
     uint32_t base = i2c_base();
-    static uint16_t g_cmds[256];
+    uint16_t cmd_buf[256];
     size_t cmd_count;
     ASSERT((data != NULL) || (len == 0u));
     if (len == 0u) {
@@ -238,7 +238,7 @@ bool i2c_read_dma(uint32_t tx_channel, uint32_t rx_channel, uint8_t addr, uint8_
         return false;
     }
     REG_RW(base + I2C_TAR) = addr;
-    cmd_count = i2c_format_read_cmds(len, g_cmds, 256u);
+    cmd_count = i2c_format_read_cmds(len, cmd_buf, 256u);
     if (cmd_count != len) {
         return false;
     }
@@ -246,7 +246,7 @@ bool i2c_read_dma(uint32_t tx_channel, uint32_t rx_channel, uint8_t addr, uint8_
                       (uintptr_t)(base + I2C_DATA_CMD), (uintptr_t)data,
                       len, DMA_SIZE_BYTE, false, true, DREQ_I2C0_RX);
     dma_channel_start(tx_channel,
-                      (uintptr_t)g_cmds, (uintptr_t)(base + I2C_DATA_CMD),
+                      (uintptr_t)cmd_buf, (uintptr_t)(base + I2C_DATA_CMD),
                       cmd_count, DMA_SIZE_HWORD, true, false, DREQ_I2C0_TX);
     if (!dma_channel_wait(tx_channel)) {
         return false;
