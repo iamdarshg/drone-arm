@@ -79,11 +79,54 @@ Current test groups include:
 - `clock_safety_test` (`tests/test_clock_safety.c`)
 - `pwm_output_test` (`tests/test_pwm_output.c`)
 - `driver_math_test` (`tests/test_driver_math.c`)
+- `example_test` (`tests/test_example.c`)
 
 Coverage for recently added functionality:
 - `driver_math_test`: UART/SPI/I2C math plus DMA DREQ and I2C DMA command-format checks.
 - `scheduler_test`: task memory-region ownership/shared-access policy checks.
 - `state_vector_test`: async IMU/GPS registration/readiness and shared state-vector surface checks.
+- `example_test`: clamp and timing-conversion helpers – demonstrates CI and test harness integration.
+
+## Running Tests with the CI Docker Container
+
+A fully pinned toolchain image is provided in `ci/Dockerfile`.
+
+### Build the image
+
+```bash
+docker build -t drone-arm-ci ci/
+```
+
+### Run tests inside the container (mirrors CI exactly)
+
+```bash
+docker run --rm -v "$(pwd)":/work -w /work drone-arm-ci \
+  bash -c "meson setup builddir && ninja -C builddir && meson test -C builddir --print-errorlogs"
+```
+
+### Generate a coverage report locally
+
+```bash
+docker run --rm -v "$(pwd)":/work -w /work drone-arm-ci \
+  bash -c "meson setup builddir -Db_coverage=true && ninja -C builddir && \
+           meson test -C builddir && ninja -C builddir coverage && \
+           lcov --capture --directory builddir --output-file builddir/coverage.info && \
+           genhtml builddir/coverage.info --output-directory builddir/coverage-html"
+```
+
+Open `builddir/coverage-html/index.html` in a browser to inspect line coverage.
+
+## CI / Continuous Integration
+
+GitHub Actions runs on every push and pull request (`.github/workflows/ci.yml`):
+
+1. **Build** – `meson setup builddir && ninja -C builddir`
+2. **Static analysis** – `cppcheck` (error-exit on any finding) + `clang-tidy`
+3. **Unit tests** – `meson test -C builddir --print-errorlogs`
+4. **Coverage** – `lcov` HTML report uploaded as a workflow artifact
+
+PRs must pass all CI checks before merging.  See `.github/PULL_REQUEST_TEMPLATE.md` for the
+required PR checklist and `docs/assurance_checklist.md` for the broader quality gate.
 
 ## Device Auto-Detection and Flashing
 

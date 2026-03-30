@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y \
+            build-essential \
+            meson \
+            ninja-build \
+            python3 \
+            python3-pip \
+            clang \
+            clang-tidy \
+            cppcheck \
+            lcov \
+            gcc
+
+      - name: Configure (native host build)
+        run: meson setup builddir -Db_coverage=true
+
+      - name: Build
+        run: ninja -C builddir
+
+      - name: Run static analysis – cppcheck
+        # Treat any error-level finding as a CI failure.
+        run: |
+          cppcheck \
+            --error-exitcode=1 \
+            --enable=warning,style,portability \
+            --suppress=missingIncludeSystem \
+            --quiet \
+            src/
+
+      - name: Run static analysis – clang-tidy
+        # Analyse every C source file; non-zero exit fails the job.
+        # --warnings-as-errors='*' causes clang-tidy to exit non-zero on any finding.
+        run: |
+          find src -name '*.c' | xargs clang-tidy \
+            --checks='bugprone-*,cert-*,clang-analyzer-*' \
+            --warnings-as-errors='*' \
+            -- -Isrc -DNDEBUG -Wall -Wextra
+
+      - name: Run unit tests
+        run: meson test -C builddir --print-errorlogs
+
+      - name: Generate coverage report
+        run: |
+          ninja -C builddir coverage || true
+          lcov --capture \
+            --directory builddir \
+            --output-file builddir/coverage.info \
+            --ignore-errors mismatch \
+            || true
+          genhtml builddir/coverage.info \
+            --output-directory builddir/coverage-html \
+            || true
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: builddir/coverage-html/
+          if-no-files-found: warn
