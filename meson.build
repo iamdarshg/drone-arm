@@ -99,6 +99,16 @@ test_driver_math = executable('test_driver_math',
 
 test('driver_math_test', test_driver_math)
 
+test_example = executable('test_example',
+  ['tests/test_example.c'],
+  include_directories: [src_inc],
+  c_args: common_c_args + ['-DNDEBUG', '-O0', '-g'],
+  native: true,
+  install: false,
+)
+
+test('example_test', test_example)
+
 if meson.is_cross_build()
   boot2 = executable('boot2.elf',
     'src/boot2.S',

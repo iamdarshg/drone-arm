@@ -23,3 +23,22 @@ motor*
 .cache/
 main_out/
 *.pyc
+# Coverage artifacts
+*.gcov
+*.gcda
+*.gcno
+coverage.info
+coverage-html/
+lcov.info
+# Meson build artifacts
+.mesonpy/
+meson-private/
+meson-logs/
+# Test artifacts
+test_example
+test_uf2
+test_scheduler
+test_state_vector
+test_clock_safety
+test_pwm_output
+test_driver_math
