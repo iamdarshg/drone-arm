@@ -6741,12 +6741,6 @@
 		(uuid "0cf656a2-ae19-4a30-a077-695486614e7d")
 	)
 	(junction
-		(at 149.86 19.05)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "0d496140-7cc2-4752-a033-3859821f118f")
-	)
-	(junction
 		(at 439.42 234.95)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -6991,12 +6985,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "29dfc537-b3e0-4337-b2c0-9249aeb7e9cc")
-	)
-	(junction
-		(at 149.86 29.21)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "2ad98b58-90b6-4ed5-8bd7-bc5c044bdf65")
 	)
 	(junction
 		(at 257.81 311.15)
@@ -7365,12 +7353,6 @@
 		(uuid "549c7762-0173-4839-a265-c168f7548f03")
 	)
 	(junction
-		(at 149.86 24.13)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "56534222-7aaf-486a-baee-0d269075601e")
-	)
-	(junction
 		(at 492.76 234.95)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -7699,12 +7681,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "7d76a0ba-cd1d-4a68-811e-0c99384db5d8")
-	)
-	(junction
-		(at 149.86 34.29)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "7fdfcf19-bad2-4133-ae80-e217bf9790cf")
 	)
 	(junction
 		(at 238.76 341.63)
@@ -10596,16 +10572,6 @@
 	)
 	(wire
 		(pts
-			(xy 161.29 34.29) (xy 149.86 34.29)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "2925ff63-f663-4d8c-92ed-e47109b4f30b")
-	)
-	(wire
-		(pts
 			(xy 440.69 349.25) (xy 453.39 349.25)
 		)
 		(stroke
@@ -10636,7 +10602,7 @@
 	)
 	(wire
 		(pts
-			(xy 149.86 24.13) (xy 161.29 24.13)
+			(xy 132.08 24.13) (xy 161.29 24.13)
 		)
 		(stroke
 			(width 0)
@@ -11986,7 +11952,7 @@
 	)
 	(wire
 		(pts
-			(xy 132.08 34.29) (xy 149.86 34.29)
+			(xy 132.08 34.29) (xy 161.29 34.29)
 		)
 		(stroke
 			(width 0)
@@ -16486,16 +16452,6 @@
 	)
 	(wire
 		(pts
-			(xy 161.29 29.21) (xy 149.86 29.21)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a1ef883a-20a2-4cfd-b2b1-0cd748c72e79")
-	)
-	(wire
-		(pts
 			(xy 85.09 293.37) (xy 85.09 260.35)
 		)
 		(stroke
@@ -16753,16 +16709,6 @@
 			(type default)
 		)
 		(uuid "a71d3a38-b0c6-4f8f-ab6c-358a2c8e9f26")
-	)
-	(wire
-		(pts
-			(xy 132.08 19.05) (xy 149.86 19.05)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a7430440-41f4-425b-94dc-3e5482547142")
 	)
 	(wire
 		(pts
@@ -18276,16 +18222,6 @@
 	)
 	(wire
 		(pts
-			(xy 132.08 24.13) (xy 149.86 24.13)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c60fc9b4-3af4-4378-b679-b4e2e720338e")
-	)
-	(wire
-		(pts
 			(xy 260.35 243.84) (xy 260.35 241.3)
 		)
 		(stroke
@@ -18886,7 +18822,7 @@
 	)
 	(wire
 		(pts
-			(xy 132.08 29.21) (xy 149.86 29.21)
+			(xy 132.08 29.21) (xy 161.29 29.21)
 		)
 		(stroke
 			(width 0)
@@ -21046,7 +20982,7 @@
 	)
 	(wire
 		(pts
-			(xy 149.86 19.05) (xy 161.29 19.05)
+			(xy 132.08 19.05) (xy 161.29 19.05)
 		)
 		(stroke
 			(width 0)
@@ -24800,76 +24736,6 @@
 			(project "esc"
 				(path "/98640010-11bc-4686-91cc-8acbb55a5e3d"
 					(reference "Q19")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C_Small")
-		(at 149.86 21.59 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "1fa5d7e8-543a-42dd-aac0-4f87b44fdf68")
-		(property "Reference" "C64"
-			(at 152.4 20.3262 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "4.7uF"
-			(at 152.4 22.8662 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:CP_Elec_6.3x7.7"
-			(at 149.86 21.59 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 149.86 21.59 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Unpolarized capacitor, small symbol"
-			(at 149.86 21.59 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "a3a2dfbd-43bd-42c0-8a12-decd4b257a1f")
-		)
-		(pin "1"
-			(uuid "caad2a05-3f18-4e8c-9c18-3fb75435f753")
-		)
-		(instances
-			(project "esc"
-				(path "/98640010-11bc-4686-91cc-8acbb55a5e3d"
-					(reference "C64")
 					(unit 1)
 				)
 			)
@@ -40751,76 +40617,6 @@
 			(project "esc"
 				(path "/98640010-11bc-4686-91cc-8acbb55a5e3d"
 					(reference "C81")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C_Small")
-		(at 149.86 31.75 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "a047e724-dcf8-4ad3-a9c7-8fbf8e2bb466")
-		(property "Reference" "C51"
-			(at 152.4 30.4862 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "4.7uF"
-			(at 152.4 33.0262 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:CP_Elec_6.3x7.7"
-			(at 149.86 31.75 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 149.86 31.75 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Unpolarized capacitor, small symbol"
-			(at 149.86 31.75 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "28534fca-dc14-4ffa-ada3-02c5f233c126")
-		)
-		(pin "1"
-			(uuid "07f2b9c0-7353-4da4-a200-938409ea15b4")
-		)
-		(instances
-			(project "esc"
-				(path "/98640010-11bc-4686-91cc-8acbb55a5e3d"
-					(reference "C51")
 					(unit 1)
 				)
 			)
