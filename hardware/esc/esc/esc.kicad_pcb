@@ -753,6 +753,7 @@
 			(pintype "passive")
 			(uuid "ab87a78a-26d0-4473-8779-619cd6d8bbcd")
 		)
+)
 		(segment
 		(start 185.435 50.015)
 		(end 159.5625 125.83)
@@ -944,20 +945,6 @@
 		(layer "F.Cu")
 		(net 168)
 		(uuid "8211565a-9373-40ba-8345-42eda66c7948")
-	)
-	(embedded_fonts no)
-		(model "${KICAD9_3DMODEL_DIR}/Package_SO.3dshapes/PowerPAK_SO-8L_Single.step"
-			(offset
-				(xyz 0 0 0)
-			)
-			(scale
-				(xyz 1 1 1)
-			)
-			(rotate
-				(xyz 0 0 0)
-			)
-		)
-	)
 	(footprint "Capacitor_SMD:C_0402_1005Metric"
 		(layer "F.Cu")
 		(uuid "0042b002-4610-4f0a-9fc0-5ec290a12643")
