@@ -1,0 +1,14 @@
+#!/bin/sh
+set -eu
+
+board="hardware/esc/esc/esc.kicad_pcb"
+
+if git diff --cached --name-only -- "$board" | grep -q "^$board$"; then
+  if [ "${ALLOW_ESC_PCB_COMMIT:-0}" != "1" ]; then
+    cat >&2 <<'EOF'
+ESC PCB changes are protected.
+Use the auto-sync script or set ALLOW_ESC_PCB_COMMIT=1 when you intentionally commit this board.
+EOF
+    exit 1
+  fi
+fi
