@@ -10218,7 +10218,7 @@
 	)
 	(wire
 		(pts
-			(xy 31.75 346.71) (xy 39.37 346.71)
+			(xy 101.6 363.22) (xy 93.98 363.22)
 		)
 		(stroke
 			(width 0)
@@ -10798,7 +10798,7 @@
 	)
 	(wire
 		(pts
-			(xy 29.21 328.93) (xy 39.37 328.93)
+			(xy 106.68 381) (xy 93.98 381)
 		)
 		(stroke
 			(width 0)
@@ -16658,7 +16658,7 @@
 	)
 	(wire
 		(pts
-			(xy 138.43 374.65) (xy 138.43 372.11)
+			(xy 138.43 375.92) (xy 138.43 372.11)
 		)
 		(stroke
 			(width 0)
@@ -17778,7 +17778,7 @@
 	)
 	(wire
 		(pts
-			(xy 123.19 374.65) (xy 138.43 374.65)
+			(xy 123.19 375.92) (xy 138.43 375.92)
 		)
 		(stroke
 			(width 0)
@@ -18788,6 +18788,16 @@
 	)
 	(wire
 		(pts
+			(xy 93.98 375.92) (xy 104.14 375.92)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c4582109-02fc-4de5-8319-8f6c0c746ca8")
+	)
+	(wire
+		(pts
 			(xy 76.2 52.07) (xy 86.36 52.07)
 		)
 		(stroke
@@ -19478,7 +19488,7 @@
 	)
 	(wire
 		(pts
-			(xy 54.61 319.405) (xy 54.61 317.5)
+			(xy 78.74 390.525) (xy 78.74 392.43)
 		)
 		(stroke
 			(width 0)
@@ -20758,7 +20768,7 @@
 	)
 	(wire
 		(pts
-			(xy 123.19 354.33) (xy 123.19 374.65)
+			(xy 123.19 354.33) (xy 123.19 375.92)
 		)
 		(stroke
 			(width 0)
@@ -21018,7 +21028,7 @@
 	)
 	(wire
 		(pts
-			(xy 31.75 322.58) (xy 39.37 322.58)
+			(xy 101.6 387.35) (xy 93.98 387.35)
 		)
 		(stroke
 			(width 0)
@@ -21746,8 +21756,37 @@
 		)
 		(uuid "ffa71bde-d72c-470a-8598-8ef808b2762d")
 	)
+	(label "BEC_SHDN2"
+		(at 124.46 372.11 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "0d1a4839-dd67-4010-a002-58d75bfc169a")
+	)
 	(label "BEC_SHDN"
-		(at 29.21 328.93 0)
+		(at 129.54 375.92 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "aba767e9-39e4-412d-be5f-2351fbb96ba0")
+	)
+	(label "BEC_SHDN2"
+		(at 104.14 375.92 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "b65200ea-8fec-4128-ab9d-66be1c9b1326")
+	)
+	(label "BEC_SHDN"
+		(at 106.68 381 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -43871,7 +43910,7 @@
 	)
 	(symbol
 		(lib_id "power:+BATT")
-		(at 31.75 322.58 0)
+		(at 101.6 387.35 180)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -43879,7 +43918,7 @@
 		(dnp no)
 		(uuid "af1f88be-682f-44e6-82c9-e3f9d002c803")
 		(property "Reference" "#PWR0145"
-			(at 31.75 326.39 0)
+			(at 101.6 383.54 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -43888,7 +43927,7 @@
 			)
 		)
 		(property "Value" "+BATT"
-			(at 31.75 317.5 0)
+			(at 101.6 392.43 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -43896,7 +43935,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 31.75 322.58 0)
+			(at 101.6 387.35 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -43905,7 +43944,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 31.75 322.58 0)
+			(at 101.6 387.35 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -43914,7 +43953,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"+BATT\""
-			(at 31.75 322.58 0)
+			(at 101.6 387.35 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -53026,7 +53065,7 @@
 	)
 	(symbol
 		(lib_id "power:+5V")
-		(at 54.61 317.5 0)
+		(at 78.74 392.43 180)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -53034,7 +53073,7 @@
 		(dnp no)
 		(uuid "f1e74c91-e0a6-4915-a568-be95e5b68717")
 		(property "Reference" "#PWR0146"
-			(at 54.61 321.31 0)
+			(at 78.74 388.62 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -53043,7 +53082,7 @@
 			)
 		)
 		(property "Value" "+5V"
-			(at 54.61 313.69 0)
+			(at 78.74 396.24 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -53051,7 +53090,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 54.61 317.5 0)
+			(at 78.74 392.43 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -53060,7 +53099,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 54.61 317.5 0)
+			(at 78.74 392.43 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -53069,7 +53108,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"+5V\""
-			(at 54.61 317.5 0)
+			(at 78.74 392.43 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -53936,7 +53975,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 31.75 346.71 180)
+		(at 101.6 363.22 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -53944,7 +53983,7 @@
 		(dnp no)
 		(uuid "f888761c-a587-4402-8c89-3ca127df21c1")
 		(property "Reference" "#PWR0147"
-			(at 31.75 340.36 0)
+			(at 101.6 369.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -53953,7 +53992,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 31.75 341.63 0)
+			(at 101.6 368.3 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -53961,7 +54000,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 31.75 346.71 0)
+			(at 101.6 363.22 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -53970,7 +54009,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 31.75 346.71 0)
+			(at 101.6 363.22 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -53979,7 +54018,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 31.75 346.71 0)
+			(at 101.6 363.22 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -54978,8 +55017,8 @@
 		)
 	)
 	(sheet
-		(at 39.37 319.405)
-		(size 24.13 31.75)
+		(at 74.93 360.045)
+		(size 19.05 30.48)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
@@ -54994,7 +55033,7 @@
 		)
 		(uuid "b97230b7-c1a6-4d1c-9783-4e0cfc306292")
 		(property "Sheetname" "BEC"
-			(at 39.37 318.6934 0)
+			(at 74.93 359.3334 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -55003,7 +55042,7 @@
 			)
 		)
 		(property "Sheetfile" "bec.kicad_sch"
-			(at 39.37 351.7396 0)
+			(at 74.93 391.1096 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -55013,18 +55052,8 @@
 			)
 		)
 		(pin "BATT_IN" input
-			(at 39.37 322.58 180)
+			(at 93.98 387.35 0)
 			(uuid "f00de8ad-1214-4fab-ad2b-409a7a324696")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(pin "BEC_5V" output
-			(at 54.61 319.405 90)
-			(uuid "5b9e6893-0f45-422f-9bc8-b3bb3d89f049")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -55032,9 +55061,9 @@
 				(justify right)
 			)
 		)
-		(pin "GND" passive
-			(at 39.37 346.71 180)
-			(uuid "2bcebacc-fdd8-4550-bf02-45a1a179565a")
+		(pin "BEC_5V" output
+			(at 78.74 390.525 270)
+			(uuid "5b9e6893-0f45-422f-9bc8-b3bb3d89f049")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -55043,13 +55072,33 @@
 			)
 		)
 		(pin "BEC_SHDN" input
-			(at 39.37 328.93 180)
+			(at 93.98 381 0)
 			(uuid "67ba2366-dd0d-43e5-b328-8af78f8531f9")
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
+				(justify right)
+			)
+		)
+		(pin "BEC_SHDN2" input
+			(at 93.98 375.92 0)
+			(uuid "eaa92655-6b6b-4f91-9430-f42fad179ef7")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "GND" passive
+			(at 93.98 363.22 0)
+			(uuid "4ebf23bc-b480-46a9-9c35-714eb3b43085")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
 			)
 		)
 		(instances
