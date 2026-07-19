@@ -4,13 +4,15 @@ on:
   push:
     branches:
       - agent/rev-b-fab-ready
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: write
 
 jobs:
   fix:
-    if: ${{ !contains(github.event.head_commit.message, 'fix: normalize rev-b netlist paths') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
