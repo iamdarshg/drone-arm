@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - agent/rev-b-fab-ready
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: read
