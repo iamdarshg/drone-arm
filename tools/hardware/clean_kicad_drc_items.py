@@ -15,6 +15,16 @@ UUID_RE = re.compile(r'\(uuid\s+"([0-9a-fA-F-]+)"\)')
 WIDTH_RE = re.compile(r'(\(width\s+)([-+0-9.eE]+)(\))')
 HEAD_RE = re.compile(r'^\s*\((\S+)')
 NET_IN_DESC = re.compile(r'\[([^\]]+)\]')
+FLOAT = r'[-+0-9.eE]+'
+START_RE = re.compile(r'\(start\s+(' + FLOAT + r')\s+(' + FLOAT + r')\)')
+MID_RE = re.compile(r'\(mid\s+(' + FLOAT + r')\s+(' + FLOAT + r')\)')
+END_RE = re.compile(r'\(end\s+(' + FLOAT + r')\s+(' + FLOAT + r')\)')
+AT_RE = re.compile(r'\(at\s+(' + FLOAT + r')\s+(' + FLOAT + r')')
+NET_RE = re.compile(r'\(net\s+(\d+)\)')
+LAYER_RE = re.compile(r'\(layer\s+"([^"]+)"\)')
+LAYERS_RE = re.compile(r'\(layers\s+([^\n]+)\)')
+SIZE_RE = re.compile(r'\(size\s+(' + FLOAT + r')\)')
+DRILL_RE = re.compile(r'\(drill\s+(' + FLOAT + r')\)')
 
 
 def matching_close(text: str, start: int) -> int:
@@ -72,12 +82,74 @@ def item_net(description: str) -> str | None:
     return match.group(1) if match else None
 
 
+def point(match: re.Match[str] | None) -> tuple[float, float] | None:
+    if not match:
+        return None
+    return (round(float(match.group(1)), 7), round(float(match.group(2)), 7))
+
+
+def copper_fingerprint(kind: str | None, block: str) -> tuple | None:
+    net_match = NET_RE.search(block)
+    if not net_match:
+        return None
+    net = int(net_match.group(1))
+    if kind == 'segment':
+        start = point(START_RE.search(block))
+        end = point(END_RE.search(block))
+        layer = LAYER_RE.search(block)
+        width = WIDTH_RE.search(block)
+        if not (start and end and layer and width):
+            return None
+        endpoints = tuple(sorted((start, end)))
+        return (
+            'segment',
+            net,
+            endpoints,
+            layer.group(1),
+            round(float(width.group(2)), 7),
+        )
+    if kind == 'arc':
+        start = point(START_RE.search(block))
+        mid = point(MID_RE.search(block))
+        end = point(END_RE.search(block))
+        layer = LAYER_RE.search(block)
+        width = WIDTH_RE.search(block)
+        if not (start and mid and end and layer and width):
+            return None
+        return (
+            'arc',
+            net,
+            start,
+            mid,
+            end,
+            layer.group(1),
+            round(float(width.group(2)), 7),
+        )
+    if kind == 'via':
+        at = point(AT_RE.search(block))
+        layers = LAYERS_RE.search(block)
+        size = SIZE_RE.search(block)
+        drill = DRILL_RE.search(block)
+        if not (at and layers and size and drill):
+            return None
+        return (
+            'via',
+            net,
+            at,
+            ' '.join(layers.group(1).split()),
+            round(float(size.group(1)), 7),
+            round(float(drill.group(1)), 7),
+        )
+    return None
+
+
 def cleanup(
     source: Path,
     drc_path: Path,
     output: Path,
     min_width_mm: float,
     remove_dangling_vias: bool,
+    remove_exact_duplicates: bool,
 ) -> dict:
     text = source.read_text(encoding='utf-8')
     drc = json.loads(drc_path.read_text(encoding='utf-8'))
@@ -122,6 +194,21 @@ def cleanup(
         if uuid:
             uuid_to_index[uuid] = child_index
 
+    duplicate_uuids: set[str] = set()
+    if remove_exact_duplicates:
+        seen_fingerprints: dict[tuple, str | None] = {}
+        for block, kind in zip(blocks, kinds):
+            fingerprint = copper_fingerprint(kind, block)
+            if fingerprint is None:
+                continue
+            uuid_match = UUID_RE.search(block)
+            uuid = uuid_match.group(1) if uuid_match else None
+            if fingerprint in seen_fingerprints and uuid:
+                duplicate_uuids.add(uuid)
+            else:
+                seen_fingerprints[fingerprint] = uuid
+        remove_uuids.update(duplicate_uuids)
+
     removed = []
     widened = []
     missing = []
@@ -130,7 +217,7 @@ def cleanup(
         if index is None:
             missing.append({'uuid': uuid, 'action': 'remove'})
             continue
-        if kinds[index] != 'via':
+        if kinds[index] not in {'via', 'segment', 'arc'}:
             skipped.append({'uuid': uuid, 'action': 'remove', 'kind': kinds[index]})
             continue
         blocks[index] = ''
@@ -176,9 +263,10 @@ def cleanup(
         'source': str(source),
         'drc': str(drc_path),
         'output': str(output),
-        'removed_vias': len(removed),
+        'removed_copper_items': len(removed),
+        'exact_duplicate_items': len(duplicate_uuids),
         'widened_tracks': len(widened),
-        'removed_via_uuids': removed,
+        'removed_copper_uuids': removed,
         'widened': widened,
         'missing': missing,
         'skipped': skipped,
@@ -193,6 +281,7 @@ def main() -> None:
     parser.add_argument('--report', type=Path)
     parser.add_argument('--min-width-mm', type=float, default=0.2)
     parser.add_argument('--remove-dangling-vias', action='store_true')
+    parser.add_argument('--remove-exact-duplicates', action='store_true')
     args = parser.parse_args()
 
     result = cleanup(
@@ -201,6 +290,7 @@ def main() -> None:
         args.output,
         args.min_width_mm,
         args.remove_dangling_vias,
+        args.remove_exact_duplicates,
     )
     payload = json.dumps(result, indent=2) + '\n'
     print(payload, end='')
