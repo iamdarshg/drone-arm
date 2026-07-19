@@ -1,0 +1,53 @@
+name: Normalize Rev-B validator paths
+
+on:
+  push:
+    branches:
+      - agent/rev-b-fab-ready
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    if: ${{ !contains(github.event.head_commit.message, 'fix: normalize rev-b netlist paths') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/rev-b-fab-ready
+          fetch-depth: 0
+      - name: Patch cross-platform source checks
+        shell: bash
+        run: |
+          git config user.name "rev-b-build[bot]"
+          git config user.email "rev-b-build[bot]@users.noreply.github.com"
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('tools/hardware/validate_rev_b_netlists.py')
+          text = path.read_text(encoding='utf-8')
+          text = text.replace(
+              'netlist.source.lower().endswith(r"hardware\\esc\\rev_b\\esc_rev_b.kicad_sch")',
+              'netlist.source.replace("\\\\", "/").lower().endswith("hardware/esc/rev_b/esc_rev_b.kicad_sch")',
+          )
+          text = text.replace(
+              'netlist.source.lower().endswith(r"hardware\\main\\rev_b\\main_rev_b.kicad_sch")',
+              'netlist.source.replace("\\\\", "/").lower().endswith("hardware/main/rev_b/main_rev_b.kicad_sch")',
+          )
+          path.write_text(text, encoding='utf-8')
+          PY
+          python3 -m py_compile tools/hardware/validate_rev_b_netlists.py
+          git add tools/hardware/validate_rev_b_netlists.py
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m 'fix: normalize rev-b netlist paths'
+          for attempt in 1 2 3; do
+            git fetch origin agent/rev-b-fab-ready
+            if git rebase origin/agent/rev-b-fab-ready && git push origin HEAD:agent/rev-b-fab-ready; then
+              exit 0
+            fi
+            git rebase --abort 2>/dev/null || true
+            sleep $((attempt * 3))
+          done
+          exit 1
