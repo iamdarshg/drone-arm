@@ -60,17 +60,32 @@ jobs:
                   'from pathlib import Path\nfrom types import SimpleNamespace\n',
                   1,
               )
-          text = text.replace(
-              '    rp_info = ksa.get_symbol_info("MCU_RaspberryPi:RP2354B")\n'
-              '    assert rp_info is not None\n',
-              '    rp_info = SimpleNamespace(\n'
-              '        pins=[SimpleNamespace(number=number, name=name) for number, name in RP2354B_PINS]\n'
-              '    )\n',
-          )
+
+          for variable in ('rp_info', 'info'):
+              old = (
+                  f'    {variable} = ksa.get_symbol_info("MCU_RaspberryPi:RP2354B")\n'
+                  f'    assert {variable} is not None\n'
+              )
+              replacement = (
+                  f'    {variable} = SimpleNamespace(\n'
+                  '        pins=[SimpleNamespace(number=number, name=name) '
+                  'for number, name in RP2354B_PINS]\n'
+                  '    )\n'
+              )
+              text = text.replace(old, replacement)
+
           text = text.replace(
               'Inductor_SMD:L_CommonModeChoke_Coilank_ACM4532',
               'Inductor_SMD:L_CommonModeChoke_Coilcraft_1812CAN',
           )
+
+          if text.count('ksa.get_symbol_info("MCU_RaspberryPi:RP2354B")') != 1:
+              raise RuntimeError('Unexpected RP2354B runtime library lookup remains')
+          if 'assert rp_info is not None' in text or 'assert info is not None' in text:
+              raise RuntimeError('RP2354B runtime assertions remain')
+          if 'L_CommonModeChoke_Coilank_ACM4532' in text:
+              raise RuntimeError('Obsolete common-mode-choke footprint remains')
+
           sch.write_text(text, encoding='utf-8')
           PY
           .venv/bin/python -m py_compile \
