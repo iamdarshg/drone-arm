@@ -1,0 +1,21 @@
+(footprint "POWER_LUG_M5_2P_P20"
+  (version 20240108)
+  (generator "drone-arm-rev-b-footprint-generator")
+  (layer "F.Cu")
+  (descr "M5 bolted ring-lug/busbar landing; 12 mm annular copper, 20 mm pitch")
+  (property "Reference" "REF**"
+    (at 0 -8.5 0)
+    (layer "F.SilkS")
+    (effects (font (size 1 1) (thickness 0.15)))
+  )
+  (property "Value" "POWER_LUG_M5_2P_P20"
+    (at 0 8.5 0)
+    (layer "F.Fab")
+    (effects (font (size 1 1) (thickness 0.15)))
+  )
+  (attr through_hole)
+  (fp_rect (start -17 -7) (end 17 7) (stroke (width 0.3) (type solid)) (fill none) (layer "F.SilkS"))
+  (fp_rect (start -17 -7) (end 17 7) (stroke (width 0.05) (type solid)) (fill none) (layer "F.CrtYd"))
+  (pad "1" thru_hole circle (at -10 0) (size 12 12) (drill 5.5) (layers "*.Cu" "*.Mask"))
+  (pad "2" thru_hole circle (at 10 0) (size 12 12) (drill 5.5) (layers "*.Cu" "*.Mask"))
+)

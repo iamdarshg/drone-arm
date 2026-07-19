@@ -1,0 +1,386 @@
+ERC report (2026-05-11T11:53:01+0530, Encoding UTF8)
+
+***** Sheet /
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(49.53 mm, 38.10 mm): Symbol U16 Pin 2 [GND, Power input, Line]
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(73.66 mm, 146.05 mm): Symbol #PWR0104 Pin 1 [Power input, Line]
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(104.14 mm, 163.83 mm): Symbol U1 Pin 61 [VREG_AVDD, Power input, Line]
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(127.00 mm, 148.59 mm): Symbol #PWR0108 Pin 1 [Power input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(109.22 mm, 163.83 mm): Symbol U1 Pin 68 [USB_OTP_VDD, Power input, Line]
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(109.22 mm, 163.83 mm): Symbol U1 Pin 68 [USB_OTP_VDD, Power input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(96.52 mm, 207.01 mm): Symbol U1 Pin 71 [QSPI_SCLK, Output, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(96.52 mm, 209.55 mm): Symbol U1 Pin 72 [QSPI_SD0, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(96.52 mm, 212.09 mm): Symbol U1 Pin 74 [QSPI_SD1, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(96.52 mm, 214.63 mm): Symbol U1 Pin 73 [QSPI_SD2, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(96.52 mm, 217.17 mm): Symbol U1 Pin 70 [QSPI_SD3, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(147.32 mm, 222.25 mm): Symbol U1 Pin 20 [GPIO20, Bidirectional, Line]
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(245.11 mm, 175.26 mm): Symbol #PWR02 Pin 1 [Power input, Line]
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(304.80 mm, 144.78 mm): Symbol #PWR01 Pin 1 [Power input, Line]
+[label_dangling]: Label not connected to anything
+    ; error
+    @(2.54 mm, 381.00 mm): Label 'BEC_SHDN'
+[pin_not_connected]: Pin not connected
+    ; error
+    @(433.07 mm, 76.20 mm): Symbol IC6 Pin 9 [ITRIP, Passive, Line]
+[lib_symbol_issues]: The current configuration does not include the symbol library 'MP9486AGN-Z'
+    ; warning
+    @(78.74 mm, 93.98 mm): Symbol IC8 [MP9486AGN-Z]
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(96.52 mm, 143.51 mm): Vertical Wire, length 3.81 mm
+[footprint_link_issues]: The current configuration does not include the footprint library ''.
+    ; warning
+    @(224.79 mm, 58.42 mm): Symbol IC2 [IR2136SPBF]
+[lib_symbol_issues]: The current configuration does not include the symbol library 'IR2136SPBF'
+    ; warning
+    @(224.79 mm, 58.42 mm): Symbol IC2 [IR2136SPBF]
+[footprint_link_issues]: The current configuration does not include the footprint library ''.
+    ; warning
+    @(209.55 mm, 167.64 mm): Symbol IC1 [IR2136SPBF]
+[lib_symbol_issues]: The current configuration does not include the symbol library 'IR2136SPBF'
+    ; warning
+    @(209.55 mm, 167.64 mm): Symbol IC1 [IR2136SPBF]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(255.27 mm, 113.03 mm): Vertical Wire, length 7.428 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(255.27 mm, 120.458 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(260.35 mm, 113.03 mm): Vertical Wire, length 7.428 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(260.35 mm, 120.458 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(260.35 mm, 120.458 mm): Symbol R20 Pin 2 [Passive, Line]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(308.61 mm, 67.31 mm): Symbol Q7 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(308.61 mm, 88.90 mm): Symbol Q8 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(317.50 mm, 53.34 mm): Symbol Q9 [NMOS]
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(5.08 mm, 322.58 mm): Horizontal Wire, length 7.62 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(240.03 mm, 229.678 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(240.03 mm, 222.25 mm): Vertical Wire, length 7.428 mm
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(331.47 mm, 40.64 mm): Symbol Q11 [NMOS]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(245.11 mm, 229.678 mm): Symbol R11 Pin 2 [Passive, Line]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(245.11 mm, 222.25 mm): Vertical Wire, length 7.428 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(245.11 mm, 229.678 mm): Vertical Wire, length 7.812 mm
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(322.58 mm, 100.33 mm): Symbol Q10 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(293.37 mm, 176.53 mm): Symbol Q1 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(302.26 mm, 162.56 mm): Symbol Q2 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(316.23 mm, 149.86 mm): Symbol Q3 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(335.28 mm, 107.95 mm): Symbol Q12 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(293.37 mm, 198.12 mm): Symbol Q4 [NMOS]
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(69.85 mm, 347.98 mm): Horizontal Wire, length 7.62 mm
+[lib_symbol_issues]: The current configuration does not include the symbol library 'TLA2528IRTER'
+    ; warning
+    @(123.19 mm, 341.63 mm): Symbol IC7 [TLA2528IRTER]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(307.34 mm, 209.55 mm): Symbol Q5 [NMOS]
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(2.54 mm, 381.00 mm): Horizontal Wire, length 10.16 mm
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(320.04 mm, 217.17 mm): Symbol Q6 [NMOS]
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(5.08 mm, 398.78 mm): Horizontal Wire, length 7.62 mm
+[footprint_link_issues]: The current configuration does not include the footprint library ''.
+    ; warning
+    @(241.30 mm, 326.39 mm): Symbol IC3 [IR2136SPBF]
+[lib_symbol_issues]: The current configuration does not include the symbol library 'IR2136SPBF'
+    ; warning
+    @(241.30 mm, 326.39 mm): Symbol IC3 [IR2136SPBF]
+[footprint_link_issues]: The current configuration does not include the footprint library ''.
+    ; warning
+    @(433.07 mm, 55.88 mm): Symbol IC6 [IR2136SPBF]
+[lib_symbol_issues]: The current configuration does not include the symbol library 'IR2136SPBF'
+    ; warning
+    @(433.07 mm, 55.88 mm): Symbol IC6 [IR2136SPBF]
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(433.07 mm, 76.20 mm): Horizontal Wire, length 2.54 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(425.45 mm, 167.832 mm): Symbol R65 Pin 2 [Passive, Line]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(425.45 mm, 160.02 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(425.45 mm, 167.832 mm): Vertical Wire, length 7.428 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(430.53 mm, 175.26 mm): Vertical Wire, length 7.428 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(430.53 mm, 167.832 mm): Vertical Wire, length 7.812 mm
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(424.18 mm, 185.42 mm): Symbol Q30 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(334.01 mm, 321.31 mm): Symbol Q15 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(347.98 mm, 308.61 mm): Symbol Q17 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(325.12 mm, 335.28 mm): Symbol Q13 [NMOS]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(438.15 mm, 160.02 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(438.15 mm, 167.832 mm): Vertical Wire, length 7.428 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(438.15 mm, 167.832 mm): Symbol R68 Pin 2 [Passive, Line]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(443.23 mm, 160.02 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(443.23 mm, 167.832 mm): Vertical Wire, length 7.428 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(271.78 mm, 381.00 mm): Vertical Wire, length 7.428 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(271.78 mm, 388.428 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(276.86 mm, 388.428 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(276.86 mm, 388.428 mm): Symbol R32 Pin 2 [Passive, Line]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(276.86 mm, 381.00 mm): Vertical Wire, length 7.428 mm
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(436.88 mm, 193.04 mm): Symbol Q28 [NMOS]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(450.85 mm, 160.02 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(450.85 mm, 167.832 mm): Symbol R71 Pin 2 [Passive, Line]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(450.85 mm, 167.832 mm): Vertical Wire, length 7.428 mm
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(325.12 mm, 356.87 mm): Symbol Q14 [NMOS]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(455.93 mm, 167.832 mm): Vertical Wire, length 7.428 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(455.93 mm, 160.02 mm): Vertical Wire, length 7.812 mm
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(450.85 mm, 204.47 mm): Symbol Q26 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(427.99 mm, 252.73 mm): Symbol Q29 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(339.09 mm, 368.30 mm): Symbol Q16 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(441.96 mm, 240.03 mm): Symbol Q27 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(450.85 mm, 226.06 mm): Symbol Q25 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(351.79 mm, 375.92 mm): Symbol Q18 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(516.89 mm, 64.77 mm): Symbol Q36 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(516.89 mm, 86.36 mm): Symbol Q35 [NMOS]
+[footprint_link_issues]: The current configuration does not include the footprint library ''.
+    ; warning
+    @(407.67 mm, 330.20 mm): Symbol IC4 [IR2136SPBF]
+[lib_symbol_issues]: The current configuration does not include the symbol library 'IR2136SPBF'
+    ; warning
+    @(407.67 mm, 330.20 mm): Symbol IC4 [IR2136SPBF]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(511.81 mm, 130.81 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(511.81 mm, 122.998 mm): Vertical Wire, length 7.428 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(499.11 mm, 180.34 mm): Vertical Wire, length 7.428 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(499.11 mm, 172.912 mm): Symbol R56 Pin 2 [Passive, Line]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(499.11 mm, 172.912 mm): Vertical Wire, length 7.812 mm
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(525.78 mm, 50.80 mm): Symbol Q34 [NMOS]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(516.89 mm, 130.81 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(516.89 mm, 122.998 mm): Vertical Wire, length 7.428 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(516.89 mm, 122.998 mm): Symbol R77 Pin 2 [Passive, Line]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(504.19 mm, 180.34 mm): Vertical Wire, length 7.428 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(504.19 mm, 172.912 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(524.51 mm, 130.81 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(524.51 mm, 122.998 mm): Vertical Wire, length 7.428 mm
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(530.86 mm, 97.79 mm): Symbol Q33 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(539.75 mm, 38.10 mm): Symbol Q32 [NMOS]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(529.59 mm, 130.81 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(529.59 mm, 122.998 mm): Symbol R74 Pin 2 [Passive, Line]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(529.59 mm, 122.998 mm): Vertical Wire, length 7.428 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(537.21 mm, 122.998 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(537.21 mm, 115.57 mm): Vertical Wire, length 7.428 mm
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(543.56 mm, 105.41 mm): Symbol Q31 [NMOS]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(542.29 mm, 130.81 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(542.29 mm, 122.998 mm): Symbol R14 Pin 2 [Passive, Line]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(542.29 mm, 122.998 mm): Vertical Wire, length 7.428 mm
+[footprint_link_issues]: The current configuration does not include the footprint library ''.
+    ; warning
+    @(534.67 mm, 234.95 mm): Symbol IC5 [IR2136SPBF]
+[lib_symbol_issues]: The current configuration does not include the symbol library 'IR2136SPBF'
+    ; warning
+    @(534.67 mm, 234.95 mm): Symbol IC5 [IR2136SPBF]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(438.15 mm, 384.81 mm): Vertical Wire, length 7.428 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(438.15 mm, 392.238 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(443.23 mm, 392.238 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(443.23 mm, 392.238 mm): Symbol R44 Pin 2 [Passive, Line]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(443.23 mm, 384.81 mm): Vertical Wire, length 7.428 mm
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(500.38 mm, 325.12 mm): Symbol Q21 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(491.49 mm, 339.09 mm): Symbol Q19 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(514.35 mm, 312.42 mm): Symbol Q23 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(491.49 mm, 360.68 mm): Symbol Q20 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(505.46 mm, 372.11 mm): Symbol Q22 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(518.16 mm, 379.73 mm): Symbol Q24 [NMOS]
+
+ ** ERC messages: 127  Errors 16  Warnings 111

@@ -1,0 +1,1099 @@
+ERC report (2026-05-11T11:58:27+0530, Encoding UTF8)
+
+***** Sheet /
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(49.53 mm, 38.10 mm): Symbol U16 Pin 2 [GND, Power input, Line]
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(73.66 mm, 146.05 mm): Symbol #PWR0104 Pin 1 [Power input, Line]
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(104.14 mm, 163.83 mm): Symbol U1 Pin 61 [VREG_AVDD, Power input, Line]
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(127.00 mm, 148.59 mm): Symbol #PWR0108 Pin 1 [Power input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(109.22 mm, 163.83 mm): Symbol U1 Pin 68 [USB_OTP_VDD, Power input, Line]
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(109.22 mm, 163.83 mm): Symbol U1 Pin 68 [USB_OTP_VDD, Power input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(96.52 mm, 207.01 mm): Symbol U1 Pin 71 [QSPI_SCLK, Output, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(96.52 mm, 209.55 mm): Symbol U1 Pin 72 [QSPI_SD0, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(96.52 mm, 212.09 mm): Symbol U1 Pin 74 [QSPI_SD1, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(96.52 mm, 214.63 mm): Symbol U1 Pin 73 [QSPI_SD2, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(96.52 mm, 217.17 mm): Symbol U1 Pin 70 [QSPI_SD3, Bidirectional, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(147.32 mm, 222.25 mm): Symbol U1 Pin 20 [GPIO20, Bidirectional, Line]
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(245.11 mm, 175.26 mm): Symbol #PWR02 Pin 1 [Power input, Line]
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(304.80 mm, 144.78 mm): Symbol #PWR01 Pin 1 [Power input, Line]
+[label_dangling]: Label not connected to anything
+    ; error
+    @(2.54 mm, 381.00 mm): Label 'BEC_SHDN'
+[pin_not_connected]: Pin not connected
+    ; error
+    @(433.07 mm, 76.20 mm): Symbol IC6 Pin 9 [ITRIP, Passive, Line]
+[label_dangling]: Label not connected to anything
+    ; error
+    @(5.08 mm, 20.32 mm): Hierarchical Label 'BATT_IN'
+[wire_dangling]: Wires not connected to anything
+    ; error
+    @(10.16 mm, 20.32 mm): Horizontal Wire, length 20.32 mm
+[label_dangling]: Label not connected to anything
+    ; error
+    @(31.75 mm, 45.72 mm): Label 'RT1'
+[wire_dangling]: Wires not connected to anything
+    ; error
+    @(40.64 mm, 38.10 mm): Horizontal Wire, length 8.89 mm
+[wire_dangling]: Wires not connected to anything
+    ; error
+    @(40.64 mm, 40.64 mm): Horizontal Wire, length 8.89 mm
+[label_dangling]: Label not connected to anything
+    ; error
+    @(31.75 mm, 48.26 mm): Label 'CNFG1'
+[wire_dangling]: Wires not connected to anything
+    ; error
+    @(40.64 mm, 43.18 mm): Horizontal Wire, length 8.89 mm
+[label_dangling]: Label not connected to anything
+    ; error
+    @(31.75 mm, 55.88 mm): Label 'FB1'
+[label_dangling]: Label not connected to anything
+    ; error
+    @(31.75 mm, 60.96 mm): Label 'VDDA1'
+[label_dangling]: Label not connected to anything
+    ; error
+    @(88.90 mm, 30.48 mm): Label 'VCC1'
+[wire_dangling]: Wires not connected to anything
+    ; error
+    @(55.88 mm, 76.20 mm): Vertical Wire, length 5.08 mm
+[label_dangling]: Label not connected to anything
+    ; error
+    @(88.90 mm, 47.00 mm): Label 'HO1'
+[label_dangling]: Label not connected to anything
+    ; error
+    @(88.90 mm, 57.16 mm): Label 'LO1'
+[wire_dangling]: Wires not connected to anything
+    ; error
+    @(40.64 mm, 99.06 mm): Horizontal Wire, length 8.89 mm
+[wire_dangling]: Wires not connected to anything
+    ; error
+    @(40.64 mm, 101.60 mm): Horizontal Wire, length 8.89 mm
+[label_dangling]: Label not connected to anything
+    ; error
+    @(31.75 mm, 106.68 mm): Label 'RT2'
+[wire_dangling]: Wires not connected to anything
+    ; error
+    @(40.64 mm, 104.14 mm): Horizontal Wire, length 8.89 mm
+[label_dangling]: Label not connected to anything
+    ; error
+    @(31.75 mm, 109.22 mm): Label 'CNFG2'
+[label_dangling]: Label not connected to anything
+    ; error
+    @(31.75 mm, 121.92 mm): Label 'VDDA2'
+[label_dangling]: Label not connected to anything
+    ; error
+    @(88.90 mm, 91.44 mm): Label 'VCC2'
+[label_dangling]: Label not connected to anything
+    ; error
+    @(32.00 mm, 124.46 mm): Label 'BEC_EN'
+[label_dangling]: Label not connected to anything
+    ; error
+    @(88.90 mm, 101.60 mm): Label 'CBOOT2'
+[label_dangling]: Label not connected to anything
+    ; error
+    @(5.08 mm, 137.16 mm): Hierarchical Label 'BEC_SHDN'
+[label_dangling]: Label not connected to anything
+    ; error
+    @(88.90 mm, 108.00 mm): Label 'HO2'
+[label_dangling]: Label not connected to anything
+    ; error
+    @(88.90 mm, 118.11 mm): Label 'LO2'
+[label_dangling]: Label not connected to anything
+    ; error
+    @(5.08 mm, 149.86 mm): Hierarchical Label 'GND'
+[wire_dangling]: Wires not connected to anything
+    ; error
+    @(10.16 mm, 149.86 mm): Horizontal Wire, length 20.32 mm
+[label_dangling]: Label not connected to anything
+    ; error
+    @(88.90 mm, 121.92 mm): Label 'SYNC_BEC'
+[label_dangling]: Label not connected to anything
+    ; error
+    @(88.90 mm, 137.16 mm): Label 'BEC_COMP'
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(96.52 mm, 143.51 mm): Vertical Wire, length 3.81 mm
+[footprint_link_issues]: The current configuration does not include the footprint library ''.
+    ; warning
+    @(224.79 mm, 58.42 mm): Symbol IC2 [IR2136SPBF]
+[footprint_link_issues]: The current configuration does not include the footprint library ''.
+    ; warning
+    @(209.55 mm, 167.64 mm): Symbol IC1 [IR2136SPBF]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(255.27 mm, 113.03 mm): Vertical Wire, length 7.428 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(255.27 mm, 120.458 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(260.35 mm, 113.03 mm): Vertical Wire, length 7.428 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(260.35 mm, 120.458 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(260.35 mm, 120.458 mm): Symbol R20 Pin 2 [Passive, Line]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(308.61 mm, 67.31 mm): Symbol Q7 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(308.61 mm, 88.90 mm): Symbol Q8 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(317.50 mm, 53.34 mm): Symbol Q9 [NMOS]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(240.03 mm, 229.678 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(240.03 mm, 222.25 mm): Vertical Wire, length 7.428 mm
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(331.47 mm, 40.64 mm): Symbol Q11 [NMOS]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(245.11 mm, 229.678 mm): Symbol R11 Pin 2 [Passive, Line]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(245.11 mm, 222.25 mm): Vertical Wire, length 7.428 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(245.11 mm, 229.678 mm): Vertical Wire, length 7.812 mm
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(322.58 mm, 100.33 mm): Symbol Q10 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(293.37 mm, 176.53 mm): Symbol Q1 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(302.26 mm, 162.56 mm): Symbol Q2 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(316.23 mm, 149.86 mm): Symbol Q3 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(335.28 mm, 107.95 mm): Symbol Q12 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(293.37 mm, 198.12 mm): Symbol Q4 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(307.34 mm, 209.55 mm): Symbol Q5 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(320.04 mm, 217.17 mm): Symbol Q6 [NMOS]
+[footprint_link_issues]: The current configuration does not include the footprint library ''.
+    ; warning
+    @(241.30 mm, 326.39 mm): Symbol IC3 [IR2136SPBF]
+[footprint_link_issues]: The current configuration does not include the footprint library ''.
+    ; warning
+    @(433.07 mm, 55.88 mm): Symbol IC6 [IR2136SPBF]
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(433.07 mm, 76.20 mm): Horizontal Wire, length 2.54 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(425.45 mm, 167.832 mm): Symbol R65 Pin 2 [Passive, Line]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(425.45 mm, 160.02 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(425.45 mm, 167.832 mm): Vertical Wire, length 7.428 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(430.53 mm, 175.26 mm): Vertical Wire, length 7.428 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(430.53 mm, 167.832 mm): Vertical Wire, length 7.812 mm
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(424.18 mm, 185.42 mm): Symbol Q30 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(334.01 mm, 321.31 mm): Symbol Q15 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(347.98 mm, 308.61 mm): Symbol Q17 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(325.12 mm, 335.28 mm): Symbol Q13 [NMOS]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(438.15 mm, 160.02 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(438.15 mm, 167.832 mm): Vertical Wire, length 7.428 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(438.15 mm, 167.832 mm): Symbol R68 Pin 2 [Passive, Line]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(443.23 mm, 160.02 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(443.23 mm, 167.832 mm): Vertical Wire, length 7.428 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(271.78 mm, 381.00 mm): Vertical Wire, length 7.428 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(271.78 mm, 388.428 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(276.86 mm, 388.428 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(276.86 mm, 388.428 mm): Symbol R32 Pin 2 [Passive, Line]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(276.86 mm, 381.00 mm): Vertical Wire, length 7.428 mm
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(436.88 mm, 193.04 mm): Symbol Q28 [NMOS]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(450.85 mm, 160.02 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(450.85 mm, 167.832 mm): Symbol R71 Pin 2 [Passive, Line]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(450.85 mm, 167.832 mm): Vertical Wire, length 7.428 mm
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(325.12 mm, 356.87 mm): Symbol Q14 [NMOS]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(455.93 mm, 167.832 mm): Vertical Wire, length 7.428 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(455.93 mm, 160.02 mm): Vertical Wire, length 7.812 mm
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(450.85 mm, 204.47 mm): Symbol Q26 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(427.99 mm, 252.73 mm): Symbol Q29 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(339.09 mm, 368.30 mm): Symbol Q16 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(441.96 mm, 240.03 mm): Symbol Q27 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(450.85 mm, 226.06 mm): Symbol Q25 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(351.79 mm, 375.92 mm): Symbol Q18 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(516.89 mm, 64.77 mm): Symbol Q36 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(516.89 mm, 86.36 mm): Symbol Q35 [NMOS]
+[footprint_link_issues]: The current configuration does not include the footprint library ''.
+    ; warning
+    @(407.67 mm, 330.20 mm): Symbol IC4 [IR2136SPBF]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(511.81 mm, 130.81 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(511.81 mm, 122.998 mm): Vertical Wire, length 7.428 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(499.11 mm, 180.34 mm): Vertical Wire, length 7.428 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(499.11 mm, 172.912 mm): Symbol R56 Pin 2 [Passive, Line]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(499.11 mm, 172.912 mm): Vertical Wire, length 7.812 mm
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(525.78 mm, 50.80 mm): Symbol Q34 [NMOS]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(516.89 mm, 130.81 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(516.89 mm, 122.998 mm): Vertical Wire, length 7.428 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(516.89 mm, 122.998 mm): Symbol R77 Pin 2 [Passive, Line]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(504.19 mm, 180.34 mm): Vertical Wire, length 7.428 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(504.19 mm, 172.912 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(524.51 mm, 130.81 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(524.51 mm, 122.998 mm): Vertical Wire, length 7.428 mm
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(530.86 mm, 97.79 mm): Symbol Q33 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(539.75 mm, 38.10 mm): Symbol Q32 [NMOS]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(529.59 mm, 130.81 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(529.59 mm, 122.998 mm): Symbol R74 Pin 2 [Passive, Line]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(529.59 mm, 122.998 mm): Vertical Wire, length 7.428 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(537.21 mm, 122.998 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(537.21 mm, 115.57 mm): Vertical Wire, length 7.428 mm
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(543.56 mm, 105.41 mm): Symbol Q31 [NMOS]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(542.29 mm, 130.81 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(542.29 mm, 122.998 mm): Symbol R14 Pin 2 [Passive, Line]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(542.29 mm, 122.998 mm): Vertical Wire, length 7.428 mm
+[footprint_link_issues]: The current configuration does not include the footprint library ''.
+    ; warning
+    @(534.67 mm, 234.95 mm): Symbol IC5 [IR2136SPBF]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(438.15 mm, 384.81 mm): Vertical Wire, length 7.428 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(438.15 mm, 392.238 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(443.23 mm, 392.238 mm): Vertical Wire, length 7.812 mm
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(443.23 mm, 392.238 mm): Symbol R44 Pin 2 [Passive, Line]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(443.23 mm, 384.81 mm): Vertical Wire, length 7.428 mm
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(500.38 mm, 325.12 mm): Symbol Q21 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(491.49 mm, 339.09 mm): Symbol Q19 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(514.35 mm, 312.42 mm): Symbol Q23 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(491.49 mm, 360.68 mm): Symbol Q20 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(505.46 mm, 372.11 mm): Symbol Q22 [NMOS]
+[lib_symbol_mismatch]: Symbol 'NMOS' doesn't match copy in library 'Simulation_SPICE'
+    ; warning
+    @(518.16 mm, 379.73 mm): Symbol Q24 [NMOS]
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(10.16 mm, 20.32 mm): Horizontal Wire, length 20.32 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(10.16 mm, 20.32 mm): Horizontal Wire, length 20.32 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(40.64 mm, 35.56 mm): Horizontal Wire, length 8.89 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(40.64 mm, 38.10 mm): Horizontal Wire, length 8.89 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(40.64 mm, 40.64 mm): Horizontal Wire, length 8.89 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(40.64 mm, 43.18 mm): Horizontal Wire, length 8.89 mm
+[footprint_link_issues]: Footprint 'VQFN-19-1EP_4.5x3.5mm_P0.5mm_EP1.7x2.3mm' not found in library 'Package_DFN_QFN'.
+    ; warning
+    @(40.64 mm, 35.56 mm): Symbol U90 [LM5148PSQRGYRQ1]
+[lib_symbol_issues]: The current configuration does not include the symbol library 'BEC'
+    ; warning
+    @(40.64 mm, 35.56 mm): Symbol U90 [LM5148PSQRGYRQ1]
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(40.64 mm, 38.10 mm): Horizontal Wire, length 8.89 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(40.64 mm, 40.64 mm): Horizontal Wire, length 8.89 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(40.64 mm, 45.72 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(40.64 mm, 43.18 mm): Horizontal Wire, length 8.89 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(55.88 mm, 15.24 mm): Vertical Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(40.64 mm, 48.26 mm): Horizontal Wire, length 5.08 mm
+[lib_symbol_issues]: The current configuration does not include the symbol library 'BEC'
+    ; warning
+    @(40.64 mm, 45.72 mm): Symbol R202 [R]
+[lib_symbol_issues]: The current configuration does not include the symbol library 'BEC'
+    ; warning
+    @(40.64 mm, 48.26 mm): Symbol R200 [R]
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(40.64 mm, 55.88 mm): Horizontal Wire, length 5.08 mm
+[lib_symbol_issues]: The current configuration does not include the symbol library 'BEC'
+    ; warning
+    @(40.64 mm, 55.88 mm): Symbol R204 [R]
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(40.64 mm, 60.96 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(50.80 mm, 45.72 mm): Horizontal Wire, length 5.08 mm
+[lib_symbol_issues]: The current configuration does not include the symbol library 'BEC'
+    ; warning
+    @(40.64 mm, 60.96 mm): Symbol C206 [C]
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(50.80 mm, 48.26 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(71.12 mm, 20.32 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(71.12 mm, 22.86 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(71.12 mm, 25.40 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(71.12 mm, 27.94 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(71.12 mm, 30.48 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(50.80 mm, 60.96 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(71.12 mm, 33.02 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(71.12 mm, 35.56 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(71.12 mm, 38.10 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(71.12 mm, 40.64 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(71.12 mm, 43.18 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(71.12 mm, 45.72 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(71.12 mm, 48.26 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(71.12 mm, 50.80 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(55.88 mm, 76.20 mm): Vertical Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(96.52 mm, 30.48 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(55.88 mm, 76.20 mm): Vertical Wire, length 5.08 mm
+[lib_symbol_issues]: The current configuration does not include the symbol library 'BEC'
+    ; warning
+    @(96.52 mm, 30.48 mm): Symbol C204 [C]
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(40.64 mm, 96.52 mm): Horizontal Wire, length 8.89 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(40.64 mm, 99.06 mm): Horizontal Wire, length 8.89 mm
+[footprint_link_issues]: Footprint 'VQFN-19-1EP_4.5x3.5mm_P0.5mm_EP1.7x2.3mm' not found in library 'Package_DFN_QFN'.
+    ; warning
+    @(40.64 mm, 96.52 mm): Symbol U91 [LM5148PSQRGYRQ1]
+[lib_symbol_issues]: The current configuration does not include the symbol library 'BEC'
+    ; warning
+    @(40.64 mm, 96.52 mm): Symbol U91 [LM5148PSQRGYRQ1]
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(40.64 mm, 101.60 mm): Horizontal Wire, length 8.89 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(40.64 mm, 99.06 mm): Horizontal Wire, length 8.89 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(40.64 mm, 104.14 mm): Horizontal Wire, length 8.89 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(40.64 mm, 101.60 mm): Horizontal Wire, length 8.89 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(71.12 mm, 81.28 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(40.64 mm, 104.14 mm): Horizontal Wire, length 8.89 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(40.64 mm, 106.68 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(71.12 mm, 83.82 mm): Horizontal Wire, length 5.08 mm
+[lib_symbol_issues]: The current configuration does not include the symbol library 'BEC'
+    ; warning
+    @(40.64 mm, 106.68 mm): Symbol R203 [R]
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(40.64 mm, 109.22 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(71.12 mm, 86.36 mm): Horizontal Wire, length 5.08 mm
+[lib_symbol_issues]: The current configuration does not include the symbol library 'BEC'
+    ; warning
+    @(40.64 mm, 109.22 mm): Symbol R201 [R]
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(71.12 mm, 88.90 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(121.92 mm, 20.32 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(50.80 mm, 106.68 mm): Horizontal Wire, length 5.08 mm
+[footprint_link_issues]: Footprint 'LFPAK56D' not found in library 'Package_TO_SOT_SMD'.
+    ; warning
+    @(111.76 mm, 45.72 mm): Symbol Q90 [BUK9K12-80LX]
+[lib_symbol_issues]: The current configuration does not include the symbol library 'BEC'
+    ; warning
+    @(111.76 mm, 45.72 mm): Symbol Q90 [BUK9K12-80LX]
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(71.12 mm, 93.98 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(50.80 mm, 109.22 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(71.12 mm, 96.52 mm): Horizontal Wire, length 5.08 mm
+[lib_symbol_issues]: The current configuration does not include the symbol library 'BEC'
+    ; warning
+    @(121.92 mm, 20.32 mm): Symbol C200 [C]
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(71.12 mm, 99.06 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(20.32 mm, 124.46 mm): Horizontal Wire, length 5.08 mm
+[lib_symbol_issues]: The current configuration does not include the symbol library 'BEC'
+    ; warning
+    @(20.32 mm, 124.46 mm): Symbol R207 [R]
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(40.64 mm, 121.92 mm): Horizontal Wire, length 5.08 mm
+[lib_symbol_issues]: The current configuration does not include the symbol library 'BEC'
+    ; warning
+    @(40.64 mm, 121.92 mm): Symbol C207 [C]
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(71.12 mm, 104.14 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(96.52 mm, 91.44 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(30.48 mm, 124.46 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(20.32 mm, 129.54 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(71.12 mm, 106.68 mm): Horizontal Wire, length 5.08 mm
+[lib_symbol_issues]: The current configuration does not include the symbol library 'BEC'
+    ; warning
+    @(20.32 mm, 129.54 mm): Symbol R208 [R]
+[lib_symbol_issues]: The current configuration does not include the symbol library 'BEC'
+    ; warning
+    @(96.52 mm, 91.44 mm): Symbol C205 [C]
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(71.12 mm, 109.22 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(50.80 mm, 121.92 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(30.48 mm, 129.54 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(71.12 mm, 111.76 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(38.10 mm, 132.08 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(124.46 mm, 60.96 mm): Vertical Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(96.52 mm, 101.60 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(45.72 mm, 127.00 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(15.24 mm, 137.16 mm): Horizontal Wire, length 1.27 mm
+[lib_symbol_issues]: The current configuration does not include the symbol library 'BEC'
+    ; warning
+    @(20.32 mm, 137.16 mm): Symbol R209 [R]
+[lib_symbol_issues]: The current configuration does not include the symbol library 'BEC'
+    ; warning
+    @(43.18 mm, 132.08 mm): Symbol Q92 [NX138AKHH]
+[lib_symbol_issues]: The current configuration does not include the symbol library 'BEC'
+    ; warning
+    @(96.52 mm, 101.60 mm): Symbol C203 [C]
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(30.48 mm, 137.16 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(121.92 mm, 81.28 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(106.68 mm, 91.44 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(45.72 mm, 137.16 mm): Horizontal Wire, length 5.08 mm
+[lib_symbol_issues]: The current configuration does not include the symbol library 'BEC'
+    ; warning
+    @(121.92 mm, 81.28 mm): Symbol C201 [C]
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(10.16 mm, 149.86 mm): Horizontal Wire, length 20.32 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(96.52 mm, 121.92 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(10.16 mm, 149.86 mm): Horizontal Wire, length 20.32 mm
+[lib_symbol_issues]: The current configuration does not include the symbol library 'BEC'
+    ; warning
+    @(147.32 mm, 45.72 mm): Symbol L90 [L]
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(111.76 mm, 111.76 mm): Horizontal Wire, length 5.08 mm
+[lib_symbol_issues]: The current configuration does not include the symbol library 'BEC'
+    ; warning
+    @(96.52 mm, 121.92 mm): Symbol R205 [R]
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(124.46 mm, 91.44 mm): Vertical Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(132.08 mm, 81.28 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(96.52 mm, 137.16 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(106.68 mm, 121.92 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(106.68 mm, 132.08 mm): Horizontal Wire, length 5.08 mm
+[lib_symbol_issues]: The current configuration does not include the symbol library 'BEC'
+    ; warning
+    @(96.52 mm, 137.16 mm): Symbol R206 [R]
+[lib_symbol_issues]: The current configuration does not include the symbol library 'BEC'
+    ; warning
+    @(106.68 mm, 132.08 mm): Symbol C208 [C]
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(124.46 mm, 121.92 mm): Vertical Wire, length 5.08 mm
+[lib_symbol_issues]: The current configuration does not include the symbol library 'BEC'
+    ; warning
+    @(167.64 mm, 45.72 mm): Symbol R210 [R]
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(106.68 mm, 137.16 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(116.84 mm, 132.08 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(167.64 mm, 80.01 mm): Horizontal Wire, length 5.08 mm
+[lib_symbol_issues]: The current configuration does not include the symbol library 'BEC'
+    ; warning
+    @(147.32 mm, 106.68 mm): Symbol L91 [L]
+[lib_symbol_issues]: The current configuration does not include the symbol library 'BEC'
+    ; warning
+    @(167.64 mm, 80.01 mm): Symbol C212 [C]
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(177.80 mm, 45.72 mm): Horizontal Wire, length 5.08 mm
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(175.26 mm, 80.01 mm): Horizontal Wire, length 5.08 mm
+[lib_symbol_issues]: The current configuration does not include the symbol library 'BEC'
+    ; warning
+    @(167.64 mm, 106.68 mm): Symbol R211 [R]
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(177.80 mm, 106.68 mm): Horizontal Wire, length 5.08 mm
+
+***** Sheet /BEC/
+[pin_not_connected]: Pin not connected
+    ; error
+    @(40.64 mm, 22.86 mm): Symbol U90 Pin 1 [CNFG, Input, Line]
+[pin_not_driven]: Input pin not driven by any Output pins
+    ; error
+    @(40.64 mm, 22.86 mm): Symbol U90 Pin 1 [CNFG, Input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(40.64 mm, 25.40 mm): Symbol U90 Pin 2 [RT, Input, Line]
+[pin_not_driven]: Input pin not driven by any Output pins
+    ; error
+    @(40.64 mm, 25.40 mm): Symbol U90 Pin 2 [RT, Input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(40.64 mm, 27.94 mm): Symbol U90 Pin 3 [EXTCOMP, Output, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(40.64 mm, 30.48 mm): Symbol U90 Pin 4 [FB, Input, Line]
+[pin_not_driven]: Input pin not driven by any Output pins
+    ; error
+    @(40.64 mm, 30.48 mm): Symbol U90 Pin 4 [FB, Input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(40.64 mm, 33.02 mm): Symbol U90 Pin 5 [AGND, Power input, Line]
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(40.64 mm, 33.02 mm): Symbol U90 Pin 5 [AGND, Power input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(40.64 mm, 35.56 mm): Symbol U90 Pin 6 [VDDA, Output, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(50.80 mm, 45.72 mm): Symbol R202 Pin 2 [Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(40.64 mm, 55.88 mm): Symbol R204 Pin 1 [Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(50.80 mm, 48.26 mm): Symbol R200 Pin 2 [Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(40.64 mm, 60.96 mm): Symbol C206 Pin 1 [Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(71.12 mm, 20.32 mm): Symbol U90 Pin 10 [VIN, Power input, Line]
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(71.12 mm, 20.32 mm): Symbol U90 Pin 10 [VIN, Power input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(71.12 mm, 22.86 mm): Symbol U90 Pin 11 [HO, Output, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(71.12 mm, 25.40 mm): Symbol U90 Pin 12 [SW, Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(71.12 mm, 27.94 mm): Symbol U90 Pin 13 [CBOOT, Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(71.12 mm, 30.48 mm): Symbol U90 Pin 8 [PGND, Power input, Line]
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(71.12 mm, 30.48 mm): Symbol U90 Pin 8 [PGND, Power input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(71.12 mm, 33.02 mm): Symbol U90 Pin 9 [LO, Output, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(50.80 mm, 60.96 mm): Symbol C206 Pin 2 [Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(71.12 mm, 35.56 mm): Symbol U90 Pin 7 [VCC, Power input, Line]
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(71.12 mm, 35.56 mm): Symbol U90 Pin 7 [VCC, Power input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(71.12 mm, 38.10 mm): Symbol U90 Pin 14 [VCCX, Power input, Line]
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(71.12 mm, 38.10 mm): Symbol U90 Pin 14 [VCCX, Power input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(71.12 mm, 40.64 mm): Symbol U90 Pin 15 [PG/SYNCOUT, Output, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(71.12 mm, 43.18 mm): Symbol U90 Pin 16 [PFM/SYNC, Input, Line]
+[pin_not_driven]: Input pin not driven by any Output pins
+    ; error
+    @(71.12 mm, 43.18 mm): Symbol U90 Pin 16 [PFM/SYNC, Input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(71.12 mm, 45.72 mm): Symbol U90 Pin 17 [EN, Input, Line]
+[pin_not_driven]: Input pin not driven by any Output pins
+    ; error
+    @(71.12 mm, 45.72 mm): Symbol U90 Pin 17 [EN, Input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(71.12 mm, 48.26 mm): Symbol U90 Pin 18 [ISNS+, Input, Line]
+[pin_not_driven]: Input pin not driven by any Output pins
+    ; error
+    @(71.12 mm, 48.26 mm): Symbol U90 Pin 18 [ISNS+, Input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(71.12 mm, 50.80 mm): Symbol U90 Pin 19 [VOUT, Input, Line]
+[pin_not_driven]: Input pin not driven by any Output pins
+    ; error
+    @(71.12 mm, 50.80 mm): Symbol U90 Pin 19 [VOUT, Input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(40.64 mm, 83.82 mm): Symbol U91 Pin 1 [CNFG, Input, Line]
+[pin_not_driven]: Input pin not driven by any Output pins
+    ; error
+    @(40.64 mm, 83.82 mm): Symbol U91 Pin 1 [CNFG, Input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(40.64 mm, 86.36 mm): Symbol U91 Pin 2 [RT, Input, Line]
+[pin_not_driven]: Input pin not driven by any Output pins
+    ; error
+    @(40.64 mm, 86.36 mm): Symbol U91 Pin 2 [RT, Input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(40.64 mm, 88.90 mm): Symbol U91 Pin 3 [EXTCOMP, Output, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(40.64 mm, 91.44 mm): Symbol U91 Pin 4 [FB, Input, Line]
+[pin_not_driven]: Input pin not driven by any Output pins
+    ; error
+    @(40.64 mm, 91.44 mm): Symbol U91 Pin 4 [FB, Input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(96.52 mm, 30.48 mm): Symbol C204 Pin 1 [Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(40.64 mm, 93.98 mm): Symbol U91 Pin 5 [AGND, Power input, Line]
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(40.64 mm, 93.98 mm): Symbol U91 Pin 5 [AGND, Power input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(40.64 mm, 96.52 mm): Symbol U91 Pin 6 [VDDA, Output, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(71.12 mm, 81.28 mm): Symbol U91 Pin 10 [VIN, Power input, Line]
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(71.12 mm, 81.28 mm): Symbol U91 Pin 10 [VIN, Power input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(71.12 mm, 83.82 mm): Symbol U91 Pin 11 [HO, Output, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(106.68 mm, 30.48 mm): Symbol C204 Pin 2 [Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(71.12 mm, 86.36 mm): Symbol U91 Pin 12 [SW, Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(71.12 mm, 88.90 mm): Symbol U91 Pin 13 [CBOOT, Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(71.12 mm, 91.44 mm): Symbol U91 Pin 8 [PGND, Power input, Line]
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(71.12 mm, 91.44 mm): Symbol U91 Pin 8 [PGND, Power input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(71.12 mm, 93.98 mm): Symbol U91 Pin 9 [LO, Output, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(50.80 mm, 106.68 mm): Symbol R203 Pin 2 [Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(71.12 mm, 96.52 mm): Symbol U91 Pin 7 [VCC, Power input, Line]
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(71.12 mm, 96.52 mm): Symbol U91 Pin 7 [VCC, Power input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(50.80 mm, 109.22 mm): Symbol R201 Pin 2 [Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(71.12 mm, 99.06 mm): Symbol U91 Pin 14 [VCCX, Power input, Line]
+[power_pin_not_driven]: Input Power pin not driven by any Output Power pins
+    ; error
+    @(71.12 mm, 99.06 mm): Symbol U91 Pin 14 [VCCX, Power input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(111.76 mm, 50.80 mm): Symbol Q90 Pin 4 [G2, Input, Line]
+[pin_not_driven]: Input pin not driven by any Output pins
+    ; error
+    @(111.76 mm, 50.80 mm): Symbol Q90 Pin 4 [G2, Input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(121.92 mm, 20.32 mm): Symbol C200 Pin 1 [Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(71.12 mm, 101.60 mm): Symbol U91 Pin 15 [PG/SYNCOUT, Output, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(20.32 mm, 124.46 mm): Symbol R207 Pin 1 [Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(124.46 mm, 30.48 mm): Symbol Q90 Pin 7 [D1, Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(71.12 mm, 106.68 mm): Symbol U91 Pin 17 [EN, Input, Line]
+[pin_not_driven]: Input pin not driven by any Output pins
+    ; error
+    @(71.12 mm, 106.68 mm): Symbol U91 Pin 17 [EN, Input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(40.64 mm, 121.92 mm): Symbol C207 Pin 1 [Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(55.88 mm, 116.84 mm): Symbol U91 Pin 20 [EP, Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(71.12 mm, 109.22 mm): Symbol U91 Pin 18 [ISNS+, Input, Line]
+[pin_not_driven]: Input pin not driven by any Output pins
+    ; error
+    @(71.12 mm, 109.22 mm): Symbol U91 Pin 18 [ISNS+, Input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(20.32 mm, 129.54 mm): Symbol R208 Pin 1 [Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(50.80 mm, 121.92 mm): Symbol C207 Pin 2 [Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(71.12 mm, 111.76 mm): Symbol U91 Pin 19 [VOUT, Input, Line]
+[pin_not_driven]: Input pin not driven by any Output pins
+    ; error
+    @(71.12 mm, 111.76 mm): Symbol U91 Pin 19 [VOUT, Input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(96.52 mm, 91.44 mm): Symbol C205 Pin 1 [Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(30.48 mm, 129.54 mm): Symbol R208 Pin 2 [Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(132.08 mm, 20.32 mm): Symbol C200 Pin 2 [Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(45.72 mm, 127.00 mm): Symbol Q92 Pin 3 [D, Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(38.10 mm, 132.08 mm): Symbol Q92 Pin 1 [G, Input, Line]
+[pin_not_driven]: Input pin not driven by any Output pins
+    ; error
+    @(38.10 mm, 132.08 mm): Symbol Q92 Pin 1 [G, Input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(124.46 mm, 60.96 mm): Symbol Q90 Pin 3 [S2, Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(96.52 mm, 101.60 mm): Symbol C203 Pin 1 [Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(30.48 mm, 137.16 mm): Symbol R209 Pin 2 [Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(45.72 mm, 137.16 mm): Symbol Q92 Pin 2 [S, Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(121.92 mm, 81.28 mm): Symbol C201 Pin 1 [Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(124.46 mm, 91.44 mm): Symbol Q91 Pin 8 [D1, Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(132.08 mm, 81.28 mm): Symbol C201 Pin 2 [Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(96.52 mm, 121.92 mm): Symbol R205 Pin 1 [Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(111.76 mm, 111.76 mm): Symbol Q91 Pin 4 [G2, Input, Line]
+[pin_not_driven]: Input pin not driven by any Output pins
+    ; error
+    @(111.76 mm, 111.76 mm): Symbol Q91 Pin 4 [G2, Input, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(106.68 mm, 121.92 mm): Symbol R205 Pin 2 [Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(96.52 mm, 137.16 mm): Symbol R206 Pin 1 [Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(106.68 mm, 132.08 mm): Symbol C208 Pin 1 [Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(124.46 mm, 121.92 mm): Symbol Q91 Pin 3 [S2, Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(116.84 mm, 132.08 mm): Symbol C208 Pin 2 [Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(177.80 mm, 45.72 mm): Symbol R210 Pin 2 [Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(167.64 mm, 80.01 mm): Symbol C212 Pin 1 [Passive, Line]
+[pin_not_connected]: Pin not connected
+    ; error
+    @(177.80 mm, 106.68 mm): Symbol R211 Pin 2 [Passive, Line]
+
+ ** ERC messages: 364  Errors 147  Warnings 217

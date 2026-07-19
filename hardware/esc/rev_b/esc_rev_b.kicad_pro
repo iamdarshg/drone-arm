@@ -1,0 +1,1453 @@
+{
+  "board": {
+    "3dviewports": [],
+    "design_settings": {
+      "defaults": {
+        "apply_defaults_to_fp_fields": false,
+        "apply_defaults_to_fp_shapes": false,
+        "apply_defaults_to_fp_text": false,
+        "board_outline_line_width": 0.05,
+        "copper_line_width": 0.2,
+        "copper_text_italic": false,
+        "copper_text_size_h": 1.5,
+        "copper_text_size_v": 1.5,
+        "copper_text_thickness": 0.3,
+        "copper_text_upright": false,
+        "courtyard_line_width": 0.05,
+        "dimension_precision": 4,
+        "dimension_units": 3,
+        "dimensions": {
+          "arrow_length": 1270000,
+          "extension_offset": 500000,
+          "keep_text_aligned": true,
+          "suppress_zeroes": true,
+          "text_position": 0,
+          "units_format": 0
+        },
+        "fab_line_width": 0.1,
+        "fab_text_italic": false,
+        "fab_text_size_h": 1.0,
+        "fab_text_size_v": 1.0,
+        "fab_text_thickness": 0.15,
+        "fab_text_upright": false,
+        "other_line_width": 0.1,
+        "other_text_italic": false,
+        "other_text_size_h": 1.0,
+        "other_text_size_v": 1.0,
+        "other_text_thickness": 0.15,
+        "other_text_upright": false,
+        "pads": {
+          "drill": 0.8,
+          "height": 1.27,
+          "width": 2.54
+        },
+        "silk_line_width": 0.1,
+        "silk_text_italic": false,
+        "silk_text_size_h": 1.0,
+        "silk_text_size_v": 1.0,
+        "silk_text_thickness": 0.1,
+        "silk_text_upright": false,
+        "zones": {
+          "min_clearance": 0.5
+        }
+      },
+      "diff_pair_dimensions": [],
+      "drc_exclusions": [],
+      "meta": {
+        "version": 2
+      },
+      "rule_severities": {
+        "annular_width": "error",
+        "clearance": "error",
+        "connection_width": "warning",
+        "copper_edge_clearance": "error",
+        "copper_sliver": "warning",
+        "courtyards_overlap": "error",
+        "creepage": "error",
+        "diff_pair_gap_out_of_range": "error",
+        "diff_pair_uncoupled_length_too_long": "error",
+        "drill_out_of_range": "error",
+        "duplicate_footprints": "warning",
+        "extra_footprint": "warning",
+        "footprint": "error",
+        "footprint_filters_mismatch": "ignore",
+        "footprint_symbol_mismatch": "warning",
+        "footprint_type_mismatch": "ignore",
+        "hole_clearance": "error",
+        "hole_to_hole": "warning",
+        "holes_co_located": "warning",
+        "invalid_outline": "error",
+        "isolated_copper": "warning",
+        "item_on_disabled_layer": "error",
+        "items_not_allowed": "error",
+        "length_out_of_range": "error",
+        "lib_footprint_issues": "warning",
+        "lib_footprint_mismatch": "warning",
+        "malformed_courtyard": "error",
+        "microvia_drill_out_of_range": "error",
+        "mirrored_text_on_front_layer": "warning",
+        "missing_courtyard": "ignore",
+        "missing_footprint": "warning",
+        "net_conflict": "warning",
+        "nonmirrored_text_on_back_layer": "warning",
+        "npth_inside_courtyard": "ignore",
+        "padstack": "warning",
+        "pth_inside_courtyard": "ignore",
+        "shorting_items": "error",
+        "silk_edge_clearance": "warning",
+        "silk_over_copper": "warning",
+        "silk_overlap": "warning",
+        "skew_out_of_range": "error",
+        "solder_mask_bridge": "error",
+        "starved_thermal": "error",
+        "text_height": "warning",
+        "text_on_edge_cuts": "error",
+        "text_thickness": "warning",
+        "through_hole_pad_without_hole": "error",
+        "too_many_vias": "error",
+        "track_angle": "error",
+        "track_dangling": "warning",
+        "track_segment_length": "error",
+        "track_width": "error",
+        "tracks_crossing": "error",
+        "unconnected_items": "error",
+        "unresolved_variable": "error",
+        "via_dangling": "warning",
+        "zones_intersect": "error"
+      },
+      "rules": {
+        "max_error": 0.005,
+        "min_clearance": 0.2,
+        "min_connection": 0.0,
+        "min_copper_edge_clearance": 0.5,
+        "min_groove_width": 0.0,
+        "min_hole_clearance": 0.2,
+        "min_hole_to_hole": 0.2,
+        "min_microvia_diameter": 0.2,
+        "min_microvia_drill": 0.1,
+        "min_resolved_spokes": 2,
+        "min_silk_clearance": 0.0,
+        "min_text_height": 0.8,
+        "min_text_thickness": 0.08,
+        "min_through_hole_diameter": 0.2,
+        "min_track_width": 0.2,
+        "min_via_annular_width": 0.1,
+        "min_via_diameter": 0.6,
+        "solder_mask_to_copper_clearance": 0.0,
+        "use_height_for_length_calcs": true
+      },
+      "teardrop_options": [
+        {
+          "td_onpthpad": true,
+          "td_onroundshapesonly": false,
+          "td_onsmdpad": true,
+          "td_ontrackend": false,
+          "td_onvia": true
+        }
+      ],
+      "teardrop_parameters": [
+        {
+          "td_allow_use_two_tracks": true,
+          "td_curve_segcount": 0,
+          "td_height_ratio": 1.0,
+          "td_length_ratio": 0.5,
+          "td_maxheight": 2.0,
+          "td_maxlen": 1.0,
+          "td_on_pad_in_zone": false,
+          "td_target_name": "td_round_shape",
+          "td_width_to_size_filter_ratio": 0.9
+        },
+        {
+          "td_allow_use_two_tracks": true,
+          "td_curve_segcount": 0,
+          "td_height_ratio": 1.0,
+          "td_length_ratio": 0.5,
+          "td_maxheight": 2.0,
+          "td_maxlen": 1.0,
+          "td_on_pad_in_zone": false,
+          "td_target_name": "td_rect_shape",
+          "td_width_to_size_filter_ratio": 0.9
+        },
+        {
+          "td_allow_use_two_tracks": true,
+          "td_curve_segcount": 0,
+          "td_height_ratio": 1.0,
+          "td_length_ratio": 0.5,
+          "td_maxheight": 2.0,
+          "td_maxlen": 1.0,
+          "td_on_pad_in_zone": false,
+          "td_target_name": "td_track_end",
+          "td_width_to_size_filter_ratio": 0.9
+        }
+      ],
+      "track_widths": [],
+      "tuning_pattern_settings": {
+        "diff_pair_defaults": {
+          "corner_radius_percentage": 80,
+          "corner_style": 1,
+          "max_amplitude": 1.0,
+          "min_amplitude": 0.2,
+          "single_sided": false,
+          "spacing": 1.0
+        },
+        "diff_pair_skew_defaults": {
+          "corner_radius_percentage": 80,
+          "corner_style": 1,
+          "max_amplitude": 1.0,
+          "min_amplitude": 0.2,
+          "single_sided": false,
+          "spacing": 0.6
+        },
+        "single_track_defaults": {
+          "corner_radius_percentage": 80,
+          "corner_style": 1,
+          "max_amplitude": 1.0,
+          "min_amplitude": 0.2,
+          "single_sided": false,
+          "spacing": 0.6
+        }
+      },
+      "via_dimensions": [],
+      "zones_allow_external_fillets": false
+    },
+    "ipc2581": {
+      "dist": "",
+      "distpn": "",
+      "internal_id": "",
+      "mfg": "",
+      "mpn": ""
+    },
+    "layer_pairs": [],
+    "layer_presets": [],
+    "viewports": []
+  },
+  "boards": [],
+  "cvpcb": {
+    "equivalence_files": []
+  },
+  "libraries": {
+    "pinned_footprint_libs": [],
+    "pinned_symbol_libs": []
+  },
+  "meta": {
+    "filename": "esc_rev_b.kicad_pro",
+    "version": 3
+  },
+  "net_settings": {
+    "classes": [
+      {
+        "bus_width": 12,
+        "clearance": 0.2,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "Default",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 2147483647,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.25,
+        "via_diameter": 0.7,
+        "via_drill": 0.35,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.2,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "CAN_DIFF",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": -1,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.25,
+        "via_diameter": 0.6,
+        "via_drill": 0.3,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.2,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "CURRENT_SENSE",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": -1,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.25,
+        "via_diameter": 0.6,
+        "via_drill": 0.3,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.2,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "GATE_DRIVE",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": -1,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.5,
+        "via_diameter": 0.7,
+        "via_drill": 0.35,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.2,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "HIGH_CURRENT",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": -1,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 6.0,
+        "via_diameter": 1.0,
+        "via_drill": 0.5,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.2,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "POWER",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": -1,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.8,
+        "via_diameter": 0.8,
+        "via_drill": 0.4,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.2,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "RF_50R",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": -1,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.35,
+        "via_diameter": 0.6,
+        "via_drill": 0.3,
+        "wire_width": 6
+      }
+    ],
+    "meta": {
+      "version": 4
+    },
+    "net_colors": null,
+    "netclass_assignments": null,
+    "netclass_patterns": [
+      {
+        "netclass": "POWER",
+        "pattern": "/3V3"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/5V"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/AUX_BATT"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/AUX_GND"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/Auxiliary power/CAN_5V_OUT"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/Auxiliary power/CAN_5V_RAW"
+      },
+      {
+        "netclass": "CAN_DIFF",
+        "pattern": "/CANH"
+      },
+      {
+        "netclass": "CAN_DIFF",
+        "pattern": "/CANL"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/Controller and ADC/1V1"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/Controller and ADC/3V3_ADC"
+      },
+      {
+        "netclass": "CAN_DIFF",
+        "pattern": "/Controller and ADC/U206_CANH"
+      },
+      {
+        "netclass": "CAN_DIFF",
+        "pattern": "/Controller and ADC/U206_CANL"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/Controller and ADC/VREG_AVDD"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/M1_BATN"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/M1_BATP"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/M1_PHASE_A"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/M1_PHASE_B"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/M1_PHASE_C"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/M2_BATN"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/M2_BATP"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/M2_PHASE_A"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/M2_PHASE_B"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/M2_PHASE_C"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/M3_BATN"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/M3_BATP"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/M3_PHASE_A"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/M3_PHASE_B"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/M3_PHASE_C"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/M4_BATN"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/M4_BATP"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/M4_PHASE_A"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/M4_PHASE_B"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/M4_PHASE_C"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/M5_BATN"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/M5_BATP"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/M5_PHASE_A"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/M5_PHASE_B"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/M5_PHASE_C"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/M6_BATN"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/M6_BATP"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/M6_PHASE_A"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/M6_PHASE_B"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/M6_PHASE_C"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/Motor 1 power cell/M1_3V3A"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/Motor 1 power cell/M1_3V3I"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/Motor 1 power cell/M1_5VI"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/Motor 1 power cell/M1_BATP_IN"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 1 power cell/M1_BUS_CURRENT"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 1 power cell/M1_BUS_CURRENT_RAW"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 1 power cell/M1_BUS_SH_N"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 1 power cell/M1_BUS_SH_P"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 1 power cell/M1_CSA_A"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 1 power cell/M1_CSA_A_RAW"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 1 power cell/M1_CSA_B"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 1 power cell/M1_CSA_B_RAW"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 1 power cell/M1_CSA_C"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 1 power cell/M1_CSA_C_RAW"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/Motor 1 power cell/M1_DVDD"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 1 power cell/M1_GHA"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 1 power cell/M1_GHA_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 1 power cell/M1_GHB"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 1 power cell/M1_GHB_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 1 power cell/M1_GHC"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 1 power cell/M1_GHC_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 1 power cell/M1_GLA"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 1 power cell/M1_GLA_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 1 power cell/M1_GLB"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 1 power cell/M1_GLB_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 1 power cell/M1_GLC"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 1 power cell/M1_GLC_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 1 power cell/M1_PWM_AH"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 1 power cell/M1_PWM_AL"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 1 power cell/M1_PWM_BH"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 1 power cell/M1_PWM_BL"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 1 power cell/M1_PWM_CH"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 1 power cell/M1_PWM_CL"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/Motor 1 power cell/M1_SHA_I"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/Motor 1 power cell/M1_SHB_I"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/Motor 1 power cell/M1_SHC_I"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 1 power cell/M1_VGLS"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/Motor 2 power cell/M2_3V3A"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/Motor 2 power cell/M2_3V3I"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/Motor 2 power cell/M2_5VI"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/Motor 2 power cell/M2_BATP_IN"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 2 power cell/M2_BUS_CURRENT"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 2 power cell/M2_BUS_CURRENT_RAW"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 2 power cell/M2_BUS_SH_N"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 2 power cell/M2_BUS_SH_P"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 2 power cell/M2_CSA_A"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 2 power cell/M2_CSA_A_RAW"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 2 power cell/M2_CSA_B"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 2 power cell/M2_CSA_B_RAW"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 2 power cell/M2_CSA_C"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 2 power cell/M2_CSA_C_RAW"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/Motor 2 power cell/M2_DVDD"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 2 power cell/M2_GHA"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 2 power cell/M2_GHA_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 2 power cell/M2_GHB"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 2 power cell/M2_GHB_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 2 power cell/M2_GHC"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 2 power cell/M2_GHC_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 2 power cell/M2_GLA"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 2 power cell/M2_GLA_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 2 power cell/M2_GLB"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 2 power cell/M2_GLB_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 2 power cell/M2_GLC"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 2 power cell/M2_GLC_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 2 power cell/M2_PWM_AH"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 2 power cell/M2_PWM_AL"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 2 power cell/M2_PWM_BH"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 2 power cell/M2_PWM_BL"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 2 power cell/M2_PWM_CH"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 2 power cell/M2_PWM_CL"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/Motor 2 power cell/M2_SHA_I"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/Motor 2 power cell/M2_SHB_I"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/Motor 2 power cell/M2_SHC_I"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 2 power cell/M2_VGLS"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/Motor 3 power cell/M3_3V3A"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/Motor 3 power cell/M3_3V3I"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/Motor 3 power cell/M3_5VI"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/Motor 3 power cell/M3_BATP_IN"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 3 power cell/M3_BUS_CURRENT"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 3 power cell/M3_BUS_CURRENT_RAW"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 3 power cell/M3_BUS_SH_N"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 3 power cell/M3_BUS_SH_P"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 3 power cell/M3_CSA_A"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 3 power cell/M3_CSA_A_RAW"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 3 power cell/M3_CSA_B"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 3 power cell/M3_CSA_B_RAW"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 3 power cell/M3_CSA_C"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 3 power cell/M3_CSA_C_RAW"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/Motor 3 power cell/M3_DVDD"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 3 power cell/M3_GHA"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 3 power cell/M3_GHA_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 3 power cell/M3_GHB"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 3 power cell/M3_GHB_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 3 power cell/M3_GHC"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 3 power cell/M3_GHC_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 3 power cell/M3_GLA"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 3 power cell/M3_GLA_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 3 power cell/M3_GLB"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 3 power cell/M3_GLB_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 3 power cell/M3_GLC"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 3 power cell/M3_GLC_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 3 power cell/M3_PWM_AH"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 3 power cell/M3_PWM_AL"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 3 power cell/M3_PWM_BH"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 3 power cell/M3_PWM_BL"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 3 power cell/M3_PWM_CH"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 3 power cell/M3_PWM_CL"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/Motor 3 power cell/M3_SHA_I"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/Motor 3 power cell/M3_SHB_I"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/Motor 3 power cell/M3_SHC_I"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 3 power cell/M3_VGLS"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/Motor 4 power cell/M4_3V3A"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/Motor 4 power cell/M4_3V3I"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/Motor 4 power cell/M4_5VI"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/Motor 4 power cell/M4_BATP_IN"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 4 power cell/M4_BUS_CURRENT"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 4 power cell/M4_BUS_CURRENT_RAW"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 4 power cell/M4_BUS_SH_N"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 4 power cell/M4_BUS_SH_P"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 4 power cell/M4_CSA_A"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 4 power cell/M4_CSA_A_RAW"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 4 power cell/M4_CSA_B"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 4 power cell/M4_CSA_B_RAW"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 4 power cell/M4_CSA_C"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 4 power cell/M4_CSA_C_RAW"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/Motor 4 power cell/M4_DVDD"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 4 power cell/M4_GHA"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 4 power cell/M4_GHA_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 4 power cell/M4_GHB"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 4 power cell/M4_GHB_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 4 power cell/M4_GHC"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 4 power cell/M4_GHC_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 4 power cell/M4_GLA"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 4 power cell/M4_GLA_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 4 power cell/M4_GLB"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 4 power cell/M4_GLB_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 4 power cell/M4_GLC"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 4 power cell/M4_GLC_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 4 power cell/M4_PWM_AH"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 4 power cell/M4_PWM_AL"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 4 power cell/M4_PWM_BH"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 4 power cell/M4_PWM_BL"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 4 power cell/M4_PWM_CH"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 4 power cell/M4_PWM_CL"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/Motor 4 power cell/M4_SHA_I"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/Motor 4 power cell/M4_SHB_I"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/Motor 4 power cell/M4_SHC_I"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 4 power cell/M4_VGLS"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/Motor 5 power cell/M5_3V3A"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/Motor 5 power cell/M5_3V3I"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/Motor 5 power cell/M5_5VI"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/Motor 5 power cell/M5_BATP_IN"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 5 power cell/M5_BUS_CURRENT"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 5 power cell/M5_BUS_CURRENT_RAW"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 5 power cell/M5_BUS_SH_N"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 5 power cell/M5_BUS_SH_P"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 5 power cell/M5_CSA_A"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 5 power cell/M5_CSA_A_RAW"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 5 power cell/M5_CSA_B"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 5 power cell/M5_CSA_B_RAW"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 5 power cell/M5_CSA_C"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 5 power cell/M5_CSA_C_RAW"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/Motor 5 power cell/M5_DVDD"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 5 power cell/M5_GHA"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 5 power cell/M5_GHA_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 5 power cell/M5_GHB"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 5 power cell/M5_GHB_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 5 power cell/M5_GHC"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 5 power cell/M5_GHC_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 5 power cell/M5_GLA"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 5 power cell/M5_GLA_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 5 power cell/M5_GLB"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 5 power cell/M5_GLB_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 5 power cell/M5_GLC"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 5 power cell/M5_GLC_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 5 power cell/M5_PWM_AH"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 5 power cell/M5_PWM_AL"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 5 power cell/M5_PWM_BH"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 5 power cell/M5_PWM_BL"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 5 power cell/M5_PWM_CH"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 5 power cell/M5_PWM_CL"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/Motor 5 power cell/M5_SHA_I"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/Motor 5 power cell/M5_SHB_I"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/Motor 5 power cell/M5_SHC_I"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 5 power cell/M5_VGLS"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/Motor 6 power cell/M6_3V3A"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/Motor 6 power cell/M6_3V3I"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/Motor 6 power cell/M6_5VI"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/Motor 6 power cell/M6_BATP_IN"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 6 power cell/M6_BUS_CURRENT"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 6 power cell/M6_BUS_CURRENT_RAW"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 6 power cell/M6_BUS_SH_N"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 6 power cell/M6_BUS_SH_P"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 6 power cell/M6_CSA_A"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 6 power cell/M6_CSA_A_RAW"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 6 power cell/M6_CSA_B"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 6 power cell/M6_CSA_B_RAW"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 6 power cell/M6_CSA_C"
+      },
+      {
+        "netclass": "CURRENT_SENSE",
+        "pattern": "/Motor 6 power cell/M6_CSA_C_RAW"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "/Motor 6 power cell/M6_DVDD"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 6 power cell/M6_GHA"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 6 power cell/M6_GHA_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 6 power cell/M6_GHB"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 6 power cell/M6_GHB_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 6 power cell/M6_GHC"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 6 power cell/M6_GHC_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 6 power cell/M6_GLA"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 6 power cell/M6_GLA_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 6 power cell/M6_GLB"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 6 power cell/M6_GLB_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 6 power cell/M6_GLC"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 6 power cell/M6_GLC_DRV"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 6 power cell/M6_PWM_AH"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 6 power cell/M6_PWM_AL"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 6 power cell/M6_PWM_BH"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 6 power cell/M6_PWM_BL"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 6 power cell/M6_PWM_CH"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 6 power cell/M6_PWM_CL"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/Motor 6 power cell/M6_SHA_I"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/Motor 6 power cell/M6_SHB_I"
+      },
+      {
+        "netclass": "HIGH_CURRENT",
+        "pattern": "/Motor 6 power cell/M6_SHC_I"
+      },
+      {
+        "netclass": "GATE_DRIVE",
+        "pattern": "/Motor 6 power cell/M6_VGLS"
+      }
+    ]
+  },
+  "pcbnew": {
+    "last_paths": {
+      "gencad": "",
+      "idf": "",
+      "netlist": "",
+      "plot": "",
+      "pos_files": "",
+      "specctra_dsn": "",
+      "step": "",
+      "svg": "",
+      "vrml": ""
+    },
+    "page_layout_descr_file": ""
+  },
+  "schematic": {
+    "legacy_lib_dir": "",
+    "legacy_lib_list": []
+  },
+  "sheets": [],
+  "text_variables": {}
+}

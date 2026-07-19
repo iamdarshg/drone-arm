@@ -2,6 +2,7 @@
 !docs/datasheets/**/*.pdf
 !docs/reference-designs/**/*.pdf
 build/
+tmp/
 .vscode/
 .idea/
 *.o

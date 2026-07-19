@@ -1,0 +1,21 @@
+(footprint "DO-218AB_SM8S"
+  (version 20240108)
+  (generator "drone-arm-rev-b-footprint-generator")
+  (layer "F.Cu")
+  (descr "Littelfuse SM8S SMTO-263 / DO-218AB compatible recommended land pattern")
+  (property "Reference" "REF**"
+    (at 0 -9.2 0)
+    (layer "F.SilkS")
+    (effects (font (size 1 1) (thickness 0.15)))
+  )
+  (property "Value" "DO-218AB_SM8S"
+    (at 0 9.2 0)
+    (layer "F.Fab")
+    (effects (font (size 1 1) (thickness 0.15)))
+  )
+  (attr smd)
+  (fp_rect (start -5.45 -8.1) (end 5.45 8.1) (stroke (width 0.12) (type solid)) (fill none) (layer "F.SilkS"))
+  (fp_rect (start -5.45 -8.1) (end 5.45 8.1) (stroke (width 0.05) (type solid)) (fill none) (layer "F.CrtYd"))
+  (pad "1" smd roundrect (at 0 -3.145) (size 10.5 8.41) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.03))
+  (pad "2" smd roundrect (at 0 6.4) (size 8.13 3) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.03))
+)
