@@ -23,6 +23,7 @@ build*/
 *.jpg
 *.jpeg
 motor*
+!hardware/esc/rev_b/motor_*.kicad_sch
 .cache/
 main_out/
 *.pyc
@@ -33,3 +34,5 @@ main_out/
 *.lck
 *-erc.rpt
 outputs/**/*.inspect.ndjson
+*-export/
+outputs/

@@ -13,6 +13,7 @@ import argparse
 from dataclasses import dataclass
 from pathlib import Path
 import json
+import re
 import shutil
 
 import kicad_sch_api as ksa
@@ -128,10 +129,62 @@ LG77L_PINS = (
     ("42", "GND"), ("43", "GND"),
 )
 
-_rp2354_library_info = ksa.get_symbol_info("MCU_RaspberryPi:RP2354B")
-if _rp2354_library_info is None:
-    raise RuntimeError("Installed KiCad library does not contain MCU_RaspberryPi:RP2354B")
-RP2354B_PINS = tuple((pin.number, pin.name) for pin in _rp2354_library_info.pins)
+def _symbol_block(text: str, symbol_name: str) -> str:
+    marker = f'(symbol "{symbol_name}"'
+    start = text.find(marker)
+    if start < 0:
+        raise ValueError(f"Symbol {symbol_name!r} not found")
+    depth = 0
+    in_string = False
+    escaped = False
+    for index in range(start, len(text)):
+        char = text[index]
+        if in_string:
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == '"':
+                in_string = False
+            continue
+        if char == '"':
+            in_string = True
+        elif char == "(":
+            depth += 1
+        elif char == ")":
+            depth -= 1
+            if depth == 0:
+                return text[start:index + 1]
+    raise ValueError(f"Unterminated symbol {symbol_name!r}")
+
+
+def _pins_from_committed_symbol(path: Path, symbol_name: str) -> tuple[tuple[str, str], ...]:
+    block = _symbol_block(path.read_text(encoding="utf-8"), symbol_name)
+    pins: list[tuple[str, str]] = []
+    for section in block.split("(pin ")[1:]:
+        name_match = re.search(r'\(name "([^"\n]+)"', section)
+        number_match = re.search(r'\(number "([^"\n]+)"', section)
+        if name_match and number_match:
+            pins.append((number_match.group(1), name_match.group(1)))
+    if not pins:
+        raise ValueError(f"No pins parsed for {symbol_name!r} from {path}")
+    return tuple(pins)
+
+
+def _load_rp2354_pins() -> tuple[tuple[str, str], ...]:
+    installed = ksa.get_symbol_info("MCU_RaspberryPi:RP2354B")
+    if installed is not None:
+        return tuple((pin.number, pin.name) for pin in installed.pins)
+    for candidate in (MAIN_DIR / "revb.kicad_sym", ESC_DIR / "revb.kicad_sym"):
+        if candidate.exists():
+            return _pins_from_committed_symbol(candidate, "RP2354B")
+    raise RuntimeError(
+        "RP2354B is absent from the installed KiCad library and no committed "
+        "Rev-B symbol library is available"
+    )
+
+
+RP2354B_PINS = _load_rp2354_pins()
 
 
 SYMBOLS = (
@@ -372,6 +425,24 @@ def connect_pins(
             no_connect_pin(sch, ref, pin)
         else:
             label_pin(sch, ref, pin, net)
+
+
+def connect_rp2354(
+    sch: ksa.Schematic,
+    ref: str,
+    gpio_nets: dict[int, str],
+    power_map: dict[str, str],
+) -> None:
+    for pin_number, pin_name in RP2354B_PINS:
+        if pin_name.startswith("GPIO"):
+            match = re.match(r"GPIO(\d+)", pin_name)
+            net = gpio_nets.get(int(match.group(1))) if match else None
+        else:
+            net = power_map.get(pin_name)
+        if net is None:
+            no_connect_pin(sch, ref, pin_number)
+        else:
+            label_pin(sch, ref, pin_number, net)
 
 
 def add_two_pin(
@@ -1040,8 +1111,6 @@ def _make_esc_controller_legacy(parent_uuid: str, sheet_uuid: str) -> None:
             44: "M3_BUS", 45: "M4_BUS", 46: "M5_BUS", 47: "M6_BUS",
         }
     )
-    rp_info = ksa.get_symbol_info("MCU_RaspberryPi:RP2354B")
-    assert rp_info is not None
     power_map = {
         "VREG_AVDD": "VREG_AVDD", "USB_OTP_VDD": "3V3", "QSPI_IOVDD": "3V3",
         "IOVDD": "3V3", "VREG_PGND": "DGND", "GND": "DGND",
@@ -1049,16 +1118,7 @@ def _make_esc_controller_legacy(parent_uuid: str, sheet_uuid: str) -> None:
         "VREG_FB": "1V1", "ADC_AVDD": "3V3_ADC", "RUN": "ESC_RUN", "SWCLK": "SWCLK",
         "SWDIO": "SWDIO", "XIN": "ESC_XIN", "XOUT": "ESC_XOUT",
     }
-    for pin in rp_info.pins:
-        if pin.name.startswith("GPIO"):
-            number = int(pin.name.split("/")[0].replace("GPIO", ""))
-            net = gpio_nets.get(number)
-        else:
-            net = power_map.get(pin.name)
-        if net is None:
-            no_connect_pin(sch, mcu_ref, pin.number)
-        else:
-            label_pin(sch, mcu_ref, pin.number, net)
+    connect_rp2354(sch, mcu_ref, gpio_nets, power_map)
 
     # Recommended RP2350 internal switching regulator network.
     add_two_pin(sch, "Device:L", "L201", "3.3u AOTA-B201610S3R3-101-T",
@@ -1263,7 +1323,7 @@ def add_can_fd_interface(
                 "Capacitor_SMD:C_0603_1608Metric")
     add_part(
         sch, "Device:L_Coupled", choke_ref, "ACT45B-110-2P-TL003",
-        (x + 120, y), "Inductor_SMD:L_CommonModeChoke_Coilank_ACM4532",
+        (x + 120, y), "revb:L_CommonModeChoke_Coilank_ACM4532",
         "TDK", "ACT45B-110-2P-TL003",
     )
     for pin, net in {
@@ -1308,8 +1368,6 @@ def make_esc_controller(parent_uuid: str, sheet_uuid: str) -> None:
         15: "CAN_nCS", 16: "CAN_INT", 17: "WDI",
         18: "ARM_CMD", 19: "STATUS_LED",
     }
-    rp_info = ksa.get_symbol_info("MCU_RaspberryPi:RP2354B")
-    assert rp_info is not None
     power_map = {
         "VREG_AVDD": "VREG_AVDD", "USB_OTP_VDD": "3V3", "QSPI_IOVDD": "3V3",
         "IOVDD": "3V3", "VREG_PGND": "DGND", "GND": "DGND",
@@ -1318,16 +1376,7 @@ def make_esc_controller(parent_uuid: str, sheet_uuid: str) -> None:
         "SWCLK": "SWCLK", "SWDIO": "SWDIO",
         "XIN": "ESC_XIN", "XOUT": "ESC_XOUT",
     }
-    for pin in rp_info.pins:
-        if pin.name.startswith("GPIO"):
-            number = int(pin.name.split("/")[0].replace("GPIO", ""))
-            net = gpio_nets.get(number)
-        else:
-            net = power_map.get(pin.name)
-        if net is None:
-            no_connect_pin(sch, mcu_ref, pin.number)
-        else:
-            label_pin(sch, mcu_ref, pin.number, net)
+    connect_rp2354(sch, mcu_ref, gpio_nets, power_map)
 
     add_two_pin(sch, "Device:L", "L201", "3.3u AOTA-B201610S3R3-101-T",
                 (155, 42), "VREG_LX", "1V1", "Inductor_SMD:L_0805_2012Metric",
@@ -1744,8 +1793,6 @@ def make_main_mcu(parent_uuid: str, sheet_uuid: str) -> None:
         27: "CAN_SCK", 28: "CAN_MOSI", 29: "CAN_MISO",
         30: "CAN_nCS", 31: "CAN_INT", 32: "STATUS_LED", 33: "GNSS_PWR_EN",
     }
-    info = ksa.get_symbol_info("MCU_RaspberryPi:RP2354B")
-    assert info is not None
     power_map = {
         "VREG_AVDD": "VREG_AVDD", "USB_OTP_VDD": "3V3", "QSPI_IOVDD": "3V3",
         "IOVDD": "3V3", "VREG_PGND": "GND", "GND": "GND", "DVDD": "1V1",
@@ -1754,16 +1801,7 @@ def make_main_mcu(parent_uuid: str, sheet_uuid: str) -> None:
         "RUN": "RUN", "SWCLK": "SWCLK", "SWDIO": "SWDIO",
         "XIN": "XIN", "XOUT": "XOUT",
     }
-    for pin in info.pins:
-        if pin.name.startswith("GPIO"):
-            number = int(pin.name.split("/")[0].replace("GPIO", ""))
-            net = gpio.get(number)
-        else:
-            net = power_map.get(pin.name)
-        if net is None:
-            no_connect_pin(sch, "U10", pin.number)
-        else:
-            label_pin(sch, "U10", pin.number, net)
+    connect_rp2354(sch, "U10", gpio, power_map)
     add_two_pin(sch, "Device:R", "R10", "27", (165, 65), "USB_DP", "USB_DP_MCU",
                 "Resistor_SMD:R_0402_1005Metric")
     add_two_pin(sch, "Device:R", "R11", "27", (165, 75), "USB_DM", "USB_DM_MCU",

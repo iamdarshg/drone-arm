@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import math
+import os
 import re
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass
@@ -25,7 +26,27 @@ import pcbnew
 ROOT = Path(__file__).resolve().parents[2]
 ESC_DIR = ROOT / "hardware" / "esc" / "rev_b"
 MAIN_DIR = ROOT / "hardware" / "main" / "rev_b"
-KICAD_FP_ROOT = Path(r"C:\Program Files\KiCad\9.0\share\kicad\footprints")
+def _discover_footprint_root() -> Path:
+    candidates: list[Path] = []
+    for name in ("KICAD_FOOTPRINT_DIR", "KICAD9_FOOTPRINT_DIR", "KICAD8_FOOTPRINT_DIR"):
+        value = os.environ.get(name)
+        if value:
+            candidates.append(Path(value))
+    candidates.extend(
+        (
+            Path(r"C:\Program Files\KiCad\9.0\share\kicad\footprints"),
+            Path("/usr/share/kicad/footprints"),
+            Path("/usr/local/share/kicad/footprints"),
+        )
+    )
+    for candidate in candidates:
+        if candidate.is_dir():
+            return candidate
+    attempted = ", ".join(str(path) for path in candidates)
+    raise RuntimeError(f"Unable to locate KiCad footprint libraries; tried: {attempted}")
+
+
+KICAD_FP_ROOT = _discover_footprint_root()
 MM = pcbnew.FromMM
 
 
@@ -73,7 +94,19 @@ def load_footprint(project_dir: Path, footprint_id: str) -> pcbnew.FOOTPRINT:
         if library == "revb"
         else KICAD_FP_ROOT / f"{library}.pretty"
     )
-    footprint = pcbnew.FootprintLoad(str(library_dir), name)
+    if not library_dir.is_dir():
+        raise RuntimeError(f"Footprint library does not exist: {library_dir}")
+    footprint_file = library_dir / f"{name}.kicad_mod"
+    if not footprint_file.is_file():
+        raise RuntimeError(f"Footprint file does not exist: {footprint_file}")
+    footprint = None
+    try:
+        footprint = pcbnew.FootprintLoad(str(library_dir), name)
+    except (AttributeError, RuntimeError):
+        plugin_type = getattr(pcbnew, "PCB_IO_KICAD_SEXPR", None)
+        if plugin_type is None:
+            raise
+        footprint = plugin_type().FootprintLoad(str(library_dir), name, False)
     if footprint is None:
         raise RuntimeError(f"Unable to load {footprint_id} from {library_dir}")
     return footprint
