@@ -1,0 +1,156 @@
+name: Retry Rev-B ESC routing safely
+
+on:
+  push:
+    branches:
+      - agent/rev-b-fab-ready
+    paths:
+      - .github/workflows/rev-b-esc-recovery-safe.yml
+  workflow_dispatch:
+
+concurrency:
+  group: rev-b-esc-recovery-safe
+  cancel-in-progress: true
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SOURCE_RUN_ID: 29693302481
+  JAVA_HOME: /opt/java25
+  PATH: /opt/java25/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+jobs:
+  route-shared-esc-safe:
+    runs-on: ubuntu-latest
+    container: debian:trixie
+    timeout-minutes: 210
+    steps:
+      - name: Install KiCad and runtime tools
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            git ca-certificates kicad kicad-symbols kicad-footprints \
+            python3 curl jq tar gzip
+
+      - name: Install Temurin JRE 25
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /opt/java25
+          jre_url=$(curl -fsSL \
+            'https://api.adoptium.net/v3/assets/latest/25/hotspot?architecture=x64&image_type=jre&os=linux&vendor=eclipse' \
+            | jq -r '.[0].binary.package.link')
+          test -n "$jre_url"
+          test "$jre_url" != "null"
+          curl -fL "$jre_url" -o /tmp/temurin25-jre.tar.gz
+          tar -xzf /tmp/temurin25-jre.tar.gz --strip-components=1 -C /opt/java25
+          java -version
+
+      - name: Check out guarded branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/rev-b-fab-ready
+          fetch-depth: 0
+
+      - name: Verify commit guard remains active
+        run: test -f .github/workflows/rev-b-esc-recovery.yml/guard
+
+      - name: Download hardened FreeRouting release
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/freerouting
+          release=$(curl -fsSL https://api.github.com/repos/freerouting/freerouting/releases/latest)
+          version=$(printf '%s' "$release" | jq -r '.tag_name')
+          jar_url=$(printf '%s' "$release" | jq -r \
+            '.assets[] | select(.name | test("executable.*\\.jar$")) | .browser_download_url' | head -n1)
+          test -n "$jar_url"
+          test "$jar_url" != "null"
+          curl -fL "$jar_url" -o build/freerouting/freerouting-executable.jar
+          printf '%s\n' "$version" > build/freerouting/version.txt
+          java -jar build/freerouting/freerouting-executable.jar -help > build/freerouting/help.txt 2>&1 || true
+
+      - name: Download replicated ESC checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          name: rev-b-esc-routed
+          path: build/source-esc
+          github-token: ${{ github.token }}
+          run-id: ${{ env.SOURCE_RUN_ID }}
+
+      - name: Route remaining ESC connections
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/recovery/esc-safe
+          exec > >(tee build/recovery/esc-safe/stage.log) 2>&1
+
+          routed=build/source-esc/build/rev-b-router/esc/esc-replicated.kicad_pcb
+          no_zones=build/source-esc/build/rev-b-router/esc/esc-replicated-nozones.kicad_pcb
+          raw_dsn=build/recovery/esc-safe/esc-with-plane-nets.dsn
+          filtered_dsn=build/recovery/esc-safe/esc-no-planes.dsn
+          test -s "$routed"
+          test -s "$no_zones"
+
+          python3 tools/hardware/route_rev_b_sections.py export-main \
+            --board "$no_zones" --dsn "$raw_dsn"
+          python3 tools/hardware/filter_specctra_plane_nets.py \
+            --board "$routed" --input "$raw_dsn" --output "$filtered_dsn" \
+            --report build/recovery/esc-safe/plane-net-filter.json
+
+          set +e
+          timeout 175m java -Xmx6g -Djava.awt.headless=true \
+            -jar build/freerouting/freerouting-executable.jar \
+            --gui.enabled=false -de "$filtered_dsn" \
+            -do build/recovery/esc-safe/esc-shared.ses \
+            -mp 24 -mt 2 -oit 0.01 -us hybrid -hr 1:2 -is prioritized \
+            -da -dct 1 --logging.console.level=INFO --logging.file.enabled=false \
+            > build/recovery/esc-safe/freerouting.log 2>&1
+          router_rc=$?
+          set -e
+          echo "$router_rc" > build/recovery/esc-safe/freerouting.exit
+          test -s build/recovery/esc-safe/esc-shared.ses
+
+          python3 tools/hardware/route_rev_b_sections.py import-main \
+            --board "$routed" --ses build/recovery/esc-safe/esc-shared.ses \
+            --output build/recovery/esc-safe/esc-imported.kicad_pcb
+
+          set +e
+          python3 tools/hardware/route_rev_b_sections.py fill-zones \
+            --board build/recovery/esc-safe/esc-imported.kicad_pcb \
+            --output build/recovery/esc-safe/esc-filled.kicad_pcb
+          fill_rc=$?
+          set -e
+          echo "$fill_rc" > build/recovery/esc-safe/fill-zones.exit
+          if ! test -s build/recovery/esc-safe/esc-filled.kicad_pcb; then
+            cp build/recovery/esc-safe/esc-imported.kicad_pcb \
+              build/recovery/esc-safe/esc-filled.kicad_pcb
+          fi
+
+          set +e
+          kicad-cli pcb drc --severity-all --format json \
+            -o build/recovery/esc-safe/drc.json \
+            build/recovery/esc-safe/esc-filled.kicad_pcb
+          echo $? > build/recovery/esc-safe/drc.exit
+          python3 tools/hardware/audit_rev_b_pcb.py --kind esc \
+            --board build/recovery/esc-safe/esc-filled.kicad_pcb \
+            --output build/recovery/esc-safe/layout-audit.json
+          echo $? > build/recovery/esc-safe/layout-audit.exit
+          set -e
+
+          jq '{unconnected: (.unconnected_items | length), violations: (.violations | length), error_violations: ([.violations[] | select(.severity == "error")] | length)}' \
+            build/recovery/esc-safe/drc.json | tee build/recovery/esc-safe/summary.json
+
+      - name: Upload guarded ESC candidate
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rev-b-esc-safe-candidate
+          path: |
+            build/freerouting/version.txt
+            build/freerouting/help.txt
+            build/recovery/esc-safe
+          if-no-files-found: error
+          retention-days: 3
