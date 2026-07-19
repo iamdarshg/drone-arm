@@ -1,0 +1,245 @@
+name: Resume Rev-B main routing
+
+on:
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: rev-b-main-recovery-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  actions: read
+  contents: write
+
+env:
+  SOURCE_RUN_ID: 29693302481
+  JAVA_HOME: /opt/java25
+  PATH: /opt/java25/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+jobs:
+  route-main-no-planes:
+    runs-on: ubuntu-latest
+    container: debian:trixie
+    timeout-minutes: 210
+    steps:
+      - name: Install KiCad and runtime tools
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            git ca-certificates kicad kicad-symbols kicad-footprints \
+            python3 curl jq tar gzip
+
+      - name: Install Temurin JRE 25
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /opt/java25
+          jre_url=$(curl -fsSL \
+            'https://api.adoptium.net/v3/assets/latest/25/hotspot?architecture=x64&image_type=jre&os=linux&vendor=eclipse' \
+            | jq -r '.[0].binary.package.link')
+          test -n "$jre_url"
+          test "$jre_url" != "null"
+          curl -fL "$jre_url" -o /tmp/temurin25-jre.tar.gz
+          tar -xzf /tmp/temurin25-jre.tar.gz --strip-components=1 -C /opt/java25
+          java -version
+
+      - name: Check out consolidated branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/rev-b-fab-ready
+          fetch-depth: 0
+
+      - name: Download fixed router
+        uses: actions/download-artifact@v4
+        with:
+          name: fixed-freerouting
+          path: build/fixed-freerouting
+          github-token: ${{ github.token }}
+          run-id: ${{ env.SOURCE_RUN_ID }}
+
+      - name: Download original main routing checkpoint
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: rev-b-main-routed
+          path: build/source-main
+          github-token: ${{ github.token }}
+          run-id: ${{ env.SOURCE_RUN_ID }}
+
+      - name: Route main board without zone-backed nets
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/recovery/main
+          exec > >(tee build/recovery/main/stage.log) 2>&1
+
+          repository_board=hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb
+          artifact_board=build/source-main/hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb
+          source_board=build/recovery/main/main-source.kicad_pcb
+          output_board=hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb
+          if test -s "$artifact_board"; then
+            cp "$artifact_board" "$source_board"
+            echo artifact > build/recovery/main/source.txt
+          else
+            cp "$repository_board" "$source_board"
+            echo repository > build/recovery/main/source.txt
+          fi
+
+          cp build/fixed-freerouting/source-sha.txt build/recovery/main/router-source-sha.txt
+          kicad-cli --version | tee build/recovery/main/kicad-version.txt
+          java -version 2>&1 | tee build/recovery/main/java-version.txt
+
+          set +e
+          kicad-cli pcb drc --severity-all --format json \
+            -o build/recovery/main/pre-route-drc.json "$source_board"
+          echo $? > build/recovery/main/pre-route-drc.exit
+          set -e
+          pre_unconnected=$(jq '.unconnected_items | length' build/recovery/main/pre-route-drc.json)
+          echo "$pre_unconnected" > build/recovery/main/pre-route-unconnected.txt
+
+          if [ "$pre_unconnected" -eq 0 ]; then
+            cp "$source_board" "$output_board"
+            echo skipped-already-connected > build/recovery/main/router-status.txt
+          else
+            set +e
+            python3 tools/hardware/route_rev_b_sections.py strip-zones \
+              --board "$source_board" \
+              --output build/recovery/main/main-nozones.kicad_pcb
+            strip_rc=$?
+            set -e
+            echo "$strip_rc" > build/recovery/main/strip-zones.exit
+            test -s build/recovery/main/main-nozones.kicad_pcb
+
+            python3 tools/hardware/route_rev_b_sections.py export-main \
+              --board build/recovery/main/main-nozones.kicad_pcb \
+              --dsn build/recovery/main/main-with-plane-nets.dsn
+            python3 tools/hardware/filter_specctra_plane_nets.py \
+              --board "$source_board" \
+              --input build/recovery/main/main-with-plane-nets.dsn \
+              --output build/recovery/main/main-no-plane-demand.dsn \
+              --report build/recovery/main/plane-net-filter.json
+
+            set +e
+            timeout 145m java -Xmx6g -Djava.awt.headless=true \
+              -jar build/fixed-freerouting/freerouting-current-executable.jar \
+              --gui.enabled=false \
+              -de build/recovery/main/main-no-plane-demand.dsn \
+              -do build/recovery/main/main.ses \
+              -mp 120 -mt 2 -oit 0.01 -us hybrid -hr 1:2 -is prioritized \
+              -da -dct 1 --logging.console.level=INFO --logging.file.enabled=false \
+              > build/recovery/main/freerouting.log 2>&1
+            router_rc=$?
+            set -e
+            echo "$router_rc" > build/recovery/main/freerouting.exit
+            test -s build/recovery/main/main.ses
+
+            set +e
+            python3 tools/hardware/route_rev_b_sections.py import-main \
+              --board "$source_board" \
+              --ses build/recovery/main/main.ses \
+              --output build/recovery/main/main-imported.kicad_pcb
+            import_rc=$?
+            set -e
+            echo "$import_rc" > build/recovery/main/import.exit
+            test -s build/recovery/main/main-imported.kicad_pcb
+
+            python3 tools/hardware/route_rev_b_sections.py clean-main-import \
+              --board build/recovery/main/main-imported.kicad_pcb \
+              --output build/recovery/main/main-clean.kicad_pcb
+
+            set +e
+            python3 tools/hardware/route_rev_b_sections.py fill-zones \
+              --board build/recovery/main/main-clean.kicad_pcb \
+              --output "$output_board"
+            fill_rc=$?
+            set -e
+            echo "$fill_rc" > build/recovery/main/fill-zones.exit
+            if ! test -s "$output_board"; then
+              cp build/recovery/main/main-clean.kicad_pcb "$output_board"
+              echo "Zone fill produced no output; committed board remains unfilled." \
+                > build/recovery/main/fill-zones-warning.txt
+            fi
+            echo routed-without-zone-backed-nets > build/recovery/main/router-status.txt
+          fi
+
+          set +e
+          kicad-cli pcb drc --severity-all --format json \
+            -o build/recovery/main/drc.json "$output_board"
+          echo $? > build/recovery/main/drc.exit
+          python3 tools/hardware/audit_rev_b_pcb.py \
+            --kind main --board "$output_board" \
+            --output build/recovery/main/layout-audit.json
+          echo $? > build/recovery/main/layout-audit.exit
+          set -e
+
+          jq '{unconnected: (.unconnected_items | length), violations: (.violations | length), error_violations: ([.violations[] | select(.severity == "error")] | length)}' \
+            build/recovery/main/drc.json | tee build/recovery/main/summary.json
+
+      - name: Upload recovered main result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rev-b-main-recovered-no-planes
+          path: |
+            hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb
+            build/recovery/main
+          if-no-files-found: error
+          retention-days: 3
+
+  commit-main-routing:
+    needs: route-main-no-planes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out consolidated branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/rev-b-fab-ready
+          fetch-depth: 0
+
+      - name: Download recovered main result
+        uses: actions/download-artifact@v4
+        with:
+          name: rev-b-main-recovered-no-planes
+          path: build/completed-main
+
+      - name: Commit main routing checkpoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Rev-B Hardware Bot"
+          git config user.email "actions@users.noreply.github.com"
+
+          for attempt in 1 2 3; do
+            git fetch origin agent/rev-b-fab-ready
+            git reset --hard origin/agent/rev-b-fab-ready
+
+            cp build/completed-main/hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb \
+              hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb
+            mkdir -p hardware/main/rev_b/reports
+            cp build/completed-main/build/recovery/main/drc.json \
+              hardware/main/rev_b/reports/main_rev_b_autorouted_drc.json
+            cp build/completed-main/build/recovery/main/layout-audit.json \
+              hardware/main/rev_b/reports/main_rev_b_autorouted_layout_audit.json
+            cp build/completed-main/build/recovery/main/summary.json \
+              hardware/main/rev_b/reports/main_rev_b_autorouted_summary.json
+            if test -s build/completed-main/build/recovery/main/plane-net-filter.json; then
+              cp build/completed-main/build/recovery/main/plane-net-filter.json \
+                hardware/main/rev_b/reports/main_rev_b_plane_net_filter.json
+            fi
+            rm -f .github/workflows/rev-b-main-recovery.yml
+            rm -rf build/completed-main
+
+            git add -A
+            git diff --cached --check
+            if git diff --cached --quiet; then
+              exit 0
+            fi
+            git commit -m "route: continue Rev-B main routing without plane nets"
+            if git push origin HEAD:agent/rev-b-fab-ready; then
+              exit 0
+            fi
+            echo "Push race on attempt ${attempt}; retrying from latest branch head."
+          done
+          exit 1
