@@ -1,4 +1,4 @@
-name: KiCad baseline validation
+name: Recover PCB history
 
 on:
   push:
@@ -12,58 +12,91 @@ permissions:
   contents: read
 
 jobs:
-  validate:
+  recover:
     runs-on: ubuntu-latest
     container: debian:trixie
     steps:
-      - name: Install validation tools
+      - name: Install tools
         run: |
           apt-get update
           DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends git ca-certificates kicad jq zip python3
-      - name: Check out repository
+      - name: Check out complete history
         uses: actions/checkout@v4
-      - name: Record tool versions
+        with:
+          fetch-depth: 0
+      - name: Fetch historical pull-request heads
         shell: bash
         run: |
-          mkdir -p validation-reports
-          kicad-cli --version | tee validation-reports/kicad-version.txt
-          kicad-cli sch erc --help > validation-reports/sch-erc-help.txt
-          kicad-cli pcb drc --help > validation-reports/pcb-drc-help.txt
-      - name: Run schematic and PCB checks
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git fetch origin \
+            +refs/pull/5/head:refs/remotes/pull/5/head \
+            +refs/pull/6/head:refs/remotes/pull/6/head \
+            +refs/pull/7/head:refs/remotes/pull/7/head
+      - name: Export historical PCB sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p recovered
+          for item in \
+            pr5:refs/remotes/pull/5/head \
+            pr6:refs/remotes/pull/6/head \
+            pr7:refs/remotes/pull/7/head \
+            main:2e81c05e5ff0b79b4ae5e96e13d6550f5d40658b; do
+            name=${item%%:*}
+            ref=${item#*:}
+            out="recovered/$name"
+            mkdir -p "$out"
+            git ls-tree -r --name-only "$ref" > "$out/tree.txt"
+            for path in \
+              hardware/main/main.kicad_pcb \
+              hardware/main/main.kicad_sch \
+              hardware/esc/esc/esc.kicad_pcb \
+              hardware/esc/esc/esc.kicad_sch \
+              hardware/esc/esc/esc_orchestrator_report.md \
+              add_infra.py add_routing.py relocate_v2.py; do
+              if git cat-file -e "$ref:$path" 2>/dev/null; then
+                mkdir -p "$out/$(dirname "$path")"
+                git show "$ref:$path" > "$out/$path"
+              fi
+            done
+          done
+          python3 - <<'PY'
+          from pathlib import Path
+          rows=[]
+          for board in sorted(Path('recovered').glob('*/hardware/*/*/*.kicad_pcb')) + sorted(Path('recovered').glob('*/hardware/main/*.kicad_pcb')):
+              text=board.read_text(errors='replace')
+              rows.append({
+                  'path': str(board),
+                  'bytes': board.stat().st_size,
+                  'footprints': text.count('(footprint '),
+                  'segments': text.count('(segment '),
+                  'arcs': text.count('(arc '),
+                  'vias': text.count('(via '),
+                  'zones': text.count('(zone '),
+              })
+          import json
+          Path('recovered/summary.json').write_text(json.dumps(rows, indent=2) + '\n')
+          print(json.dumps(rows, indent=2))
+          PY
+      - name: Run current baseline checks
         shell: bash
         run: |
           set +e
+          mkdir -p recovered/validation
+          kicad-cli --version > recovered/validation/kicad-version.txt
           for project in main esc; do
-            if [ "$project" = main ]; then
-              root=hardware/main/main
-            else
-              root=hardware/esc/esc/esc
-            fi
-            kicad-cli sch erc --severity-all --exit-code-violations -o "validation-reports/${project}-erc.rpt" "${root}.kicad_sch"
-            echo $? > "validation-reports/${project}-erc.exit"
-            kicad-cli pcb drc --severity-all --exit-code-violations --format json -o "validation-reports/${project}-drc.json" "${root}.kicad_pcb"
-            echo $? > "validation-reports/${project}-drc.exit"
+            if [ "$project" = main ]; then root=hardware/main/main; else root=hardware/esc/esc/esc; fi
+            kicad-cli sch erc --severity-all --format json -o "recovered/validation/${project}-erc.json" "${root}.kicad_sch"
+            echo $? > "recovered/validation/${project}-erc.exit"
+            kicad-cli pcb drc --severity-all --format json -o "recovered/validation/${project}-drc.json" "${root}.kicad_pcb"
+            echo $? > "recovered/validation/${project}-drc.exit"
           done
           set -e
-          python3 - <<'PY'
-          import json
-          from pathlib import Path
-          lines=[]
-          for project in ('main','esc'):
-              p=Path(f'validation-reports/{project}-drc.json')
-              if p.exists():
-                  d=json.loads(p.read_text())
-                  lines.append(f"{project}: violations={len(d.get('violations', []))}, unconnected={len(d.get('unconnected_items', []))}")
-              else:
-                  lines.append(f"{project}: no DRC JSON generated")
-          Path('validation-reports/summary.txt').write_text('\n'.join(lines)+'\n')
-          print('\n'.join(lines))
-          PY
-      - name: Upload validation reports
+      - name: Upload recovered sources
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: kicad-baseline-validation
-          path: validation-reports
+          name: recovered-pcb-history
+          path: recovered
           if-no-files-found: error
           retention-days: 2
