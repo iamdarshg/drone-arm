@@ -1,0 +1,132 @@
+name: Rev-B fabrication readiness
+
+on:
+  push:
+    branches:
+      - agent/rev-b-fab-ready
+
+permissions:
+  contents: read
+
+jobs:
+  baseline:
+    runs-on: ubuntu-latest
+    container: debian:trixie
+    steps:
+      - name: Install KiCad and validation dependencies
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            git ca-certificates kicad python3 python3-venv python3-pip jq zip unzip
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Configure Python environment
+        shell: bash
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          python3 -m venv --system-site-packages .venv
+          .venv/bin/pip install --disable-pip-version-check 'kicad-sch-api==0.5.6'
+          mkdir -p validation-reports
+          kicad-cli --version | tee validation-reports/kicad-version.txt
+          .venv/bin/python - <<'PY' | tee validation-reports/python-modules.txt
+          import pcbnew
+          import kicad_sch_api
+          print('pcbnew', pcbnew.GetBuildVersion())
+          print('kicad_sch_api', getattr(kicad_sch_api, '__version__', 'unknown'))
+          PY
+      - name: Audit committed Rev-B designs
+        shell: bash
+        run: |
+          set +e
+          ESC_ROOT=hardware/esc/rev_b/esc_rev_b
+          MAIN_ROOT=hardware/main/rev_b/main_rev_b
+          MAIN_BOARD=hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb
+
+          kicad-cli sch erc --severity-all --format json -o validation-reports/esc-erc.json "${ESC_ROOT}.kicad_sch"
+          echo $? > validation-reports/esc-erc.exit
+          kicad-cli sch erc --severity-all --format json -o validation-reports/main-erc.json "${MAIN_ROOT}.kicad_sch"
+          echo $? > validation-reports/main-erc.exit
+
+          kicad-cli sch export netlist --format kicadxml -o validation-reports/esc-netlist.xml "${ESC_ROOT}.kicad_sch"
+          echo $? > validation-reports/esc-netlist.exit
+          kicad-cli sch export netlist --format kicadxml -o validation-reports/main-netlist.xml "${MAIN_ROOT}.kicad_sch"
+          echo $? > validation-reports/main-netlist.exit
+
+          .venv/bin/python tools/hardware/validate_rev_b_netlists.py \
+            validation-reports/esc-netlist.xml validation-reports/main-netlist.xml \
+            --output validation-reports/connectivity-audit.json
+          echo $? > validation-reports/connectivity-audit.exit
+
+          kicad-cli pcb drc --severity-all --format json -o validation-reports/esc-drc.json "${ESC_ROOT}.kicad_pcb"
+          echo $? > validation-reports/esc-drc.exit
+          kicad-cli pcb drc --severity-all --format json -o validation-reports/main-drc.json "$MAIN_BOARD"
+          echo $? > validation-reports/main-drc.exit
+
+          .venv/bin/python tools/hardware/audit_rev_b_pcb.py --kind esc \
+            --board "${ESC_ROOT}.kicad_pcb" --output validation-reports/esc-layout-audit.json
+          echo $? > validation-reports/esc-layout-audit.exit
+          .venv/bin/python tools/hardware/audit_rev_b_pcb.py --kind main \
+            --board "$MAIN_BOARD" --output validation-reports/main-layout-audit.json
+          echo $? > validation-reports/main-layout-audit.exit
+          set -e
+      - name: Regenerate in an isolated copy
+        shell: bash
+        run: |
+          rm -rf /tmp/rev-b-generated
+          cp -a "$GITHUB_WORKSPACE" /tmp/rev-b-generated
+          cd /tmp/rev-b-generated
+          .venv/bin/python tools/hardware/generate_rev_b_schematics.py --board both \
+            > "$GITHUB_WORKSPACE/validation-reports/generate-schematics.log" 2>&1
+          .venv/bin/python tools/hardware/generate_rev_b_pcbs.py --board both \
+            > "$GITHUB_WORKSPACE/validation-reports/generate-pcbs.log" 2>&1
+          git diff --stat > "$GITHUB_WORKSPACE/validation-reports/regeneration-diff-stat.txt"
+          git diff -- hardware/esc/rev_b hardware/main/rev_b docs/hardware/REV_B_GENERATION.json \
+            > "$GITHUB_WORKSPACE/validation-reports/regeneration.diff"
+      - name: Summarize readiness blockers
+        shell: bash
+        run: |
+          .venv/bin/python - <<'PY'
+          import json
+          from pathlib import Path
+
+          out = Path('validation-reports')
+          summary = {'exit_codes': {}, 'reports': {}}
+          for path in sorted(out.glob('*.exit')):
+              summary['exit_codes'][path.stem] = int(path.read_text().strip())
+          for name in ('esc-erc', 'main-erc', 'esc-drc', 'main-drc', 'connectivity-audit', 'esc-layout-audit', 'main-layout-audit'):
+              path = out / f'{name}.json'
+              if not path.exists():
+                  continue
+              try:
+                  data = json.loads(path.read_text())
+              except Exception as exc:
+                  summary['reports'][name] = {'parse_error': str(exc)}
+                  continue
+              if name.endswith('-drc'):
+                  summary['reports'][name] = {
+                      'violations': len(data.get('violations', [])),
+                      'unconnected_items': len(data.get('unconnected_items', [])),
+                  }
+              elif name.endswith('-erc'):
+                  summary['reports'][name] = {
+                      'violations': len(data.get('violations', [])),
+                  }
+              else:
+                  summary['reports'][name] = data.get('summary', {
+                      'status': data.get('status'),
+                      'failures': data.get('failures'),
+                      'checks': data.get('checks'),
+                  })
+          (out / 'baseline-summary.json').write_text(json.dumps(summary, indent=2) + '\n')
+          print(json.dumps(summary, indent=2))
+          PY
+      - name: Upload baseline reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rev-b-baseline-readiness
+          path: validation-reports
+          if-no-files-found: error
+          retention-days: 3
