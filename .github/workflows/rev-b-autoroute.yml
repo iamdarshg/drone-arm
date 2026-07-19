@@ -38,7 +38,7 @@ jobs:
           apt-get update
           DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
             git ca-certificates kicad kicad-symbols kicad-footprints \
-            python3 python3-venv default-jre-headless curl jq
+            python3 python3-venv curl jq tar gzip
 
       - name: Check out consolidated branch
         uses: actions/checkout@v4
@@ -46,19 +46,27 @@ jobs:
           ref: agent/rev-b-fab-ready
           fetch-depth: 0
 
-      - name: Download Freerouting
+      - name: Download Java 25 and Freerouting
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p build/rev-b-router
+          mkdir -p build/rev-b-router/jre25
+          curl -fL \
+            'https://api.adoptium.net/v3/binary/latest/25/ga/linux/x64/jre/hotspot/normal/eclipse' \
+            -o build/rev-b-router/jre25.tar.gz
+          tar -xzf build/rev-b-router/jre25.tar.gz \
+            --strip-components=1 -C build/rev-b-router/jre25
+
           asset_url=$(curl -fsSL \
             "https://api.github.com/repos/freerouting/freerouting/releases/tags/v${FREEROUTING_VERSION}" \
             | jq -r '.assets[] | select(.name == "freerouting-'"${FREEROUTING_VERSION}"'.jar") | .browser_download_url')
           test -n "$asset_url"
           test "$asset_url" != "null"
           curl -fL "$asset_url" -o build/rev-b-router/freerouting.jar
-          java -version 2>&1 | tee build/rev-b-router/${{ matrix.key }}-java-version.txt
-          kicad-cli --version | tee build/rev-b-router/${{ matrix.key }}-kicad-version.txt
+          build/rev-b-router/jre25/bin/java -version 2>&1 \
+            | tee build/rev-b-router/${{ matrix.key }}-java-version.txt
+          kicad-cli --version \
+            | tee build/rev-b-router/${{ matrix.key }}-kicad-version.txt
 
       - name: Export, autoroute, import, and validate
         shell: bash
@@ -72,7 +80,8 @@ jobs:
             "$board" "build/rev-b-router/${key}.dsn"
 
           set +e
-          timeout ${{ matrix.route_timeout }} java -Xmx6g -Djava.awt.headless=true \
+          timeout ${{ matrix.route_timeout }} \
+            build/rev-b-router/jre25/bin/java -Xmx6g -Djava.awt.headless=true \
             -jar build/rev-b-router/freerouting.jar \
             --gui.enabled=false \
             -de "build/rev-b-router/${key}.dsn" \
