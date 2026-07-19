@@ -26,3 +26,10 @@ motor*
 .cache/
 main_out/
 *.pyc
+
+# KiCad/editor and generated validation debris
+*-backups/
+*.kicad_prl
+*.lck
+*-erc.rpt
+outputs/**/*.inspect.ndjson
