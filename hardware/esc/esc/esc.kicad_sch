@@ -8837,6 +8837,12 @@
 		(uuid "c84f503a-83e3-45c8-bc56-88113f51229b")
 	)
 	(junction
+		(at 57.15 38.1)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "c971a30d-710b-43a9-b228-5abb047af374")
+	)
+	(junction
 		(at 455.93 167.8316)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -10199,6 +10205,16 @@
 			(type default)
 		)
 		(uuid "1678e953-9d84-4cfa-9669-e2ad2c45f49e")
+	)
+	(wire
+		(pts
+			(xy 80.01 403.86) (xy 405.13 403.86)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "168d3987-4703-4d64-bd25-fbc6c843bab5")
 	)
 	(wire
 		(pts
@@ -12562,6 +12578,16 @@
 	)
 	(wire
 		(pts
+			(xy 535.94 158.75) (xy 533.4 158.75)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "46a48563-3641-4085-8a1e-54c349ba29b7")
+	)
+	(wire
+		(pts
 			(xy 138.43 318.77) (xy 138.43 312.42)
 		)
 		(stroke
@@ -13769,6 +13795,16 @@
 			(type default)
 		)
 		(uuid "616ad1ff-07b9-470b-920d-3a5254729b0c")
+	)
+	(wire
+		(pts
+			(xy 553.72 139.7) (xy 556.26 139.7)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "61b8c7b5-8630-4bbb-bebb-f822d6e2d406")
 	)
 	(wire
 		(pts
@@ -15512,16 +15548,6 @@
 	)
 	(wire
 		(pts
-			(xy 537.21 185.42) (xy 528.32 185.42)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "8326ac08-5de2-4f63-9082-e0e2d01c024b")
-	)
-	(wire
-		(pts
 			(xy 222.25 78.74) (xy 222.25 107.95)
 		)
 		(stroke
@@ -16112,6 +16138,16 @@
 	)
 	(wire
 		(pts
+			(xy 147.32 222.25) (xy 154.94 222.25)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8d9e6a33-d84d-4f75-b378-a6f74b0f76d1")
+	)
+	(wire
+		(pts
 			(xy 110.49 106.68) (xy 110.49 107.95)
 		)
 		(stroke
@@ -16499,16 +16535,6 @@
 			(type default)
 		)
 		(uuid "974c64b2-fd65-4982-af84-1b9c412bc54f")
-	)
-	(wire
-		(pts
-			(xy 80.01 403.86) (xy 405.13 403.86)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "9768387d-4ee5-4bed-8c8b-c85b20de372d")
 	)
 	(wire
 		(pts
@@ -17159,16 +17185,6 @@
 			(type default)
 		)
 		(uuid "a4df6bb1-3014-4576-b672-c0348fabf559")
-	)
-	(wire
-		(pts
-			(xy 537.21 214.63) (xy 537.21 185.42)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a573464b-c120-44a0-8c01-a5eea6fc5546")
 	)
 	(wire
 		(pts
@@ -21571,23 +21587,23 @@
 		(uuid "ffa71bde-d72c-470a-8598-8ef808b2762d")
 	)
 	(label "BEC_SHDN2"
-		(at 124.46 372.11 0)
+		(at 124.46 375.92 0)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
 			(justify left bottom)
 		)
-		(uuid "0d1a4839-dd67-4010-a002-58d75bfc169a")
+		(uuid "714a709e-7ed9-44ac-b724-8cf5adeeca2b")
 	)
 	(label "BEC_SHDN"
-		(at 129.54 375.92 0)
+		(at 154.94 222.25 0)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
 		)
-		(uuid "aba767e9-39e4-412d-be5f-2351fbb96ba0")
+		(uuid "b4316b82-824c-4932-b8f7-e6f6e185060d")
 	)
 	(label "BEC_SHDN2"
 		(at 104.14 375.92 0)
@@ -32527,6 +32543,72 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 57.15 38.1 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "5d69a804-41d5-4205-a3e6-f3da85f0118a")
+		(property "Reference" "#PWR0120"
+			(at 57.15 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 57.15 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 57.15 38.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 57.15 38.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 57.15 38.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "c1bd01b0-5d4b-4e99-b4d2-101cac8ab80f")
+		)
+		(instances
+			(project "esc"
+				(path "/98640010-11bc-4686-91cc-8acbb55a5e3d"
+					(reference "#PWR0120")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R_Small")
 		(at 251.46 43.18 270)
 		(unit 1)
@@ -38195,7 +38277,7 @@
 	)
 	(symbol
 		(lib_id "power:+3V3")
-		(at 556.26 139.7 0)
+		(at 553.72 139.7 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -38204,7 +38286,7 @@
 		(fields_autoplaced yes)
 		(uuid "88b4201f-f766-4c05-a001-72346c986b4f")
 		(property "Reference" "#PWR0136"
-			(at 556.26 143.51 0)
+			(at 553.72 143.51 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -38213,7 +38295,7 @@
 			)
 		)
 		(property "Value" "+3V3"
-			(at 556.26 134.62 0)
+			(at 553.72 134.62 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -38221,7 +38303,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 556.26 139.7 0)
+			(at 553.72 139.7 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -38230,7 +38312,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 556.26 139.7 0)
+			(at 553.72 139.7 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -38239,7 +38321,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 556.26 139.7 0)
+			(at 553.72 139.7 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -46245,7 +46327,7 @@
 	)
 	(symbol
 		(lib_id "power:+3V3")
-		(at 533.4 158.75 0)
+		(at 535.94 158.75 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -46254,7 +46336,7 @@
 		(fields_autoplaced yes)
 		(uuid "c9975ee2-2566-4081-ad10-ae671fce842f")
 		(property "Reference" "#PWR0128"
-			(at 533.4 162.56 0)
+			(at 535.94 162.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -46263,7 +46345,7 @@
 			)
 		)
 		(property "Value" "+3V3"
-			(at 533.4 153.67 0)
+			(at 535.94 153.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -46271,7 +46353,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 533.4 158.75 0)
+			(at 535.94 158.75 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -46280,7 +46362,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 533.4 158.75 0)
+			(at 535.94 158.75 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -46289,7 +46371,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 533.4 158.75 0)
+			(at 535.94 158.75 0)
 			(effects
 				(font
 					(size 1.27 1.27)

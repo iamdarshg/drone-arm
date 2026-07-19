@@ -1,4 +1,6 @@
 *.pdf
+!docs/datasheets/**/*.pdf
+!docs/reference-designs/**/*.pdf
 build/
 .vscode/
 .idea/
