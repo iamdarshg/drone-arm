@@ -1,0 +1,3640 @@
+{
+    "$schema": "https://schemas.kicad.org/erc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-07-19T13:31:38+0000",
+    "kicad_version": "9.0.2",
+    "sheets": [
+        {
+            "path": "/",
+            "uuid_path": "/94616530-9a4d-4eb4-ab8e-589eb49d9ab4",
+            "violations": [
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M1_CMD'",
+                            "pos": {
+                                "x": 0.9144,
+                                "y": 0.3048
+                            },
+                            "uuid": "d5bd9efa-d777-4bb6-ad06-750433d27218"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M2_CMD'",
+                            "pos": {
+                                "x": 0.9144,
+                                "y": 0.3302
+                            },
+                            "uuid": "8d844680-ed7a-447f-a995-1af4840b1573"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M3_CMD'",
+                            "pos": {
+                                "x": 0.9144,
+                                "y": 0.3556
+                            },
+                            "uuid": "7a42041b-d236-41d0-a700-1bdc5798a6ce"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M4_CMD'",
+                            "pos": {
+                                "x": 0.9144,
+                                "y": 0.381
+                            },
+                            "uuid": "f8539913-b15b-4093-ba2f-88745b497ac1"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M5_CMD'",
+                            "pos": {
+                                "x": 0.9144,
+                                "y": 0.4064
+                            },
+                            "uuid": "30db7a42-3016-479b-8f8b-e2b03ace7fc5"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M6_CMD'",
+                            "pos": {
+                                "x": 0.9144,
+                                "y": 0.4318
+                            },
+                            "uuid": "21db3b3f-f5d0-40ce-aef1-469e921ced74"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M1_BATP'",
+                            "pos": {
+                                "x": 0.127,
+                                "y": 1.1176
+                            },
+                            "uuid": "95570f6a-65bb-49f3-b3c6-21fae36062fe"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin M1_BATP has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M1_BATP",
+                            "pos": {
+                                "x": 0.1524,
+                                "y": 1.1176
+                            },
+                            "uuid": "434bdd51-b3d2-4043-9c06-d67a2a37031f"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M1_PHASE_A'",
+                            "pos": {
+                                "x": 0.127,
+                                "y": 1.143
+                            },
+                            "uuid": "d0fb9163-7917-41b1-9929-3d2f51b05ee3"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin M1_PHASE_A has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M1_PHASE_A",
+                            "pos": {
+                                "x": 0.1524,
+                                "y": 1.143
+                            },
+                            "uuid": "e7380adc-0a32-4ade-b103-a1913c07f636"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M1_PHASE_C'",
+                            "pos": {
+                                "x": 0.127,
+                                "y": 1.1684
+                            },
+                            "uuid": "9adbacdd-dbed-4b10-8ace-2788d247fc0b"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin M1_PHASE_C has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M1_PHASE_C",
+                            "pos": {
+                                "x": 0.1524,
+                                "y": 1.1684
+                            },
+                            "uuid": "64305e3a-854b-4412-ba4f-f553b92da61e"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M1_STATUS'",
+                            "pos": {
+                                "x": 0.127,
+                                "y": 1.1938
+                            },
+                            "uuid": "fec6222b-656b-4269-94c9-3f468736b78b"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin M1_STATUS has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M1_STATUS",
+                            "pos": {
+                                "x": 0.1524,
+                                "y": 1.1938
+                            },
+                            "uuid": "43fc3ec5-9022-49a3-95ea-ebe83f717a64"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Sheet pin 5V has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin 5V",
+                            "pos": {
+                                "x": 0.1524,
+                                "y": 1.2192
+                            },
+                            "uuid": "193d6b1d-155a-414b-a389-fd91ed9c82ac"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Sheet pin DGND has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin DGND",
+                            "pos": {
+                                "x": 0.1524,
+                                "y": 1.2446
+                            },
+                            "uuid": "14754aba-8d88-4c3c-9490-d046f6bb71d1"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Sheet pin M1_BATN has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M1_BATN",
+                            "pos": {
+                                "x": 0.9906,
+                                "y": 1.1176
+                            },
+                            "uuid": "10e89f6c-378a-4368-bd4d-8dda8b94c254"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M1_BATN'",
+                            "pos": {
+                                "x": 1.016,
+                                "y": 1.1176
+                            },
+                            "uuid": "378df509-c44b-4eda-874f-bef1f1b02747"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin M1_PHASE_B has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M1_PHASE_B",
+                            "pos": {
+                                "x": 0.9906,
+                                "y": 1.143
+                            },
+                            "uuid": "b9912151-1deb-4305-9b77-749b8105360a"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M1_PHASE_B'",
+                            "pos": {
+                                "x": 1.016,
+                                "y": 1.143
+                            },
+                            "uuid": "252746c3-d2f7-4a27-930c-a44e9084d3a0"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin M1_CMD has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M1_CMD",
+                            "pos": {
+                                "x": 0.9906,
+                                "y": 1.1684
+                            },
+                            "uuid": "6e778c87-6ddb-4528-b3a1-25537974a73c"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M2_BATP'",
+                            "pos": {
+                                "x": 1.0668,
+                                "y": 1.1176
+                            },
+                            "uuid": "84a72ee7-ed3d-4ecc-a019-b57f6d3a2c95"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M1_CMD'",
+                            "pos": {
+                                "x": 1.016,
+                                "y": 1.1684
+                            },
+                            "uuid": "c59a99f1-7f89-449c-9938-70a0d53c4945"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin ARM_SAFE has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin ARM_SAFE",
+                            "pos": {
+                                "x": 0.9906,
+                                "y": 1.1938
+                            },
+                            "uuid": "1c18ddba-6799-4317-b988-d9b65ebd7614"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Sheet pin M2_BATP has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M2_BATP",
+                            "pos": {
+                                "x": 1.0922,
+                                "y": 1.1176
+                            },
+                            "uuid": "ff4e8b87-7cf8-492b-85cf-1fa5e740dad6"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M2_PHASE_A'",
+                            "pos": {
+                                "x": 1.0668,
+                                "y": 1.143
+                            },
+                            "uuid": "d0316f13-6e6e-46b6-96f2-2af33475fcd7"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'ARM_SAFE'",
+                            "pos": {
+                                "x": 1.016,
+                                "y": 1.1938
+                            },
+                            "uuid": "dc7a9f47-344c-45b6-96f3-aa9084bb802c"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin 3V3 has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin 3V3",
+                            "pos": {
+                                "x": 0.9906,
+                                "y": 1.2192
+                            },
+                            "uuid": "7aaf1541-0da3-41bb-9766-91dbb48656b4"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Sheet pin M2_PHASE_A has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M2_PHASE_A",
+                            "pos": {
+                                "x": 1.0922,
+                                "y": 1.143
+                            },
+                            "uuid": "e842a946-261a-44e5-b75b-0f851cebf419"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M2_PHASE_C'",
+                            "pos": {
+                                "x": 1.0668,
+                                "y": 1.1684
+                            },
+                            "uuid": "b8beed36-bbb6-41db-aded-5ebf129cae38"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin M2_PHASE_C has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M2_PHASE_C",
+                            "pos": {
+                                "x": 1.0922,
+                                "y": 1.1684
+                            },
+                            "uuid": "609acd7d-0540-4a76-94bd-3eefd2d986fd"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M2_STATUS'",
+                            "pos": {
+                                "x": 1.0668,
+                                "y": 1.1938
+                            },
+                            "uuid": "90c117fa-b6d1-4b6b-803d-83da8f4b249d"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin M2_STATUS has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M2_STATUS",
+                            "pos": {
+                                "x": 1.0922,
+                                "y": 1.1938
+                            },
+                            "uuid": "fc1496f9-d004-4e26-bb8b-b75b285f24f1"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M4_BATP'",
+                            "pos": {
+                                "x": 0.127,
+                                "y": 1.6256
+                            },
+                            "uuid": "ac8ae8f6-c5ba-4ec8-88e1-c156b2b2c331"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin M4_BATP has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M4_BATP",
+                            "pos": {
+                                "x": 0.1524,
+                                "y": 1.6256
+                            },
+                            "uuid": "7a65f970-1e5d-4ec3-9b25-f7f3fae9bc96"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Sheet pin 5V has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin 5V",
+                            "pos": {
+                                "x": 1.0922,
+                                "y": 1.2192
+                            },
+                            "uuid": "d69ed19c-4482-4581-a70c-ab440b76cd6f"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M4_PHASE_A'",
+                            "pos": {
+                                "x": 0.127,
+                                "y": 1.651
+                            },
+                            "uuid": "c9afa473-b278-49aa-85c0-3ba21b589e85"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin M4_PHASE_A has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M4_PHASE_A",
+                            "pos": {
+                                "x": 0.1524,
+                                "y": 1.651
+                            },
+                            "uuid": "9f2ce39a-4d85-42c7-a51d-5ca5c2a59c47"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M4_PHASE_C'",
+                            "pos": {
+                                "x": 0.127,
+                                "y": 1.6764
+                            },
+                            "uuid": "f40533ad-77d5-4f72-91ea-43b24285cf88"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin M4_PHASE_C has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M4_PHASE_C",
+                            "pos": {
+                                "x": 0.1524,
+                                "y": 1.6764
+                            },
+                            "uuid": "fbf61652-baa2-469b-8d47-98a9139eca92"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M4_STATUS'",
+                            "pos": {
+                                "x": 0.127,
+                                "y": 1.7018
+                            },
+                            "uuid": "d1a9bb75-6e60-4cd4-a105-8e6c78afbb5a"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin M4_STATUS has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M4_STATUS",
+                            "pos": {
+                                "x": 0.1524,
+                                "y": 1.7018
+                            },
+                            "uuid": "ab542c22-617b-4ae8-85e8-4ec4d638efaf"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Sheet pin 5V has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin 5V",
+                            "pos": {
+                                "x": 0.1524,
+                                "y": 1.7272
+                            },
+                            "uuid": "bee08d6a-b67a-4a0b-bd96-d3133529814b"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Sheet pin DGND has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin DGND",
+                            "pos": {
+                                "x": 0.1524,
+                                "y": 1.7526
+                            },
+                            "uuid": "284ec2a4-2581-4782-9f83-c2f5f45b097d"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Sheet pin M4_BATN has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M4_BATN",
+                            "pos": {
+                                "x": 0.9906,
+                                "y": 1.6256
+                            },
+                            "uuid": "028918c5-aa3e-448a-ba8b-4eee9c02bcf3"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M4_BATN'",
+                            "pos": {
+                                "x": 1.016,
+                                "y": 1.6256
+                            },
+                            "uuid": "6c454d0b-237d-49db-884f-05e9d9d1ca68"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin M4_PHASE_B has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M4_PHASE_B",
+                            "pos": {
+                                "x": 0.9906,
+                                "y": 1.651
+                            },
+                            "uuid": "c4b0ee78-dccf-46d8-a95d-c33a94294056"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M4_PHASE_B'",
+                            "pos": {
+                                "x": 1.016,
+                                "y": 1.651
+                            },
+                            "uuid": "95c87c77-1142-4653-bde1-820e88b15c86"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M5_BATP'",
+                            "pos": {
+                                "x": 1.0668,
+                                "y": 1.6256
+                            },
+                            "uuid": "fbdd82c2-7113-4063-9b75-73963f0d7068"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin M4_CMD has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M4_CMD",
+                            "pos": {
+                                "x": 0.9906,
+                                "y": 1.6764
+                            },
+                            "uuid": "fb1f1e16-4892-4fec-b556-bc5cd99de353"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M4_CMD'",
+                            "pos": {
+                                "x": 1.016,
+                                "y": 1.6764
+                            },
+                            "uuid": "85a723e3-c84d-4e69-8383-31b7455aa113"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M5_PHASE_A'",
+                            "pos": {
+                                "x": 1.0668,
+                                "y": 1.651
+                            },
+                            "uuid": "d0594daa-dcc4-4f84-a8fb-ad616f4a5a79"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin ARM_SAFE has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin ARM_SAFE",
+                            "pos": {
+                                "x": 0.9906,
+                                "y": 1.7018
+                            },
+                            "uuid": "138a6117-0538-49bc-92e6-b0c28136f6f5"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'ARM_SAFE'",
+                            "pos": {
+                                "x": 1.016,
+                                "y": 1.7018
+                            },
+                            "uuid": "30863790-73ee-4804-96e8-8d941bb36cc4"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M5_PHASE_C'",
+                            "pos": {
+                                "x": 1.0668,
+                                "y": 1.6764
+                            },
+                            "uuid": "4cab9594-e9f9-46d8-b0fc-b94a9670c07b"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin 3V3 has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin 3V3",
+                            "pos": {
+                                "x": 0.9906,
+                                "y": 1.7272
+                            },
+                            "uuid": "1a1407ee-f30e-4121-a50b-5d80ddbbceda"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M5_STATUS'",
+                            "pos": {
+                                "x": 1.0668,
+                                "y": 1.7018
+                            },
+                            "uuid": "33616858-3e71-49ed-9878-82cedbc48f94"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin M2_BATN has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M2_BATN",
+                            "pos": {
+                                "x": 1.9304,
+                                "y": 1.1176
+                            },
+                            "uuid": "50dfd54e-6243-4a0c-b3e0-c31bd0a27e3d"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Sheet pin M2_PHASE_B has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M2_PHASE_B",
+                            "pos": {
+                                "x": 1.9304,
+                                "y": 1.143
+                            },
+                            "uuid": "655af762-3025-4d89-837c-baa3c096fe5f"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M2_BATN'",
+                            "pos": {
+                                "x": 1.9558,
+                                "y": 1.1176
+                            },
+                            "uuid": "71b5aa5e-df3d-4581-bc29-66894d690465"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin M2_CMD has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M2_CMD",
+                            "pos": {
+                                "x": 1.9304,
+                                "y": 1.1684
+                            },
+                            "uuid": "8fe6697f-bc42-45b3-804a-8a92dfd9bf27"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M2_PHASE_B'",
+                            "pos": {
+                                "x": 1.9558,
+                                "y": 1.143
+                            },
+                            "uuid": "c860362b-4260-470c-a5b0-9f6a20d3927e"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin ARM_SAFE has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin ARM_SAFE",
+                            "pos": {
+                                "x": 1.9304,
+                                "y": 1.1938
+                            },
+                            "uuid": "cbea8513-69c4-4454-98e1-211de26e1a7c"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M2_CMD'",
+                            "pos": {
+                                "x": 1.9558,
+                                "y": 1.1684
+                            },
+                            "uuid": "4582479c-0d92-4df2-93ab-178232500eb9"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin 3V3 has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin 3V3",
+                            "pos": {
+                                "x": 1.9304,
+                                "y": 1.2192
+                            },
+                            "uuid": "aad8e8fe-fe37-4c4d-ab27-0bd00b212b63"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'ARM_SAFE'",
+                            "pos": {
+                                "x": 1.9558,
+                                "y": 1.1938
+                            },
+                            "uuid": "4e5d7ffc-74ef-4cfd-90fd-6923c357161f"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M3_BATP'",
+                            "pos": {
+                                "x": 2.0066,
+                                "y": 1.1176
+                            },
+                            "uuid": "b4567317-b886-443a-a52a-bc2ae66bb95b"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M3_PHASE_A'",
+                            "pos": {
+                                "x": 2.0066,
+                                "y": 1.143
+                            },
+                            "uuid": "dd4d31f4-1e24-4633-b179-af71cd06b2e1"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin M3_BATP has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M3_BATP",
+                            "pos": {
+                                "x": 2.032,
+                                "y": 1.1176
+                            },
+                            "uuid": "fe31fb45-83b2-4e0a-a7bb-2308d3771f1f"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M3_PHASE_C'",
+                            "pos": {
+                                "x": 2.0066,
+                                "y": 1.1684
+                            },
+                            "uuid": "413fe600-5f97-4354-9f1b-6dde9fee1bb7"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin M3_PHASE_A has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M3_PHASE_A",
+                            "pos": {
+                                "x": 2.032,
+                                "y": 1.143
+                            },
+                            "uuid": "f8dd7783-c301-4736-8f9d-cb39fb387da8"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M3_STATUS'",
+                            "pos": {
+                                "x": 2.0066,
+                                "y": 1.1938
+                            },
+                            "uuid": "71459db5-309f-4962-9d5f-0a6116d5811d"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin M3_PHASE_C has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M3_PHASE_C",
+                            "pos": {
+                                "x": 2.032,
+                                "y": 1.1684
+                            },
+                            "uuid": "938464d0-5ac8-465a-960a-72010fde67d6"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Sheet pin M3_STATUS has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M3_STATUS",
+                            "pos": {
+                                "x": 2.032,
+                                "y": 1.1938
+                            },
+                            "uuid": "1cb2bc42-f77f-47f5-b604-fecb51f9b27b"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Sheet pin 5V has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin 5V",
+                            "pos": {
+                                "x": 2.032,
+                                "y": 1.2192
+                            },
+                            "uuid": "1e4bc255-e55e-4dc2-aca6-d35e6b272c2a"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Sheet pin DGND has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin DGND",
+                            "pos": {
+                                "x": 2.032,
+                                "y": 1.2446
+                            },
+                            "uuid": "ddafde67-20b1-4e32-a52b-4153a55b7816"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M5_BATN'",
+                            "pos": {
+                                "x": 1.9558,
+                                "y": 1.6256
+                            },
+                            "uuid": "4667a291-b583-4fe5-bfd8-f1a5a7464138"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M5_PHASE_B'",
+                            "pos": {
+                                "x": 1.9558,
+                                "y": 1.651
+                            },
+                            "uuid": "5e151617-c506-494d-88d1-2c10dad189db"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M5_CMD'",
+                            "pos": {
+                                "x": 1.9558,
+                                "y": 1.6764
+                            },
+                            "uuid": "d77b00a1-62de-4070-b0c0-579ac81cd111"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M6_BATP'",
+                            "pos": {
+                                "x": 2.0066,
+                                "y": 1.6256
+                            },
+                            "uuid": "f180f0af-c583-4439-b6fa-85ae71190e0f"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'ARM_SAFE'",
+                            "pos": {
+                                "x": 1.9558,
+                                "y": 1.7018
+                            },
+                            "uuid": "386e5546-a660-40f8-ad67-45e23cb2d4d9"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M6_PHASE_A'",
+                            "pos": {
+                                "x": 2.0066,
+                                "y": 1.651
+                            },
+                            "uuid": "41af2cb9-0b65-452a-a1d0-d31915d08589"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin M6_BATP has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M6_BATP",
+                            "pos": {
+                                "x": 2.032,
+                                "y": 1.6256
+                            },
+                            "uuid": "9b210fcd-287a-4658-830d-8e43587b9326"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M6_PHASE_C'",
+                            "pos": {
+                                "x": 2.0066,
+                                "y": 1.6764
+                            },
+                            "uuid": "13b3af02-c011-4f81-a97b-36056623143f"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin M6_PHASE_A has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M6_PHASE_A",
+                            "pos": {
+                                "x": 2.032,
+                                "y": 1.651
+                            },
+                            "uuid": "1e1c77c5-17bc-46b0-a62e-cdf68d540712"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M6_STATUS'",
+                            "pos": {
+                                "x": 2.0066,
+                                "y": 1.7018
+                            },
+                            "uuid": "99258501-f0c0-43dc-9e36-064a504e0898"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin M6_PHASE_C has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M6_PHASE_C",
+                            "pos": {
+                                "x": 2.032,
+                                "y": 1.6764
+                            },
+                            "uuid": "3fe17a1a-55c2-40eb-b5a2-0f4ed7306e6e"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Sheet pin M6_STATUS has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M6_STATUS",
+                            "pos": {
+                                "x": 2.032,
+                                "y": 1.7018
+                            },
+                            "uuid": "281c7282-f8f0-43a2-8656-1768b67ab7c6"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Sheet pin 5V has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin 5V",
+                            "pos": {
+                                "x": 2.032,
+                                "y": 1.7272
+                            },
+                            "uuid": "11d87a7e-710d-4e6d-aeec-e86f1b185804"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Sheet pin DGND has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin DGND",
+                            "pos": {
+                                "x": 2.032,
+                                "y": 1.7526
+                            },
+                            "uuid": "514ff6aa-f2d0-463a-ab5f-23223d2231d7"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'ARM_SAFE'",
+                            "pos": {
+                                "x": 2.921,
+                                "y": 0.2794
+                            },
+                            "uuid": "5d6dd4c5-c32a-424d-bed9-ee7fa71a0f5f"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M1_STATUS'",
+                            "pos": {
+                                "x": 2.921,
+                                "y": 0.3048
+                            },
+                            "uuid": "a5027787-4071-46e4-a83d-026b7b23b650"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M2_STATUS'",
+                            "pos": {
+                                "x": 2.921,
+                                "y": 0.3302
+                            },
+                            "uuid": "ec9a3c00-a192-41c3-abde-937ef1d259bb"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M3_STATUS'",
+                            "pos": {
+                                "x": 2.921,
+                                "y": 0.3556
+                            },
+                            "uuid": "80214931-a926-4d00-877c-59262c3b4661"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M4_STATUS'",
+                            "pos": {
+                                "x": 2.921,
+                                "y": 0.381
+                            },
+                            "uuid": "bad32f94-e0a7-4f4b-b75f-537487d7a462"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M5_STATUS'",
+                            "pos": {
+                                "x": 2.921,
+                                "y": 0.4064
+                            },
+                            "uuid": "41c9b9dd-4165-4f36-a835-4ed4341dd7b4"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M6_STATUS'",
+                            "pos": {
+                                "x": 2.921,
+                                "y": 0.4318
+                            },
+                            "uuid": "08ce1db6-1b38-4d63-9729-f50bba6f7a20"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin M3_BATN has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M3_BATN",
+                            "pos": {
+                                "x": 2.8702,
+                                "y": 1.1176
+                            },
+                            "uuid": "b24419ec-05e5-4f98-81ac-b3fe21dbb775"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Sheet pin M3_PHASE_B has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M3_PHASE_B",
+                            "pos": {
+                                "x": 2.8702,
+                                "y": 1.143
+                            },
+                            "uuid": "46f44f90-e089-4b44-b2cd-2c8626f922c1"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Sheet pin M3_CMD has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M3_CMD",
+                            "pos": {
+                                "x": 2.8702,
+                                "y": 1.1684
+                            },
+                            "uuid": "5eb4db38-f7d4-4d5f-a6cd-36d2c32db4a4"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M3_BATN'",
+                            "pos": {
+                                "x": 2.8956,
+                                "y": 1.1176
+                            },
+                            "uuid": "16541f1e-b0ea-4ee0-bccb-bda63f24eb72"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin ARM_SAFE has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin ARM_SAFE",
+                            "pos": {
+                                "x": 2.8702,
+                                "y": 1.1938
+                            },
+                            "uuid": "0669b992-0b6a-4574-ad58-cdf487e2b5c9"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M3_PHASE_B'",
+                            "pos": {
+                                "x": 2.8956,
+                                "y": 1.143
+                            },
+                            "uuid": "74d42950-8eb5-4d31-9112-7b2ea8e82938"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin 3V3 has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin 3V3",
+                            "pos": {
+                                "x": 2.8702,
+                                "y": 1.2192
+                            },
+                            "uuid": "467e9bac-10ec-4d8a-8105-75b1c15dcfba"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M3_CMD'",
+                            "pos": {
+                                "x": 2.8956,
+                                "y": 1.1684
+                            },
+                            "uuid": "3ee09952-82c6-4810-9544-7c87a798e509"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'ARM_SAFE'",
+                            "pos": {
+                                "x": 2.8956,
+                                "y": 1.1938
+                            },
+                            "uuid": "0f251674-e8cf-49ef-9020-b4000055d140"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin M6_BATN has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M6_BATN",
+                            "pos": {
+                                "x": 2.8702,
+                                "y": 1.6256
+                            },
+                            "uuid": "6f790e44-1b8e-4350-8668-c7d616b2ed00"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Sheet pin M6_PHASE_B has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M6_PHASE_B",
+                            "pos": {
+                                "x": 2.8702,
+                                "y": 1.651
+                            },
+                            "uuid": "f4b9834e-8cff-4294-84e3-283b5f4dca01"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M6_BATN'",
+                            "pos": {
+                                "x": 2.8956,
+                                "y": 1.6256
+                            },
+                            "uuid": "59866d3d-648b-4801-bac5-7c53fd620b83"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin M6_CMD has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin M6_CMD",
+                            "pos": {
+                                "x": 2.8702,
+                                "y": 1.6764
+                            },
+                            "uuid": "4ae04bf8-a879-445f-a369-f0c5b33b6522"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M6_PHASE_B'",
+                            "pos": {
+                                "x": 2.8956,
+                                "y": 1.651
+                            },
+                            "uuid": "058cf583-8353-48e2-93dc-55d36c9ecc53"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin ARM_SAFE has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin ARM_SAFE",
+                            "pos": {
+                                "x": 2.8702,
+                                "y": 1.7018
+                            },
+                            "uuid": "67bd0f4c-bba0-4873-be87-41dd41ecbb6f"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M6_CMD'",
+                            "pos": {
+                                "x": 2.8956,
+                                "y": 1.6764
+                            },
+                            "uuid": "e58c4a76-54f1-4ffa-8ba0-ca208c6bacd6"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Sheet pin 3V3 has no matching hierarchical label inside the sheet",
+                    "items": [
+                        {
+                            "description": "Hierarchical Sheet Pin 3V3",
+                            "pos": {
+                                "x": 2.8702,
+                                "y": 1.7272
+                            },
+                            "uuid": "f201345a-ac07-4dd5-8f3a-2200bcdf8ec5"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "hier_label_mismatch"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'ARM_SAFE'",
+                            "pos": {
+                                "x": 2.8956,
+                                "y": 1.7018
+                            },
+                            "uuid": "ecbafc20-8044-4bb0-a38c-86f8275926d9"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Connector_Generic'",
+                    "items": [
+                        {
+                            "description": "Symbol J701 [Conn_01x02]",
+                            "pos": {
+                                "x": 0.3556,
+                                "y": 0.5969
+                            },
+                            "uuid": "61e50454-c403-4d0f-99d1-db77bcfb9c72"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol R701 [R]",
+                            "pos": {
+                                "x": 0.5842,
+                                "y": 0.9017
+                            },
+                            "uuid": "7a0922e3-3d60-4c8e-a523-7975c6934db4"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Regulator_Switching'",
+                    "items": [
+                        {
+                            "description": "Symbol U701 [LM5164DDA]",
+                            "pos": {
+                                "x": 0.9144,
+                                "y": 0.6858
+                            },
+                            "uuid": "4b4a16d1-5514-4c3d-9c42-fd0e81635feb"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C701 [C]",
+                            "pos": {
+                                "x": 0.5842,
+                                "y": 1.0541
+                            },
+                            "uuid": "8fa9f092-534b-42fc-8dab-cfd831828774"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C703 [C]",
+                            "pos": {
+                                "x": 1.1557,
+                                "y": 0.5207
+                            },
+                            "uuid": "8cfd2bd6-8d3c-49fd-b99c-7b6a2abfbccb"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol D701 [D_TVS]",
+                            "pos": {
+                                "x": 0.4826,
+                                "y": 1.1938
+                            },
+                            "uuid": "cbad986d-491c-4cd2-a89f-cdf2c4d80556"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C702 [C]",
+                            "pos": {
+                                "x": 0.7493,
+                                "y": 1.0541
+                            },
+                            "uuid": "9e14e21c-debe-4b23-91d2-e9ed6f2e7575"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol R705 [R]",
+                            "pos": {
+                                "x": 1.0541,
+                                "y": 0.9144
+                            },
+                            "uuid": "da91aead-2e0f-4740-8bdd-521f1859affc"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol L701 [L]",
+                            "pos": {
+                                "x": 1.1938,
+                                "y": 0.7239
+                            },
+                            "uuid": "abcf504a-5553-4d8a-bce0-b0134f176375"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'power'",
+                    "items": [
+                        {
+                            "description": "Symbol #FLG701 [PWR_FLAG]",
+                            "pos": {
+                                "x": 0.3556,
+                                "y": 1.397
+                            },
+                            "uuid": "f98f4dd8-063e-459a-8cba-305e722803f3"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'power'",
+                    "items": [
+                        {
+                            "description": "Symbol #FLG702 [PWR_FLAG]",
+                            "pos": {
+                                "x": 0.5461,
+                                "y": 1.397
+                            },
+                            "uuid": "d2bee2f1-4b92-4966-8ba7-7ca04d49d860"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C708 [C]",
+                            "pos": {
+                                "x": 1.2192,
+                                "y": 0.9144
+                            },
+                            "uuid": "0251a76b-b682-432e-87d8-a982a0d43afc"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol R702 [R]",
+                            "pos": {
+                                "x": 1.4224,
+                                "y": 0.5969
+                            },
+                            "uuid": "59b9d826-146c-48d3-bd8a-0365be40605a"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'power'",
+                    "items": [
+                        {
+                            "description": "Symbol #FLG703 [PWR_FLAG]",
+                            "pos": {
+                                "x": 0.7493,
+                                "y": 1.397
+                            },
+                            "uuid": "2794ee2b-1385-47df-9e7e-2c23fb546df8"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C704 [C]",
+                            "pos": {
+                                "x": 1.4224,
+                                "y": 0.8255
+                            },
+                            "uuid": "cec3e8ea-747e-40e7-a8d0-51d743b82db5"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C709 [C]",
+                            "pos": {
+                                "x": 1.3843,
+                                "y": 0.9144
+                            },
+                            "uuid": "d8916841-5586-4bd9-b6d0-4476476b2949"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol R703 [R]",
+                            "pos": {
+                                "x": 1.5748,
+                                "y": 0.5969
+                            },
+                            "uuid": "ba2a93cc-bd0f-4d84-bdc6-db4d8a0f0d10"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'power'",
+                    "items": [
+                        {
+                            "description": "Symbol #FLG704 [PWR_FLAG]",
+                            "pos": {
+                                "x": 0.9525,
+                                "y": 1.397
+                            },
+                            "uuid": "602d4d49-3a92-482c-b191-becc1d848e07"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C705 [C]",
+                            "pos": {
+                                "x": 1.5748,
+                                "y": 0.8255
+                            },
+                            "uuid": "a066df10-469e-4118-9633-fbec517b46ff"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'power'",
+                    "items": [
+                        {
+                            "description": "Symbol #FLG705 [PWR_FLAG]",
+                            "pos": {
+                                "x": 1.1557,
+                                "y": 1.397
+                            },
+                            "uuid": "ab4e0a0d-56b2-4c42-81d5-5465bbe5edfd"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'power'",
+                    "items": [
+                        {
+                            "description": "Symbol #FLG706 [PWR_FLAG]",
+                            "pos": {
+                                "x": 1.3462,
+                                "y": 1.397
+                            },
+                            "uuid": "363bca22-194a-406b-b740-a0d2e5e5ab0f"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Regulator_Switching'",
+                    "items": [
+                        {
+                            "description": "Symbol U703 [LM5164DDA]",
+                            "pos": {
+                                "x": 0.9144,
+                                "y": 1.7526
+                            },
+                            "uuid": "c4332499-6047-4dbd-bd79-a4fb280f0b24"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol R710 [R]",
+                            "pos": {
+                                "x": 0.5842,
+                                "y": 1.905
+                            },
+                            "uuid": "ed3fdd04-2fe1-4c77-b628-da1fbd58ba49"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C712 [C]",
+                            "pos": {
+                                "x": 1.1557,
+                                "y": 1.6256
+                            },
+                            "uuid": "7559b9d9-5e4e-40c0-aaf1-457e3f3c366a"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C710 [C]",
+                            "pos": {
+                                "x": 0.5842,
+                                "y": 2.0447
+                            },
+                            "uuid": "cf4cc632-b770-48e6-8239-b7cbda0a10b6"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol L702 [L]",
+                            "pos": {
+                                "x": 1.1938,
+                                "y": 1.7653
+                            },
+                            "uuid": "30082b52-78ac-4b39-9c41-1139e4ef00b4"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C711 [C]",
+                            "pos": {
+                                "x": 0.7493,
+                                "y": 2.0447
+                            },
+                            "uuid": "f4b1992d-96b8-4700-acab-1747d8ace3c1"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol R711 [R]",
+                            "pos": {
+                                "x": 1.4224,
+                                "y": 1.651
+                            },
+                            "uuid": "87446546-75ce-454b-8300-fead276f475b"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol R704 [R]",
+                            "pos": {
+                                "x": 1.9558,
+                                "y": 1.0541
+                            },
+                            "uuid": "4cbb9eb4-e24a-46bc-bcbc-c33e1158b67b"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol R713 [R]",
+                            "pos": {
+                                "x": 1.0541,
+                                "y": 1.9685
+                            },
+                            "uuid": "58735db4-39b8-4ec4-92b7-457c17041925"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol R712 [R]",
+                            "pos": {
+                                "x": 1.5748,
+                                "y": 1.651
+                            },
+                            "uuid": "11459773-bcfd-48fa-817b-1cae629482ed"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C715 [C]",
+                            "pos": {
+                                "x": 1.2192,
+                                "y": 1.9685
+                            },
+                            "uuid": "7c167762-026c-4105-9b1c-bf2b31836cac"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C713 [C]",
+                            "pos": {
+                                "x": 1.4224,
+                                "y": 1.8796
+                            },
+                            "uuid": "9dddf8cc-c2ca-4a38-bf53-048241da9e4c"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C706 [C]",
+                            "pos": {
+                                "x": 2.2987,
+                                "y": 0.5842
+                            },
+                            "uuid": "2e3c3cd8-a946-4465-8ed5-5c6ab1c6151e"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C716 [C]",
+                            "pos": {
+                                "x": 1.3843,
+                                "y": 1.9685
+                            },
+                            "uuid": "6d9326c0-aa08-417b-a6f4-da180575e74b"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C707 [C]",
+                            "pos": {
+                                "x": 2.2987,
+                                "y": 0.7239
+                            },
+                            "uuid": "9c3d2f46-990f-4095-ac7c-d571b247474d"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C714 [C]",
+                            "pos": {
+                                "x": 1.5748,
+                                "y": 1.8796
+                            },
+                            "uuid": "a7306724-cf0d-4f66-9432-f7a42b1b6736"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol F701 [Fuse]",
+                            "pos": {
+                                "x": 1.8796,
+                                "y": 1.7653
+                            },
+                            "uuid": "fbc17aa3-2fc3-44b7-91b9-91d956f33741"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Connector_Generic'",
+                    "items": [
+                        {
+                            "description": "Symbol J702 [Conn_01x04]",
+                            "pos": {
+                                "x": 2.2987,
+                                "y": 1.7653
+                            },
+                            "uuid": "401f6c9b-42d6-4cdb-8985-7a14b2d1ad36"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Hierarchical Label 'ARM_SAFE'",
+                            "pos": {
+                                "x": 0.2032,
+                                "y": 0.3302
+                            },
+                            "uuid": "3909c972-cc78-4c96-a892-9c730a93212e"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Hierarchical Label 'M1_CMD'",
+                            "pos": {
+                                "x": 0.2032,
+                                "y": 0.3556
+                            },
+                            "uuid": "0e58a182-5732-45ee-ac2d-6287dfa89257"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'ARM_SAFE'",
+                            "pos": {
+                                "x": 0.254,
+                                "y": 0.3302
+                            },
+                            "uuid": "116cf6dd-b7d8-47b1-b54b-8e07640e4a20"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Hierarchical Label 'M1_STATUS'",
+                            "pos": {
+                                "x": 0.2032,
+                                "y": 0.381
+                            },
+                            "uuid": "77db51a3-1aff-4148-bf8c-12be00b09945"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M1_CMD'",
+                            "pos": {
+                                "x": 0.254,
+                                "y": 0.3556
+                            },
+                            "uuid": "469e87ac-8d30-4a97-8a0e-51edf29e57ac"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Hierarchical Label 'M2_CMD'",
+                            "pos": {
+                                "x": 0.2032,
+                                "y": 0.4064
+                            },
+                            "uuid": "a75f94ba-0dd2-4613-9a9d-f5492264f60e"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M1_STATUS'",
+                            "pos": {
+                                "x": 0.254,
+                                "y": 0.381
+                            },
+                            "uuid": "9ce34ed8-41da-4aa2-a40a-37a79172b149"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Hierarchical Label 'M2_STATUS'",
+                            "pos": {
+                                "x": 0.2032,
+                                "y": 0.4318
+                            },
+                            "uuid": "44ca4514-35f3-4500-842e-46b4efb7aa10"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M2_CMD'",
+                            "pos": {
+                                "x": 0.254,
+                                "y": 0.4064
+                            },
+                            "uuid": "0c3cba12-5bd1-4193-b471-7686bd96a9c0"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Hierarchical Label 'M3_CMD'",
+                            "pos": {
+                                "x": 0.2032,
+                                "y": 0.4572
+                            },
+                            "uuid": "fff07b42-eda2-4429-b70d-a25221278a65"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M2_STATUS'",
+                            "pos": {
+                                "x": 0.254,
+                                "y": 0.4318
+                            },
+                            "uuid": "094bda52-5d35-41e7-b32e-2ff2a7694c37"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M3_CMD'",
+                            "pos": {
+                                "x": 0.254,
+                                "y": 0.4572
+                            },
+                            "uuid": "2d61c6d6-be99-49e3-987d-19a320760f3a"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Hierarchical Label 'M3_STATUS'",
+                            "pos": {
+                                "x": 0.2032,
+                                "y": 0.4826
+                            },
+                            "uuid": "1d0ede58-c941-4afc-810f-46c206165321"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M3_STATUS'",
+                            "pos": {
+                                "x": 0.254,
+                                "y": 0.4826
+                            },
+                            "uuid": "ff0eb614-124d-492a-a705-1662e2ea3658"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Hierarchical Label 'M4_CMD'",
+                            "pos": {
+                                "x": 0.2032,
+                                "y": 0.508
+                            },
+                            "uuid": "9a0bc24d-a353-4c97-b96e-763ac982447f"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M4_CMD'",
+                            "pos": {
+                                "x": 0.254,
+                                "y": 0.508
+                            },
+                            "uuid": "305b6f9f-740e-4812-ad19-bffd9036bfb2"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Hierarchical Label 'M4_STATUS'",
+                            "pos": {
+                                "x": 0.2032,
+                                "y": 0.5334
+                            },
+                            "uuid": "779a2ea3-044f-4ea4-8463-eb68a6266fee"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M4_STATUS'",
+                            "pos": {
+                                "x": 0.254,
+                                "y": 0.5334
+                            },
+                            "uuid": "6902b0a5-5729-4226-8fd5-307eb59409a2"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Hierarchical Label 'M5_CMD'",
+                            "pos": {
+                                "x": 0.2032,
+                                "y": 0.5588
+                            },
+                            "uuid": "878e42c9-c19f-481b-87d0-d2efde3a94df"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M5_CMD'",
+                            "pos": {
+                                "x": 0.254,
+                                "y": 0.5588
+                            },
+                            "uuid": "99684183-9947-445d-a399-a8bf36da5406"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Hierarchical Label 'M5_STATUS'",
+                            "pos": {
+                                "x": 0.2032,
+                                "y": 0.5842
+                            },
+                            "uuid": "05add531-dde4-4e7c-98f5-984f0663d5ed"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M5_STATUS'",
+                            "pos": {
+                                "x": 0.254,
+                                "y": 0.5842
+                            },
+                            "uuid": "5556ac95-1a4f-438f-9af0-5a03d2456da2"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Hierarchical Label 'M6_CMD'",
+                            "pos": {
+                                "x": 0.2032,
+                                "y": 0.6096
+                            },
+                            "uuid": "53ba82bd-5e63-403f-9c08-84ecf0e1763a"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M6_CMD'",
+                            "pos": {
+                                "x": 0.254,
+                                "y": 0.6096
+                            },
+                            "uuid": "dbe541b1-9398-445f-bfbc-ac1716daac1d"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Hierarchical Label 'M6_STATUS'",
+                            "pos": {
+                                "x": 0.2032,
+                                "y": 0.635
+                            },
+                            "uuid": "9edacdba-95cb-40a9-a7ec-93e9499115d9"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M6_STATUS'",
+                            "pos": {
+                                "x": 0.254,
+                                "y": 0.635
+                            },
+                            "uuid": "6606d9e1-3fd4-46c3-a5e0-ea51eef8ae80"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M1_CMD'",
+                            "pos": {
+                                "x": 1.1303,
+                                "y": 0.5461
+                            },
+                            "uuid": "b51fb8a0-46ff-4996-9779-d1b0a298e14c"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M2_CMD'",
+                            "pos": {
+                                "x": 1.1303,
+                                "y": 0.5715
+                            },
+                            "uuid": "45d720a1-631e-4915-942b-e99485da2048"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M3_CMD'",
+                            "pos": {
+                                "x": 1.1303,
+                                "y": 0.5969
+                            },
+                            "uuid": "aee8e132-5977-4aa0-8f31-8a6d53bfcc78"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M4_CMD'",
+                            "pos": {
+                                "x": 1.1303,
+                                "y": 0.6223
+                            },
+                            "uuid": "78e3d8f1-d8e2-4ad0-941b-12ca35dea795"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M5_CMD'",
+                            "pos": {
+                                "x": 1.1303,
+                                "y": 0.6477
+                            },
+                            "uuid": "c817c816-742d-4501-8de4-79d352d17c53"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M6_CMD'",
+                            "pos": {
+                                "x": 1.1303,
+                                "y": 0.6731
+                            },
+                            "uuid": "db82f57c-87d5-4c03-b37d-3baced7fd825"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M1_STATUS'",
+                            "pos": {
+                                "x": 1.1303,
+                                "y": 0.6985
+                            },
+                            "uuid": "d57cb227-98d4-4a58-aadb-86d751748e8e"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M2_STATUS'",
+                            "pos": {
+                                "x": 1.1303,
+                                "y": 0.7239
+                            },
+                            "uuid": "2420c563-eaeb-45e0-80bf-faf69ee032f9"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M3_STATUS'",
+                            "pos": {
+                                "x": 1.1303,
+                                "y": 0.7493
+                            },
+                            "uuid": "c9c22fd6-dd10-45ed-a4f8-f351959e6799"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M4_STATUS'",
+                            "pos": {
+                                "x": 1.1303,
+                                "y": 0.7747
+                            },
+                            "uuid": "e93f78f2-e74f-4b1f-b93d-e74b487e792b"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M5_STATUS'",
+                            "pos": {
+                                "x": 1.1303,
+                                "y": 0.8001
+                            },
+                            "uuid": "75d48f9c-411a-473a-a343-97ec9c176f89"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'M6_STATUS'",
+                            "pos": {
+                                "x": 1.1303,
+                                "y": 0.8255
+                            },
+                            "uuid": "00dbc791-4bf8-4295-b9ec-1195046c07c5"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol L201 [L]",
+                            "pos": {
+                                "x": 1.5494,
+                                "y": 0.4191
+                            },
+                            "uuid": "8b4f8306-683d-4e39-8fbc-88ba72f68c65"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol R201 [R]",
+                            "pos": {
+                                "x": 1.5494,
+                                "y": 0.5207
+                            },
+                            "uuid": "e427adc8-0248-45a6-b3f4-45969b02641d"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol R202 [R]",
+                            "pos": {
+                                "x": 1.4986,
+                                "y": 0.7493
+                            },
+                            "uuid": "e53420dc-29f3-48f2-a52f-f3d99b5dba22"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Interface_CAN_LIN'",
+                    "items": [
+                        {
+                            "description": "Symbol U207 [MCP2518FD-xQBB]",
+                            "pos": {
+                                "x": 0.9525,
+                                "y": 1.4986
+                            },
+                            "uuid": "f0bf807b-2261-4472-877a-b103fe7a30ba"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C201 [C]",
+                            "pos": {
+                                "x": 1.7526,
+                                "y": 0.3937
+                            },
+                            "uuid": "c17d6281-fc50-4245-906b-5473c965b8dc"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C202 [C]",
+                            "pos": {
+                                "x": 1.7526,
+                                "y": 0.5207
+                            },
+                            "uuid": "3dc48572-295f-4702-834a-3e916f93cc53"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Connector_Generic'",
+                    "items": [
+                        {
+                            "description": "Symbol J201 [Conn_01x03]",
+                            "pos": {
+                                "x": 0.5969,
+                                "y": 1.7526
+                            },
+                            "uuid": "16c8a79c-fc99-40e0-accf-a0a92bda2e86"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol Y201 [Crystal]",
+                            "pos": {
+                                "x": 1.6002,
+                                "y": 0.9525
+                            },
+                            "uuid": "87ec4c77-dd9f-4cd7-b434-b532f4246e6e"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C203 [C]",
+                            "pos": {
+                                "x": 1.7526,
+                                "y": 0.635
+                            },
+                            "uuid": "e0de4f35-96f8-4a2f-8379-84aea7acc0b0"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C204 [C]",
+                            "pos": {
+                                "x": 1.7526,
+                                "y": 0.762
+                            },
+                            "uuid": "757f9fe0-0e42-44fd-aa76-6efea17cf78f"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol Y202 [Crystal]",
+                            "pos": {
+                                "x": 1.3462,
+                                "y": 1.3843
+                            },
+                            "uuid": "ea2ff184-92d4-44e3-85f1-90d9416143d2"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C205 [C]",
+                            "pos": {
+                                "x": 1.9558,
+                                "y": 0.3937
+                            },
+                            "uuid": "f49605dd-36c8-4f0e-9be4-d2e893d36457"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol R203 [R]",
+                            "pos": {
+                                "x": 0.5842,
+                                "y": 1.9177
+                            },
+                            "uuid": "3aed7308-9a91-4bc6-ad0b-5dc514dd473b"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C240 [C]",
+                            "pos": {
+                                "x": 1.524,
+                                "y": 1.3208
+                            },
+                            "uuid": "f0421ce5-2d4c-4452-b9c7-a5d745e81637"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C209 [C]",
+                            "pos": {
+                                "x": 1.9558,
+                                "y": 0.4953
+                            },
+                            "uuid": "a2c5919e-b082-445d-a9e5-782b77b4dbec"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C215 [C]",
+                            "pos": {
+                                "x": 1.9558,
+                                "y": 0.6223
+                            },
+                            "uuid": "1fbd85c4-c7b2-4919-a884-711ac35943e8"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C242 [C]",
+                            "pos": {
+                                "x": 1.1303,
+                                "y": 1.7145
+                            },
+                            "uuid": "eb4c9688-59ba-425a-a5e3-8d685282da1f"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C213 [C]",
+                            "pos": {
+                                "x": 1.8542,
+                                "y": 0.9017
+                            },
+                            "uuid": "730f3c6f-45c8-4ee9-8e9c-f96a5092751c"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'power'",
+                    "items": [
+                        {
+                            "description": "Symbol #FLG201 [PWR_FLAG]",
+                            "pos": {
+                                "x": 2.0447,
+                                "y": 0.4191
+                            },
+                            "uuid": "9dc86a10-d436-493e-8500-f693e58f0f28"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol D201 [LED]",
+                            "pos": {
+                                "x": 0.8255,
+                                "y": 1.9177
+                            },
+                            "uuid": "72d0048f-1a57-426d-9505-7cec88ee3da1"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C241 [C]",
+                            "pos": {
+                                "x": 1.524,
+                                "y": 1.4351
+                            },
+                            "uuid": "81b71a5d-bb2f-499a-bcfe-7fea29639d2a"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C214 [C]",
+                            "pos": {
+                                "x": 1.8542,
+                                "y": 1.0033
+                            },
+                            "uuid": "7abf2d0b-a5fe-4366-87fc-4926da0f4dba"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C206 [C]",
+                            "pos": {
+                                "x": 2.0955,
+                                "y": 0.3937
+                            },
+                            "uuid": "6bf83210-345d-4c69-b324-f5b4d8e906c1"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol R240 [R]",
+                            "pos": {
+                                "x": 1.2954,
+                                "y": 1.7145
+                            },
+                            "uuid": "7800541e-bcf1-4768-a6e8-705d5a710b4e"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C210 [C]",
+                            "pos": {
+                                "x": 2.0955,
+                                "y": 0.4953
+                            },
+                            "uuid": "98ece67b-43b0-47c0-8e50-271c5eb30bd3"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C216 [C]",
+                            "pos": {
+                                "x": 2.0955,
+                                "y": 0.6223
+                            },
+                            "uuid": "8c213d6d-c1fc-4f9e-87da-ffd3a1c901c0"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'power'",
+                    "items": [
+                        {
+                            "description": "Symbol #FLG202 [PWR_FLAG]",
+                            "pos": {
+                                "x": 2.1971,
+                                "y": 0.4191
+                            },
+                            "uuid": "8a4d9e47-8fe9-4792-93e6-1304da910e1d"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol R241 [R]",
+                            "pos": {
+                                "x": 1.4478,
+                                "y": 1.7145
+                            },
+                            "uuid": "3fabfd3c-fa0a-4172-a39c-36ae06e4f292"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C207 [C]",
+                            "pos": {
+                                "x": 2.2479,
+                                "y": 0.3937
+                            },
+                            "uuid": "af7d1389-6646-4c59-a989-b0b8f73b09fc"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C211 [C]",
+                            "pos": {
+                                "x": 2.2479,
+                                "y": 0.4953
+                            },
+                            "uuid": "3cfb4f42-045a-4b4f-9706-dd4d72dd76b4"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C217 [C]",
+                            "pos": {
+                                "x": 2.2479,
+                                "y": 0.6223
+                            },
+                            "uuid": "8441ef46-4167-4a5e-9a90-ebd3364b9eee"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'power'",
+                    "items": [
+                        {
+                            "description": "Symbol #FLG203 [PWR_FLAG]",
+                            "pos": {
+                                "x": 2.3495,
+                                "y": 0.4191
+                            },
+                            "uuid": "eabc28a6-7631-467b-966a-c9aa2d16e898"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol R242 [R]",
+                            "pos": {
+                                "x": 1.9939,
+                                "y": 1.3208
+                            },
+                            "uuid": "06444ed1-326b-4a49-b761-4ab3a80a9b92"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C208 [C]",
+                            "pos": {
+                                "x": 2.4003,
+                                "y": 0.3937
+                            },
+                            "uuid": "b3d0c0e5-77ab-43b5-be3e-b37c08d52f88"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C212 [C]",
+                            "pos": {
+                                "x": 2.4003,
+                                "y": 0.4953
+                            },
+                            "uuid": "af6edb9c-3ef3-47bb-9296-d4eb432ba7ec"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C218 [C]",
+                            "pos": {
+                                "x": 2.4003,
+                                "y": 0.6223
+                            },
+                            "uuid": "b4fc11f0-1b02-4f5e-97f9-fdefb39f1872"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol FB201 [FerriteBead]",
+                            "pos": {
+                                "x": 2.5019,
+                                "y": 0.5207
+                            },
+                            "uuid": "b0a6f922-4efe-4544-8ad8-2e12b60b4e8a"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C230 [C]",
+                            "pos": {
+                                "x": 2.4257,
+                                "y": 0.8509
+                            },
+                            "uuid": "2bbcde98-bda7-4bfd-b487-37a4109b0d39"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C243 [C]",
+                            "pos": {
+                                "x": 1.9304,
+                                "y": 1.7145
+                            },
+                            "uuid": "35710cf4-f4e2-4e7f-b003-be77aaec6fb3"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C231 [C]",
+                            "pos": {
+                                "x": 2.4257,
+                                "y": 0.9525
+                            },
+                            "uuid": "019b1b8e-e3cf-4591-8a42-31e879493449"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "Footprint 'L_CommonModeChoke_Coilank_ACM4532' not found in library 'Inductor_SMD'.",
+                    "items": [
+                        {
+                            "description": "Symbol FL201 [L_Coupled]",
+                            "pos": {
+                                "x": 2.1463,
+                                "y": 1.4986
+                            },
+                            "uuid": "b4dca8f9-d150-4eb1-bb62-9fd27a7570d9"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "footprint_link_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol FL201 [L_Coupled]",
+                            "pos": {
+                                "x": 2.1463,
+                                "y": 1.4986
+                            },
+                            "uuid": "b4dca8f9-d150-4eb1-bb62-9fd27a7570d9"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C219 [C]",
+                            "pos": {
+                                "x": 2.5527,
+                                "y": 0.6223
+                            },
+                            "uuid": "ba613a2c-e5f4-43d0-ad93-c993a4615663"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol R231 [R]",
+                            "pos": {
+                                "x": 2.4257,
+                                "y": 1.1557
+                            },
+                            "uuid": "ac6d480d-288d-4544-a006-3a4374957ca3"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "Label not connected to anything",
+                    "items": [
+                        {
+                            "description": "Label 'ARM_SAFE'",
+                            "pos": {
+                                "x": 2.3749,
+                                "y": 1.3081
+                            },
+                            "uuid": "3584dcb0-57a1-4cb4-9285-20389cc2993a"
+                        }
+                    ],
+                    "severity": "error",
+                    "type": "label_dangling"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C232 [C]",
+                            "pos": {
+                                "x": 2.5781,
+                                "y": 0.9525
+                            },
+                            "uuid": "6100a8be-91c6-4645-af78-4e83310194a7"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                },
+                {
+                    "description": "The current configuration does not include the symbol library 'Device'",
+                    "items": [
+                        {
+                            "description": "Symbol C233 [C]",
+                            "pos": {
+                                "x": 2.4511,
+                                "y": 1.3462
+                            },
+                            "uuid": "4f0ea265-14d0-4d0a-b4d2-16c4f9774b91"
+                        }
+                    ],
+                    "severity": "warning",
+                    "type": "lib_symbol_issues"
+                }
+            ]
+        },
+        {
+            "path": "/Auxiliary power/",
+            "uuid_path": "/94616530-9a4d-4eb4-ab8e-589eb49d9ab4/15ca008e-0b7b-45bb-9314-b090dc3185a5",
+            "violations": []
+        },
+        {
+            "path": "/Motor 1 power cell/",
+            "uuid_path": "/94616530-9a4d-4eb4-ab8e-589eb49d9ab4/e82dce8a-2452-4763-91c2-b1519abe4308",
+            "violations": []
+        },
+        {
+            "path": "/Motor 4 power cell/",
+            "uuid_path": "/94616530-9a4d-4eb4-ab8e-589eb49d9ab4/d180c382-33ad-4c62-92e7-7341170b1915",
+            "violations": []
+        },
+        {
+            "path": "/Controller and ADC/",
+            "uuid_path": "/94616530-9a4d-4eb4-ab8e-589eb49d9ab4/a7a76b69-d225-4d48-b33e-8192230fb473",
+            "violations": []
+        },
+        {
+            "path": "/Motor 2 power cell/",
+            "uuid_path": "/94616530-9a4d-4eb4-ab8e-589eb49d9ab4/39e96923-43b8-46dd-bbe9-c07856ddbab5",
+            "violations": []
+        },
+        {
+            "path": "/Motor 5 power cell/",
+            "uuid_path": "/94616530-9a4d-4eb4-ab8e-589eb49d9ab4/064638bd-da90-4a50-adb9-213f2f54b19f",
+            "violations": []
+        },
+        {
+            "path": "/Motor 3 power cell/",
+            "uuid_path": "/94616530-9a4d-4eb4-ab8e-589eb49d9ab4/029fe393-9679-49f2-aa1b-8276446143a6",
+            "violations": []
+        },
+        {
+            "path": "/Motor 6 power cell/",
+            "uuid_path": "/94616530-9a4d-4eb4-ab8e-589eb49d9ab4/32a64e90-3bf4-45bf-9748-439bba25462e",
+            "violations": []
+        }
+    ],
+    "source": "esc_rev_b.kicad_sch"
+}

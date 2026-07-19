@@ -13,6 +13,7 @@ import argparse
 from dataclasses import dataclass
 from pathlib import Path
 import json
+import re
 import shutil
 
 import kicad_sch_api as ksa
@@ -128,10 +129,36 @@ LG77L_PINS = (
     ("42", "GND"), ("43", "GND"),
 )
 
-_rp2354_library_info = ksa.get_symbol_info("MCU_RaspberryPi:RP2354B")
-if _rp2354_library_info is None:
-    raise RuntimeError("Installed KiCad library does not contain MCU_RaspberryPi:RP2354B")
-RP2354B_PINS = tuple((pin.number, pin.name) for pin in _rp2354_library_info.pins)
+def load_rp2354_pins() -> tuple[tuple[str, str], ...]:
+    """Load RP2354B pins from KiCad or the committed audited symbol."""
+    library_info = ksa.get_symbol_info("MCU_RaspberryPi:RP2354B")
+    if library_info is not None:
+        return tuple((pin.number, pin.name) for pin in library_info.pins)
+    pin_pattern = re.compile(
+        r"\(pin\s+.*?\(name\s+\"([^\"]+)\".*?"
+        r"\(number\s+\"([^\"]+)\"",
+        re.DOTALL,
+    )
+    for path in (MAIN_DIR / "revb.kicad_sym", ESC_DIR / "revb.kicad_sym"):
+        if not path.exists():
+            continue
+        source = path.read_text(encoding="utf-8")
+        start = source.find('(symbol "RP2354B"')
+        if start < 0:
+            continue
+        end = source.find('\n  (symbol "', start + 1)
+        block = source[start:] if end < 0 else source[start:end]
+        matches = pin_pattern.findall(block)
+        pins = tuple((number, name) for name, number in matches)
+        if len(pins) == 81:
+            return pins
+    raise RuntimeError(
+        "RP2354B is absent from the installed KiCad library and the "
+        "committed Rev-B fallback symbol could not be parsed"
+    )
+
+
+RP2354B_PINS = load_rp2354_pins()
 
 
 SYMBOLS = (
