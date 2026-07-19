@@ -1,5 +1,5 @@
 {
-  "generator": "tools\\hardware\\generate_rev_b_schematics.py",
+  "generator": "tools/hardware/generate_rev_b_schematics.py",
   "esc_root": "hardware/esc/rev_b/esc_rev_b.kicad_sch",
   "main_root": "hardware/main/rev_b/main_rev_b.kicad_sch",
   "note": "Generated Rev-B projects are distinct and do not overwrite original designs."

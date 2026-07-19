@@ -1,7 +1,7 @@
 {
-  "status": "FAIL",
-  "checks": 11,
-  "failures": 10,
+  "status": "PASS",
+  "checks": 239,
+  "failures": 0,
   "results": [
     {
       "name": "ESC source identity",
@@ -10,53 +10,1193 @@
     },
     {
       "name": "ESC population: STM32G431CBT6",
-      "status": "FAIL",
-      "detail": "expected=6, actual=0"
+      "status": "PASS",
+      "detail": "expected=6, actual=6"
     },
     {
       "name": "ESC population: DRV8353SRTAR",
-      "status": "FAIL",
-      "detail": "expected=6, actual=0"
+      "status": "PASS",
+      "detail": "expected=6, actual=6"
     },
     {
       "name": "ESC population: IPTC014N10NM5",
-      "status": "FAIL",
-      "detail": "expected=36, actual=0"
+      "status": "PASS",
+      "detail": "expected=36, actual=36"
     },
     {
       "name": "ESC population: 0.5m 1% 5W",
-      "status": "FAIL",
-      "detail": "expected=24, actual=0"
+      "status": "PASS",
+      "detail": "expected=24, actual=24"
     },
     {
       "name": "ESC population: INA296A2IDR",
-      "status": "FAIL",
-      "detail": "expected=6, actual=0"
+      "status": "PASS",
+      "detail": "expected=6, actual=6"
     },
     {
       "name": "ESC population: ISO6731FDWR",
-      "status": "FAIL",
-      "detail": "expected=6, actual=0"
+      "status": "PASS",
+      "detail": "expected=6, actual=6"
     },
     {
       "name": "ESC population: RFM-0505S",
-      "status": "FAIL",
-      "detail": "expected=6, actual=0"
+      "status": "PASS",
+      "detail": "expected=6, actual=6"
     },
     {
       "name": "ESC population: TPS70933DBVR",
-      "status": "FAIL",
-      "detail": "expected=6, actual=0"
+      "status": "PASS",
+      "detail": "expected=6, actual=6"
     },
     {
       "name": "ESC population: SM8S51A",
-      "status": "FAIL",
-      "detail": "expected=7, actual=1"
+      "status": "PASS",
+      "detail": "expected=7, actual=7"
     },
     {
-      "name": "audit execution",
-      "status": "FAIL",
-      "detail": "esc_rev_b_netlist.xml: missing component U1101"
+      "name": "M1: local controller/current/isolation population",
+      "status": "PASS",
+      "detail": "11 required parts present"
+    },
+    {
+      "name": "M1: phase A Kelvin plus",
+      "status": "PASS",
+      "detail": "/M1_SHA_P: missing=none"
+    },
+    {
+      "name": "M1: phase A Kelvin minus",
+      "status": "PASS",
+      "detail": "/M1_SHA_N: missing=none"
+    },
+    {
+      "name": "M1: phase A amplifier output",
+      "status": "PASS",
+      "detail": "/M1_CSA_A_RAW: missing=none"
+    },
+    {
+      "name": "M1: phase A filtered ADC",
+      "status": "PASS",
+      "detail": "/M1_CSA_A: missing=none"
+    },
+    {
+      "name": "M1: phase A high PWM",
+      "status": "PASS",
+      "detail": "/M1_PWM_AH: missing=none"
+    },
+    {
+      "name": "M1: phase A low PWM",
+      "status": "PASS",
+      "detail": "/M1_PWM_AL: missing=none"
+    },
+    {
+      "name": "M1: phase B Kelvin plus",
+      "status": "PASS",
+      "detail": "/M1_SHB_P: missing=none"
+    },
+    {
+      "name": "M1: phase B Kelvin minus",
+      "status": "PASS",
+      "detail": "/M1_SHB_N: missing=none"
+    },
+    {
+      "name": "M1: phase B amplifier output",
+      "status": "PASS",
+      "detail": "/M1_CSA_B_RAW: missing=none"
+    },
+    {
+      "name": "M1: phase B filtered ADC",
+      "status": "PASS",
+      "detail": "/M1_CSA_B: missing=none"
+    },
+    {
+      "name": "M1: phase B high PWM",
+      "status": "PASS",
+      "detail": "/M1_PWM_BH: missing=none"
+    },
+    {
+      "name": "M1: phase B low PWM",
+      "status": "PASS",
+      "detail": "/M1_PWM_BL: missing=none"
+    },
+    {
+      "name": "M1: phase C Kelvin plus",
+      "status": "PASS",
+      "detail": "/M1_SHC_P: missing=none"
+    },
+    {
+      "name": "M1: phase C Kelvin minus",
+      "status": "PASS",
+      "detail": "/M1_SHC_N: missing=none"
+    },
+    {
+      "name": "M1: phase C amplifier output",
+      "status": "PASS",
+      "detail": "/M1_CSA_C_RAW: missing=none"
+    },
+    {
+      "name": "M1: phase C filtered ADC",
+      "status": "PASS",
+      "detail": "/M1_CSA_C: missing=none"
+    },
+    {
+      "name": "M1: phase C high PWM",
+      "status": "PASS",
+      "detail": "/M1_PWM_CH: missing=none"
+    },
+    {
+      "name": "M1: phase C low PWM",
+      "status": "PASS",
+      "detail": "/M1_PWM_CL: missing=none"
+    },
+    {
+      "name": "M1: bus Kelvin plus",
+      "status": "PASS",
+      "detail": "/M1_BUS_SH_P: missing=none"
+    },
+    {
+      "name": "M1: bus Kelvin minus",
+      "status": "PASS",
+      "detail": "/M1_BUS_SH_N: missing=none"
+    },
+    {
+      "name": "M1: bus amplifier output",
+      "status": "PASS",
+      "detail": "/M1_BUS_CURRENT_RAW: missing=none"
+    },
+    {
+      "name": "M1: filtered bus-current ADC",
+      "status": "PASS",
+      "detail": "/M1_BUS_CURRENT: missing=none"
+    },
+    {
+      "name": "M1: INA296 ground, reserved pin, and REF1",
+      "status": "PASS",
+      "detail": "/M1_BATN: missing=none"
+    },
+    {
+      "name": "M1: INA296 REF2 and supply",
+      "status": "PASS",
+      "detail": "/M1_3V3A: missing=none"
+    },
+    {
+      "name": "M1: driver fault to TIM1 break",
+      "status": "PASS",
+      "detail": "/M1_DRV_nFAULT: missing=none"
+    },
+    {
+      "name": "M1: hardware-gated driver enable",
+      "status": "PASS",
+      "detail": "/M1_DRV_ENABLE: missing=none"
+    },
+    {
+      "name": "M1: divided isolated-LDO enable",
+      "status": "PASS",
+      "detail": "/M1_LDO_EN: missing=none"
+    },
+    {
+      "name": "M1: raw isolated rail reaches TPS709 IN, not EN",
+      "status": "PASS",
+      "detail": "/M1_5VI: missing=none"
+    },
+    {
+      "name": "M1: DRV8353 VREF uses quiet local 3.3 V",
+      "status": "PASS",
+      "detail": "/M1_3V3A: missing=none"
+    },
+    {
+      "name": "M1: no local power/control bond to DGND",
+      "status": "PASS",
+      "detail": "offenders=none"
+    },
+    {
+      "name": "M2: local controller/current/isolation population",
+      "status": "PASS",
+      "detail": "11 required parts present"
+    },
+    {
+      "name": "M2: phase A Kelvin plus",
+      "status": "PASS",
+      "detail": "/M2_SHA_P: missing=none"
+    },
+    {
+      "name": "M2: phase A Kelvin minus",
+      "status": "PASS",
+      "detail": "/M2_SHA_N: missing=none"
+    },
+    {
+      "name": "M2: phase A amplifier output",
+      "status": "PASS",
+      "detail": "/M2_CSA_A_RAW: missing=none"
+    },
+    {
+      "name": "M2: phase A filtered ADC",
+      "status": "PASS",
+      "detail": "/M2_CSA_A: missing=none"
+    },
+    {
+      "name": "M2: phase A high PWM",
+      "status": "PASS",
+      "detail": "/M2_PWM_AH: missing=none"
+    },
+    {
+      "name": "M2: phase A low PWM",
+      "status": "PASS",
+      "detail": "/M2_PWM_AL: missing=none"
+    },
+    {
+      "name": "M2: phase B Kelvin plus",
+      "status": "PASS",
+      "detail": "/M2_SHB_P: missing=none"
+    },
+    {
+      "name": "M2: phase B Kelvin minus",
+      "status": "PASS",
+      "detail": "/M2_SHB_N: missing=none"
+    },
+    {
+      "name": "M2: phase B amplifier output",
+      "status": "PASS",
+      "detail": "/M2_CSA_B_RAW: missing=none"
+    },
+    {
+      "name": "M2: phase B filtered ADC",
+      "status": "PASS",
+      "detail": "/M2_CSA_B: missing=none"
+    },
+    {
+      "name": "M2: phase B high PWM",
+      "status": "PASS",
+      "detail": "/M2_PWM_BH: missing=none"
+    },
+    {
+      "name": "M2: phase B low PWM",
+      "status": "PASS",
+      "detail": "/M2_PWM_BL: missing=none"
+    },
+    {
+      "name": "M2: phase C Kelvin plus",
+      "status": "PASS",
+      "detail": "/M2_SHC_P: missing=none"
+    },
+    {
+      "name": "M2: phase C Kelvin minus",
+      "status": "PASS",
+      "detail": "/M2_SHC_N: missing=none"
+    },
+    {
+      "name": "M2: phase C amplifier output",
+      "status": "PASS",
+      "detail": "/M2_CSA_C_RAW: missing=none"
+    },
+    {
+      "name": "M2: phase C filtered ADC",
+      "status": "PASS",
+      "detail": "/M2_CSA_C: missing=none"
+    },
+    {
+      "name": "M2: phase C high PWM",
+      "status": "PASS",
+      "detail": "/M2_PWM_CH: missing=none"
+    },
+    {
+      "name": "M2: phase C low PWM",
+      "status": "PASS",
+      "detail": "/M2_PWM_CL: missing=none"
+    },
+    {
+      "name": "M2: bus Kelvin plus",
+      "status": "PASS",
+      "detail": "/M2_BUS_SH_P: missing=none"
+    },
+    {
+      "name": "M2: bus Kelvin minus",
+      "status": "PASS",
+      "detail": "/M2_BUS_SH_N: missing=none"
+    },
+    {
+      "name": "M2: bus amplifier output",
+      "status": "PASS",
+      "detail": "/M2_BUS_CURRENT_RAW: missing=none"
+    },
+    {
+      "name": "M2: filtered bus-current ADC",
+      "status": "PASS",
+      "detail": "/M2_BUS_CURRENT: missing=none"
+    },
+    {
+      "name": "M2: INA296 ground, reserved pin, and REF1",
+      "status": "PASS",
+      "detail": "/M2_BATN: missing=none"
+    },
+    {
+      "name": "M2: INA296 REF2 and supply",
+      "status": "PASS",
+      "detail": "/M2_3V3A: missing=none"
+    },
+    {
+      "name": "M2: driver fault to TIM1 break",
+      "status": "PASS",
+      "detail": "/M2_DRV_nFAULT: missing=none"
+    },
+    {
+      "name": "M2: hardware-gated driver enable",
+      "status": "PASS",
+      "detail": "/M2_DRV_ENABLE: missing=none"
+    },
+    {
+      "name": "M2: divided isolated-LDO enable",
+      "status": "PASS",
+      "detail": "/M2_LDO_EN: missing=none"
+    },
+    {
+      "name": "M2: raw isolated rail reaches TPS709 IN, not EN",
+      "status": "PASS",
+      "detail": "/M2_5VI: missing=none"
+    },
+    {
+      "name": "M2: DRV8353 VREF uses quiet local 3.3 V",
+      "status": "PASS",
+      "detail": "/M2_3V3A: missing=none"
+    },
+    {
+      "name": "M2: no local power/control bond to DGND",
+      "status": "PASS",
+      "detail": "offenders=none"
+    },
+    {
+      "name": "M3: local controller/current/isolation population",
+      "status": "PASS",
+      "detail": "11 required parts present"
+    },
+    {
+      "name": "M3: phase A Kelvin plus",
+      "status": "PASS",
+      "detail": "/M3_SHA_P: missing=none"
+    },
+    {
+      "name": "M3: phase A Kelvin minus",
+      "status": "PASS",
+      "detail": "/M3_SHA_N: missing=none"
+    },
+    {
+      "name": "M3: phase A amplifier output",
+      "status": "PASS",
+      "detail": "/M3_CSA_A_RAW: missing=none"
+    },
+    {
+      "name": "M3: phase A filtered ADC",
+      "status": "PASS",
+      "detail": "/M3_CSA_A: missing=none"
+    },
+    {
+      "name": "M3: phase A high PWM",
+      "status": "PASS",
+      "detail": "/M3_PWM_AH: missing=none"
+    },
+    {
+      "name": "M3: phase A low PWM",
+      "status": "PASS",
+      "detail": "/M3_PWM_AL: missing=none"
+    },
+    {
+      "name": "M3: phase B Kelvin plus",
+      "status": "PASS",
+      "detail": "/M3_SHB_P: missing=none"
+    },
+    {
+      "name": "M3: phase B Kelvin minus",
+      "status": "PASS",
+      "detail": "/M3_SHB_N: missing=none"
+    },
+    {
+      "name": "M3: phase B amplifier output",
+      "status": "PASS",
+      "detail": "/M3_CSA_B_RAW: missing=none"
+    },
+    {
+      "name": "M3: phase B filtered ADC",
+      "status": "PASS",
+      "detail": "/M3_CSA_B: missing=none"
+    },
+    {
+      "name": "M3: phase B high PWM",
+      "status": "PASS",
+      "detail": "/M3_PWM_BH: missing=none"
+    },
+    {
+      "name": "M3: phase B low PWM",
+      "status": "PASS",
+      "detail": "/M3_PWM_BL: missing=none"
+    },
+    {
+      "name": "M3: phase C Kelvin plus",
+      "status": "PASS",
+      "detail": "/M3_SHC_P: missing=none"
+    },
+    {
+      "name": "M3: phase C Kelvin minus",
+      "status": "PASS",
+      "detail": "/M3_SHC_N: missing=none"
+    },
+    {
+      "name": "M3: phase C amplifier output",
+      "status": "PASS",
+      "detail": "/M3_CSA_C_RAW: missing=none"
+    },
+    {
+      "name": "M3: phase C filtered ADC",
+      "status": "PASS",
+      "detail": "/M3_CSA_C: missing=none"
+    },
+    {
+      "name": "M3: phase C high PWM",
+      "status": "PASS",
+      "detail": "/M3_PWM_CH: missing=none"
+    },
+    {
+      "name": "M3: phase C low PWM",
+      "status": "PASS",
+      "detail": "/M3_PWM_CL: missing=none"
+    },
+    {
+      "name": "M3: bus Kelvin plus",
+      "status": "PASS",
+      "detail": "/M3_BUS_SH_P: missing=none"
+    },
+    {
+      "name": "M3: bus Kelvin minus",
+      "status": "PASS",
+      "detail": "/M3_BUS_SH_N: missing=none"
+    },
+    {
+      "name": "M3: bus amplifier output",
+      "status": "PASS",
+      "detail": "/M3_BUS_CURRENT_RAW: missing=none"
+    },
+    {
+      "name": "M3: filtered bus-current ADC",
+      "status": "PASS",
+      "detail": "/M3_BUS_CURRENT: missing=none"
+    },
+    {
+      "name": "M3: INA296 ground, reserved pin, and REF1",
+      "status": "PASS",
+      "detail": "/M3_BATN: missing=none"
+    },
+    {
+      "name": "M3: INA296 REF2 and supply",
+      "status": "PASS",
+      "detail": "/M3_3V3A: missing=none"
+    },
+    {
+      "name": "M3: driver fault to TIM1 break",
+      "status": "PASS",
+      "detail": "/M3_DRV_nFAULT: missing=none"
+    },
+    {
+      "name": "M3: hardware-gated driver enable",
+      "status": "PASS",
+      "detail": "/M3_DRV_ENABLE: missing=none"
+    },
+    {
+      "name": "M3: divided isolated-LDO enable",
+      "status": "PASS",
+      "detail": "/M3_LDO_EN: missing=none"
+    },
+    {
+      "name": "M3: raw isolated rail reaches TPS709 IN, not EN",
+      "status": "PASS",
+      "detail": "/M3_5VI: missing=none"
+    },
+    {
+      "name": "M3: DRV8353 VREF uses quiet local 3.3 V",
+      "status": "PASS",
+      "detail": "/M3_3V3A: missing=none"
+    },
+    {
+      "name": "M3: no local power/control bond to DGND",
+      "status": "PASS",
+      "detail": "offenders=none"
+    },
+    {
+      "name": "M4: local controller/current/isolation population",
+      "status": "PASS",
+      "detail": "11 required parts present"
+    },
+    {
+      "name": "M4: phase A Kelvin plus",
+      "status": "PASS",
+      "detail": "/M4_SHA_P: missing=none"
+    },
+    {
+      "name": "M4: phase A Kelvin minus",
+      "status": "PASS",
+      "detail": "/M4_SHA_N: missing=none"
+    },
+    {
+      "name": "M4: phase A amplifier output",
+      "status": "PASS",
+      "detail": "/M4_CSA_A_RAW: missing=none"
+    },
+    {
+      "name": "M4: phase A filtered ADC",
+      "status": "PASS",
+      "detail": "/M4_CSA_A: missing=none"
+    },
+    {
+      "name": "M4: phase A high PWM",
+      "status": "PASS",
+      "detail": "/M4_PWM_AH: missing=none"
+    },
+    {
+      "name": "M4: phase A low PWM",
+      "status": "PASS",
+      "detail": "/M4_PWM_AL: missing=none"
+    },
+    {
+      "name": "M4: phase B Kelvin plus",
+      "status": "PASS",
+      "detail": "/M4_SHB_P: missing=none"
+    },
+    {
+      "name": "M4: phase B Kelvin minus",
+      "status": "PASS",
+      "detail": "/M4_SHB_N: missing=none"
+    },
+    {
+      "name": "M4: phase B amplifier output",
+      "status": "PASS",
+      "detail": "/M4_CSA_B_RAW: missing=none"
+    },
+    {
+      "name": "M4: phase B filtered ADC",
+      "status": "PASS",
+      "detail": "/M4_CSA_B: missing=none"
+    },
+    {
+      "name": "M4: phase B high PWM",
+      "status": "PASS",
+      "detail": "/M4_PWM_BH: missing=none"
+    },
+    {
+      "name": "M4: phase B low PWM",
+      "status": "PASS",
+      "detail": "/M4_PWM_BL: missing=none"
+    },
+    {
+      "name": "M4: phase C Kelvin plus",
+      "status": "PASS",
+      "detail": "/M4_SHC_P: missing=none"
+    },
+    {
+      "name": "M4: phase C Kelvin minus",
+      "status": "PASS",
+      "detail": "/M4_SHC_N: missing=none"
+    },
+    {
+      "name": "M4: phase C amplifier output",
+      "status": "PASS",
+      "detail": "/M4_CSA_C_RAW: missing=none"
+    },
+    {
+      "name": "M4: phase C filtered ADC",
+      "status": "PASS",
+      "detail": "/M4_CSA_C: missing=none"
+    },
+    {
+      "name": "M4: phase C high PWM",
+      "status": "PASS",
+      "detail": "/M4_PWM_CH: missing=none"
+    },
+    {
+      "name": "M4: phase C low PWM",
+      "status": "PASS",
+      "detail": "/M4_PWM_CL: missing=none"
+    },
+    {
+      "name": "M4: bus Kelvin plus",
+      "status": "PASS",
+      "detail": "/M4_BUS_SH_P: missing=none"
+    },
+    {
+      "name": "M4: bus Kelvin minus",
+      "status": "PASS",
+      "detail": "/M4_BUS_SH_N: missing=none"
+    },
+    {
+      "name": "M4: bus amplifier output",
+      "status": "PASS",
+      "detail": "/M4_BUS_CURRENT_RAW: missing=none"
+    },
+    {
+      "name": "M4: filtered bus-current ADC",
+      "status": "PASS",
+      "detail": "/M4_BUS_CURRENT: missing=none"
+    },
+    {
+      "name": "M4: INA296 ground, reserved pin, and REF1",
+      "status": "PASS",
+      "detail": "/M4_BATN: missing=none"
+    },
+    {
+      "name": "M4: INA296 REF2 and supply",
+      "status": "PASS",
+      "detail": "/M4_3V3A: missing=none"
+    },
+    {
+      "name": "M4: driver fault to TIM1 break",
+      "status": "PASS",
+      "detail": "/M4_DRV_nFAULT: missing=none"
+    },
+    {
+      "name": "M4: hardware-gated driver enable",
+      "status": "PASS",
+      "detail": "/M4_DRV_ENABLE: missing=none"
+    },
+    {
+      "name": "M4: divided isolated-LDO enable",
+      "status": "PASS",
+      "detail": "/M4_LDO_EN: missing=none"
+    },
+    {
+      "name": "M4: raw isolated rail reaches TPS709 IN, not EN",
+      "status": "PASS",
+      "detail": "/M4_5VI: missing=none"
+    },
+    {
+      "name": "M4: DRV8353 VREF uses quiet local 3.3 V",
+      "status": "PASS",
+      "detail": "/M4_3V3A: missing=none"
+    },
+    {
+      "name": "M4: no local power/control bond to DGND",
+      "status": "PASS",
+      "detail": "offenders=none"
+    },
+    {
+      "name": "M5: local controller/current/isolation population",
+      "status": "PASS",
+      "detail": "11 required parts present"
+    },
+    {
+      "name": "M5: phase A Kelvin plus",
+      "status": "PASS",
+      "detail": "/M5_SHA_P: missing=none"
+    },
+    {
+      "name": "M5: phase A Kelvin minus",
+      "status": "PASS",
+      "detail": "/M5_SHA_N: missing=none"
+    },
+    {
+      "name": "M5: phase A amplifier output",
+      "status": "PASS",
+      "detail": "/M5_CSA_A_RAW: missing=none"
+    },
+    {
+      "name": "M5: phase A filtered ADC",
+      "status": "PASS",
+      "detail": "/M5_CSA_A: missing=none"
+    },
+    {
+      "name": "M5: phase A high PWM",
+      "status": "PASS",
+      "detail": "/M5_PWM_AH: missing=none"
+    },
+    {
+      "name": "M5: phase A low PWM",
+      "status": "PASS",
+      "detail": "/M5_PWM_AL: missing=none"
+    },
+    {
+      "name": "M5: phase B Kelvin plus",
+      "status": "PASS",
+      "detail": "/M5_SHB_P: missing=none"
+    },
+    {
+      "name": "M5: phase B Kelvin minus",
+      "status": "PASS",
+      "detail": "/M5_SHB_N: missing=none"
+    },
+    {
+      "name": "M5: phase B amplifier output",
+      "status": "PASS",
+      "detail": "/M5_CSA_B_RAW: missing=none"
+    },
+    {
+      "name": "M5: phase B filtered ADC",
+      "status": "PASS",
+      "detail": "/M5_CSA_B: missing=none"
+    },
+    {
+      "name": "M5: phase B high PWM",
+      "status": "PASS",
+      "detail": "/M5_PWM_BH: missing=none"
+    },
+    {
+      "name": "M5: phase B low PWM",
+      "status": "PASS",
+      "detail": "/M5_PWM_BL: missing=none"
+    },
+    {
+      "name": "M5: phase C Kelvin plus",
+      "status": "PASS",
+      "detail": "/M5_SHC_P: missing=none"
+    },
+    {
+      "name": "M5: phase C Kelvin minus",
+      "status": "PASS",
+      "detail": "/M5_SHC_N: missing=none"
+    },
+    {
+      "name": "M5: phase C amplifier output",
+      "status": "PASS",
+      "detail": "/M5_CSA_C_RAW: missing=none"
+    },
+    {
+      "name": "M5: phase C filtered ADC",
+      "status": "PASS",
+      "detail": "/M5_CSA_C: missing=none"
+    },
+    {
+      "name": "M5: phase C high PWM",
+      "status": "PASS",
+      "detail": "/M5_PWM_CH: missing=none"
+    },
+    {
+      "name": "M5: phase C low PWM",
+      "status": "PASS",
+      "detail": "/M5_PWM_CL: missing=none"
+    },
+    {
+      "name": "M5: bus Kelvin plus",
+      "status": "PASS",
+      "detail": "/M5_BUS_SH_P: missing=none"
+    },
+    {
+      "name": "M5: bus Kelvin minus",
+      "status": "PASS",
+      "detail": "/M5_BUS_SH_N: missing=none"
+    },
+    {
+      "name": "M5: bus amplifier output",
+      "status": "PASS",
+      "detail": "/M5_BUS_CURRENT_RAW: missing=none"
+    },
+    {
+      "name": "M5: filtered bus-current ADC",
+      "status": "PASS",
+      "detail": "/M5_BUS_CURRENT: missing=none"
+    },
+    {
+      "name": "M5: INA296 ground, reserved pin, and REF1",
+      "status": "PASS",
+      "detail": "/M5_BATN: missing=none"
+    },
+    {
+      "name": "M5: INA296 REF2 and supply",
+      "status": "PASS",
+      "detail": "/M5_3V3A: missing=none"
+    },
+    {
+      "name": "M5: driver fault to TIM1 break",
+      "status": "PASS",
+      "detail": "/M5_DRV_nFAULT: missing=none"
+    },
+    {
+      "name": "M5: hardware-gated driver enable",
+      "status": "PASS",
+      "detail": "/M5_DRV_ENABLE: missing=none"
+    },
+    {
+      "name": "M5: divided isolated-LDO enable",
+      "status": "PASS",
+      "detail": "/M5_LDO_EN: missing=none"
+    },
+    {
+      "name": "M5: raw isolated rail reaches TPS709 IN, not EN",
+      "status": "PASS",
+      "detail": "/M5_5VI: missing=none"
+    },
+    {
+      "name": "M5: DRV8353 VREF uses quiet local 3.3 V",
+      "status": "PASS",
+      "detail": "/M5_3V3A: missing=none"
+    },
+    {
+      "name": "M5: no local power/control bond to DGND",
+      "status": "PASS",
+      "detail": "offenders=none"
+    },
+    {
+      "name": "M6: local controller/current/isolation population",
+      "status": "PASS",
+      "detail": "11 required parts present"
+    },
+    {
+      "name": "M6: phase A Kelvin plus",
+      "status": "PASS",
+      "detail": "/M6_SHA_P: missing=none"
+    },
+    {
+      "name": "M6: phase A Kelvin minus",
+      "status": "PASS",
+      "detail": "/M6_SHA_N: missing=none"
+    },
+    {
+      "name": "M6: phase A amplifier output",
+      "status": "PASS",
+      "detail": "/M6_CSA_A_RAW: missing=none"
+    },
+    {
+      "name": "M6: phase A filtered ADC",
+      "status": "PASS",
+      "detail": "/M6_CSA_A: missing=none"
+    },
+    {
+      "name": "M6: phase A high PWM",
+      "status": "PASS",
+      "detail": "/M6_PWM_AH: missing=none"
+    },
+    {
+      "name": "M6: phase A low PWM",
+      "status": "PASS",
+      "detail": "/M6_PWM_AL: missing=none"
+    },
+    {
+      "name": "M6: phase B Kelvin plus",
+      "status": "PASS",
+      "detail": "/M6_SHB_P: missing=none"
+    },
+    {
+      "name": "M6: phase B Kelvin minus",
+      "status": "PASS",
+      "detail": "/M6_SHB_N: missing=none"
+    },
+    {
+      "name": "M6: phase B amplifier output",
+      "status": "PASS",
+      "detail": "/M6_CSA_B_RAW: missing=none"
+    },
+    {
+      "name": "M6: phase B filtered ADC",
+      "status": "PASS",
+      "detail": "/M6_CSA_B: missing=none"
+    },
+    {
+      "name": "M6: phase B high PWM",
+      "status": "PASS",
+      "detail": "/M6_PWM_BH: missing=none"
+    },
+    {
+      "name": "M6: phase B low PWM",
+      "status": "PASS",
+      "detail": "/M6_PWM_BL: missing=none"
+    },
+    {
+      "name": "M6: phase C Kelvin plus",
+      "status": "PASS",
+      "detail": "/M6_SHC_P: missing=none"
+    },
+    {
+      "name": "M6: phase C Kelvin minus",
+      "status": "PASS",
+      "detail": "/M6_SHC_N: missing=none"
+    },
+    {
+      "name": "M6: phase C amplifier output",
+      "status": "PASS",
+      "detail": "/M6_CSA_C_RAW: missing=none"
+    },
+    {
+      "name": "M6: phase C filtered ADC",
+      "status": "PASS",
+      "detail": "/M6_CSA_C: missing=none"
+    },
+    {
+      "name": "M6: phase C high PWM",
+      "status": "PASS",
+      "detail": "/M6_PWM_CH: missing=none"
+    },
+    {
+      "name": "M6: phase C low PWM",
+      "status": "PASS",
+      "detail": "/M6_PWM_CL: missing=none"
+    },
+    {
+      "name": "M6: bus Kelvin plus",
+      "status": "PASS",
+      "detail": "/M6_BUS_SH_P: missing=none"
+    },
+    {
+      "name": "M6: bus Kelvin minus",
+      "status": "PASS",
+      "detail": "/M6_BUS_SH_N: missing=none"
+    },
+    {
+      "name": "M6: bus amplifier output",
+      "status": "PASS",
+      "detail": "/M6_BUS_CURRENT_RAW: missing=none"
+    },
+    {
+      "name": "M6: filtered bus-current ADC",
+      "status": "PASS",
+      "detail": "/M6_BUS_CURRENT: missing=none"
+    },
+    {
+      "name": "M6: INA296 ground, reserved pin, and REF1",
+      "status": "PASS",
+      "detail": "/M6_BATN: missing=none"
+    },
+    {
+      "name": "M6: INA296 REF2 and supply",
+      "status": "PASS",
+      "detail": "/M6_3V3A: missing=none"
+    },
+    {
+      "name": "M6: driver fault to TIM1 break",
+      "status": "PASS",
+      "detail": "/M6_DRV_nFAULT: missing=none"
+    },
+    {
+      "name": "M6: hardware-gated driver enable",
+      "status": "PASS",
+      "detail": "/M6_DRV_ENABLE: missing=none"
+    },
+    {
+      "name": "M6: divided isolated-LDO enable",
+      "status": "PASS",
+      "detail": "/M6_LDO_EN: missing=none"
+    },
+    {
+      "name": "M6: raw isolated rail reaches TPS709 IN, not EN",
+      "status": "PASS",
+      "detail": "/M6_5VI: missing=none"
+    },
+    {
+      "name": "M6: DRV8353 VREF uses quiet local 3.3 V",
+      "status": "PASS",
+      "detail": "/M6_3V3A: missing=none"
+    },
+    {
+      "name": "M6: no local power/control bond to DGND",
+      "status": "PASS",
+      "detail": "offenders=none"
+    },
+    {
+      "name": "M1/M2: motor-cell nets remain separate",
+      "status": "PASS",
+      "detail": "shared=none"
+    },
+    {
+      "name": "M1/M3: motor-cell nets remain separate",
+      "status": "PASS",
+      "detail": "shared=none"
+    },
+    {
+      "name": "M1/M4: motor-cell nets remain separate",
+      "status": "PASS",
+      "detail": "shared=none"
+    },
+    {
+      "name": "M1/M5: motor-cell nets remain separate",
+      "status": "PASS",
+      "detail": "shared=none"
+    },
+    {
+      "name": "M1/M6: motor-cell nets remain separate",
+      "status": "PASS",
+      "detail": "shared=none"
+    },
+    {
+      "name": "M2/M3: motor-cell nets remain separate",
+      "status": "PASS",
+      "detail": "shared=none"
+    },
+    {
+      "name": "M2/M4: motor-cell nets remain separate",
+      "status": "PASS",
+      "detail": "shared=none"
+    },
+    {
+      "name": "M2/M5: motor-cell nets remain separate",
+      "status": "PASS",
+      "detail": "shared=none"
+    },
+    {
+      "name": "M2/M6: motor-cell nets remain separate",
+      "status": "PASS",
+      "detail": "shared=none"
+    },
+    {
+      "name": "M3/M4: motor-cell nets remain separate",
+      "status": "PASS",
+      "detail": "shared=none"
+    },
+    {
+      "name": "M3/M5: motor-cell nets remain separate",
+      "status": "PASS",
+      "detail": "shared=none"
+    },
+    {
+      "name": "M3/M6: motor-cell nets remain separate",
+      "status": "PASS",
+      "detail": "shared=none"
+    },
+    {
+      "name": "M4/M5: motor-cell nets remain separate",
+      "status": "PASS",
+      "detail": "shared=none"
+    },
+    {
+      "name": "M4/M6: motor-cell nets remain separate",
+      "status": "PASS",
+      "detail": "shared=none"
+    },
+    {
+      "name": "M5/M6: motor-cell nets remain separate",
+      "status": "PASS",
+      "detail": "shared=none"
+    },
+    {
+      "name": "ESC supervisor: nine RP2354B 3.3 V bypass positions",
+      "status": "PASS",
+      "detail": "/3V3: missing=none"
+    },
+    {
+      "name": "ESC supervisor: three RP2354B DVDD bypass positions",
+      "status": "PASS",
+      "detail": "/1V1: missing=none"
+    },
+    {
+      "name": "ESC supervisor: local ADC_AVDD high-frequency bypass",
+      "status": "PASS",
+      "detail": "/3V3_ADC: missing=none"
+    },
+    {
+      "name": "Control-board source identity",
+      "status": "PASS",
+      "detail": "/__w/drone-arm/drone-arm/hardware/main/rev_b/main_rev_b.kicad_sch"
+    },
+    {
+      "name": "Control-board population: RP2354B",
+      "status": "PASS",
+      "detail": "expected=1, actual=1"
+    },
+    {
+      "name": "Control-board population: MCP2518FD-H/QBB",
+      "status": "PASS",
+      "detail": "expected=1, actual=1"
+    },
+    {
+      "name": "Control-board population: TCAN3413DR",
+      "status": "PASS",
+      "detail": "expected=1, actual=1"
+    },
+    {
+      "name": "Control-board population: PESD2CANFD24L-T",
+      "status": "PASS",
+      "detail": "expected=1, actual=1"
+    },
+    {
+      "name": "Control-board population: LG77LICMD",
+      "status": "PASS",
+      "detail": "expected=1, actual=1"
+    },
+    {
+      "name": "Control-board population: TLV75528PDBVR",
+      "status": "PASS",
+      "detail": "expected=1, actual=1"
+    },
+    {
+      "name": "Control-board population: TLV75533PDBVR",
+      "status": "PASS",
+      "detail": "expected=1, actual=1"
+    },
+    {
+      "name": "Control-board population: TPD1E0B04DPYR",
+      "status": "PASS",
+      "detail": "expected=1, actual=1"
+    },
+    {
+      "name": "Control-board population: ESD9B3.3ST5G",
+      "status": "PASS",
+      "detail": "expected=2, actual=2"
+    },
+    {
+      "name": "Control board remains distinct from ESC power stages",
+      "status": "PASS",
+      "detail": "ESC-only parts=none"
+    },
+    {
+      "name": "Control-board MCU: nine RP2354B 3.3 V bypass positions",
+      "status": "PASS",
+      "detail": "/3V3: missing=none"
+    },
+    {
+      "name": "Control-board MCU: three RP2354B DVDD bypass positions",
+      "status": "PASS",
+      "detail": "/1V1: missing=none"
+    },
+    {
+      "name": "Control-board MCU: local ADC_AVDD high-frequency bypass",
+      "status": "PASS",
+      "detail": "/3V3_ADC: missing=none"
+    },
+    {
+      "name": "Control-board CAN TX path",
+      "status": "PASS",
+      "detail": "/U51_TXCAN: missing=none"
+    },
+    {
+      "name": "Control-board CAN RX path",
+      "status": "PASS",
+      "detail": "/U51_RXCAN: missing=none"
+    },
+    {
+      "name": "GNSS quiet VCC rail and local 10u/100n/33p protection",
+      "status": "PASS",
+      "detail": "/3V3_GNSS: missing=none"
+    },
+    {
+      "name": "GNSS 2.8 V I/O rail",
+      "status": "PASS",
+      "detail": "/2V8_GNSS: missing=none"
+    },
+    {
+      "name": "GNSS always-on backup rail and local 4.7u/100n/33p protection",
+      "status": "PASS",
+      "detail": "/GNSS_VBCKP: missing=none"
+    },
+    {
+      "name": "GNSS antenna connector, pi pad, and ultra-low-C TVS",
+      "status": "PASS",
+      "detail": "/GNSS_RF_ANT: missing=none"
+    },
+    {
+      "name": "GNSS module-side pi matching node",
+      "status": "PASS",
+      "detail": "/GNSS_RF_IN: missing=none"
+    },
+    {
+      "name": "MCU-controlled dual GNSS LDO enable",
+      "status": "PASS",
+      "detail": "/GNSS_PWR_EN: missing=none"
+    },
+    {
+      "name": "GNSS power enable reaches flight MCU",
+      "status": "PASS",
+      "detail": "nodes=[('R8', '2'), ('U10', '42'), ('U3', '3'), ('U4', '3')]"
+    },
+    {
+      "name": "LG77L reserved pins remain NC",
+      "status": "PASS",
+      "detail": "connected reserved pins=none"
+    },
+    {
+      "name": "All LG77L ground pads connect to the ground plane",
+      "status": "PASS",
+      "detail": "/GND: missing=none"
     }
   ]
 }

@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 from dataclasses import dataclass
 from pathlib import Path
+from types import SimpleNamespace
 import json
 import re
 import shutil
@@ -1067,8 +1068,9 @@ def _make_esc_controller_legacy(parent_uuid: str, sheet_uuid: str) -> None:
             44: "M3_BUS", 45: "M4_BUS", 46: "M5_BUS", 47: "M6_BUS",
         }
     )
-    rp_info = ksa.get_symbol_info("MCU_RaspberryPi:RP2354B")
-    assert rp_info is not None
+    rp_info = SimpleNamespace(
+        pins=[SimpleNamespace(number=number, name=name) for number, name in RP2354B_PINS]
+    )
     power_map = {
         "VREG_AVDD": "VREG_AVDD", "USB_OTP_VDD": "3V3", "QSPI_IOVDD": "3V3",
         "IOVDD": "3V3", "VREG_PGND": "DGND", "GND": "DGND",
@@ -1290,7 +1292,7 @@ def add_can_fd_interface(
                 "Capacitor_SMD:C_0603_1608Metric")
     add_part(
         sch, "Device:L_Coupled", choke_ref, "ACT45B-110-2P-TL003",
-        (x + 120, y), "Inductor_SMD:L_CommonModeChoke_Coilank_ACM4532",
+        (x + 120, y), "Inductor_SMD:L_CommonModeChoke_Coilcraft_1812CAN",
         "TDK", "ACT45B-110-2P-TL003",
     )
     for pin, net in {
@@ -1335,8 +1337,9 @@ def make_esc_controller(parent_uuid: str, sheet_uuid: str) -> None:
         15: "CAN_nCS", 16: "CAN_INT", 17: "WDI",
         18: "ARM_CMD", 19: "STATUS_LED",
     }
-    rp_info = ksa.get_symbol_info("MCU_RaspberryPi:RP2354B")
-    assert rp_info is not None
+    rp_info = SimpleNamespace(
+        pins=[SimpleNamespace(number=number, name=name) for number, name in RP2354B_PINS]
+    )
     power_map = {
         "VREG_AVDD": "VREG_AVDD", "USB_OTP_VDD": "3V3", "QSPI_IOVDD": "3V3",
         "IOVDD": "3V3", "VREG_PGND": "DGND", "GND": "DGND",
@@ -1771,8 +1774,9 @@ def make_main_mcu(parent_uuid: str, sheet_uuid: str) -> None:
         27: "CAN_SCK", 28: "CAN_MOSI", 29: "CAN_MISO",
         30: "CAN_nCS", 31: "CAN_INT", 32: "STATUS_LED", 33: "GNSS_PWR_EN",
     }
-    info = ksa.get_symbol_info("MCU_RaspberryPi:RP2354B")
-    assert info is not None
+    info = SimpleNamespace(
+        pins=[SimpleNamespace(number=number, name=name) for number, name in RP2354B_PINS]
+    )
     power_map = {
         "VREG_AVDD": "VREG_AVDD", "USB_OTP_VDD": "3V3", "QSPI_IOVDD": "3V3",
         "IOVDD": "3V3", "VREG_PGND": "GND", "GND": "GND", "DVDD": "1V1",

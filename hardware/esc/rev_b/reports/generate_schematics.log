@@ -1,16 +1,7 @@
 Symbol RP2354B not found in /usr/share/kicad/symbols/MCU_RaspberryPi.kicad_sym
-Symbol RP2354B not found in /usr/share/kicad/symbols/MCU_RaspberryPi.kicad_sym
-Traceback (most recent call last):
-  File "/__w/drone-arm/drone-arm/tools/hardware/generate_rev_b_schematics.py", line 2288, in <module>
-    main()
-    ~~~~^^
-  File "/__w/drone-arm/drone-arm/tools/hardware/generate_rev_b_schematics.py", line 2270, in main
-    make_esc_top()
-    ~~~~~~~~~~~~^^
-  File "/__w/drone-arm/drone-arm/tools/hardware/generate_rev_b_schematics.py", line 1621, in make_esc_top
-    make_esc_controller(top.uuid, controller_uuid)
-    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/__w/drone-arm/drone-arm/tools/hardware/generate_rev_b_schematics.py", line 1339, in make_esc_controller
-    assert rp_info is not None
-           ^^^^^^^^^^^^^^^^^^^
-AssertionError
+{
+  "generator": "tools/hardware/generate_rev_b_schematics.py",
+  "esc_root": "hardware/esc/rev_b/esc_rev_b.kicad_sch",
+  "main_root": "hardware/main/rev_b/main_rev_b.kicad_sch",
+  "note": "Generated Rev-B projects are distinct and do not overwrite original designs."
+}
