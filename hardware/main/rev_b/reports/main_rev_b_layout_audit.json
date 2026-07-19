@@ -4,38 +4,38 @@
   "passed": false,
   "summary": {
     "checks": 6,
-    "failures": 6,
-    "unconnected_count": 35,
-    "track_count": 1682,
-    "via_count": 296
+    "failures": 5,
+    "unconnected_count": 45,
+    "track_count": 1613,
+    "via_count": 280
   },
   "checks": [
     {
       "name": "Zero unrouted connections",
       "passed": false,
       "detail": {
-        "unconnected_count": 35
+        "unconnected_count": 45
       }
     },
     {
       "name": "RF routes remain on F.Cu without vias",
       "passed": false,
       "detail": {
-        "audited_nets": 30,
+        "audited_nets": 32,
         "failures": {
           "/915 MHz RF/CC1121_RF": {
-            "track_length_mm": 4.839,
-            "track_count": 5,
+            "track_length_mm": 8.278,
+            "track_count": 10,
             "via_count": 2,
             "layers": [
               "F.Cu",
               "In2.Cu"
             ],
-            "min_width_mm": 0.35
+            "min_width_mm": 0.3
           },
           "/915 MHz RF/CC_DCPL_XOSC": {
-            "track_length_mm": 5.447,
-            "track_count": 7,
+            "track_length_mm": 4.63,
+            "track_count": 6,
             "via_count": 2,
             "layers": [
               "F.Cu",
@@ -44,28 +44,18 @@
             "min_width_mm": 0.25
           },
           "/915 MHz RF/CC_EXTCLK": {
-            "track_length_mm": 6.247,
+            "track_length_mm": 6.711,
             "track_count": 6,
             "via_count": 2,
             "layers": [
-              "F.Cu",
-              "In1.Cu"
+              "B.Cu",
+              "F.Cu"
             ],
             "min_width_mm": 0.25
           },
           "/915 MHz RF/CC_LNA_N": {
-            "track_length_mm": 7.781,
-            "track_count": 7,
-            "via_count": 2,
-            "layers": [
-              "F.Cu",
-              "In1.Cu"
-            ],
-            "min_width_mm": 0.25
-          },
-          "/915 MHz RF/MATCH_A": {
-            "track_length_mm": 14.75,
-            "track_count": 10,
+            "track_length_mm": 7.651,
+            "track_count": 5,
             "via_count": 2,
             "layers": [
               "F.Cu",
@@ -74,9 +64,9 @@
             "min_width_mm": 0.35
           },
           "/915 MHz RF/VDD_CC112": {
-            "track_length_mm": 68.047,
-            "track_count": 53,
-            "via_count": 2,
+            "track_length_mm": 66.062,
+            "track_count": 61,
+            "via_count": 3,
             "layers": [
               "F.Cu",
               "In1.Cu"
@@ -88,13 +78,13 @@
     },
     {
       "name": "USB connector-side pair skew",
-      "passed": false,
+      "passed": true,
       "detail": {
         "positive": "/Power and USB/USB_DP_CONN",
         "negative": "/Power and USB/USB_DN_CONN",
-        "positive_length_mm": 17.73,
-        "negative_length_mm": 24.584,
-        "skew_mm": 6.854,
+        "positive_length_mm": 13.832,
+        "negative_length_mm": 13.832,
+        "skew_mm": 0.0,
         "limit_mm": 0.5
       }
     },
@@ -104,9 +94,9 @@
       "detail": {
         "positive": "/USB_DP",
         "negative": "/USB_DM",
-        "positive_length_mm": 58.414,
-        "negative_length_mm": 37.941,
-        "skew_mm": 20.473,
+        "positive_length_mm": 59.032,
+        "negative_length_mm": 37.739,
+        "skew_mm": 21.293,
         "limit_mm": 0.5
       }
     },
@@ -117,8 +107,8 @@
         "positive": "/CANH",
         "negative": "/CANL",
         "positive_length_mm": 16.903,
-        "negative_length_mm": 26.987,
-        "skew_mm": 10.084,
+        "negative_length_mm": 27.097,
+        "skew_mm": 10.194,
         "limit_mm": 2.0
       }
     },
@@ -128,9 +118,9 @@
       "detail": {
         "positive": "/CAN interface/U50_CANH",
         "negative": "/CAN interface/U50_CANL",
-        "positive_length_mm": 16.411,
-        "negative_length_mm": 11.32,
-        "skew_mm": 5.091,
+        "positive_length_mm": 16.545,
+        "negative_length_mm": 12.08,
+        "skew_mm": 4.464,
         "limit_mm": 2.0
       }
     }
