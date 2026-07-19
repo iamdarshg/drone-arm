@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+concurrency:
+  group: rev-b-esc-recovery-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   actions: read
   contents: write
@@ -18,7 +22,7 @@ jobs:
   route-shared-esc:
     runs-on: ubuntu-latest
     container: debian:trixie
-    timeout-minutes: 240
+    timeout-minutes: 270
     steps:
       - name: Install KiCad and runtime tools
         run: |
@@ -63,7 +67,7 @@ jobs:
           github-token: ${{ github.token }}
           run-id: ${{ env.SOURCE_RUN_ID }}
 
-      - name: Route remaining ESC connections
+      - name: Route remaining ESC connections without zone-backed nets
         shell: bash
         run: |
           set -euo pipefail
@@ -72,21 +76,83 @@ jobs:
 
           routed=build/source-esc/build/rev-b-router/esc/esc-replicated.kicad_pcb
           no_zones=build/source-esc/build/rev-b-router/esc/esc-replicated-nozones.kicad_pcb
+          filtered_board=build/recovery/esc/esc-router-input.kicad_pcb
+          filtered_dsn=build/recovery/esc/esc-shared-no-planes.dsn
           test -s "$routed"
           test -s "$no_zones"
           cp build/fixed-freerouting/source-sha.txt build/recovery/esc/router-source-sha.txt
           kicad-cli --version | tee build/recovery/esc/kicad-version.txt
           java -version 2>&1 | tee build/recovery/esc/java-version.txt
 
-          python3 tools/hardware/route_rev_b_sections.py export-main \
-            --board "$no_zones" \
-            --dsn build/recovery/esc/esc-shared.dsn
+          # FreeRouting can become unstable when it is asked to route large copper
+          # planes. Derive the exclusion set from the actual KiCad zones, disconnect
+          # only those pads in a temporary board, and keep the real board untouched.
+          python3 - "$routed" "$no_zones" "$filtered_board" "$filtered_dsn" \
+            build/recovery/esc/plane-net-filter.json <<'PY'
+          from __future__ import annotations
+
+          import json
+          import re
+          import sys
+          from pathlib import Path
+
+          import pcbnew
+
+          routed_path, no_zones_path, output_board_path, output_dsn_path, report_path = map(Path, sys.argv[1:])
+          source_text = routed_path.read_text(encoding="utf-8", errors="replace")
+          plane_nets: set[str] = set()
+          for match in re.finditer(r"\(zone\b", source_text):
+              header = source_text[match.start():match.start() + 1200]
+              net_match = re.search(r'\(net_name\s+"((?:\\.|[^"\\])*)"\)', header)
+              if net_match:
+                  plane_nets.add(re.sub(r"\\(.)", r"\1", net_match.group(1)))
+          if not plane_nets:
+              raise SystemExit("No zone-backed nets found; refusing to route an unfiltered DSN")
+
+          board = pcbnew.LoadBoard(str(no_zones_path))
+          disconnected_pads = 0
+          for footprint in board.GetFootprints():
+              for pad in footprint.Pads():
+                  if str(pad.GetNetname()) in plane_nets:
+                      pad.SetNetCode(0)
+                      disconnected_pads += 1
+
+          removed_tracks = 0
+          for item in list(board.GetTracks()):
+              if str(item.GetNetname()) in plane_nets:
+                  board.Remove(item)
+                  removed_tracks += 1
+
+          pcbnew.SaveBoard(str(output_board_path), board)
+          if not pcbnew.ExportSpecctraDSN(board, str(output_dsn_path)):
+              raise SystemExit(f"Failed to export {output_dsn_path}")
+
+          dsn_text = output_dsn_path.read_text(encoding="utf-8", errors="strict")
+          network_names = set()
+          for net_match in re.finditer(r'\(net\s+(?:"((?:\\.|[^"\\])*)"|([^\s()]+))\s', dsn_text):
+              raw_name = net_match.group(1) if net_match.group(1) is not None else net_match.group(2)
+              network_names.add(re.sub(r"\\(.)", r"\1", raw_name))
+          leaked = sorted(plane_nets & network_names)
+          if leaked:
+              raise SystemExit(f"Zone-backed nets leaked into filtered DSN: {leaked}")
+
+          report = {
+              "omitted_zone_backed_nets": sorted(plane_nets),
+              "omitted_zone_backed_net_count": len(plane_nets),
+              "disconnected_pads_in_temporary_board": disconnected_pads,
+              "removed_plane_tracks_in_temporary_board": removed_tracks,
+              "router_input_board": str(output_board_path),
+              "router_input_dsn": str(output_dsn_path),
+          }
+          report_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+          print(json.dumps(report, indent=2))
+          PY
 
           set +e
           timeout 205m java -Xmx6g -Djava.awt.headless=true \
             -jar build/fixed-freerouting/freerouting-current-executable.jar \
             --gui.enabled=false \
-            -de build/recovery/esc/esc-shared.dsn \
+            -de "$filtered_dsn" \
             -do build/recovery/esc/esc-shared.ses \
             -mp 170 -mt 2 -oit 0.01 -us hybrid -hr 1:2 -is prioritized \
             -da -dct 1 --logging.console.level=INFO --logging.file.enabled=false \
@@ -96,13 +162,30 @@ jobs:
           echo "$router_rc" > build/recovery/esc/freerouting.exit
           test -s build/recovery/esc/esc-shared.ses
 
+          set +e
           python3 tools/hardware/route_rev_b_sections.py import-main \
             --board "$routed" \
             --ses build/recovery/esc/esc-shared.ses \
             --output build/recovery/esc/esc-imported.kicad_pcb
+          import_rc=$?
+          set -e
+          echo "$import_rc" > build/recovery/esc/import.exit
+          test -s build/recovery/esc/esc-imported.kicad_pcb
+
+          # KiCad's Python zone filler can segfault during SWIG teardown after it
+          # has already saved a valid board. Accept that case only when output exists.
+          set +e
           python3 tools/hardware/route_rev_b_sections.py fill-zones \
             --board build/recovery/esc/esc-imported.kicad_pcb \
             --output hardware/esc/rev_b/esc_rev_b.kicad_pcb
+          fill_rc=$?
+          set -e
+          echo "$fill_rc" > build/recovery/esc/fill-zones.exit
+          if ! test -s hardware/esc/rev_b/esc_rev_b.kicad_pcb; then
+            cp build/recovery/esc/esc-imported.kicad_pcb hardware/esc/rev_b/esc_rev_b.kicad_pcb
+            echo "Zone fill produced no output; committed board remains unfilled." \
+              > build/recovery/esc/fill-zones-warning.txt
+          fi
 
           set +e
           kicad-cli pcb drc --severity-all --format json \
@@ -122,7 +205,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: rev-b-esc-recovered
+          name: rev-b-esc-recovered-no-planes
           path: |
             hardware/esc/rev_b/esc_rev_b.kicad_pcb
             build/recovery/esc
@@ -142,24 +225,8 @@ jobs:
       - name: Download recovered ESC result
         uses: actions/download-artifact@v4
         with:
-          name: rev-b-esc-recovered
+          name: rev-b-esc-recovered-no-planes
           path: build/completed-esc
-
-      - name: Install board and reports
-        shell: bash
-        run: |
-          set -euo pipefail
-          cp build/completed-esc/hardware/esc/rev_b/esc_rev_b.kicad_pcb \
-            hardware/esc/rev_b/esc_rev_b.kicad_pcb
-          mkdir -p hardware/esc/rev_b/reports
-          cp build/completed-esc/build/recovery/esc/drc.json \
-            hardware/esc/rev_b/reports/esc_rev_b_autorouted_drc.json
-          cp build/completed-esc/build/recovery/esc/layout-audit.json \
-            hardware/esc/rev_b/reports/esc_rev_b_autorouted_layout_audit.json
-          cp build/completed-esc/build/recovery/esc/summary.json \
-            hardware/esc/rev_b/reports/esc_rev_b_autorouted_summary.json
-          rm -f .github/workflows/rev-b-esc-recovery.yml
-          rm -rf build/completed-esc
 
       - name: Commit ESC routing checkpoint
         shell: bash
@@ -167,7 +234,34 @@ jobs:
           set -euo pipefail
           git config user.name "Rev-B Hardware Bot"
           git config user.email "actions@users.noreply.github.com"
-          git add -A
-          git diff --cached --check
-          git commit -m "route: continue Rev-B ESC routing from replicated cells"
-          git push origin HEAD:agent/rev-b-fab-ready
+
+          for attempt in 1 2 3; do
+            git fetch origin agent/rev-b-fab-ready
+            git reset --hard origin/agent/rev-b-fab-ready
+
+            cp build/completed-esc/hardware/esc/rev_b/esc_rev_b.kicad_pcb \
+              hardware/esc/rev_b/esc_rev_b.kicad_pcb
+            mkdir -p hardware/esc/rev_b/reports
+            cp build/completed-esc/build/recovery/esc/drc.json \
+              hardware/esc/rev_b/reports/esc_rev_b_autorouted_drc.json
+            cp build/completed-esc/build/recovery/esc/layout-audit.json \
+              hardware/esc/rev_b/reports/esc_rev_b_autorouted_layout_audit.json
+            cp build/completed-esc/build/recovery/esc/summary.json \
+              hardware/esc/rev_b/reports/esc_rev_b_autorouted_summary.json
+            cp build/completed-esc/build/recovery/esc/plane-net-filter.json \
+              hardware/esc/rev_b/reports/esc_rev_b_plane_net_filter.json
+            rm -f .github/workflows/rev-b-esc-recovery.yml
+            rm -rf build/completed-esc
+
+            git add -A
+            git diff --cached --check
+            if git diff --cached --quiet; then
+              exit 0
+            fi
+            git commit -m "route: continue Rev-B ESC routing without plane nets"
+            if git push origin HEAD:agent/rev-b-fab-ready; then
+              exit 0
+            fi
+            echo "Push race on attempt ${attempt}; retrying from latest branch head."
+          done
+          exit 1
