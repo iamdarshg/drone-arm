@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""Suppress zone-backed nets from a Specctra DSN routing demand.
+"""Suppress zone-backed nets from Specctra routing demand without reformatting.
 
-The DSN's existing wiring and net definitions are preserved so already-routed
-power/ground copper remains valid protected geometry. Each matching net is
-reduced to one retained pin, which gives FreeRouting no connection to solve
-without leaving wiring that refers to an undefined net.
+FreeRouting's DSN reader is sensitive to the exporter layout of ``(net NAME ...)``
+entries.  Re-serializing the whole network block can therefore make valid nets
+invisible even when the resulting S-expression is structurally correct.  This
+filter performs surgical text replacements only inside the ``(pins ...)`` block
+of zone-backed nets.  Every other network entry and the complete wiring block
+remain byte-for-byte identical to KiCad's export.
 """
 
 from __future__ import annotations
@@ -13,126 +15,32 @@ import argparse
 import json
 import re
 from pathlib import Path
-from typing import Iterator
 
 
-class Atom(str):
-    """An S-expression atom retaining its original quoting."""
+_TOKEN_RE = re.compile(r'"(?:\\.|[^"\\])*"|[^\s()]+')
 
 
-Node = Atom | list["Node"]
+def unquote(token: str) -> str:
+    if len(token) >= 2 and token[0] == '"' and token[-1] == '"':
+        return re.sub(r"\\(.)", r"\1", token[1:-1])
+    return token
 
 
-def tokenize(text: str) -> Iterator[str]:
-    index = 0
-    while index < len(text):
-        char = text[index]
-        if char.isspace():
-            index += 1
-            continue
-        if char in "()":
-            yield char
-            index += 1
-            continue
-        if char == ";":
-            newline = text.find("\n", index)
-            index = len(text) if newline < 0 else newline + 1
-            continue
-        if char == '"':
-            end = index + 1
-            escaped = False
-            while end < len(text):
-                current = text[end]
-                if escaped:
-                    escaped = False
-                elif current == "\\":
-                    escaped = True
-                elif current == '"':
-                    end += 1
-                    break
-                end += 1
-            if end > len(text) or text[end - 1] != '"':
-                raise ValueError(f"Unterminated quoted token at offset {index}")
-            yield text[index:end]
-            index = end
-            continue
-        end = index
-        while end < len(text) and not text[end].isspace() and text[end] not in "();":
-            end += 1
-        yield text[index:end]
-        index = end
-
-
-def parse_one(text: str) -> Node:
-    roots: list[Node] = []
-    stack: list[list[Node]] = []
-    for token in tokenize(text):
-        if token == "(":
-            node: list[Node] = []
-            (stack[-1] if stack else roots).append(node)
-            stack.append(node)
-        elif token == ")":
-            if not stack:
-                raise ValueError("Unexpected closing parenthesis")
-            stack.pop()
-        else:
-            (stack[-1] if stack else roots).append(Atom(token))
-    if stack or len(roots) != 1:
-        raise ValueError("Malformed S-expression")
-    return roots[0]
-
-
-def atom_value(node: Node) -> str | None:
-    if not isinstance(node, Atom):
-        return None
-    raw = str(node)
-    if len(raw) >= 2 and raw[0] == '"' and raw[-1] == '"':
-        return re.sub(r"\\(.)", r"\1", raw[1:-1])
-    return raw
-
-
-def head(node: Node) -> str | None:
-    return atom_value(node[0]) if isinstance(node, list) and node else None
-
-
-def serialize(node: Node, depth: int = 0) -> str:
-    if isinstance(node, Atom):
-        return str(node)
-    if not node:
-        return "()"
-    if all(isinstance(child, Atom) for child in node) and sum(
-        len(str(child)) + 1 for child in node
-    ) < 100:
-        return "(" + " ".join(map(str, node)) + ")"
-
-    indent = "  " * depth
-    child_indent = "  " * (depth + 1)
-    if isinstance(node[0], Atom):
-        if len(node) == 1:
-            return "(" + str(node[0]) + ")"
-        children = ("\n" + child_indent).join(
-            serialize(child, depth + 1) for child in node[1:]
-        )
-        return f"({node[0]}\n{child_indent}{children}\n{indent})"
-
-    children = ("\n" + child_indent).join(
-        serialize(child, depth + 1) for child in node
-    )
-    return f"(\n{child_indent}{children}\n{indent})"
-
-
-def find_block(text: str, marker: str) -> tuple[int, int]:
-    start = text.find(marker)
-    if start < 0:
-        raise ValueError(f"Missing {marker}")
+def matching_paren(text: str, start: int) -> int:
+    if text[start] != "(":
+        raise ValueError("Block does not start with '('")
 
     depth = 0
     quoted = False
     escaped = False
+    comment = False
     index = start
     while index < len(text):
         char = text[index]
-        if quoted:
+        if comment:
+            if char == "\n":
+                comment = False
+        elif quoted:
             if escaped:
                 escaped = False
             elif char == "\\":
@@ -140,22 +48,82 @@ def find_block(text: str, marker: str) -> tuple[int, int]:
             elif char == '"':
                 quoted = False
         else:
-            if char == '"':
+            if char == ";":
+                comment = True
+            elif char == '"':
                 quoted = True
             elif char == "(":
                 depth += 1
             elif char == ")":
                 depth -= 1
                 if depth == 0:
-                    return start, index + 1
+                    return index + 1
         index += 1
-    raise ValueError(f"Unclosed {marker}")
+    raise ValueError("Unclosed S-expression")
+
+
+def find_head_block(text: str, block_head: str, start: int = 0) -> tuple[int, int]:
+    pattern = re.compile(r"\(" + re.escape(block_head) + r"(?=[\s)])")
+    match = pattern.search(text, start)
+    if not match:
+        raise ValueError(f"Missing ({block_head} block")
+    return match.start(), matching_paren(text, match.start())
+
+
+def direct_child_spans(block: str) -> list[tuple[int, int]]:
+    """Return spans for direct child S-expressions of one complete block."""
+
+    index = 1
+    while index < len(block) and block[index].isspace():
+        index += 1
+    head_match = _TOKEN_RE.match(block, index)
+    if not head_match:
+        raise ValueError("Missing block head")
+    index = head_match.end()
+
+    spans: list[tuple[int, int]] = []
+    while index < len(block) - 1:
+        char = block[index]
+        if char.isspace():
+            index += 1
+            continue
+        if char == ";":
+            newline = block.find("\n", index)
+            index = len(block) - 1 if newline < 0 else newline + 1
+            continue
+        if char == "(":
+            end = matching_paren(block, index)
+            spans.append((index, end))
+            index = end
+            continue
+        token_match = _TOKEN_RE.match(block, index)
+        if not token_match:
+            raise ValueError(f"Unexpected token at offset {index}")
+        index = token_match.end()
+    return spans
+
+
+def net_name_and_pins(child: str) -> tuple[str, list[str]] | None:
+    match = re.match(
+        r'^\(\s*net\s+("(?:\\.|[^"\\])*"|[^\s()]+)',
+        child,
+        re.DOTALL,
+    )
+    if not match:
+        return None
+
+    name = unquote(match.group(1))
+    pins_start, pins_end = find_head_block(child, "pins")
+    tokens = _TOKEN_RE.findall(child[pins_start + 1 : pins_end - 1])
+    if not tokens or tokens[0] != "pins":
+        raise ValueError(f"Malformed pins block for {name!r}")
+    return name, tokens[1:]
 
 
 def zone_net_names(board_text: str) -> set[str]:
     names: set[str] = set()
     for match in re.finditer(r"\(zone\b", board_text):
-        header = board_text[match.start() : match.start() + 1200]
+        header = board_text[match.start() : match.start() + 1600]
         net_match = re.search(r'\(net_name\s+"((?:\\.|[^"\\])*)"\)', header)
         if net_match:
             name = re.sub(r"\\(.)", r"\1", net_match.group(1))
@@ -164,83 +132,79 @@ def zone_net_names(board_text: str) -> set[str]:
     return names
 
 
+def network_snapshot(network_block: str) -> dict[str, tuple[int, str]]:
+    snapshot: dict[str, tuple[int, str]] = {}
+    for start, end in direct_child_spans(network_block):
+        child = network_block[start:end]
+        parsed = net_name_and_pins(child)
+        if parsed is None:
+            continue
+        name, pins = parsed
+        if name in snapshot:
+            raise ValueError(f"Duplicate network net {name!r}")
+        snapshot[name] = (len(pins), child)
+    return snapshot
+
+
 def suppress_plane_net_pins(
-    dsn_text: str, zone_nets: set[str]
+    dsn_text: str,
+    zone_nets: set[str],
 ) -> tuple[str, dict[str, int], int]:
-    block_start, block_end = find_block(dsn_text, "(network")
-    network = parse_one(dsn_text[block_start:block_end])
-    if head(network) != "network" or not isinstance(network, list):
-        raise ValueError("Located block is not a network block")
+    network_start, network_end = find_head_block(dsn_text, "network")
+    network = dsn_text[network_start:network_end]
+    before = network_snapshot(network)
 
-    suppressed: dict[str, int] = {}
-    removed_pin_references = 0
-    filtered: list[Node] = [network[0]]
-    for child in network[1:]:
-        if not (
-            head(child) == "net"
-            and isinstance(child, list)
-            and len(child) > 1
-            and atom_value(child[1]) in zone_nets
-        ):
-            filtered.append(child)
+    missing = sorted(zone_nets - set(before))
+    if missing:
+        raise ValueError(f"Zone-backed nets missing from network block: {missing}")
+
+    replacements: list[tuple[int, int, str]] = []
+    original_pin_counts: dict[str, int] = {}
+    for child_start, child_end in direct_child_spans(network):
+        child = network[child_start:child_end]
+        parsed = net_name_and_pins(child)
+        if parsed is None:
             continue
-
-        net_name = atom_value(child[1])
-        assert net_name is not None
-        rebuilt: list[Node] = child[:2]
-        original_pin_count = 0
-        retained_pin_count = 0
-        for item in child[2:]:
-            if head(item) != "pins" or not isinstance(item, list):
-                rebuilt.append(item)
-                continue
-            pins = [pin for pin in item[1:] if isinstance(pin, Atom)]
-            original_pin_count += len(pins)
-            if pins and retained_pin_count == 0:
-                rebuilt.append([Atom("pins"), pins[0]])
-                retained_pin_count = 1
-        if original_pin_count == 0:
-            raise ValueError(f"Zone-backed net {net_name!r} contains no pins")
-        suppressed[net_name] = original_pin_count
-        removed_pin_references += original_pin_count - retained_pin_count
-        filtered.append(rebuilt)
-
-    if not suppressed:
-        raise ValueError("No zone-backed network entries were found")
-    filtered_block = serialize(filtered)
-    return (
-        dsn_text[:block_start] + filtered_block + dsn_text[block_end:],
-        suppressed,
-        removed_pin_references,
-    )
-
-
-def verify_suppressed_network(dsn_text: str, suppressed: set[str]) -> None:
-    start, end = find_block(dsn_text, "(network")
-    network = parse_one(dsn_text[start:end])
-    if not isinstance(network, list):
-        raise ValueError("Filtered network is malformed")
-
-    found: dict[str, int] = {}
-    for child in network[1:]:
-        if head(child) != "net" or not isinstance(child, list) or len(child) < 2:
+        name, pins = parsed
+        if name not in zone_nets:
             continue
-        net_name = atom_value(child[1])
-        if net_name not in suppressed:
-            continue
-        pin_count = sum(
-            len([pin for pin in item[1:] if isinstance(pin, Atom)])
-            for item in child[2:]
-            if head(item) == "pins" and isinstance(item, list)
+        if not pins:
+            raise ValueError(f"Zone-backed net {name!r} contains no pins")
+
+        pins_start, pins_end = find_head_block(child, "pins")
+        replacements.append(
+            (child_start + pins_start, child_start + pins_end, f"(pins {pins[0]})")
         )
-        found[net_name] = pin_count
+        original_pin_counts[name] = len(pins)
 
-    missing = sorted(suppressed - set(found))
-    invalid = {name: count for name, count in found.items() if count != 1}
-    if missing or invalid:
-        raise ValueError(
-            f"Plane-net suppression verification failed: missing={missing}, pins={invalid}"
+    filtered_network = network
+    for start, end, replacement in reversed(replacements):
+        filtered_network = (
+            filtered_network[:start] + replacement + filtered_network[end:]
         )
+    filtered = dsn_text[:network_start] + filtered_network + dsn_text[network_end:]
+
+    after = network_snapshot(filtered_network)
+    if set(before) != set(after):
+        raise ValueError("Network names changed during plane-net filtering")
+    for name, (before_count, before_text) in before.items():
+        after_count, after_text = after[name]
+        if name in zone_nets:
+            if after_count != 1:
+                raise ValueError(
+                    f"Plane net {name!r} retained {after_count} pins instead of 1"
+                )
+        elif before_text != after_text:
+            raise ValueError(f"Non-suppressed net {name!r} changed")
+
+    wiring_start, wiring_end = find_head_block(dsn_text, "wiring")
+    filtered_wiring_start, filtered_wiring_end = find_head_block(filtered, "wiring")
+    if dsn_text[wiring_start:wiring_end] != filtered[
+        filtered_wiring_start:filtered_wiring_end
+    ]:
+        raise ValueError("Wiring block changed during plane-net filtering")
+
+    return filtered, original_pin_counts, len(before)
 
 
 def main() -> None:
@@ -251,30 +215,38 @@ def main() -> None:
     parser.add_argument("--report", type=Path, required=True)
     args = parser.parse_args()
 
-    zone_nets = zone_net_names(args.board.read_text(encoding="utf-8", errors="replace"))
+    zone_nets = zone_net_names(
+        args.board.read_text(encoding="utf-8", errors="replace")
+    )
     if not zone_nets:
         raise SystemExit("No zone-backed nets found; refusing to emit an unfiltered DSN")
 
     source = args.input.read_text(encoding="utf-8", errors="strict")
-    filtered, suppressed, removed_pin_references = suppress_plane_net_pins(
-        source, zone_nets
+    filtered, original_pin_counts, network_net_count = suppress_plane_net_pins(
+        source,
+        zone_nets,
     )
-    verify_suppressed_network(filtered, set(suppressed))
+    args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(filtered, encoding="utf-8")
 
-    wiring_start = filtered.find("(wiring")
-    wiring = filtered[wiring_start:] if wiring_start >= 0 else ""
+    wiring_start, wiring_end = find_head_block(filtered, "wiring")
+    wiring = filtered[wiring_start:wiring_end]
     report = {
         "zone_backed_nets_on_board": sorted(zone_nets),
         "zone_backed_net_count_on_board": len(zone_nets),
-        "suppressed_router_nets": sorted(suppressed),
-        "suppressed_router_net_count": len(suppressed),
-        "original_pin_counts": suppressed,
-        "removed_pin_references": removed_pin_references,
-        "retained_pin_references": len(suppressed),
+        "suppressed_router_nets": sorted(original_pin_counts),
+        "suppressed_router_net_count": len(original_pin_counts),
+        "network_net_count": network_net_count,
+        "original_pin_counts": original_pin_counts,
+        "removed_pin_references": sum(
+            count - 1 for count in original_pin_counts.values()
+        ),
+        "retained_pin_references": len(original_pin_counts),
         "preserved_plane_wiring_mentions": {
-            name: wiring.count(name) for name in sorted(suppressed)
+            name: wiring.count(name) for name in sorted(original_pin_counts)
         },
+        "non_suppressed_network_entries_preserved": True,
+        "wiring_block_preserved_byte_for_byte": True,
         "router_input_dsn": str(args.output),
     }
     args.report.parent.mkdir(parents=True, exist_ok=True)
