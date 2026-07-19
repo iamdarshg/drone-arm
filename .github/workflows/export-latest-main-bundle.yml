@@ -1,0 +1,27 @@
+name: Export latest main bundle
+
+on:
+  push:
+    branches:
+      - agent/sync-latest-main
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out complete history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Create Git bundle
+        run: git bundle create drone-arm-latest.bundle --all
+      - name: Upload repository bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: drone-arm-latest-bundle
+          path: drone-arm-latest.bundle
+          if-no-files-found: error
+          retention-days: 1
