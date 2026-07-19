@@ -1,13 +1,13 @@
 name: Rev-B generation routing and validation
 
 on:
-  push:
+  pull_request:
     branches:
-      - agent/rev-b-fab-release
+      - main
 
 concurrency:
   group: rev-b-fab-release
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 permissions:
   contents: write
@@ -228,17 +228,17 @@ jobs:
               PCB=hardware/esc/rev_b/esc_rev_b_fab.kicad_pcb
               DIR=hardware/esc/rev_b/fab
               NAME=esc_rev_b
-              XML=hardware/esc/rev_b/reports/esc_rev_b_netlist.xml
+              REPORTS=hardware/esc/rev_b/reports
             else
               PCB=hardware/main/rev_b/main_rev_b_fab.kicad_pcb
               DIR=hardware/main/rev_b/fab
               NAME=main_rev_b
-              XML=hardware/main/rev_b/reports/main_rev_b_netlist.xml
+              REPORTS=hardware/main/rev_b/reports
             fi
             OUT=${DIR}/gerbers
             mkdir -p "$OUT"
-            if [ "$(cat hardware/$([ "$board" = esc ] && echo esc || echo main)/rev_b/reports/${board}_rev_b_final_drc.exit)" != 0 ] || \
-               [ "$(cat hardware/$([ "$board" = esc ] && echo esc || echo main)/rev_b/reports/${board}_rev_b_layout_audit.exit)" != 0 ]; then
+            if [ "$(cat "$REPORTS/${board}_rev_b_final_drc.exit")" != 0 ] || \
+               [ "$(cat "$REPORTS/${board}_rev_b_layout_audit.exit")" != 0 ]; then
               ALL_PASS=0
               continue
             fi
