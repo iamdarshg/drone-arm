@@ -1,9 +1,6 @@
 name: Rev-B fabrication readiness
 
 on:
-  push:
-    branches:
-      - agent/rev-b-fab-ready
   pull_request:
     branches:
       - main
@@ -82,6 +79,7 @@ jobs:
           set -euo pipefail
           rm -rf /tmp/rev-b-generated
           cp -a "$GITHUB_WORKSPACE" /tmp/rev-b-generated
+          git config --global --add safe.directory /tmp/rev-b-generated
           cd /tmp/rev-b-generated
           "$GITHUB_WORKSPACE/.venv/bin/python" tools/hardware/generate_rev_b_schematics.py --board both \
             > "$GITHUB_WORKSPACE/validation-reports/generate-schematics.log" 2>&1
@@ -194,11 +192,6 @@ jobs:
             cat validation-reports/baseline-summary.json
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Export repository source bundle
-        if: always()
-        shell: bash
-        run: git bundle create validation-reports/rev-b-source.bundle --all
 
       - name: Upload validation evidence
         if: always()
