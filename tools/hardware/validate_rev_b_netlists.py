@@ -86,7 +86,7 @@ class Audit:
 def audit_esc(netlist: Netlist, audit: Audit) -> None:
     audit.check(
         "ESC source identity",
-        netlist.source.lower().endswith(r"hardware\esc\rev_b\esc_rev_b.kicad_sch"),
+        netlist.source.replace("\\", "/").lower().endswith("hardware/esc/rev_b/esc_rev_b.kicad_sch"),
         netlist.source,
     )
     expected_counts = {
@@ -314,7 +314,7 @@ def audit_esc(netlist: Netlist, audit: Audit) -> None:
 def audit_main(netlist: Netlist, audit: Audit) -> None:
     audit.check(
         "Control-board source identity",
-        netlist.source.lower().endswith(r"hardware\main\rev_b\main_rev_b.kicad_sch"),
+        netlist.source.replace("\\", "/").lower().endswith("hardware/main/rev_b/main_rev_b.kicad_sch"),
         netlist.source,
     )
     required = {
