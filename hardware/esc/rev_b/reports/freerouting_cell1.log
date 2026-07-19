@@ -1,2 +1,190 @@
-Error: LinkageError occurred while loading main class app.freerouting.Freerouting
-	java.lang.UnsupportedClassVersionError: app/freerouting/Freerouting has been compiled by a more recent version of the Java Runtime (class file version 69.0), this version of the Java Runtime only recognizes class file versions up to 65.0
+2026-07-19 14:36:58.472 INFO   Freerouting v2.2.4 (build-date: 2026-05-13)
+2026-07-19 14:37:00.123 INFO   [D389D5\D7F700] Job 'D389D5\D7F700' started at 2026-07-19T14:37:00.123163933Z.
+2026-07-19 14:37:00.426 INFO   New version available: v2.2.4
+2026-07-19 14:37:00.950 WARN   Polyline: must contain at least 2 different points
+2026-07-19 14:37:00.950 ERROR  Error during routing passes
+java.lang.NullPointerException: Cannot invoke "Object.equals(Object)" because "from_corner" is null
+	at app.freerouting.board.RoutingBoard.insert_forced_trace_polyline(RoutingBoard.java:603)
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.insert_trace(InsertFoundConnectionAlgo.java:143)
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.get_instance(InsertFoundConnectionAlgo.java:64)
+	at app.freerouting.autoroute.AutorouteEngine.autoroute_connection(AutorouteEngine.java:241)
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_item(BatchAutorouter.java:1104)
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_pass(BatchAutorouter.java:451)
+	at app.freerouting.autoroute.BatchAutorouter.runBatchLoop(BatchAutorouter.java:744)
+	at app.freerouting.management.RoutingJobSchedulerActionThread.thread_action(RoutingJobSchedulerActionThread.java:114)
+	at app.freerouting.core.StoppableThread.run(StoppableThread.java:22)
+2026-07-19 14:37:00.950 ERROR  Error during routing passes
+java.lang.NullPointerException: Cannot invoke "Object.equals(Object)" because "from_corner" is null
+	at app.freerouting.board.RoutingBoard.insert_forced_trace_polyline(RoutingBoard.java:603)
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.insert_trace(InsertFoundConnectionAlgo.java:143)
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.get_instance(InsertFoundConnectionAlgo.java:64)
+	at app.freerouting.autoroute.AutorouteEngine.autoroute_connection(AutorouteEngine.java:241)
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_item(BatchAutorouter.java:1104)
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_pass(BatchAutorouter.java:451)
+	at app.freerouting.autoroute.BatchAutorouter.runBatchLoop(BatchAutorouter.java:744)
+	at app.freerouting.management.RoutingJobSchedulerActionThread.thread_action(RoutingJobSchedulerActionThread.java:114)
+	at app.freerouting.core.StoppableThread.run(StoppableThread.java:22)
+2026-07-19 14:37:34.423 INFO   [D389D5\D7F700] Auto-router pass #1 on board '15e0ca3a7c81e9e80a1d7d4c65dfcb87' was completed in 33.98 seconds with the score of 889.99 (87 unrouted), using 32.59 CPU seconds and the job allocated 21.80 GB of memory so far.
+2026-07-19 14:37:34.688 WARN   Polyline: must contain at least 2 different points
+2026-07-19 14:37:34.688 ERROR  Error during routing passes
+java.lang.NullPointerException: Cannot invoke "Object.equals(Object)" because "from_corner" is null
+	at app.freerouting.board.RoutingBoard.insert_forced_trace_polyline(RoutingBoard.java:603)
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.insert_trace(InsertFoundConnectionAlgo.java:143)
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.get_instance(InsertFoundConnectionAlgo.java:64)
+	at app.freerouting.autoroute.AutorouteEngine.autoroute_connection(AutorouteEngine.java:241)
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_item(BatchAutorouter.java:1104)
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_pass(BatchAutorouter.java:451)
+	at app.freerouting.autoroute.BatchAutorouter.runBatchLoop(BatchAutorouter.java:744)
+	at app.freerouting.management.RoutingJobSchedulerActionThread.thread_action(RoutingJobSchedulerActionThread.java:114)
+	at app.freerouting.core.StoppableThread.run(StoppableThread.java:22)
+2026-07-19 14:37:34.688 ERROR  Error during routing passes
+java.lang.NullPointerException: Cannot invoke "Object.equals(Object)" because "from_corner" is null
+	at app.freerouting.board.RoutingBoard.insert_forced_trace_polyline(RoutingBoard.java:603)
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.insert_trace(InsertFoundConnectionAlgo.java:143)
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.get_instance(InsertFoundConnectionAlgo.java:64)
+	at app.freerouting.autoroute.AutorouteEngine.autoroute_connection(AutorouteEngine.java:241)
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_item(BatchAutorouter.java:1104)
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_pass(BatchAutorouter.java:451)
+	at app.freerouting.autoroute.BatchAutorouter.runBatchLoop(BatchAutorouter.java:744)
+	at app.freerouting.management.RoutingJobSchedulerActionThread.thread_action(RoutingJobSchedulerActionThread.java:114)
+	at app.freerouting.core.StoppableThread.run(StoppableThread.java:22)
+2026-07-19 14:38:09.494 INFO   [D389D5\D7F700] Auto-router pass #2 on board '750cba57fad0571b287df176bcece15b' was completed in 34.99 seconds with the score of 900.97 (79 unrouted), using 66.61 CPU seconds and the job allocated 45.50 GB of memory so far.
+2026-07-19 14:38:09.618 WARN   Polyline: must contain at least 2 different points
+2026-07-19 14:38:09.618 ERROR  Error during routing passes
+java.lang.NullPointerException: Cannot invoke "Object.equals(Object)" because "from_corner" is null
+	at app.freerouting.board.RoutingBoard.insert_forced_trace_polyline(RoutingBoard.java:603)
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.insert_trace(InsertFoundConnectionAlgo.java:143)
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.get_instance(InsertFoundConnectionAlgo.java:64)
+	at app.freerouting.autoroute.AutorouteEngine.autoroute_connection(AutorouteEngine.java:241)
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_item(BatchAutorouter.java:1104)
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_pass(BatchAutorouter.java:451)
+	at app.freerouting.autoroute.BatchAutorouter.runBatchLoop(BatchAutorouter.java:744)
+	at app.freerouting.management.RoutingJobSchedulerActionThread.thread_action(RoutingJobSchedulerActionThread.java:114)
+	at app.freerouting.core.StoppableThread.run(StoppableThread.java:22)
+2026-07-19 14:38:09.618 ERROR  Error during routing passes
+java.lang.NullPointerException: Cannot invoke "Object.equals(Object)" because "from_corner" is null
+	at app.freerouting.board.RoutingBoard.insert_forced_trace_polyline(RoutingBoard.java:603)
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.insert_trace(InsertFoundConnectionAlgo.java:143)
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.get_instance(InsertFoundConnectionAlgo.java:64)
+	at app.freerouting.autoroute.AutorouteEngine.autoroute_connection(AutorouteEngine.java:241)
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_item(BatchAutorouter.java:1104)
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_pass(BatchAutorouter.java:451)
+	at app.freerouting.autoroute.BatchAutorouter.runBatchLoop(BatchAutorouter.java:744)
+	at app.freerouting.management.RoutingJobSchedulerActionThread.thread_action(RoutingJobSchedulerActionThread.java:114)
+	at app.freerouting.core.StoppableThread.run(StoppableThread.java:22)
+2026-07-19 14:38:43.472 INFO   [D389D5\D7F700] Auto-router pass #3 on board '0a2418a2b963b18180a5e684f1317aed' was completed in 33.93 seconds with the score of 910.68 (73 unrouted), using 99.70 CPU seconds and the job allocated 69.97 GB of memory so far.
+2026-07-19 14:38:43.677 WARN   Polyline: must contain at least 2 different points
+2026-07-19 14:38:43.677 ERROR  Error during routing passes
+java.lang.NullPointerException: Cannot invoke "Object.equals(Object)" because "from_corner" is null
+	at app.freerouting.board.RoutingBoard.insert_forced_trace_polyline(RoutingBoard.java:603)
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.insert_trace(InsertFoundConnectionAlgo.java:143)
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.get_instance(InsertFoundConnectionAlgo.java:64)
+	at app.freerouting.autoroute.AutorouteEngine.autoroute_connection(AutorouteEngine.java:241)
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_item(BatchAutorouter.java:1104)
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_pass(BatchAutorouter.java:451)
+	at app.freerouting.autoroute.BatchAutorouter.runBatchLoop(BatchAutorouter.java:744)
+	at app.freerouting.management.RoutingJobSchedulerActionThread.thread_action(RoutingJobSchedulerActionThread.java:114)
+	at app.freerouting.core.StoppableThread.run(StoppableThread.java:22)
+2026-07-19 14:38:43.677 ERROR  Error during routing passes
+java.lang.NullPointerException: Cannot invoke "Object.equals(Object)" because "from_corner" is null
+	at app.freerouting.board.RoutingBoard.insert_forced_trace_polyline(RoutingBoard.java:603)
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.insert_trace(InsertFoundConnectionAlgo.java:143)
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.get_instance(InsertFoundConnectionAlgo.java:64)
+	at app.freerouting.autoroute.AutorouteEngine.autoroute_connection(AutorouteEngine.java:241)
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_item(BatchAutorouter.java:1104)
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_pass(BatchAutorouter.java:451)
+	at app.freerouting.autoroute.BatchAutorouter.runBatchLoop(BatchAutorouter.java:744)
+	at app.freerouting.management.RoutingJobSchedulerActionThread.thread_action(RoutingJobSchedulerActionThread.java:114)
+	at app.freerouting.core.StoppableThread.run(StoppableThread.java:22)
+2026-07-19 14:39:13.938 INFO   [D389D5\D7F700] Auto-router pass #4 on board 'f6de57c080ed448d6f990b94409100d4' was completed in 30.41 seconds with the score of 913.28 (71 unrouted), using 128.84 CPU seconds and the job allocated 91.46 GB of memory so far.
+2026-07-19 14:39:14.119 WARN   Polyline: must contain at least 2 different points
+2026-07-19 14:39:14.119 ERROR  Error during routing passes
+java.lang.NullPointerException: Cannot invoke "Object.equals(Object)" because "from_corner" is null
+	at app.freerouting.board.RoutingBoard.insert_forced_trace_polyline(RoutingBoard.java:603)
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.insert_trace(InsertFoundConnectionAlgo.java:143)
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.get_instance(InsertFoundConnectionAlgo.java:64)
+	at app.freerouting.autoroute.AutorouteEngine.autoroute_connection(AutorouteEngine.java:241)
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_item(BatchAutorouter.java:1104)
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_pass(BatchAutorouter.java:451)
+	at app.freerouting.autoroute.BatchAutorouter.runBatchLoop(BatchAutorouter.java:744)
+	at app.freerouting.management.RoutingJobSchedulerActionThread.thread_action(RoutingJobSchedulerActionThread.java:114)
+	at app.freerouting.core.StoppableThread.run(StoppableThread.java:22)
+2026-07-19 14:39:14.119 ERROR  Error during routing passes
+java.lang.NullPointerException: Cannot invoke "Object.equals(Object)" because "from_corner" is null
+	at app.freerouting.board.RoutingBoard.insert_forced_trace_polyline(RoutingBoard.java:603)
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.insert_trace(InsertFoundConnectionAlgo.java:143)
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.get_instance(InsertFoundConnectionAlgo.java:64)
+	at app.freerouting.autoroute.AutorouteEngine.autoroute_connection(AutorouteEngine.java:241)
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_item(BatchAutorouter.java:1104)
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_pass(BatchAutorouter.java:451)
+	at app.freerouting.autoroute.BatchAutorouter.runBatchLoop(BatchAutorouter.java:744)
+	at app.freerouting.management.RoutingJobSchedulerActionThread.thread_action(RoutingJobSchedulerActionThread.java:114)
+	at app.freerouting.core.StoppableThread.run(StoppableThread.java:22)
+2026-07-19 14:39:46.522 INFO   [D389D5\D7F700] Auto-router pass #5 on board '21088e06595e0f4bd86956d950bc73fe' was completed in 32.53 seconds with the score of 919.25 (67 unrouted), using 160.89 CPU seconds and the job allocated 115.05 GB of memory so far.
+2026-07-19 14:39:46.708 WARN   Polyline: must contain at least 2 different points
+2026-07-19 14:39:46.708 ERROR  Error during routing passes
+java.lang.NullPointerException: Cannot invoke "Object.equals(Object)" because "from_corner" is null
+	at app.freerouting.board.RoutingBoard.insert_forced_trace_polyline(RoutingBoard.java:603)
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.insert_trace(InsertFoundConnectionAlgo.java:143)
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.get_instance(InsertFoundConnectionAlgo.java:64)
+	at app.freerouting.autoroute.AutorouteEngine.autoroute_connection(AutorouteEngine.java:241)
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_item(BatchAutorouter.java:1104)
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_pass(BatchAutorouter.java:451)
+	at app.freerouting.autoroute.BatchAutorouter.runBatchLoop(BatchAutorouter.java:744)
+	at app.freerouting.management.RoutingJobSchedulerActionThread.thread_action(RoutingJobSchedulerActionThread.java:114)
+	at app.freerouting.core.StoppableThread.run(StoppableThread.java:22)
+2026-07-19 14:39:46.708 ERROR  Error during routing passes
+java.lang.NullPointerException: Cannot invoke "Object.equals(Object)" because "from_corner" is null
+	at app.freerouting.board.RoutingBoard.insert_forced_trace_polyline(RoutingBoard.java:603)
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.insert_trace(InsertFoundConnectionAlgo.java:143)
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.get_instance(InsertFoundConnectionAlgo.java:64)
+	at app.freerouting.autoroute.AutorouteEngine.autoroute_connection(AutorouteEngine.java:241)
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_item(BatchAutorouter.java:1104)
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_pass(BatchAutorouter.java:451)
+	at app.freerouting.autoroute.BatchAutorouter.runBatchLoop(BatchAutorouter.java:744)
+	at app.freerouting.management.RoutingJobSchedulerActionThread.thread_action(RoutingJobSchedulerActionThread.java:114)
+	at app.freerouting.core.StoppableThread.run(StoppableThread.java:22)
+2026-07-19 14:40:17.935 INFO   [D389D5\D7F700] Auto-router pass #6 on board '4ec540913779f22dddd74b020364dad5' was completed in 31.36 seconds with the score of 922.03 (65 unrouted), using 190.96 CPU seconds and the job allocated 137.43 GB of memory so far.
+2026-07-19 14:40:18.119 WARN   Polyline: must contain at least 2 different points
+2026-07-19 14:40:18.119 ERROR  Error during routing passes
+java.lang.NullPointerException: Cannot invoke "Object.equals(Object)" because "from_corner" is null
+	at app.freerouting.board.RoutingBoard.insert_forced_trace_polyline(RoutingBoard.java:603)
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.insert_trace(InsertFoundConnectionAlgo.java:143)
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.get_instance(InsertFoundConnectionAlgo.java:64)
+	at app.freerouting.autoroute.AutorouteEngine.autoroute_connection(AutorouteEngine.java:241)
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_item(BatchAutorouter.java:1104)
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_pass(BatchAutorouter.java:451)
+	at app.freerouting.autoroute.BatchAutorouter.runBatchLoop(BatchAutorouter.java:744)
+	at app.freerouting.management.RoutingJobSchedulerActionThread.thread_action(RoutingJobSchedulerActionThread.java:114)
+	at app.freerouting.core.StoppableThread.run(StoppableThread.java:22)
+2026-07-19 14:40:18.119 ERROR  Error during routing passes
+java.lang.NullPointerException: Cannot invoke "Object.equals(Object)" because "from_corner" is null
+	at app.freerouting.board.RoutingBoard.insert_forced_trace_polyline(RoutingBoard.java:603)
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.insert_trace(InsertFoundConnectionAlgo.java:143)
+	at app.freerouting.autoroute.InsertFoundConnectionAlgo.get_instance(InsertFoundConnectionAlgo.java:64)
+	at app.freerouting.autoroute.AutorouteEngine.autoroute_connection(AutorouteEngine.java:241)
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_item(BatchAutorouter.java:1104)
+	at app.freerouting.autoroute.BatchAutorouter.autoroute_pass(BatchAutorouter.java:451)
+	at app.freerouting.autoroute.BatchAutorouter.runBatchLoop(BatchAutorouter.java:744)
+	at app.freerouting.management.RoutingJobSchedulerActionThread.thread_action(RoutingJobSchedulerActionThread.java:114)
+	at app.freerouting.core.StoppableThread.run(StoppableThread.java:22)
+2026-07-19 14:40:51.005 INFO   [D389D5\D7F700] Auto-router pass #7 on board 'b3b6ab0d7dd254e44a0dda00e2443b8e' was completed in 33.02 seconds with the score of 917.74 (68 unrouted), using 222.98 CPU seconds and the job allocated 161.64 GB of memory so far.
+2026-07-19 14:40:51.182 WARN   Polyline: must contain at least 2 different points
+2026-07-19 14:40:51.182 ERROR  Error during routing passes
+java.lang.NullPointerException
+2026-07-19 14:40:51.182 ERROR  Error during routing passes
+java.lang.NullPointerException
+2026-07-19 14:41:22.772 INFO   [D389D5\D7F700] Auto-router pass #8 on board '8299c7a4353682029102670689cd5f4d' was completed in 31.72 seconds with the score of 923.60 (64 unrouted), using 254.02 CPU seconds and the job allocated 185.90 GB of memory so far.
+2026-07-19 14:41:22.954 WARN   Polyline: must contain at least 2 different points
+2026-07-19 14:41:22.954 ERROR  Error during routing passes
+java.lang.NullPointerException
+2026-07-19 14:41:22.954 ERROR  Error during routing passes
+java.lang.NullPointerException
+2026-07-19 14:41:53.705 INFO   [D389D5\D7F700] Auto-router pass #9 on board '9b8fc8b429f67e223e7587db6a2d73b6' was completed in 30.88 seconds with the score of 925.17 (63 unrouted), using 284.12 CPU seconds and the job allocated 209.60 GB of memory so far.
+2026-07-19 14:41:53.882 WARN   Polyline: must contain at least 2 different points
+2026-07-19 14:41:53.883 ERROR  Error during routing passes
+java.lang.NullPointerException
+2026-07-19 14:41:53.883 ERROR  Error during routing passes
+java.lang.NullPointerException
+2026-07-19 14:42:21.438 INFO   [D389D5\D7F700] Auto-router pass #10 on board 'f81d0057d6c9f889bcb2468c135483d8' was completed in 27.69 seconds with the score of 928.04 (61 unrouted), using 311.31 CPU seconds and the job allocated 230.57 GB of memory so far.
+2026-07-19 14:42:21.484 INFO   [D389D5\D7F700] Auto-router session completed: started with 227 unrouted nets, completed in 5 minutes 21.17 seconds, final score: 928.04 (61 unrouted), using 311.31 total CPU seconds, 230.57 GB total allocated, and 1300.36 MB peak heap usage.

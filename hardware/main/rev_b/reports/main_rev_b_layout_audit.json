@@ -1,0 +1,138 @@
+{
+  "board": "hardware/main/rev_b/main_rev_b_fab.kicad_pcb",
+  "kind": "main",
+  "passed": false,
+  "summary": {
+    "checks": 6,
+    "failures": 6,
+    "unconnected_count": 35,
+    "track_count": 1682,
+    "via_count": 296
+  },
+  "checks": [
+    {
+      "name": "Zero unrouted connections",
+      "passed": false,
+      "detail": {
+        "unconnected_count": 35
+      }
+    },
+    {
+      "name": "RF routes remain on F.Cu without vias",
+      "passed": false,
+      "detail": {
+        "audited_nets": 30,
+        "failures": {
+          "/915 MHz RF/CC1121_RF": {
+            "track_length_mm": 4.839,
+            "track_count": 5,
+            "via_count": 2,
+            "layers": [
+              "F.Cu",
+              "In2.Cu"
+            ],
+            "min_width_mm": 0.35
+          },
+          "/915 MHz RF/CC_DCPL_XOSC": {
+            "track_length_mm": 5.447,
+            "track_count": 7,
+            "via_count": 2,
+            "layers": [
+              "F.Cu",
+              "In2.Cu"
+            ],
+            "min_width_mm": 0.25
+          },
+          "/915 MHz RF/CC_EXTCLK": {
+            "track_length_mm": 6.247,
+            "track_count": 6,
+            "via_count": 2,
+            "layers": [
+              "F.Cu",
+              "In1.Cu"
+            ],
+            "min_width_mm": 0.25
+          },
+          "/915 MHz RF/CC_LNA_N": {
+            "track_length_mm": 7.781,
+            "track_count": 7,
+            "via_count": 2,
+            "layers": [
+              "F.Cu",
+              "In1.Cu"
+            ],
+            "min_width_mm": 0.25
+          },
+          "/915 MHz RF/MATCH_A": {
+            "track_length_mm": 14.75,
+            "track_count": 10,
+            "via_count": 2,
+            "layers": [
+              "F.Cu",
+              "In1.Cu"
+            ],
+            "min_width_mm": 0.35
+          },
+          "/915 MHz RF/VDD_CC112": {
+            "track_length_mm": 68.047,
+            "track_count": 53,
+            "via_count": 2,
+            "layers": [
+              "F.Cu",
+              "In1.Cu"
+            ],
+            "min_width_mm": 0.25
+          }
+        }
+      }
+    },
+    {
+      "name": "USB connector-side pair skew",
+      "passed": false,
+      "detail": {
+        "positive": "/Power and USB/USB_DP_CONN",
+        "negative": "/Power and USB/USB_DN_CONN",
+        "positive_length_mm": 17.73,
+        "negative_length_mm": 24.584,
+        "skew_mm": 6.854,
+        "limit_mm": 0.5
+      }
+    },
+    {
+      "name": "USB MCU-side pair skew",
+      "passed": false,
+      "detail": {
+        "positive": "/USB_DP",
+        "negative": "/USB_DM",
+        "positive_length_mm": 58.414,
+        "negative_length_mm": 37.941,
+        "skew_mm": 20.473,
+        "limit_mm": 0.5
+      }
+    },
+    {
+      "name": "CAN connector pair skew",
+      "passed": false,
+      "detail": {
+        "positive": "/CANH",
+        "negative": "/CANL",
+        "positive_length_mm": 16.903,
+        "negative_length_mm": 26.987,
+        "skew_mm": 10.084,
+        "limit_mm": 2.0
+      }
+    },
+    {
+      "name": "CAN transceiver pair skew",
+      "passed": false,
+      "detail": {
+        "positive": "/CAN interface/U50_CANH",
+        "negative": "/CAN interface/U50_CANL",
+        "positive_length_mm": 16.411,
+        "negative_length_mm": 11.32,
+        "skew_mm": 5.091,
+        "limit_mm": 2.0
+      }
+    }
+  ]
+}
