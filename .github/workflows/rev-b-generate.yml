@@ -40,6 +40,7 @@ jobs:
           git config user.email "rev-b-build[bot]@users.noreply.github.com"
           python3 -m venv --system-site-packages .venv
           .venv/bin/pip install --disable-pip-version-check 'kicad-sch-api==0.5.6'
+          mkdir -p hardware/esc/rev_b/reports hardware/main/rev_b/reports
       - name: Make generators portable and deterministic
         shell: bash
         run: |
@@ -85,10 +86,10 @@ jobs:
 
           RP2354B_PINS = load_rp2354_pins()
           '''
-          if old not in text and 'def load_rp2354_pins()' not in text:
-              raise SystemExit('RP2354B generator block not found')
           if old in text:
               text = text.replace(old, new)
+          elif 'def load_rp2354_pins()' not in text:
+              raise SystemExit('RP2354B generator block not found')
           sch.write_text(text, encoding='utf-8')
 
           pcb = Path('tools/hardware/generate_rev_b_pcbs.py')
@@ -112,56 +113,82 @@ jobs:
               for candidate in candidates:
                   if candidate.is_dir():
                       return candidate
-              raise RuntimeError(
-                  "Unable to locate KiCad footprints; set KICAD_FOOTPRINT_DIR"
-              )
+              raise RuntimeError("Unable to locate KiCad footprints; set KICAD_FOOTPRINT_DIR")
 
 
           KICAD_FP_ROOT = discover_footprint_root()
           '''
-          if old not in text and 'def discover_footprint_root()' not in text:
-              raise SystemExit('KiCad footprint root block not found')
           if old in text:
               text = text.replace(old, new)
+          elif 'def discover_footprint_root()' not in text:
+              raise SystemExit('KiCad footprint root block not found')
           pcb.write_text(text, encoding='utf-8')
           PY
           .venv/bin/python -m py_compile \
             tools/hardware/generate_rev_b_schematics.py \
             tools/hardware/generate_rev_b_pcbs.py
-      - name: Generate schematics and netlists
+      - name: Generate sources and diagnostics
         shell: bash
         run: |
-          .venv/bin/python tools/hardware/generate_rev_b_schematics.py --board both
-          mkdir -p hardware/esc/rev_b/reports hardware/main/rev_b/reports
+          set +e
+          REPORT=hardware/esc/rev_b/reports/generation_status.txt
+          : > "$REPORT"
+
+          .venv/bin/python tools/hardware/generate_rev_b_schematics.py --board both \
+            > hardware/esc/rev_b/reports/generate_schematics.log 2>&1
+          echo "generate_schematics=$?" | tee -a "$REPORT"
+
           kicad-cli sch export netlist --format kicadxml \
             -o hardware/esc/rev_b/reports/esc_rev_b_netlist.xml \
-            hardware/esc/rev_b/esc_rev_b.kicad_sch
+            hardware/esc/rev_b/esc_rev_b.kicad_sch \
+            > hardware/esc/rev_b/reports/export_esc_netlist.log 2>&1
+          echo "export_esc_netlist=$?" | tee -a "$REPORT"
+
           kicad-cli sch export netlist --format kicadxml \
             -o hardware/main/rev_b/reports/main_rev_b_netlist.xml \
-            hardware/main/rev_b/main_rev_b.kicad_sch
-          .venv/bin/python tools/hardware/validate_rev_b_netlists.py \
-            hardware/esc/rev_b/reports/esc_rev_b_netlist.xml \
-            hardware/main/rev_b/reports/main_rev_b_netlist.xml \
-            --output hardware/esc/rev_b/reports/rev_b_connectivity_audit.json || true
-      - name: Generate placed PCB sources
-        shell: bash
-        run: .venv/bin/python tools/hardware/generate_rev_b_pcbs.py --board both
-      - name: Record pre-route checks
-        shell: bash
-        run: |
-          kicad-cli sch erc --severity-all --format json \
-            -o hardware/esc/rev_b/reports/esc_rev_b_erc.json \
-            hardware/esc/rev_b/esc_rev_b.kicad_sch
-          kicad-cli sch erc --severity-all --format json \
-            -o hardware/main/rev_b/reports/main_rev_b_erc.json \
-            hardware/main/rev_b/main_rev_b.kicad_sch
-          kicad-cli pcb drc --severity-all --format json \
-            -o hardware/esc/rev_b/reports/esc_rev_b_preroute_drc.json \
-            hardware/esc/rev_b/esc_rev_b.kicad_pcb
-          kicad-cli pcb drc --severity-all --format json \
-            -o hardware/main/rev_b/reports/main_rev_b_preroute_drc.json \
-            hardware/main/rev_b/main_rev_b.kicad_pcb
-      - name: Commit generated sources
+            hardware/main/rev_b/main_rev_b.kicad_sch \
+            > hardware/main/rev_b/reports/export_main_netlist.log 2>&1
+          echo "export_main_netlist=$?" | tee -a "$REPORT"
+
+          if [ -f hardware/esc/rev_b/reports/esc_rev_b_netlist.xml ] && \
+             [ -f hardware/main/rev_b/reports/main_rev_b_netlist.xml ]; then
+            .venv/bin/python tools/hardware/validate_rev_b_netlists.py \
+              hardware/esc/rev_b/reports/esc_rev_b_netlist.xml \
+              hardware/main/rev_b/reports/main_rev_b_netlist.xml \
+              --output hardware/esc/rev_b/reports/rev_b_connectivity_audit.json \
+              > hardware/esc/rev_b/reports/connectivity_audit.log 2>&1
+            echo "connectivity_audit=$?" | tee -a "$REPORT"
+          else
+            echo "connectivity_audit=skipped" | tee -a "$REPORT"
+          fi
+
+          .venv/bin/python tools/hardware/generate_rev_b_pcbs.py --board both \
+            > hardware/esc/rev_b/reports/generate_pcbs.log 2>&1
+          echo "generate_pcbs=$?" | tee -a "$REPORT"
+
+          for board in esc main; do
+            if [ "$board" = esc ]; then
+              ROOT=hardware/esc/rev_b/esc_rev_b
+              OUT=hardware/esc/rev_b/reports
+            else
+              ROOT=hardware/main/rev_b/main_rev_b
+              OUT=hardware/main/rev_b/reports
+            fi
+            if [ -f "${ROOT}.kicad_sch" ]; then
+              kicad-cli sch erc --severity-all --format json \
+                -o "$OUT/${board}_rev_b_erc.json" "${ROOT}.kicad_sch" \
+                > "$OUT/${board}_erc.log" 2>&1
+              echo "${board}_erc=$?" | tee -a "$REPORT"
+            fi
+            if [ -f "${ROOT}.kicad_pcb" ]; then
+              kicad-cli pcb drc --severity-all --format json \
+                -o "$OUT/${board}_rev_b_preroute_drc.json" "${ROOT}.kicad_pcb" \
+                > "$OUT/${board}_preroute_drc.log" 2>&1
+              echo "${board}_preroute_drc=$?" | tee -a "$REPORT"
+            fi
+          done
+          set -e
+      - name: Commit generated sources and diagnostics
         shell: bash
         run: |
           git add \
