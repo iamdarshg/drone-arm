@@ -1,0 +1,77 @@
+{
+  "board": "hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb",
+  "kind": "main",
+  "passed": false,
+  "summary": {
+    "checks": 6,
+    "failures": 6,
+    "unconnected_count": 413,
+    "track_count": 0,
+    "via_count": 0
+  },
+  "checks": [
+    {
+      "name": "Zero unrouted connections",
+      "passed": false,
+      "detail": {
+        "unconnected_count": 413
+      }
+    },
+    {
+      "name": "RF routes remain on F.Cu without vias",
+      "passed": false,
+      "detail": {
+        "audited_nets": 0,
+        "failures": {}
+      }
+    },
+    {
+      "name": "USB connector-side pair skew",
+      "passed": false,
+      "detail": {
+        "positive": "/Power and USB/USB_DP_CONN",
+        "negative": "/Power and USB/USB_DN_CONN",
+        "positive_length_mm": 0.0,
+        "negative_length_mm": 0.0,
+        "skew_mm": 0.0,
+        "limit_mm": 0.5
+      }
+    },
+    {
+      "name": "USB MCU-side pair skew",
+      "passed": false,
+      "detail": {
+        "positive": "/USB_DP",
+        "negative": "/USB_DM",
+        "positive_length_mm": 0.0,
+        "negative_length_mm": 0.0,
+        "skew_mm": 0.0,
+        "limit_mm": 0.5
+      }
+    },
+    {
+      "name": "CAN connector pair skew",
+      "passed": false,
+      "detail": {
+        "positive": "/CANH",
+        "negative": "/CANL",
+        "positive_length_mm": 0.0,
+        "negative_length_mm": 0.0,
+        "skew_mm": 0.0,
+        "limit_mm": 2.0
+      }
+    },
+    {
+      "name": "CAN transceiver pair skew",
+      "passed": false,
+      "detail": {
+        "positive": "/CAN interface/U50_CANH",
+        "negative": "/CAN interface/U50_CANL",
+        "positive_length_mm": 0.0,
+        "negative_length_mm": 0.0,
+        "skew_mm": 0.0,
+        "limit_mm": 2.0
+      }
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "zone_backed_nets_on_board": [
+    "/GND"
+  ],
+  "zone_backed_net_count_on_board": 1,
+  "suppressed_router_nets": [
+    "/GND"
+  ],
+  "suppressed_router_net_count": 1,
+  "original_pin_counts": {
+    "/GND": 159
+  },
+  "removed_pin_references": 158,
+  "retained_pin_references": 1,
+  "preserved_plane_wiring_mentions": {
+    "/GND": 943
+  },
+  "router_input_dsn": "build/recovery/main/main-no-plane-demand.dsn"
+}
