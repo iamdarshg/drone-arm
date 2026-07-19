@@ -19,13 +19,14 @@ jobs:
       - name: Install validation tools
         run: |
           apt-get update
-          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends git ca-certificates kicad jq zip
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends git ca-certificates kicad jq zip python3
       - name: Check out repository
         uses: actions/checkout@v4
       - name: Record tool versions
+        shell: bash
         run: |
           mkdir -p validation-reports
-          kicad-cli version | tee validation-reports/kicad-version.txt
+          kicad-cli --version | tee validation-reports/kicad-version.txt
           kicad-cli sch erc --help > validation-reports/sch-erc-help.txt
           kicad-cli pcb drc --help > validation-reports/pcb-drc-help.txt
       - name: Run schematic and PCB checks
@@ -59,6 +60,7 @@ jobs:
           print('\n'.join(lines))
           PY
       - name: Upload validation reports
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: kicad-baseline-validation
