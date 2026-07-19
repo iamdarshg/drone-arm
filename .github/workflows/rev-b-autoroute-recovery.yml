@@ -1,0 +1,224 @@
+name: Resume Rev-B ESC routing
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  actions: read
+  contents: write
+
+env:
+  SOURCE_RUN_ID: 29693302481
+  JAVA_HOME: /opt/java25
+  PATH: /opt/java25/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+jobs:
+  measure-replicated-esc:
+    runs-on: ubuntu-latest
+    container: debian:trixie
+    timeout-minutes: 45
+    steps:
+      - name: Install KiCad tools
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            git ca-certificates kicad kicad-symbols kicad-footprints python3 jq
+
+      - name: Check out consolidated branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/rev-b-fab-ready
+          fetch-depth: 0
+
+      - name: Download replicated ESC checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          name: rev-b-esc-routed
+          path: build/source-esc
+          github-token: ${{ github.token }}
+          run-id: ${{ env.SOURCE_RUN_ID }}
+
+      - name: Fill zones and measure replicated cells
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/recovery/measure
+          source_board=build/source-esc/build/rev-b-router/esc/esc-replicated.kicad_pcb
+          test -s "$source_board"
+          python3 tools/hardware/route_rev_b_sections.py fill-zones \
+            --board "$source_board" \
+            --output build/recovery/measure/esc-replicated-filled.kicad_pcb
+
+          set +e
+          kicad-cli pcb drc --severity-all --format json \
+            -o build/recovery/measure/drc.json \
+            build/recovery/measure/esc-replicated-filled.kicad_pcb
+          echo $? > build/recovery/measure/drc.exit
+          python3 tools/hardware/audit_rev_b_pcb.py \
+            --kind esc \
+            --board build/recovery/measure/esc-replicated-filled.kicad_pcb \
+            --output build/recovery/measure/layout-audit.json
+          echo $? > build/recovery/measure/layout-audit.exit
+          set -e
+          jq '{unconnected: (.unconnected_items | length), violations: (.violations | length), error_violations: ([.violations[] | select(.severity == "error")] | length)}' \
+            build/recovery/measure/drc.json | tee build/recovery/measure/summary.json
+
+      - name: Upload measured replicated ESC
+        uses: actions/upload-artifact@v4
+        with:
+          name: rev-b-esc-replicated-measured
+          path: build/recovery/measure
+          if-no-files-found: error
+          retention-days: 3
+
+  route-shared-esc:
+    needs: measure-replicated-esc
+    runs-on: ubuntu-latest
+    container: debian:trixie
+    timeout-minutes: 220
+    steps:
+      - name: Install KiCad and runtime tools
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            git ca-certificates kicad kicad-symbols kicad-footprints \
+            python3 curl jq tar gzip
+
+      - name: Install Temurin JRE 25
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /opt/java25
+          jre_url=$(curl -fsSL \
+            'https://api.adoptium.net/v3/assets/latest/25/hotspot?architecture=x64&image_type=jre&os=linux&vendor=eclipse' \
+            | jq -r '.[0].binary.package.link')
+          curl -fL "$jre_url" -o /tmp/temurin25-jre.tar.gz
+          tar -xzf /tmp/temurin25-jre.tar.gz --strip-components=1 -C /opt/java25
+          java -version
+
+      - name: Check out consolidated branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/rev-b-fab-ready
+          fetch-depth: 0
+
+      - name: Download fixed router and ESC checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          name: fixed-freerouting
+          path: build/fixed-freerouting
+          github-token: ${{ github.token }}
+          run-id: ${{ env.SOURCE_RUN_ID }}
+
+      - name: Download replicated ESC checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          name: rev-b-esc-routed
+          path: build/source-esc
+          github-token: ${{ github.token }}
+          run-id: ${{ env.SOURCE_RUN_ID }}
+
+      - name: Route shared controller and power nets
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/recovery/shared
+          exec > >(tee build/recovery/shared/stage.log) 2>&1
+          routed=build/source-esc/build/rev-b-router/esc/esc-replicated.kicad_pcb
+          no_zones=build/source-esc/build/rev-b-router/esc/esc-replicated-nozones.kicad_pcb
+          test -s "$routed"
+          test -s "$no_zones"
+
+          python3 tools/hardware/route_rev_b_sections.py export-main \
+            --board "$no_zones" \
+            --dsn build/recovery/shared/esc-shared.dsn
+
+          set +e
+          timeout 190m java -Xmx6g -Djava.awt.headless=true \
+            -jar build/fixed-freerouting/freerouting-current-executable.jar \
+            --gui.enabled=false \
+            -de build/recovery/shared/esc-shared.dsn \
+            -do build/recovery/shared/esc-shared.ses \
+            -mp 120 -mt 2 -oit 0.01 -us hybrid -hr 1:2 -is prioritized \
+            -da -dct 1 --logging.console.level=INFO --logging.file.enabled=false \
+            > build/recovery/shared/freerouting.log 2>&1
+          echo $? > build/recovery/shared/freerouting.exit
+          set -e
+          test -s build/recovery/shared/esc-shared.ses
+
+          python3 tools/hardware/route_rev_b_sections.py import-main \
+            --board "$routed" \
+            --ses build/recovery/shared/esc-shared.ses \
+            --output build/recovery/shared/esc-imported.kicad_pcb
+          python3 tools/hardware/route_rev_b_sections.py fill-zones \
+            --board build/recovery/shared/esc-imported.kicad_pcb \
+            --output hardware/esc/rev_b/esc_rev_b.kicad_pcb
+
+          set +e
+          kicad-cli pcb drc --severity-all --format json \
+            -o build/recovery/shared/drc.json \
+            hardware/esc/rev_b/esc_rev_b.kicad_pcb
+          echo $? > build/recovery/shared/drc.exit
+          python3 tools/hardware/audit_rev_b_pcb.py \
+            --kind esc --board hardware/esc/rev_b/esc_rev_b.kicad_pcb \
+            --output build/recovery/shared/layout-audit.json
+          echo $? > build/recovery/shared/layout-audit.exit
+          set -e
+          jq '{unconnected: (.unconnected_items | length), violations: (.violations | length), error_violations: ([.violations[] | select(.severity == "error")] | length)}' \
+            build/recovery/shared/drc.json | tee build/recovery/shared/summary.json
+
+      - name: Upload shared-net ESC result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rev-b-esc-shared-routed
+          path: |
+            hardware/esc/rev_b/esc_rev_b.kicad_pcb
+            build/recovery/shared
+          if-no-files-found: error
+          retention-days: 3
+
+  commit-esc-routing:
+    needs: route-shared-esc
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out consolidated branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/rev-b-fab-ready
+          fetch-depth: 0
+
+      - name: Download completed ESC route
+        uses: actions/download-artifact@v4
+        with:
+          name: rev-b-esc-shared-routed
+          path: build/completed-esc
+
+      - name: Install board and reports
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp build/completed-esc/hardware/esc/rev_b/esc_rev_b.kicad_pcb \
+            hardware/esc/rev_b/esc_rev_b.kicad_pcb
+          mkdir -p hardware/esc/rev_b/reports
+          cp build/completed-esc/build/recovery/shared/drc.json \
+            hardware/esc/rev_b/reports/esc_rev_b_autorouted_drc.json
+          cp build/completed-esc/build/recovery/shared/layout-audit.json \
+            hardware/esc/rev_b/reports/esc_rev_b_autorouted_layout_audit.json
+          cp build/completed-esc/build/recovery/shared/summary.json \
+            hardware/esc/rev_b/reports/esc_rev_b_autorouted_summary.json
+          rm -f .github/workflows/rev-b-autoroute-recovery.yml
+          rm -rf build/completed-esc
+
+      - name: Commit ESC routing to consolidated PR
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Rev-B Hardware Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "route: complete section-aware Rev-B ESC routing pass"
+          git push origin HEAD:agent/rev-b-fab-ready
