@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - agent/rev-b-fab-ready
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: write
@@ -15,7 +18,6 @@ env:
 
 jobs:
   generate:
-    if: ${{ !contains(github.event.head_commit.message, 'build: generate rev-b outputs') }}
     runs-on: ubuntu-latest
     container: debian:trixie
     steps:
@@ -173,4 +175,14 @@ jobs:
             exit 0
           fi
           git commit -m 'build: generate rev-b outputs'
-          git push origin HEAD:agent/rev-b-fab-ready
+          for attempt in 1 2 3; do
+            git fetch origin agent/rev-b-fab-ready
+            if git rebase origin/agent/rev-b-fab-ready && \
+               git push origin HEAD:agent/rev-b-fab-ready; then
+              exit 0
+            fi
+            git rebase --abort 2>/dev/null || true
+            sleep $((attempt * 5))
+          done
+          echo 'Unable to publish generated outputs after three rebased attempts.' >&2
+          exit 1
