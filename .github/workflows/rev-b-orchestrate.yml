@@ -137,7 +137,8 @@ jobs:
           .venv/bin/python tools/hardware/route_rev_b_sections.py export-main \
             --board build/rev-b/main_no_zones.kicad_pcb \
             --dsn build/rev-b/main.dsn
-          timeout 45m java -Xmx6g -jar build/rev-b/freerouting.jar \
+          timeout 20m java -Xmx6g -jar build/rev-b/freerouting.jar \
+            -mp 10 -mt 4 --gui.enabled=false -da -dl \
             -de build/rev-b/main.dsn -do build/rev-b/main.ses \
             > hardware/main/rev_b/reports/freerouting_main.log 2>&1
           echo $? > hardware/main/rev_b/reports/freerouting_main.exit
@@ -163,7 +164,8 @@ jobs:
             --cell build/rev-b/esc_cell1.kicad_pcb \
             --baseline build/rev-b/esc_cell1_baseline.json \
             --dsn build/rev-b/esc_cell1.dsn
-          timeout 45m java -Xmx6g -jar build/rev-b/freerouting.jar \
+          timeout 20m java -Xmx6g -jar build/rev-b/freerouting.jar \
+            -mp 10 -mt 4 --gui.enabled=false -da -dl \
             -de build/rev-b/esc_cell1.dsn -do build/rev-b/esc_cell1.ses \
             > hardware/esc/rev_b/reports/freerouting_cell1.log 2>&1
           echo $? > hardware/esc/rev_b/reports/freerouting_cell1.exit
@@ -183,7 +185,8 @@ jobs:
             .venv/bin/python tools/hardware/route_rev_b_sections.py export-main \
               --board build/rev-b/esc_cells_no_zones.kicad_pcb \
               --dsn build/rev-b/esc_full.dsn
-            timeout 60m java -Xmx7g -jar build/rev-b/freerouting.jar \
+            timeout 25m java -Xmx7g -jar build/rev-b/freerouting.jar \
+              -mp 10 -mt 4 --gui.enabled=false -da -dl \
               -de build/rev-b/esc_full.dsn -do build/rev-b/esc_full.ses \
               > hardware/esc/rev_b/reports/freerouting_full.log 2>&1
             echo $? > hardware/esc/rev_b/reports/freerouting_full.exit
