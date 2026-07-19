@@ -76,7 +76,7 @@ jobs:
 
           routed=build/source-esc/build/rev-b-router/esc/esc-replicated.kicad_pcb
           no_zones=build/source-esc/build/rev-b-router/esc/esc-replicated-nozones.kicad_pcb
-          filtered_board=build/recovery/esc/esc-router-input.kicad_pcb
+          raw_dsn=build/recovery/esc/esc-shared-with-plane-nets.dsn
           filtered_dsn=build/recovery/esc/esc-shared-no-planes.dsn
           test -s "$routed"
           test -s "$no_zones"
@@ -84,69 +84,17 @@ jobs:
           kicad-cli --version | tee build/recovery/esc/kicad-version.txt
           java -version 2>&1 | tee build/recovery/esc/java-version.txt
 
-          # FreeRouting can become unstable when it is asked to route large copper
-          # planes. Derive the exclusion set from the actual KiCad zones, disconnect
-          # only those pads in a temporary board, and keep the real board untouched.
-          python3 - "$routed" "$no_zones" "$filtered_board" "$filtered_dsn" \
-            build/recovery/esc/plane-net-filter.json <<'PY'
-          from __future__ import annotations
+          python3 tools/hardware/route_rev_b_sections.py export-main \
+            --board "$no_zones" \
+            --dsn "$raw_dsn"
 
-          import json
-          import re
-          import sys
-          from pathlib import Path
-
-          import pcbnew
-
-          routed_path, no_zones_path, output_board_path, output_dsn_path, report_path = map(Path, sys.argv[1:])
-          source_text = routed_path.read_text(encoding="utf-8", errors="replace")
-          plane_nets: set[str] = set()
-          for match in re.finditer(r"\(zone\b", source_text):
-              header = source_text[match.start():match.start() + 1200]
-              net_match = re.search(r'\(net_name\s+"((?:\\.|[^"\\])*)"\)', header)
-              if net_match:
-                  plane_nets.add(re.sub(r"\\(.)", r"\1", net_match.group(1)))
-          if not plane_nets:
-              raise SystemExit("No zone-backed nets found; refusing to route an unfiltered DSN")
-
-          board = pcbnew.LoadBoard(str(no_zones_path))
-          disconnected_pads = 0
-          for footprint in board.GetFootprints():
-              for pad in footprint.Pads():
-                  if str(pad.GetNetname()) in plane_nets:
-                      pad.SetNetCode(0)
-                      disconnected_pads += 1
-
-          removed_tracks = 0
-          for item in list(board.GetTracks()):
-              if str(item.GetNetname()) in plane_nets:
-                  board.Remove(item)
-                  removed_tracks += 1
-
-          pcbnew.SaveBoard(str(output_board_path), board)
-          if not pcbnew.ExportSpecctraDSN(board, str(output_dsn_path)):
-              raise SystemExit(f"Failed to export {output_dsn_path}")
-
-          dsn_text = output_dsn_path.read_text(encoding="utf-8", errors="strict")
-          network_names = set()
-          for net_match in re.finditer(r'\(net\s+(?:"((?:\\.|[^"\\])*)"|([^\s()]+))\s', dsn_text):
-              raw_name = net_match.group(1) if net_match.group(1) is not None else net_match.group(2)
-              network_names.add(re.sub(r"\\(.)", r"\1", raw_name))
-          leaked = sorted(plane_nets & network_names)
-          if leaked:
-              raise SystemExit(f"Zone-backed nets leaked into filtered DSN: {leaked}")
-
-          report = {
-              "omitted_zone_backed_nets": sorted(plane_nets),
-              "omitted_zone_backed_net_count": len(plane_nets),
-              "disconnected_pads_in_temporary_board": disconnected_pads,
-              "removed_plane_tracks_in_temporary_board": removed_tracks,
-              "router_input_board": str(output_board_path),
-              "router_input_dsn": str(output_dsn_path),
-          }
-          report_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-          print(json.dumps(report, indent=2))
-          PY
+          # Keep existing power/ground/phase copper visible to FreeRouting as fixed
+          # obstacles, but remove those zone-backed nets from the routing demand.
+          python3 tools/hardware/filter_specctra_plane_nets.py \
+            --board "$routed" \
+            --input "$raw_dsn" \
+            --output "$filtered_dsn" \
+            --report build/recovery/esc/plane-net-filter.json
 
           set +e
           timeout 205m java -Xmx6g -Djava.awt.headless=true \
