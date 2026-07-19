@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - agent/recover-rev-b
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: read
