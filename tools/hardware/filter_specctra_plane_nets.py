@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Remove zone-backed nets from a Specctra DSN routing demand.
+"""Suppress zone-backed nets from a Specctra DSN routing demand.
 
-The DSN's existing wiring is preserved so already-routed plane copper remains
-visible to FreeRouting as protected geometry. Only the matching ``network/net``
-entries and class references are removed.
+The DSN's existing wiring and net definitions are preserved so already-routed
+power/ground copper remains valid protected geometry. Each matching net is
+reduced to one retained pin, which gives FreeRouting no connection to solve
+without leaving wiring that refers to an undefined net.
 """
 
 from __future__ import annotations
@@ -163,69 +164,82 @@ def zone_net_names(board_text: str) -> set[str]:
     return names
 
 
-def filter_plane_nets(dsn_text: str, omitted: set[str]) -> tuple[str, int, int]:
+def suppress_plane_net_pins(
+    dsn_text: str, zone_nets: set[str]
+) -> tuple[str, dict[str, int], int]:
     block_start, block_end = find_block(dsn_text, "(network")
     network = parse_one(dsn_text[block_start:block_end])
     if head(network) != "network" or not isinstance(network, list):
         raise ValueError("Located block is not a network block")
 
-    removed_nets = 0
-    removed_class_refs = 0
+    suppressed: dict[str, int] = {}
+    removed_pin_references = 0
     filtered: list[Node] = [network[0]]
     for child in network[1:]:
-        child_head = head(child)
-        if (
-            child_head == "net"
+        if not (
+            head(child) == "net"
             and isinstance(child, list)
             and len(child) > 1
-            and atom_value(child[1]) in omitted
+            and atom_value(child[1]) in zone_nets
         ):
-            removed_nets += 1
+            filtered.append(child)
             continue
-        if child_head == "class" and isinstance(child, list) and len(child) > 2:
-            rebuilt: list[Node] = child[:2]
-            for item in child[2:]:
-                if isinstance(item, Atom) and atom_value(item) in omitted:
-                    removed_class_refs += 1
-                    continue
-                rebuilt.append(item)
-            child = rebuilt
-        filtered.append(child)
 
-    if removed_nets == 0:
-        raise ValueError("No zone-backed network entries were removed")
+        net_name = atom_value(child[1])
+        assert net_name is not None
+        rebuilt: list[Node] = child[:2]
+        original_pin_count = 0
+        retained_pin_count = 0
+        for item in child[2:]:
+            if head(item) != "pins" or not isinstance(item, list):
+                rebuilt.append(item)
+                continue
+            pins = [pin for pin in item[1:] if isinstance(pin, Atom)]
+            original_pin_count += len(pins)
+            if pins and retained_pin_count == 0:
+                rebuilt.append([Atom("pins"), pins[0]])
+                retained_pin_count = 1
+        if original_pin_count == 0:
+            raise ValueError(f"Zone-backed net {net_name!r} contains no pins")
+        suppressed[net_name] = original_pin_count
+        removed_pin_references += original_pin_count - retained_pin_count
+        filtered.append(rebuilt)
+
+    if not suppressed:
+        raise ValueError("No zone-backed network entries were found")
     filtered_block = serialize(filtered)
     return (
         dsn_text[:block_start] + filtered_block + dsn_text[block_end:],
-        removed_nets,
-        removed_class_refs,
+        suppressed,
+        removed_pin_references,
     )
 
 
-def verify_filtered_network(dsn_text: str, omitted: set[str]) -> None:
+def verify_suppressed_network(dsn_text: str, suppressed: set[str]) -> None:
     start, end = find_block(dsn_text, "(network")
     network = parse_one(dsn_text[start:end])
     if not isinstance(network, list):
         raise ValueError("Filtered network is malformed")
 
-    leaked_nets = sorted(
-        atom_value(child[1])
-        for child in network[1:]
-        if head(child) == "net"
-        and isinstance(child, list)
-        and len(child) > 1
-        and atom_value(child[1]) in omitted
-    )
-    leaked_class_refs = sorted(
-        atom_value(item)
-        for child in network[1:]
-        if head(child) == "class" and isinstance(child, list)
-        for item in child[2:]
-        if isinstance(item, Atom) and atom_value(item) in omitted
-    )
-    if leaked_nets or leaked_class_refs:
+    found: dict[str, int] = {}
+    for child in network[1:]:
+        if head(child) != "net" or not isinstance(child, list) or len(child) < 2:
+            continue
+        net_name = atom_value(child[1])
+        if net_name not in suppressed:
+            continue
+        pin_count = sum(
+            len([pin for pin in item[1:] if isinstance(pin, Atom)])
+            for item in child[2:]
+            if head(item) == "pins" and isinstance(item, list)
+        )
+        found[net_name] = pin_count
+
+    missing = sorted(suppressed - set(found))
+    invalid = {name: count for name, count in found.items() if count != 1}
+    if missing or invalid:
         raise ValueError(
-            f"Plane-net filter verification failed: {leaked_nets}, {leaked_class_refs}"
+            f"Plane-net suppression verification failed: missing={missing}, pins={invalid}"
         )
 
 
@@ -237,24 +251,29 @@ def main() -> None:
     parser.add_argument("--report", type=Path, required=True)
     args = parser.parse_args()
 
-    omitted = zone_net_names(args.board.read_text(encoding="utf-8", errors="replace"))
-    if not omitted:
+    zone_nets = zone_net_names(args.board.read_text(encoding="utf-8", errors="replace"))
+    if not zone_nets:
         raise SystemExit("No zone-backed nets found; refusing to emit an unfiltered DSN")
 
     source = args.input.read_text(encoding="utf-8", errors="strict")
-    filtered, removed_nets, removed_class_refs = filter_plane_nets(source, omitted)
-    verify_filtered_network(filtered, omitted)
+    filtered, suppressed, removed_pin_references = suppress_plane_net_pins(
+        source, zone_nets
+    )
+    verify_suppressed_network(filtered, set(suppressed))
     args.output.write_text(filtered, encoding="utf-8")
 
     wiring_start = filtered.find("(wiring")
     wiring = filtered[wiring_start:] if wiring_start >= 0 else ""
     report = {
-        "omitted_zone_backed_nets": sorted(omitted),
-        "omitted_zone_backed_net_count": len(omitted),
-        "removed_network_entries": removed_nets,
-        "removed_class_references": removed_class_refs,
+        "zone_backed_nets_on_board": sorted(zone_nets),
+        "zone_backed_net_count_on_board": len(zone_nets),
+        "suppressed_router_nets": sorted(suppressed),
+        "suppressed_router_net_count": len(suppressed),
+        "original_pin_counts": suppressed,
+        "removed_pin_references": removed_pin_references,
+        "retained_pin_references": len(suppressed),
         "preserved_plane_wiring_mentions": {
-            name: wiring.count(name) for name in sorted(omitted)
+            name: wiring.count(name) for name in sorted(suppressed)
         },
         "router_input_dsn": str(args.output),
     }
