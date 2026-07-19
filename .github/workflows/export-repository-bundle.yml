@@ -1,4 +1,4 @@
-name: Export repository bundle
+name: KiCad baseline validation
 
 on:
   push:
@@ -12,19 +12,56 @@ permissions:
   contents: read
 
 jobs:
-  export:
+  validate:
     runs-on: ubuntu-latest
+    container: debian:trixie
     steps:
-      - name: Check out complete history
+      - name: Install validation tools
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends git ca-certificates kicad jq zip
+      - name: Check out repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Create Git bundle
-        run: git bundle create drone-arm.bundle --all
-      - name: Upload repository bundle
+      - name: Record tool versions
+        run: |
+          mkdir -p validation-reports
+          kicad-cli version | tee validation-reports/kicad-version.txt
+          kicad-cli sch erc --help > validation-reports/sch-erc-help.txt
+          kicad-cli pcb drc --help > validation-reports/pcb-drc-help.txt
+      - name: Run schematic and PCB checks
+        shell: bash
+        run: |
+          set +e
+          for project in main esc; do
+            if [ "$project" = main ]; then
+              root=hardware/main/main
+            else
+              root=hardware/esc/esc/esc
+            fi
+            kicad-cli sch erc --severity-all --exit-code-violations -o "validation-reports/${project}-erc.rpt" "${root}.kicad_sch"
+            echo $? > "validation-reports/${project}-erc.exit"
+            kicad-cli pcb drc --severity-all --exit-code-violations --format json -o "validation-reports/${project}-drc.json" "${root}.kicad_pcb"
+            echo $? > "validation-reports/${project}-drc.exit"
+          done
+          set -e
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          lines=[]
+          for project in ('main','esc'):
+              p=Path(f'validation-reports/{project}-drc.json')
+              if p.exists():
+                  d=json.loads(p.read_text())
+                  lines.append(f"{project}: violations={len(d.get('violations', []))}, unconnected={len(d.get('unconnected_items', []))}")
+              else:
+                  lines.append(f"{project}: no DRC JSON generated")
+          Path('validation-reports/summary.txt').write_text('\n'.join(lines)+'\n')
+          print('\n'.join(lines))
+          PY
+      - name: Upload validation reports
         uses: actions/upload-artifact@v4
         with:
-          name: drone-arm-repository-bundle
-          path: drone-arm.bundle
+          name: kicad-baseline-validation
+          path: validation-reports
           if-no-files-found: error
-          retention-days: 1
+          retention-days: 2
