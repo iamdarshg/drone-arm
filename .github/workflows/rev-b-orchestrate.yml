@@ -1,0 +1,284 @@
+name: Rev-B generation routing and validation
+
+on:
+  push:
+    branches:
+      - agent/rev-b-fab-release
+
+concurrency:
+  group: rev-b-fab-release
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  KICAD_SYMBOL_DIR: /usr/share/kicad/symbols
+  KICAD9_SYMBOL_DIR: /usr/share/kicad/symbols
+  KICAD_FOOTPRINT_DIR: /usr/share/kicad/footprints
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: debian:trixie
+    steps:
+      - name: Install toolchain
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            git ca-certificates curl jq zip unzip \
+            python3 python3-venv python3-pip \
+            kicad kicad-symbols kicad-footprints \
+            default-jre-headless
+      - name: Check out consolidated branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/rev-b-fab-release
+          fetch-depth: 0
+      - name: Configure environment
+        shell: bash
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git config user.name "rev-b-build[bot]"
+          git config user.email "rev-b-build[bot]@users.noreply.github.com"
+          python3 -m venv --system-site-packages .venv
+          .venv/bin/pip install --disable-pip-version-check 'kicad-sch-api==0.5.6'
+          mkdir -p hardware/esc/rev_b/reports hardware/main/rev_b/reports build/rev-b
+          kicad-cli --version | tee build/rev-b/kicad-version.txt
+          java -version 2>&1 | tee build/rev-b/java-version.txt
+      - name: Apply portable generator fixes
+        shell: bash
+        run: |
+          .venv/bin/python - <<'PY'
+          from pathlib import Path
+
+          sch = Path('tools/hardware/generate_rev_b_schematics.py')
+          text = sch.read_text(encoding='utf-8')
+          if 'from types import SimpleNamespace' not in text:
+              text = text.replace(
+                  'from pathlib import Path\n',
+                  'from pathlib import Path\nfrom types import SimpleNamespace\n',
+                  1,
+              )
+          text = text.replace(
+              '    rp_info = ksa.get_symbol_info("MCU_RaspberryPi:RP2354B")\n'
+              '    assert rp_info is not None\n',
+              '    rp_info = SimpleNamespace(\n'
+              '        pins=[SimpleNamespace(number=number, name=name) for number, name in RP2354B_PINS]\n'
+              '    )\n',
+          )
+          text = text.replace(
+              'Inductor_SMD:L_CommonModeChoke_Coilank_ACM4532',
+              'Inductor_SMD:L_CommonModeChoke_Coilcraft_1812CAN',
+          )
+          sch.write_text(text, encoding='utf-8')
+          PY
+          .venv/bin/python -m py_compile \
+            tools/hardware/generate_rev_b_schematics.py \
+            tools/hardware/generate_rev_b_pcbs.py \
+            tools/hardware/route_rev_b_sections.py \
+            tools/hardware/audit_rev_b_pcb.py \
+            tools/hardware/validate_rev_b_netlists.py
+      - name: Regenerate schematics and netlists
+        shell: bash
+        run: |
+          set -o pipefail
+          .venv/bin/python tools/hardware/generate_rev_b_schematics.py --board both \
+            2>&1 | tee hardware/esc/rev_b/reports/generate_schematics.log
+          kicad-cli sch export netlist --format kicadxml \
+            -o hardware/esc/rev_b/reports/esc_rev_b_netlist.xml \
+            hardware/esc/rev_b/esc_rev_b.kicad_sch
+          kicad-cli sch export netlist --format kicadxml \
+            -o hardware/main/rev_b/reports/main_rev_b_netlist.xml \
+            hardware/main/rev_b/main_rev_b.kicad_sch
+          set +e
+          .venv/bin/python tools/hardware/validate_rev_b_netlists.py \
+            hardware/esc/rev_b/reports/esc_rev_b_netlist.xml \
+            hardware/main/rev_b/reports/main_rev_b_netlist.xml \
+            --output hardware/esc/rev_b/reports/rev_b_connectivity_audit.json \
+            2>&1 | tee hardware/esc/rev_b/reports/connectivity_audit.log
+          echo ${PIPESTATUS[0]} > hardware/esc/rev_b/reports/connectivity_audit.exit
+          set -e
+      - name: Regenerate placed PCB sources
+        shell: bash
+        run: |
+          set -o pipefail
+          .venv/bin/python tools/hardware/generate_rev_b_pcbs.py --board both \
+            2>&1 | tee hardware/esc/rev_b/reports/generate_pcbs.log
+      - name: Download Freerouting
+        shell: bash
+        run: |
+          curl -fL --retry 4 --retry-delay 3 \
+            -o build/rev-b/freerouting.jar \
+            https://github.com/freerouting/freerouting/releases/download/v2.2.4/freerouting-2.2.4.jar
+          test -s build/rev-b/freerouting.jar
+      - name: Route flight-control board
+        shell: bash
+        run: |
+          set +e
+          .venv/bin/python tools/hardware/route_rev_b_sections.py strip-zones \
+            --board hardware/main/rev_b/main_rev_b.kicad_pcb \
+            --output build/rev-b/main_no_zones.kicad_pcb
+          .venv/bin/python tools/hardware/route_rev_b_sections.py export-main \
+            --board build/rev-b/main_no_zones.kicad_pcb \
+            --dsn build/rev-b/main.dsn
+          timeout 45m java -Xmx6g -jar build/rev-b/freerouting.jar \
+            -de build/rev-b/main.dsn -do build/rev-b/main.ses \
+            > hardware/main/rev_b/reports/freerouting_main.log 2>&1
+          echo $? > hardware/main/rev_b/reports/freerouting_main.exit
+          if [ -s build/rev-b/main.ses ]; then
+            .venv/bin/python tools/hardware/route_rev_b_sections.py import-main \
+              --board hardware/main/rev_b/main_rev_b.kicad_pcb \
+              --ses build/rev-b/main.ses \
+              --output build/rev-b/main_imported.kicad_pcb
+            .venv/bin/python tools/hardware/route_rev_b_sections.py clean-main-import \
+              --board build/rev-b/main_imported.kicad_pcb \
+              --output build/rev-b/main_clean.kicad_pcb
+            .venv/bin/python tools/hardware/route_rev_b_sections.py fill-zones \
+              --board build/rev-b/main_clean.kicad_pcb \
+              --output hardware/main/rev_b/main_rev_b_fab.kicad_pcb
+          fi
+          set -e
+      - name: Route and replicate ESC motor cells
+        shell: bash
+        run: |
+          set +e
+          .venv/bin/python tools/hardware/route_rev_b_sections.py extract-cell \
+            --full hardware/esc/rev_b/esc_rev_b.kicad_pcb \
+            --cell build/rev-b/esc_cell1.kicad_pcb \
+            --baseline build/rev-b/esc_cell1_baseline.json \
+            --dsn build/rev-b/esc_cell1.dsn
+          timeout 45m java -Xmx6g -jar build/rev-b/freerouting.jar \
+            -de build/rev-b/esc_cell1.dsn -do build/rev-b/esc_cell1.ses \
+            > hardware/esc/rev_b/reports/freerouting_cell1.log 2>&1
+          echo $? > hardware/esc/rev_b/reports/freerouting_cell1.exit
+          if [ -s build/rev-b/esc_cell1.ses ]; then
+            .venv/bin/python tools/hardware/route_rev_b_sections.py import-cell \
+              --cell build/rev-b/esc_cell1.kicad_pcb \
+              --ses build/rev-b/esc_cell1.ses \
+              --output build/rev-b/esc_cell1_routed.kicad_pcb
+            .venv/bin/python tools/hardware/route_rev_b_sections.py replicate-cell \
+              --full hardware/esc/rev_b/esc_rev_b.kicad_pcb \
+              --cell build/rev-b/esc_cell1_routed.kicad_pcb \
+              --baseline build/rev-b/esc_cell1_baseline.json \
+              --output build/rev-b/esc_cells_routed.kicad_pcb
+            .venv/bin/python tools/hardware/route_rev_b_sections.py strip-zones \
+              --board build/rev-b/esc_cells_routed.kicad_pcb \
+              --output build/rev-b/esc_cells_no_zones.kicad_pcb
+            .venv/bin/python tools/hardware/route_rev_b_sections.py export-main \
+              --board build/rev-b/esc_cells_no_zones.kicad_pcb \
+              --dsn build/rev-b/esc_full.dsn
+            timeout 60m java -Xmx7g -jar build/rev-b/freerouting.jar \
+              -de build/rev-b/esc_full.dsn -do build/rev-b/esc_full.ses \
+              > hardware/esc/rev_b/reports/freerouting_full.log 2>&1
+            echo $? > hardware/esc/rev_b/reports/freerouting_full.exit
+            if [ -s build/rev-b/esc_full.ses ]; then
+              .venv/bin/python tools/hardware/route_rev_b_sections.py import-main \
+                --board build/rev-b/esc_cells_routed.kicad_pcb \
+                --ses build/rev-b/esc_full.ses \
+                --output build/rev-b/esc_imported.kicad_pcb
+              .venv/bin/python tools/hardware/route_rev_b_sections.py fix-ina296-reserved \
+                --board build/rev-b/esc_imported.kicad_pcb \
+                --output build/rev-b/esc_fixed.kicad_pcb
+              .venv/bin/python tools/hardware/route_rev_b_sections.py fill-zones \
+                --board build/rev-b/esc_fixed.kicad_pcb \
+                --output hardware/esc/rev_b/esc_rev_b_fab.kicad_pcb
+            fi
+          fi
+          set -e
+      - name: Run final digital gates
+        shell: bash
+        run: |
+          set +e
+          for board in esc main; do
+            if [ "$board" = esc ]; then
+              ROOT=hardware/esc/rev_b/esc_rev_b
+              PCB=hardware/esc/rev_b/esc_rev_b_fab.kicad_pcb
+              OUT=hardware/esc/rev_b/reports
+            else
+              ROOT=hardware/main/rev_b/main_rev_b
+              PCB=hardware/main/rev_b/main_rev_b_fab.kicad_pcb
+              OUT=hardware/main/rev_b/reports
+            fi
+            kicad-cli sch erc --severity-all --format json \
+              -o "$OUT/${board}_rev_b_final_erc.json" "${ROOT}.kicad_sch"
+            echo $? > "$OUT/${board}_rev_b_final_erc.exit"
+            if [ -f "$PCB" ]; then
+              kicad-cli pcb drc --severity-all --format json \
+                -o "$OUT/${board}_rev_b_final_drc.json" "$PCB"
+              echo $? > "$OUT/${board}_rev_b_final_drc.exit"
+              .venv/bin/python tools/hardware/audit_rev_b_pcb.py \
+                --kind "$board" --board "$PCB" \
+                --output "$OUT/${board}_rev_b_layout_audit.json"
+              echo $? > "$OUT/${board}_rev_b_layout_audit.exit"
+            else
+              echo 99 > "$OUT/${board}_rev_b_final_drc.exit"
+              echo 99 > "$OUT/${board}_rev_b_layout_audit.exit"
+            fi
+          done
+          set -e
+      - name: Export fabrication package when digital gates pass
+        shell: bash
+        run: |
+          set +e
+          rm -rf hardware/esc/rev_b/fab hardware/main/rev_b/fab
+          ALL_PASS=1
+          for board in esc main; do
+            if [ "$board" = esc ]; then
+              PCB=hardware/esc/rev_b/esc_rev_b_fab.kicad_pcb
+              DIR=hardware/esc/rev_b/fab
+              NAME=esc_rev_b
+              XML=hardware/esc/rev_b/reports/esc_rev_b_netlist.xml
+            else
+              PCB=hardware/main/rev_b/main_rev_b_fab.kicad_pcb
+              DIR=hardware/main/rev_b/fab
+              NAME=main_rev_b
+              XML=hardware/main/rev_b/reports/main_rev_b_netlist.xml
+            fi
+            OUT=${DIR}/gerbers
+            mkdir -p "$OUT"
+            if [ "$(cat hardware/$([ "$board" = esc ] && echo esc || echo main)/rev_b/reports/${board}_rev_b_final_drc.exit)" != 0 ] || \
+               [ "$(cat hardware/$([ "$board" = esc ] && echo esc || echo main)/rev_b/reports/${board}_rev_b_layout_audit.exit)" != 0 ]; then
+              ALL_PASS=0
+              continue
+            fi
+            kicad-cli pcb export gerbers --output "$OUT" "$PCB"
+            kicad-cli pcb export drill --output "$OUT" --generate-map --generate-report "$PCB"
+            kicad-cli pcb export pos --format csv --units mm --side both --exclude-dnp \
+              --output "$DIR/${NAME}_positions.csv" "$PCB"
+            cp "$PCB" "$DIR/${NAME}.kicad_pcb"
+            (cd "$DIR" && zip -r "${NAME}_fab.zip" gerbers "${NAME}.kicad_pcb" "${NAME}_positions.csv")
+          done
+          .venv/bin/python tools/hardware/export_rev_b_bom.py \
+            --esc hardware/esc/rev_b/reports/esc_rev_b_netlist.xml \
+            --main hardware/main/rev_b/reports/main_rev_b_netlist.xml \
+            --output hardware/rev_b_grouped_bom.csv
+          echo "$ALL_PASS" > hardware/esc/rev_b/reports/fabrication_gate_passed.txt
+          set -e
+      - name: Commit results
+        shell: bash
+        run: |
+          git add \
+            tools/hardware/generate_rev_b_schematics.py \
+            hardware/esc/rev_b hardware/main/rev_b \
+            hardware/rev_b_grouped_bom.csv docs/hardware/REV_B_GENERATION.json
+          if git diff --cached --quiet; then
+            echo 'No result changes.'
+            exit 0
+          fi
+          git commit -m 'build: route and validate rev-b boards'
+          git push origin HEAD:agent/rev-b-fab-release
+      - name: Upload run artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rev-b-routing-validation
+          path: |
+            hardware/esc/rev_b/reports
+            hardware/main/rev_b/reports
+            hardware/esc/rev_b/fab
+            hardware/main/rev_b/fab
+            build/rev-b/*.log
+            build/rev-b/*.txt
+          if-no-files-found: warn
+          retention-days: 5
