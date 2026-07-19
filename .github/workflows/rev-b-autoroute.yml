@@ -15,87 +15,29 @@ env:
   KICAD_FOOTPRINT_DIR: /usr/share/kicad/footprints
 
 jobs:
-  route-main:
+  route:
     runs-on: ubuntu-latest
-    timeout-minutes: 150
-    steps:
-      - name: Install routing tools
-        run: |
-          sudo apt-get update
-          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-            kicad kicad-symbols kicad-footprints \
-            python3 python3-venv default-jre-headless curl jq
-
-      - name: Check out consolidated branch
-        uses: actions/checkout@v4
-        with:
-          ref: agent/rev-b-fab-ready
-          fetch-depth: 0
-
-      - name: Download Freerouting
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p build/rev-b-router
-          asset_url=$(curl -fsSL \
-            "https://api.github.com/repos/freerouting/freerouting/releases/tags/v${FREEROUTING_VERSION}" \
-            | jq -r '.assets[] | select(.name == "freerouting-'"${FREEROUTING_VERSION}"'.jar") | .browser_download_url')
-          test -n "$asset_url"
-          test "$asset_url" != "null"
-          curl -fL "$asset_url" -o build/rev-b-router/freerouting.jar
-          java -version 2>&1 | tee build/rev-b-router/java-version.txt
-
-      - name: Export and route main control board
-        shell: bash
-        run: |
-          set -euo pipefail
-          board=hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb
-          python3 tools/hardware/route_rev_b_specctra.py export \
-            "$board" build/rev-b-router/main.dsn
-          set +e
-          timeout 120m java -Xmx6g -Djava.awt.headless=true \
-            -jar build/rev-b-router/freerouting.jar \
-            --gui.enabled=false \
-            -de build/rev-b-router/main.dsn \
-            -do build/rev-b-router/main.ses \
-            -mp 100 -mt 2 -oit 0.02 -us hybrid -hr 1:2 -is prioritized \
-            -da -dct 1 --logging.console.level=INFO --logging.file.enabled=false \
-            > build/rev-b-router/main-freerouting.log 2>&1
-          router_rc=$?
-          set -e
-          echo "$router_rc" > build/rev-b-router/main-freerouting.exit
-          test -s build/rev-b-router/main.ses
-          python3 tools/hardware/route_rev_b_specctra.py import \
-            "$board" build/rev-b-router/main.ses
-          set +e
-          kicad-cli pcb drc --severity-all --format json \
-            -o build/rev-b-router/main-drc.json "$board"
-          echo $? > build/rev-b-router/main-drc.exit
-          set -e
-          jq '{unconnected: (.unconnected_items | length), violations: (.violations | length), error_violations: ([.violations[] | select(.severity == "error")] | length)}' \
-            build/rev-b-router/main-drc.json | tee build/rev-b-router/main-summary.json
-
-      - name: Upload main routed board
-        uses: actions/upload-artifact@v4
-        with:
-          name: rev-b-main-routed
-          path: |
-            hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb
-            build/rev-b-router/main.*
-            build/rev-b-router/main-*
-            build/rev-b-router/java-version.txt
-          if-no-files-found: error
-          retention-days: 3
-
-  route-esc:
-    runs-on: ubuntu-latest
+    container: debian:trixie
     timeout-minutes: 330
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - key: main
+            board: hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb
+            passes: 100
+            route_timeout: 120m
+          - key: esc
+            board: hardware/esc/rev_b/esc_rev_b.kicad_pcb
+            passes: 180
+            route_timeout: 300m
+
     steps:
-      - name: Install routing tools
+      - name: Install KiCad and routing tools
         run: |
-          sudo apt-get update
-          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-            kicad kicad-symbols kicad-footprints \
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            git ca-certificates kicad kicad-symbols kicad-footprints \
             python3 python3-venv default-jre-headless curl jq
 
       - name: Check out consolidated branch
@@ -115,55 +57,63 @@ jobs:
           test -n "$asset_url"
           test "$asset_url" != "null"
           curl -fL "$asset_url" -o build/rev-b-router/freerouting.jar
-          java -version 2>&1 | tee build/rev-b-router/java-version.txt
+          java -version 2>&1 | tee build/rev-b-router/${{ matrix.key }}-java-version.txt
+          kicad-cli --version | tee build/rev-b-router/${{ matrix.key }}-kicad-version.txt
 
-      - name: Export and route six-channel ESC
+      - name: Export, autoroute, import, and validate
         shell: bash
         run: |
           set -euo pipefail
-          board=hardware/esc/rev_b/esc_rev_b.kicad_pcb
+          key=${{ matrix.key }}
+          board=${{ matrix.board }}
+          exec > >(tee "build/rev-b-router/${key}-stage.log") 2>&1
+
           python3 tools/hardware/route_rev_b_specctra.py export \
-            "$board" build/rev-b-router/esc.dsn
+            "$board" "build/rev-b-router/${key}.dsn"
+
           set +e
-          timeout 300m java -Xmx6g -Djava.awt.headless=true \
+          timeout ${{ matrix.route_timeout }} java -Xmx6g -Djava.awt.headless=true \
             -jar build/rev-b-router/freerouting.jar \
             --gui.enabled=false \
-            -de build/rev-b-router/esc.dsn \
-            -do build/rev-b-router/esc.ses \
-            -mp 180 -mt 2 -oit 0.01 -us hybrid -hr 1:2 -is prioritized \
+            -de "build/rev-b-router/${key}.dsn" \
+            -do "build/rev-b-router/${key}.ses" \
+            -mp ${{ matrix.passes }} -mt 2 -oit 0.01 \
+            -us hybrid -hr 1:2 -is prioritized \
             -da -dct 1 --logging.console.level=INFO --logging.file.enabled=false \
-            > build/rev-b-router/esc-freerouting.log 2>&1
+            > "build/rev-b-router/${key}-freerouting.log" 2>&1
           router_rc=$?
           set -e
-          echo "$router_rc" > build/rev-b-router/esc-freerouting.exit
-          test -s build/rev-b-router/esc.ses
+          echo "$router_rc" > "build/rev-b-router/${key}-freerouting.exit"
+          test -s "build/rev-b-router/${key}.ses"
+
           python3 tools/hardware/route_rev_b_specctra.py import \
-            "$board" build/rev-b-router/esc.ses
+            "$board" "build/rev-b-router/${key}.ses"
+
           set +e
           kicad-cli pcb drc --severity-all --format json \
-            -o build/rev-b-router/esc-drc.json "$board"
-          echo $? > build/rev-b-router/esc-drc.exit
+            -o "build/rev-b-router/${key}-drc.json" "$board"
+          drc_rc=$?
           set -e
+          echo "$drc_rc" > "build/rev-b-router/${key}-drc.exit"
           jq '{unconnected: (.unconnected_items | length), violations: (.violations | length), error_violations: ([.violations[] | select(.severity == "error")] | length)}' \
-            build/rev-b-router/esc-drc.json | tee build/rev-b-router/esc-summary.json
+            "build/rev-b-router/${key}-drc.json" \
+            | tee "build/rev-b-router/${key}-summary.json"
 
-      - name: Upload ESC routed board
+      - name: Upload routed board and complete transcript
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: rev-b-esc-routed
+          name: rev-b-${{ matrix.key }}-routed
           path: |
-            hardware/esc/rev_b/esc_rev_b.kicad_pcb
-            build/rev-b-router/esc.*
-            build/rev-b-router/esc-*
-            build/rev-b-router/java-version.txt
+            ${{ matrix.board }}
+            build/rev-b-router/${{ matrix.key }}*
           if-no-files-found: error
           retention-days: 3
 
   commit-routing:
     runs-on: ubuntu-latest
     needs:
-      - route-main
-      - route-esc
+      - route
     steps:
       - name: Check out consolidated branch
         uses: actions/checkout@v4
