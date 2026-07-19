@@ -29,4 +29,4 @@ jobs:
           name: drone-arm-latest-bundle
           path: drone-arm-latest.bundle
           if-no-files-found: error
-          retention-days: 2
+          retention-days: 1
