@@ -17,7 +17,7 @@ permissions:
   contents: write
 
 env:
-  DONOR_ARTIFACT_ID: 8454880334
+  DONOR_RUN_ID: 29726548399
 
 jobs:
   validate-and-promote:
@@ -40,10 +40,11 @@ jobs:
       - name: Download focused-route donor artifact
         uses: actions/download-artifact@v4
         with:
-          artifact-ids: ${{ env.DONOR_ARTIFACT_ID }}
+          name: rev-b-main-focused-candidate
           path: build/rf-donor
           github-token: ${{ github.token }}
           repository: iamdarshg/drone-arm
+          run-id: ${{ env.DONOR_RUN_ID }}
 
       - name: Transplant and validate oscillator route
         shell: bash
