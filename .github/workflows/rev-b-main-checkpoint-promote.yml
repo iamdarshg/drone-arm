@@ -1,0 +1,153 @@
+name: Preserve recovered Rev-B main checkpoint
+
+on:
+  push:
+    branches:
+      - agent/rev-b-fab-ready
+    paths:
+      - .github/workflows/rev-b-main-checkpoint-promote.yml
+  workflow_dispatch:
+
+concurrency:
+  group: rev-b-main-checkpoint-promote
+  cancel-in-progress: false
+
+permissions:
+  actions: read
+  contents: write
+
+env:
+  SOURCE_RUN_ID: 29696163068
+
+jobs:
+  validate-and-promote:
+    runs-on: ubuntu-latest
+    container: debian:trixie
+    timeout-minutes: 25
+    steps:
+      - name: Install KiCad and validation tools
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            git ca-certificates kicad kicad-symbols kicad-footprints python3 jq
+
+      - name: Check out guarded branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/rev-b-fab-ready
+          fetch-depth: 0
+
+      - name: Download recovered main result
+        uses: actions/download-artifact@v4
+        with:
+          name: rev-b-main-recovered-no-planes
+          path: build/completed-main
+          github-token: ${{ github.token }}
+          run-id: ${{ env.SOURCE_RUN_ID }}
+
+      - name: Revalidate checkpoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=build/completed-main
+          board=$root/hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb
+          evidence=$root/build/recovery/main
+          test -s "$board"
+          test -s "$evidence/summary.json"
+          test -s "$evidence/layout-audit.json"
+          test -s "$evidence/plane-net-filter.json"
+
+          mkdir -p build/main-checkpoint-validation
+          set +e
+          kicad-cli pcb drc --severity-all --format json \
+            -o build/main-checkpoint-validation/drc.json "$board"
+          echo $? > build/main-checkpoint-validation/drc.exit
+          python3 tools/hardware/audit_rev_b_pcb.py --kind main \
+            --board "$board" \
+            --output build/main-checkpoint-validation/layout-audit.json
+          echo $? > build/main-checkpoint-validation/layout-audit.exit
+          set -e
+
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path('build/main-checkpoint-validation')
+          drc = json.loads((root / 'drc.json').read_text())
+          audit = json.loads((root / 'layout-audit.json').read_text())
+          summary = {
+              'unconnected': len(drc.get('unconnected_items', [])),
+              'violations': len(drc.get('violations', [])),
+              'error_violations': sum(
+                  item.get('severity') == 'error'
+                  for item in drc.get('violations', [])
+              ),
+              'tracks': audit['summary']['track_count'],
+              'vias': audit['summary']['via_count'],
+              'layout_audit_passed': audit['passed'],
+              'checkpoint_only': True,
+              'fabrication_ready': False,
+              'source_run_id': 29696163068,
+          }
+          checks = {
+              'unconnected_at_most_25': summary['unconnected'] <= 25,
+              'violations_at_most_10': summary['violations'] <= 10,
+              'error_violations_at_most_6': summary['error_violations'] <= 6,
+              'tracks_at_least_1982': summary['tracks'] >= 1982,
+              'vias_at_least_407': summary['vias'] >= 407,
+              'still_marked_checkpoint_only': not summary['layout_audit_passed'],
+          }
+          result = {'summary': summary, 'checks': checks, 'accepted': all(checks.values())}
+          (root / 'checkpoint-status.json').write_text(
+              json.dumps(result, indent=2) + '\n'
+          )
+          print(json.dumps(result, indent=2))
+          if not result['accepted']:
+              raise SystemExit('recovered main checkpoint failed preservation gates')
+          PY
+
+      - name: Commit preserved checkpoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Rev-B Hardware Bot"
+          git config user.email "actions@users.noreply.github.com"
+
+          root=build/completed-main
+          candidate=$root/hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb
+          evidence=$root/build/recovery/main
+          validated=build/main-checkpoint-validation
+
+          for attempt in 1 2 3; do
+            git fetch origin agent/rev-b-fab-ready
+            git reset --hard origin/agent/rev-b-fab-ready
+
+            cp "$candidate" hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb
+            mkdir -p hardware/main/rev_b/reports
+            cp "$validated/drc.json" \
+              hardware/main/rev_b/reports/main_rev_b_autorouted_drc.json
+            cp "$validated/layout-audit.json" \
+              hardware/main/rev_b/reports/main_rev_b_autorouted_layout_audit.json
+            cp "$validated/checkpoint-status.json" \
+              hardware/main/rev_b/reports/main_rev_b_autorouted_checkpoint_status.json
+            cp "$evidence/plane-net-filter.json" \
+              hardware/main/rev_b/reports/main_rev_b_plane_net_filter.json
+
+            git add -f \
+              hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb \
+              hardware/main/rev_b/reports/main_rev_b_autorouted_drc.json \
+              hardware/main/rev_b/reports/main_rev_b_autorouted_layout_audit.json \
+              hardware/main/rev_b/reports/main_rev_b_autorouted_checkpoint_status.json \
+              hardware/main/rev_b/reports/main_rev_b_plane_net_filter.json
+            git diff --cached --check
+            if git diff --cached --quiet; then
+              echo 'Recovered main checkpoint is already preserved.'
+              exit 0
+            fi
+            git commit -m 'route: preserve recovered Rev-B main checkpoint'
+            if git push origin HEAD:agent/rev-b-fab-ready; then
+              exit 0
+            fi
+            echo "Push race on attempt ${attempt}; retrying from latest branch head."
+          done
+          exit 1
