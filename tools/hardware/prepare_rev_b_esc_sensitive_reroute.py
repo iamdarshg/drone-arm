@@ -132,8 +132,17 @@ def main() -> None:
     parser.add_argument("--report", type=Path, required=True)
     args = parser.parse_args()
 
-    source = args.board.read_text(encoding="utf-8", errors="strict")
-    if not re.match(r"^\s*\(kicad_pcb(?=[\s)])", source):
+    file_text = args.board.read_text(encoding="utf-8", errors="strict")
+    root_start = file_text.find("(")
+    if root_start < 0:
+        raise SystemExit(f"No S-expression root in {args.board}")
+    root_end = matching_paren(file_text, root_start)
+    prefix = file_text[:root_start]
+    source = file_text[root_start:root_end]
+    suffix = file_text[root_end:]
+    if suffix.strip():
+        raise SystemExit(f"Unexpected content after KiCad PCB root in {args.board}")
+    if not re.match(r"^\(kicad_pcb(?=[\s)])", source):
         raise SystemExit(f"Not a KiCad PCB file: {args.board}")
 
     spans = direct_child_spans(source)
@@ -189,13 +198,13 @@ def main() -> None:
     if not removals:
         raise SystemExit("No sensitive routed copper found; refusing no-op reroute base")
 
-    output = source
+    output_root = source
     for start, end in reversed(removals):
-        output = output[:start] + output[end:]
+        output_root = output_root[:start] + output_root[end:]
 
     remaining_sensitive = 0
-    for start, end in direct_child_spans(output):
-        block = output[start:end]
+    for start, end in direct_child_spans(output_root):
+        block = output_root[start:end]
         if block_head(block) not in {"segment", "via"}:
             continue
         code = routed_net_code(block)
@@ -207,7 +216,7 @@ def main() -> None:
         )
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(output, encoding="utf-8")
+    args.output.write_text(prefix + output_root + suffix, encoding="utf-8")
     report = {
         "source_board": str(args.board),
         "output_board": str(args.output),
@@ -224,6 +233,8 @@ def main() -> None:
         ),
         "remaining_sensitive_copper_items": remaining_sensitive,
         "non_target_board_text_preserved": True,
+        "prefix_bytes_preserved": len(prefix.encode("utf-8")),
+        "suffix_bytes_preserved": len(suffix.encode("utf-8")),
         "rewrite_engine": "direct-child-kicad-s-expression",
     }
     args.report.parent.mkdir(parents=True, exist_ok=True)
