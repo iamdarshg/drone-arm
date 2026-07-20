@@ -1,5 +1,6 @@
 name: Retry Rev-B ESC routing safely
 
+# Triggered by guarded recovery automation; artifact-only workflow.
 on:
   push:
     branches:
