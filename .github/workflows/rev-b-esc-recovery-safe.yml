@@ -19,6 +19,7 @@ permissions:
 
 env:
   SOURCE_RUN_ID: 29693302481
+  FREEROUTING_TAG: v2.2.4
   JAVA_HOME: /opt/java25
   PATH: /opt/java25/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
@@ -26,28 +27,29 @@ jobs:
   route-shared-esc-safe:
     runs-on: ubuntu-latest
     container: debian:trixie
-    timeout-minutes: 210
+    timeout-minutes: 205
     steps:
-      - name: Install KiCad and runtime tools
+      - name: Install KiCad and build tools
         run: |
           apt-get update
           DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
             git ca-certificates kicad kicad-symbols kicad-footprints \
-            python3 curl jq tar gzip
+            python3 curl jq tar gzip unzip patch
 
-      - name: Install Temurin JRE 25
+      - name: Install Temurin JDK 25
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p /opt/java25
-          jre_url=$(curl -fsSL \
-            'https://api.adoptium.net/v3/assets/latest/25/hotspot?architecture=x64&image_type=jre&os=linux&vendor=eclipse' \
+          jdk_url=$(curl -fsSL \
+            'https://api.adoptium.net/v3/assets/latest/25/hotspot?architecture=x64&image_type=jdk&os=linux&vendor=eclipse' \
             | jq -r '.[0].binary.package.link')
-          test -n "$jre_url"
-          test "$jre_url" != "null"
-          curl -fL "$jre_url" -o /tmp/temurin25-jre.tar.gz
-          tar -xzf /tmp/temurin25-jre.tar.gz --strip-components=1 -C /opt/java25
+          test -n "$jdk_url"
+          test "$jdk_url" != "null"
+          curl -fL "$jdk_url" -o /tmp/temurin25-jdk.tar.gz
+          tar -xzf /tmp/temurin25-jdk.tar.gz --strip-components=1 -C /opt/java25
           java -version
+          javac -version
 
       - name: Check out guarded branch
         uses: actions/checkout@v4
@@ -55,23 +57,62 @@ jobs:
           ref: agent/rev-b-fab-ready
           fetch-depth: 0
 
-      - name: Verify commit guard remains active
-        run: test -f .github/workflows/rev-b-esc-recovery.yml/guard
+      - name: Verify commit guards remain active
+        run: |
+          test -f .github/workflows/rev-b-esc-recovery.yml/guard
+          test -f .github/workflows/rev-b-main-recovery.yml/guard
 
-      - name: Download hardened FreeRouting release
+      - name: Build patched FreeRouting
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p build/freerouting
-          release=$(curl -fsSL https://api.github.com/repos/freerouting/freerouting/releases/latest)
-          version=$(printf '%s' "$release" | jq -r '.tag_name')
-          jar_url=$(printf '%s' "$release" | jq -r \
-            '.assets[] | select(.name | test("executable.*\\.jar$")) | .browser_download_url' | head -n1)
-          test -n "$jar_url"
-          test "$jar_url" != "null"
-          curl -fL "$jar_url" -o build/freerouting/freerouting-executable.jar
-          printf '%s\n' "$version" > build/freerouting/version.txt
-          java -jar build/freerouting/freerouting-executable.jar -help > build/freerouting/help.txt 2>&1 || true
+          git clone --depth 1 --branch "$FREEROUTING_TAG" \
+            https://github.com/freerouting/freerouting.git build/freerouting/source
+          printf '%s\n' "$FREEROUTING_TAG" > build/freerouting/version.txt
+
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('build/freerouting/source/src/main/java/app/freerouting/board/RoutingBoard.java')
+          text = path.read_text()
+          old = '''    Point from_corner = p_polyline.first_corner();
+              Point to_corner = p_polyline.last_corner();
+              if (from_corner.equals(to_corner)) {
+                return to_corner;
+              }
+          '''
+          new = '''    if (p_polyline == null || p_polyline.arr == null || p_polyline.arr.length < 3) {
+                FRLogger.warn("RoutingBoard.insert_forced_trace_polyline: rejecting null or degenerate polyline");
+                return null;
+              }
+              Point from_corner = p_polyline.first_corner();
+              Point to_corner = p_polyline.last_corner();
+              if (from_corner == null || to_corner == null) {
+                FRLogger.warn("RoutingBoard.insert_forced_trace_polyline: rejecting polyline with null corner");
+                return null;
+              }
+              if (from_corner.equals(to_corner)) {
+                return to_corner;
+              }
+          '''
+          if old not in text:
+              raise SystemExit('expected RoutingBoard insertion block not found')
+          path.write_text(text.replace(old, new, 1))
+          PY
+
+          cd build/freerouting/source
+          chmod +x gradlew
+          ./gradlew --no-daemon executableJar -x test -x integrationTest
+          cp build/libs/*-executable.jar ../freerouting-executable.jar
+          cd ../../..
+          test -s build/freerouting/freerouting-executable.jar
+          java -jar build/freerouting/freerouting-executable.jar -help \
+            > build/freerouting/help.txt 2>&1 || true
+          git -C build/freerouting/source diff --check
+          git -C build/freerouting/source diff \
+            > build/freerouting/null-corner-guard.patch
+          test -s build/freerouting/null-corner-guard.patch
 
       - name: Download replicated ESC checkpoint
         uses: actions/download-artifact@v4
@@ -83,6 +124,9 @@ jobs:
 
       - name: Route remaining ESC connections
         shell: bash
+        env:
+          FREEROUTING__ROUTER__MAX_PASSES: '2'
+          FREEROUTING__ROUTER__MAX_ITEMS: '520'
         run: |
           set -euo pipefail
           mkdir -p build/recovery/esc-safe
@@ -95,18 +139,22 @@ jobs:
           test -s "$routed"
           test -s "$no_zones"
 
+          cp "$routed" build/recovery/esc-safe/esc-baseline.kicad_pcb
           python3 tools/hardware/route_rev_b_sections.py export-main \
             --board "$no_zones" --dsn "$raw_dsn"
           python3 tools/hardware/filter_specctra_plane_nets.py \
             --board "$routed" --input "$raw_dsn" --output "$filtered_dsn" \
             --report build/recovery/esc-safe/plane-net-filter.json
+          test "$(grep -c '^(network' "$filtered_dsn" || true)" -gt 0
+          grep -q '^(wiring' "$filtered_dsn"
 
           set +e
-          timeout 175m java -Xmx6g -Djava.awt.headless=true \
+          timeout --signal=INT --kill-after=5m 145m \
+            java -Xmx6g -Djava.awt.headless=true \
             -jar build/freerouting/freerouting-executable.jar \
             --gui.enabled=false -de "$filtered_dsn" \
             -do build/recovery/esc-safe/esc-shared.ses \
-            -mp 24 -mt 2 -oit 0.01 -us hybrid -hr 1:2 -is prioritized \
+            -mp 2 -mt 1 -oit 0.01 -us hybrid -hr 1:2 -is prioritized \
             -da -dct 1 --logging.console.level=INFO --logging.file.enabled=false \
             > build/recovery/esc-safe/freerouting.log 2>&1
           router_rc=$?
@@ -130,19 +178,69 @@ jobs:
               build/recovery/esc-safe/esc-filled.kicad_pcb
           fi
 
-          set +e
-          kicad-cli pcb drc --severity-all --format json \
-            -o build/recovery/esc-safe/drc.json \
-            build/recovery/esc-safe/esc-filled.kicad_pcb
-          echo $? > build/recovery/esc-safe/drc.exit
-          python3 tools/hardware/audit_rev_b_pcb.py --kind esc \
-            --board build/recovery/esc-safe/esc-filled.kicad_pcb \
-            --output build/recovery/esc-safe/layout-audit.json
-          echo $? > build/recovery/esc-safe/layout-audit.exit
-          set -e
+          for kind in baseline candidate; do
+            if [ "$kind" = baseline ]; then
+              board=build/recovery/esc-safe/esc-baseline.kicad_pcb
+            else
+              board=build/recovery/esc-safe/esc-filled.kicad_pcb
+            fi
+            set +e
+            kicad-cli pcb drc --severity-all --format json \
+              -o build/recovery/esc-safe/${kind}-drc.json "$board"
+            echo $? > build/recovery/esc-safe/${kind}-drc.exit
+            python3 tools/hardware/audit_rev_b_pcb.py --kind esc \
+              --board "$board" \
+              --output build/recovery/esc-safe/${kind}-layout-audit.json
+            echo $? > build/recovery/esc-safe/${kind}-layout-audit.exit
+            set -e
+          done
 
-          jq '{unconnected: (.unconnected_items | length), violations: (.violations | length), error_violations: ([.violations[] | select(.severity == "error")] | length)}' \
-            build/recovery/esc-safe/drc.json | tee build/recovery/esc-safe/summary.json
+          python3 - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+
+          root = Path('build/recovery/esc-safe')
+          def load(name):
+              return json.loads((root / name).read_text())
+          def copper(path):
+              text = path.read_text(errors='replace')
+              return {
+                  'tracks': len(re.findall(r'^\s*\(segment\b', text, re.M)),
+                  'vias': len(re.findall(r'^\s*\(via\b', text, re.M)),
+              }
+          def drc(name):
+              data = load(name)
+              return {
+                  'unconnected': len(data.get('unconnected_items', [])),
+                  'violations': len(data.get('violations', [])),
+                  'error_violations': sum(v.get('severity') == 'error' for v in data.get('violations', [])),
+              }
+
+          baseline = drc('baseline-drc.json')
+          candidate = drc('candidate-drc.json')
+          baseline.update(copper(root / 'esc-baseline.kicad_pcb'))
+          candidate.update(copper(root / 'esc-filled.kicad_pcb'))
+          audit_rc = int((root / 'candidate-layout-audit.exit').read_text().strip())
+          router_rc = int((root / 'freerouting.exit').read_text().strip())
+
+          checks = {
+              'ses_exists': (root / 'esc-shared.ses').stat().st_size > 0,
+              'unconnected_improved': candidate['unconnected'] < baseline['unconnected'],
+              'drc_errors_non_regressed': candidate['error_violations'] <= baseline['error_violations'],
+              'tracks_non_regressed': candidate['tracks'] >= baseline['tracks'],
+              'vias_non_regressed': candidate['vias'] >= baseline['vias'],
+              'nonzero_copper': candidate['tracks'] > 0 and candidate['vias'] > 0,
+              'layout_audit_passed': audit_rc == 0,
+              'router_not_timed_out': router_rc not in (124, 137),
+          }
+          summary = {'baseline': baseline, 'candidate': candidate, 'checks': checks,
+                     'accepted': all(checks.values())}
+          (root / 'summary.json').write_text(json.dumps(summary, indent=2) + '\n')
+          print(json.dumps(summary, indent=2))
+          if not summary['accepted']:
+              raise SystemExit('candidate rejected by fabrication-safety gates')
+          PY
 
       - name: Upload guarded ESC candidate
         if: always()
@@ -152,6 +250,7 @@ jobs:
           path: |
             build/freerouting/version.txt
             build/freerouting/help.txt
+            build/freerouting/null-corner-guard.patch
             build/recovery/esc-safe
           if-no-files-found: error
           retention-days: 3
