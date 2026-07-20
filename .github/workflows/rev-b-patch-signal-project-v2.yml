@@ -1,5 +1,6 @@
 name: Patch main-signal project context v2
 
+# Retriggered to apply the project rules directly to the constrained candidate.
 on:
   push:
     branches:
@@ -61,6 +62,8 @@ jobs:
             git fetch origin agent/rev-b-fab-ready
             git reset --hard origin/agent/rev-b-fab-ready
             python3 /tmp/patch.py
+            grep -F 'main_rev_b_signal_candidate.kicad_pro' \
+              .github/workflows/rev-b-main-signal-recovery.yml
             rm -f .github/workflows/rev-b-patch-signal-project-v2.yml
             git add -A
             git diff --cached --check
