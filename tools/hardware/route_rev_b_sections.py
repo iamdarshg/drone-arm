@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 from pathlib import Path
 
@@ -238,13 +239,20 @@ def fill_zones(board_path: Path, output_path: Path) -> None:
 
 
 def strip_zones(board_path: Path, output_path: Path) -> None:
-    """Remove copper zones in a dedicated process (KiCad SWIG safety)."""
+    """Remove zones, save, then bypass the unstable pcbnew teardown path."""
     board = pcbnew.LoadBoard(str(board_path))
     removed_zones = len(list(board.Zones()))
     for zone in list(board.Zones()):
         board.Remove(zone)
     pcbnew.SaveBoard(str(output_path), board)
-    print(json.dumps({"removed_zones": removed_zones, "output": str(output_path)}, indent=2))
+    print(
+        json.dumps(
+            {"removed_zones": removed_zones, "output": str(output_path)},
+            indent=2,
+        ),
+        flush=True,
+    )
+    os._exit(0)
 
 
 def strip_tracks_and_export(
