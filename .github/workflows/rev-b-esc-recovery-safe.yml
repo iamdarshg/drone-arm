@@ -145,8 +145,8 @@ jobs:
           python3 tools/hardware/filter_specctra_plane_nets.py \
             --board "$routed" --input "$raw_dsn" --output "$filtered_dsn" \
             --report build/recovery/esc-safe/plane-net-filter.json
-          test "$(grep -c '^(network' "$filtered_dsn" || true)" -gt 0
-          grep -q '^(wiring' "$filtered_dsn"
+          grep -Eq '^[[:space:]]*\(network([[:space:]]|$)' "$filtered_dsn"
+          grep -Eq '^[[:space:]]*\(wiring([[:space:]]|$)' "$filtered_dsn"
 
           set +e
           timeout --signal=INT --kill-after=5m 145m \
