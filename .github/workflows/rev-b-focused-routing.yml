@@ -1,0 +1,267 @@
+name: Continue Rev-B focused routing
+
+on:
+  push:
+    branches:
+      - agent/rev-b-fab-ready
+    paths:
+      - .github/workflows/rev-b-focused-routing.yml
+      - tools/hardware/prepare_rev_b_main_rf_reroute.py
+      - tools/hardware/focus_specctra_main_nets.py
+  workflow_dispatch:
+
+concurrency:
+  group: rev-b-focused-routing
+  cancel-in-progress: true
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  ROUTER_SOURCE_RUN_ID: 29693302481
+  MAIN_SOURCE_RUN_ID: 29696163068
+  JAVA_HOME: /opt/java25
+  PATH: /opt/java25/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+jobs:
+  route-main-focused:
+    runs-on: ubuntu-latest
+    container: debian:trixie
+    timeout-minutes: 165
+    steps:
+      - name: Install KiCad and runtime tools
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            git ca-certificates kicad kicad-symbols kicad-footprints \
+            python3 curl jq tar gzip
+
+      - name: Install Temurin JRE 25
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /opt/java25
+          jre_url=$(curl -fsSL \
+            'https://api.adoptium.net/v3/assets/latest/25/hotspot?architecture=x64&image_type=jre&os=linux&vendor=eclipse' \
+            | jq -r '.[0].binary.package.link')
+          test -n "$jre_url"
+          test "$jre_url" != "null"
+          curl -fL "$jre_url" -o /tmp/temurin25-jre.tar.gz
+          tar -xzf /tmp/temurin25-jre.tar.gz --strip-components=1 -C /opt/java25
+          java -version
+
+      - name: Check out guarded branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/rev-b-fab-ready
+          fetch-depth: 0
+
+      - name: Verify recovery guards remain active
+        run: |
+          test -f .github/workflows/rev-b-esc-recovery.yml/guard
+          test -f .github/workflows/rev-b-main-recovery.yml/guard
+
+      - name: Download fixed router
+        uses: actions/download-artifact@v4
+        with:
+          name: fixed-freerouting
+          path: build/fixed-freerouting
+          github-token: ${{ github.token }}
+          run-id: ${{ env.ROUTER_SOURCE_RUN_ID }}
+
+      - name: Download recovered main checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          name: rev-b-main-recovered-no-planes
+          path: build/source-main
+          github-token: ${{ github.token }}
+          run-id: ${{ env.MAIN_SOURCE_RUN_ID }}
+
+      - name: Route unresolved and unsafe main-board nets
+        shell: bash
+        env:
+          FREEROUTING__ROUTER__MAX_PASSES: '30'
+          FREEROUTING__ROUTER__MAX_ITEMS: '180'
+        run: |
+          set -euo pipefail
+          mkdir -p build/recovery/main-focused
+          exec > >(tee build/recovery/main-focused/stage.log) 2>&1
+
+          root=build/recovery/main-focused
+          source_root=build/source-main
+          baseline=$source_root/hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb
+          baseline_drc=$source_root/build/recovery/main/drc.json
+          focused_base=$root/main-focused-base.kicad_pcb
+          no_zones=$root/main-focused-nozones.kicad_pcb
+          raw_dsn=$root/main-with-plane-nets.dsn
+          no_planes=$root/main-no-plane-demand.dsn
+          focused_dsn=$root/main-focused.dsn
+          router=build/fixed-freerouting/freerouting-current-executable.jar
+
+          test -s "$baseline"
+          test -s "$baseline_drc"
+          test -s "$router"
+          cp "$baseline" "$root/main-baseline.kicad_pcb"
+          cp "$baseline_drc" "$root/source-drc.json"
+
+          python3 tools/hardware/prepare_rev_b_main_rf_reroute.py \
+            --board "$baseline" --output "$focused_base" \
+            --report "$root/rf-board-strip.json"
+          python3 tools/hardware/route_rev_b_sections.py strip-zones \
+            --board "$focused_base" --output "$no_zones"
+          python3 tools/hardware/route_rev_b_sections.py export-main \
+            --board "$no_zones" --dsn "$raw_dsn"
+          python3 tools/hardware/filter_specctra_plane_nets.py \
+            --board "$focused_base" --input "$raw_dsn" --output "$no_planes" \
+            --report "$root/plane-net-filter.json"
+          python3 tools/hardware/focus_specctra_main_nets.py \
+            --input "$no_planes" --drc "$baseline_drc" --output "$focused_dsn" \
+            --report "$root/focus-report.json"
+
+          test "$(jq -r '.target_net_count' "$root/focus-report.json")" = 22
+          test "$(jq -r '.restricted_rf_nets | length' "$root/focus-report.json")" = 7
+          grep -q '(class FAB_RF_250' "$focused_dsn"
+          grep -q '(class FAB_RF_350' "$focused_dsn"
+          grep -q '(class FAB_RF_800' "$focused_dsn"
+          test "$(grep -c '(use_layer F.Cu)' "$focused_dsn")" -ge 3
+          test "$(grep -c '(use_via "__NO_VIAS__")' "$focused_dsn")" -ge 3
+
+          set +e
+          timeout --signal=INT --kill-after=5m 125m \
+            java -Xmx6g -Djava.awt.headless=true -jar "$router" \
+            --gui.enabled=false -de "$focused_dsn" \
+            -do "$root/main-focused.ses" \
+            -mp 30 -mt 2 -oit 0.01 -us hybrid -hr 1:2 -is prioritized \
+            -da -dct 1 --logging.console.level=INFO --logging.file.enabled=false \
+            > "$root/freerouting.log" 2>&1
+          router_rc=$?
+          set -e
+          echo "$router_rc" > "$root/freerouting.exit"
+          test -s "$root/main-focused.ses"
+
+          python3 tools/hardware/route_rev_b_sections.py import-main \
+            --board "$focused_base" --ses "$root/main-focused.ses" \
+            --output "$root/main-imported.kicad_pcb"
+          python3 tools/hardware/route_rev_b_sections.py clean-main-import \
+            --board "$root/main-imported.kicad_pcb" \
+            --output "$root/main-clean.kicad_pcb"
+
+          set +e
+          python3 tools/hardware/route_rev_b_sections.py fill-zones \
+            --board "$root/main-clean.kicad_pcb" \
+            --output "$root/main-filled.kicad_pcb"
+          fill_rc=$?
+          set -e
+          echo "$fill_rc" > "$root/fill-zones.exit"
+          if ! test -s "$root/main-filled.kicad_pcb"; then
+            cp "$root/main-clean.kicad_pcb" "$root/main-filled.kicad_pcb"
+          fi
+
+          for kind in baseline candidate; do
+            if [ "$kind" = baseline ]; then
+              board="$root/main-baseline.kicad_pcb"
+            else
+              board="$root/main-filled.kicad_pcb"
+            fi
+            set +e
+            kicad-cli pcb drc --severity-all --format json \
+              -o "$root/${kind}-drc.json" "$board"
+            echo $? > "$root/${kind}-drc.exit"
+            python3 tools/hardware/audit_rev_b_pcb.py --kind main \
+              --board "$board" --output "$root/${kind}-layout-audit.json"
+            echo $? > "$root/${kind}-layout-audit.exit"
+            set -e
+          done
+
+          python3 - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+
+          root = Path('build/recovery/main-focused')
+          def load(name):
+              return json.loads((root / name).read_text())
+          def copper(name):
+              text = (root / name).read_text(errors='replace')
+              return {
+                  'tracks': len(re.findall(r'^\s*\(segment\b', text, re.M)),
+                  'vias': len(re.findall(r'^\s*\(via\b', text, re.M)),
+              }
+          def drc(name):
+              data = load(name)
+              return {
+                  'unconnected': len(data.get('unconnected_items', [])),
+                  'violations': len(data.get('violations', [])),
+                  'error_violations': sum(
+                      item.get('severity') == 'error'
+                      for item in data.get('violations', [])
+                  ),
+              }
+          def audit_check(audit, name):
+              for check in audit.get('checks', []):
+                  if check.get('name') == name:
+                      return check
+              raise KeyError(name)
+
+          baseline = drc('baseline-drc.json')
+          candidate = drc('candidate-drc.json')
+          baseline.update(copper('main-baseline.kicad_pcb'))
+          candidate.update(copper('main-filled.kicad_pcb'))
+          strip = load('rf-board-strip.json')
+          focus = load('focus-report.json')
+          candidate_audit = load('candidate-layout-audit.json')
+          rf_check = audit_check(
+              candidate_audit, 'RF routes remain on F.Cu without vias'
+          )
+          removed_tracks = strip['removed_by_kind'].get('segment', 0)
+          removed_vias = strip['removed_by_kind'].get('via', 0)
+          router_rc = int((root / 'freerouting.exit').read_text().strip())
+
+          checks = {
+              'ses_exists': (root / 'main-focused.ses').stat().st_size > 0,
+              'unconnected_improved': candidate['unconnected'] < baseline['unconnected'],
+              'drc_errors_non_regressed': (
+                  candidate['error_violations'] <= baseline['error_violations']
+              ),
+              'non_target_track_floor_preserved': (
+                  candidate['tracks'] >= baseline['tracks'] - removed_tracks
+              ),
+              'non_target_via_floor_preserved': (
+                  candidate['vias'] >= baseline['vias'] - removed_vias
+              ),
+              'rf_strip_complete': (
+                  strip['target_net_count'] == 7
+                  and strip['remaining_target_copper_items'] == 0
+              ),
+              'focus_scope_exact': (
+                  focus['target_net_count'] == 22
+                  and len(focus['restricted_rf_nets']) == 7
+              ),
+              'rf_layout_rule_passed': bool(rf_check['passed']),
+              'router_not_timed_out': router_rc not in (124, 137),
+          }
+          summary = {
+              'baseline': baseline,
+              'candidate': candidate,
+              'rf_audit_check': rf_check,
+              'rf_strip': strip,
+              'focus': focus,
+              'checks': checks,
+              'accepted_as_improved_checkpoint': all(checks.values()),
+              'fabrication_ready': False,
+          }
+          (root / 'summary.json').write_text(json.dumps(summary, indent=2) + '\n')
+          print(json.dumps(summary, indent=2))
+          if not summary['accepted_as_improved_checkpoint']:
+              raise SystemExit('focused main candidate rejected by safety gates')
+          PY
+
+      - name: Upload focused main candidate
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rev-b-main-focused-candidate
+          path: build/recovery/main-focused
+          if-no-files-found: error
+          retention-days: 3
