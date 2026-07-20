@@ -7,6 +7,8 @@ on:
       - agent/rev-b-fab-ready
     paths:
       - .github/workflows/rev-b-esc-recovery-safe.yml
+      - tools/hardware/prepare_rev_b_esc_sensitive_reroute.py
+      - tools/hardware/constrain_specctra_sensitive_nets.py
   workflow_dispatch:
 
 concurrency:
@@ -133,26 +135,39 @@ jobs:
           exec > >(tee build/recovery/esc-safe/stage.log) 2>&1
 
           routed=build/source-esc/build/rev-b-router/esc/esc-replicated.kicad_pcb
-          no_zones=build/source-esc/build/rev-b-router/esc/esc-replicated-nozones.kicad_pcb
+          sensitive_base=build/recovery/esc-safe/esc-sensitive-base.kicad_pcb
+          sensitive_no_zones=build/recovery/esc-safe/esc-sensitive-nozones.kicad_pcb
           raw_dsn=build/recovery/esc-safe/esc-with-plane-nets.dsn
           filtered_dsn=build/recovery/esc-safe/esc-no-planes.dsn
+          constrained_dsn=build/recovery/esc-safe/esc-sensitive-top.dsn
           test -s "$routed"
-          test -s "$no_zones"
 
           cp "$routed" build/recovery/esc-safe/esc-baseline.kicad_pcb
+          python3 tools/hardware/prepare_rev_b_esc_sensitive_reroute.py \
+            --board "$routed" --output "$sensitive_base" \
+            --report build/recovery/esc-safe/sensitive-board-strip.json
+          python3 tools/hardware/route_rev_b_sections.py strip-zones \
+            --board "$sensitive_base" --output "$sensitive_no_zones"
           python3 tools/hardware/route_rev_b_sections.py export-main \
-            --board "$no_zones" --dsn "$raw_dsn"
+            --board "$sensitive_no_zones" --dsn "$raw_dsn"
           python3 tools/hardware/filter_specctra_plane_nets.py \
-            --board "$routed" --input "$raw_dsn" --output "$filtered_dsn" \
+            --board "$sensitive_base" --input "$raw_dsn" --output "$filtered_dsn" \
             --report build/recovery/esc-safe/plane-net-filter.json
-          grep -Eq '^[[:space:]]*\(network([[:space:]]|$)' "$filtered_dsn"
-          grep -Eq '^[[:space:]]*\(wiring([[:space:]]|$)' "$filtered_dsn"
+          python3 tools/hardware/constrain_specctra_sensitive_nets.py \
+            --input "$filtered_dsn" --output "$constrained_dsn" \
+            --report build/recovery/esc-safe/sensitive-dsn-constraints.json
+          grep -Eq '^[[:space:]]*\(network([[:space:]]|$)' "$constrained_dsn"
+          grep -Eq '^[[:space:]]*\(wiring([[:space:]]|$)' "$constrained_dsn"
+          grep -q '(class FAB_GATE_TOP' "$constrained_dsn"
+          grep -q '(class FAB_SENSE_TOP' "$constrained_dsn"
+          grep -q '(use_layer F.Cu)' "$constrained_dsn"
+          grep -q '(use_via "__NO_VIAS__")' "$constrained_dsn"
 
           set +e
           timeout --signal=INT --kill-after=5m 145m \
             java -Xmx6g -Djava.awt.headless=true \
             -jar build/freerouting/freerouting-executable.jar \
-            --gui.enabled=false -de "$filtered_dsn" \
+            --gui.enabled=false -de "$constrained_dsn" \
             -do build/recovery/esc-safe/esc-shared.ses \
             -mp 2 -mt 1 -oit 0.01 -us hybrid -hr 1:2 -is prioritized \
             -da -dct 1 --logging.console.level=INFO --logging.file.enabled=false \
@@ -163,7 +178,7 @@ jobs:
           test -s build/recovery/esc-safe/esc-shared.ses
 
           python3 tools/hardware/route_rev_b_sections.py import-main \
-            --board "$routed" --ses build/recovery/esc-safe/esc-shared.ses \
+            --board "$sensitive_base" --ses build/recovery/esc-safe/esc-shared.ses \
             --output build/recovery/esc-safe/esc-imported.kicad_pcb
 
           set +e
@@ -221,6 +236,10 @@ jobs:
           candidate = drc('candidate-drc.json')
           baseline.update(copper(root / 'esc-baseline.kicad_pcb'))
           candidate.update(copper(root / 'esc-filled.kicad_pcb'))
+          strip = load('sensitive-board-strip.json')
+          constraints = load('sensitive-dsn-constraints.json')
+          removed_tracks = strip['removed_by_kind'].get('track', 0)
+          removed_vias = strip['removed_by_kind'].get('via', 0)
           audit_rc = int((root / 'candidate-layout-audit.exit').read_text().strip())
           router_rc = int((root / 'freerouting.exit').read_text().strip())
 
@@ -228,14 +247,30 @@ jobs:
               'ses_exists': (root / 'esc-shared.ses').stat().st_size > 0,
               'unconnected_improved': candidate['unconnected'] < baseline['unconnected'],
               'drc_errors_non_regressed': candidate['error_violations'] <= baseline['error_violations'],
-              'tracks_non_regressed': candidate['tracks'] >= baseline['tracks'],
-              'vias_non_regressed': candidate['vias'] >= baseline['vias'],
+              'non_sensitive_track_floor_preserved': candidate['tracks'] >= baseline['tracks'] - removed_tracks,
+              'non_sensitive_via_floor_preserved': candidate['vias'] >= baseline['vias'] - removed_vias,
               'nonzero_copper': candidate['tracks'] > 0 and candidate['vias'] > 0,
+              'sensitive_board_strip_complete': (
+                  strip['target_net_count'] == 168
+                  and strip['remaining_sensitive_copper_items'] == 0
+              ),
+              'sensitive_dsn_constraints_complete': (
+                  constraints['target_net_count'] == 168
+                  and constraints['sensitive_wiring_removed']
+                  and constraints['network_pin_entries_preserved_byte_for_byte']
+                  and constraints['non_sensitive_class_memberships_preserved']
+              ),
               'layout_audit_passed': audit_rc == 0,
               'router_not_timed_out': router_rc not in (124, 137),
           }
-          summary = {'baseline': baseline, 'candidate': candidate, 'checks': checks,
-                     'accepted': all(checks.values())}
+          summary = {
+              'baseline': baseline,
+              'candidate': candidate,
+              'sensitive_strip': strip,
+              'sensitive_constraints': constraints,
+              'checks': checks,
+              'accepted': all(checks.values()),
+          }
           (root / 'summary.json').write_text(json.dumps(summary, indent=2) + '\n')
           print(json.dumps(summary, indent=2))
           if not summary['accepted']:
