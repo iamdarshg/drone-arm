@@ -1,0 +1,99 @@
+name: Patch Rev-B routed-path audit
+
+on:
+  push:
+    branches:
+      - agent/rev-b-fab-ready
+    paths:
+      - .github/workflows/rev-b-patch-path-audit.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out guarded branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/rev-b-fab-ready
+          fetch-depth: 0
+
+      - name: Patch audit and commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Rev-B Hardware Bot"
+          git config user.email "actions@users.noreply.github.com"
+
+          cat > /tmp/patch-audit.py <<'PY'
+          from pathlib import Path
+
+          path = Path('tools/hardware/audit_rev_b_pcb.py')
+          text = path.read_text()
+          import_line = 'from audit_routed_paths import audit_main_signal_paths\n'
+          if import_line not in text:
+              text = text.replace('import pcbnew\n', 'import pcbnew\n\n' + import_line, 1)
+
+          old = '''    pair_check(
+              checks,
+              routes,
+              "USB connector-side pair skew",
+              "/Power and USB/USB_DP_CONN",
+              "/Power and USB/USB_DN_CONN",
+              0.5,
+          )
+              pair_check(
+              checks,
+              routes,
+              "USB MCU-side pair skew",
+              "/USB_DP",
+              "/USB_DM",
+              0.5,
+          )
+              pair_check(checks, routes, "CAN connector pair skew", "/CANH", "/CANL", 2.0)
+              pair_check(
+              checks,
+              routes,
+              "CAN transceiver pair skew",
+              "/CAN interface/U50_CANH",
+              "/CAN interface/U50_CANL",
+              2.0,
+          )
+          '''
+          # The committed file uses four-space indentation; normalize the exact block
+          # separately to keep this patch guarded and easy to review.
+          old = old.replace('          )\n              pair_check', '          )\n          pair_check')
+          new = '''    audit_main_signal_paths(board, routes, checks, add_check)
+          '''
+          if old not in text:
+              if new.strip() in text:
+                  path.write_text(text)
+                  raise SystemExit(0)
+              raise SystemExit('expected main-board pair audit block not found')
+          path.write_text(text.replace(old, new, 1))
+          PY
+
+          for attempt in 1 2 3; do
+            git fetch origin agent/rev-b-fab-ready
+            git reset --hard origin/agent/rev-b-fab-ready
+            python3 /tmp/patch-audit.py
+            python3 -m py_compile \
+              tools/hardware/audit_rev_b_pcb.py \
+              tools/hardware/audit_routed_paths.py
+            rm -f .github/workflows/rev-b-patch-path-audit.yml
+            git add -A
+            git diff --cached --check
+            if git diff --cached --quiet; then
+              exit 0
+            fi
+            git commit -m 'fix: measure end-to-end routed pair paths'
+            if git push origin HEAD:agent/rev-b-fab-ready; then
+              exit 0
+            fi
+            echo "Push race on attempt ${attempt}; retrying."
+          done
+          exit 1
