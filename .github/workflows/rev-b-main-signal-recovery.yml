@@ -89,7 +89,7 @@ jobs:
           focused_dsn="$root/main-signals.dsn"
           router=build/fixed-freerouting/freerouting-current-executable.jar
           test -s "$board"
-          test -s hardware/main/rev_b/main_rev_b.kicad_pro
+          test -s hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pro
           test -s "$router"
 
           cat > "$root/targets.json" <<'JSON'
@@ -165,6 +165,8 @@ jobs:
           if ! test -s "$candidate"; then
             cp hardware/main/rev_b/main_rev_b_signal_clean.kicad_pcb "$candidate"
           fi
+          cp hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pro \
+            hardware/main/rev_b/main_rev_b_signal_candidate.kicad_pro
 
           set +e
           kicad-cli pcb drc --severity-all --format json \
