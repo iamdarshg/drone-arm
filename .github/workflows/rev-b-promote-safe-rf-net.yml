@@ -53,9 +53,12 @@ jobs:
           root=build/recovery/rf-transplant
           mkdir -p "$root"
           board=hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb
+          project=hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pro
           donor=$(find build/rf-donor -type f -name main-filled.kicad_pcb -print -quit)
           candidate=hardware/main/rev_b/main_rev_b_rf_candidate.kicad_pcb
+          candidate_project=hardware/main/rev_b/main_rev_b_rf_candidate.kicad_pro
           test -s "$board"
+          test -s "$project"
           test -n "$donor"
           test -s "$donor"
 
@@ -76,6 +79,7 @@ jobs:
             --source "$board" --donor "$donor" --targets "$root/targets.json" \
             --output "$candidate" --report "$root/transplant-report.json" \
             --require-layer F.Cu --forbid-vias
+          cp "$project" "$candidate_project"
 
           set +e
           kicad-cli pcb drc --severity-all --format json \
@@ -186,7 +190,8 @@ jobs:
           cp "$candidate" /tmp/main_rev_b_rf_candidate.kicad_pcb
           cp "$root/transplant-report.json" /tmp/main_rev_b_rf_transplant.json
           cp "$root/summary.json" /tmp/main_rev_b_rf_transplant_summary.json
-          rm -f "$candidate" "$candidate".kicad_pro "$candidate".kicad_prl
+          rm -f "$candidate" "$candidate_project" \
+            hardware/main/rev_b/main_rev_b_rf_candidate.kicad_prl
 
       - name: Commit validated route improvement
         shell: bash
