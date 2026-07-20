@@ -5,24 +5,75 @@
   "summary": {
     "checks": 6,
     "failures": 6,
-    "unconnected_count": 413,
-    "track_count": 0,
-    "via_count": 0
+    "unconnected_count": 25,
+    "track_count": 1982,
+    "via_count": 407
   },
   "checks": [
     {
       "name": "Zero unrouted connections",
       "passed": false,
       "detail": {
-        "unconnected_count": 413
+        "unconnected_count": 25
       }
     },
     {
       "name": "RF routes remain on F.Cu without vias",
       "passed": false,
       "detail": {
-        "audited_nets": 0,
-        "failures": {}
+        "audited_nets": 32,
+        "failures": {
+          "/915 MHz RF/CC1121_RF": {
+            "track_length_mm": 6.945,
+            "track_count": 8,
+            "via_count": 2,
+            "layers": [
+              "F.Cu",
+              "In1.Cu"
+            ],
+            "min_width_mm": 0.3
+          },
+          "/915 MHz RF/CC_DCPL_XOSC": {
+            "track_length_mm": 4.919,
+            "track_count": 6,
+            "via_count": 2,
+            "layers": [
+              "F.Cu",
+              "In2.Cu"
+            ],
+            "min_width_mm": 0.25
+          },
+          "/915 MHz RF/CC_EXTCLK": {
+            "track_length_mm": 6.206,
+            "track_count": 6,
+            "via_count": 2,
+            "layers": [
+              "F.Cu",
+              "In1.Cu"
+            ],
+            "min_width_mm": 0.25
+          },
+          "/915 MHz RF/CC_LNA_N": {
+            "track_length_mm": 8.477,
+            "track_count": 8,
+            "via_count": 2,
+            "layers": [
+              "F.Cu",
+              "In2.Cu"
+            ],
+            "min_width_mm": 0.25
+          },
+          "/915 MHz RF/VDD_CC112": {
+            "track_length_mm": 68.217,
+            "track_count": 68,
+            "via_count": 2,
+            "layers": [
+              "F.Cu",
+              "In1.Cu"
+            ],
+            "min_width_mm": 0.25
+          }
+        }
       }
     },
     {
@@ -31,9 +82,9 @@
       "detail": {
         "positive": "/Power and USB/USB_DP_CONN",
         "negative": "/Power and USB/USB_DN_CONN",
-        "positive_length_mm": 0.0,
-        "negative_length_mm": 0.0,
-        "skew_mm": 0.0,
+        "positive_length_mm": 27.826,
+        "negative_length_mm": 16.21,
+        "skew_mm": 11.616,
         "limit_mm": 0.5
       }
     },
@@ -43,9 +94,9 @@
       "detail": {
         "positive": "/USB_DP",
         "negative": "/USB_DM",
-        "positive_length_mm": 0.0,
-        "negative_length_mm": 0.0,
-        "skew_mm": 0.0,
+        "positive_length_mm": 66.726,
+        "negative_length_mm": 43.621,
+        "skew_mm": 23.104,
         "limit_mm": 0.5
       }
     },
@@ -55,9 +106,9 @@
       "detail": {
         "positive": "/CANH",
         "negative": "/CANL",
-        "positive_length_mm": 0.0,
-        "negative_length_mm": 0.0,
-        "skew_mm": 0.0,
+        "positive_length_mm": 15.964,
+        "negative_length_mm": 25.452,
+        "skew_mm": 9.488,
         "limit_mm": 2.0
       }
     },
@@ -67,9 +118,9 @@
       "detail": {
         "positive": "/CAN interface/U50_CANH",
         "negative": "/CAN interface/U50_CANL",
-        "positive_length_mm": 0.0,
-        "negative_length_mm": 0.0,
-        "skew_mm": 0.0,
+        "positive_length_mm": 14.446,
+        "negative_length_mm": 10.16,
+        "skew_mm": 4.286,
         "limit_mm": 2.0
       }
     }

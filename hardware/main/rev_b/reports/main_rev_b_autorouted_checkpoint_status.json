@@ -1,0 +1,22 @@
+{
+  "summary": {
+    "unconnected": 25,
+    "violations": 10,
+    "error_violations": 6,
+    "tracks": 1982,
+    "vias": 407,
+    "board_sha256": "6941a559edf6c812c0df712f440bb1e180352b74657690deecf09f2f969c96c6",
+    "source_run_id": 29696163068,
+    "layout_audit_passed": false,
+    "checkpoint_only": true,
+    "fabrication_ready": false
+  },
+  "checks": {
+    "artifact_summary_exact": true,
+    "board_copper_exact": true,
+    "audit_matches_board": true,
+    "explicitly_not_fabrication_ready": true,
+    "ground_plane_filter_preserved": true
+  },
+  "accepted_as_checkpoint": true
+}
