@@ -1,0 +1,153 @@
+name: Preserve Rev-B routing checkpoints
+
+on:
+  push:
+    branches:
+      - agent/rev-b-fab-ready
+    paths:
+      - .github/workflows/rev-b-preserve-checkpoints.yml
+  workflow_dispatch:
+
+concurrency:
+  group: rev-b-preserve-checkpoints
+  cancel-in-progress: false
+
+permissions:
+  actions: read
+  contents: write
+
+env:
+  MAIN_SOURCE_RUN_ID: 29696163068
+
+jobs:
+  preserve-main-checkpoint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out guarded branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/rev-b-fab-ready
+          fetch-depth: 0
+
+      - name: Download recovered main result
+        uses: actions/download-artifact@v4
+        with:
+          name: rev-b-main-recovered-no-planes
+          path: build/completed-main
+          github-token: ${{ github.token }}
+          run-id: ${{ env.MAIN_SOURCE_RUN_ID }}
+
+      - name: Verify checkpoint provenance and improvement
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=build/completed-main
+          board=$root/hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb
+          evidence=$root/build/recovery/main
+          test -s "$board"
+          test -s "$evidence/summary.json"
+          test -s "$evidence/layout-audit.json"
+          test -s "$evidence/plane-net-filter.json"
+
+          mkdir -p build/checkpoint-evidence
+          python3 - <<'PY'
+          import hashlib
+          import json
+          import re
+          from pathlib import Path
+
+          root = Path('build/completed-main')
+          board = root / 'hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb'
+          evidence = root / 'build/recovery/main'
+          summary = json.loads((evidence / 'summary.json').read_text())
+          audit = json.loads((evidence / 'layout-audit.json').read_text())
+          plane_filter = json.loads((evidence / 'plane-net-filter.json').read_text())
+          text = board.read_text(errors='strict')
+          measured = {
+              'unconnected': summary['unconnected'],
+              'violations': summary['violations'],
+              'error_violations': summary['error_violations'],
+              'tracks': len(re.findall(r'^\s*\(segment\b', text, re.M)),
+              'vias': len(re.findall(r'^\s*\(via\b', text, re.M)),
+              'board_sha256': hashlib.sha256(board.read_bytes()).hexdigest(),
+              'source_run_id': 29696163068,
+              'layout_audit_passed': bool(audit['passed']),
+              'checkpoint_only': True,
+              'fabrication_ready': False,
+          }
+          checks = {
+              'artifact_summary_exact': (
+                  measured['unconnected'] == 25
+                  and measured['violations'] == 10
+                  and measured['error_violations'] == 6
+              ),
+              'board_copper_exact': measured['tracks'] == 1982 and measured['vias'] == 407,
+              'audit_matches_board': (
+                  audit['summary']['unconnected_count'] == 25
+                  and audit['summary']['track_count'] == 1982
+                  and audit['summary']['via_count'] == 407
+              ),
+              'explicitly_not_fabrication_ready': not audit['passed'],
+              'ground_plane_filter_preserved': (
+                  plane_filter['suppressed_router_nets'] == ['/GND']
+                  and plane_filter['removed_pin_references'] == 158
+              ),
+          }
+          result = {
+              'summary': measured,
+              'checks': checks,
+              'accepted_as_checkpoint': all(checks.values()),
+          }
+          out = Path('build/checkpoint-evidence/main_rev_b_autorouted_checkpoint_status.json')
+          out.write_text(json.dumps(result, indent=2) + '\n')
+          print(json.dumps(result, indent=2))
+          if not result['accepted_as_checkpoint']:
+              raise SystemExit('main routing artifact failed checkpoint-preservation gates')
+          PY
+
+      - name: Commit main routing checkpoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Rev-B Hardware Bot"
+          git config user.email "actions@users.noreply.github.com"
+
+          root=build/completed-main
+          board=$root/hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb
+          evidence=$root/build/recovery/main
+          status=build/checkpoint-evidence/main_rev_b_autorouted_checkpoint_status.json
+
+          for attempt in 1 2 3; do
+            git fetch origin agent/rev-b-fab-ready
+            git reset --hard origin/agent/rev-b-fab-ready
+
+            cp "$board" hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb
+            mkdir -p hardware/main/rev_b/reports
+            cp "$evidence/drc.json" \
+              hardware/main/rev_b/reports/main_rev_b_autorouted_drc.json
+            cp "$evidence/layout-audit.json" \
+              hardware/main/rev_b/reports/main_rev_b_autorouted_layout_audit.json
+            cp "$evidence/plane-net-filter.json" \
+              hardware/main/rev_b/reports/main_rev_b_plane_net_filter.json
+            cp "$status" \
+              hardware/main/rev_b/reports/main_rev_b_autorouted_checkpoint_status.json
+
+            git add -f \
+              hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb \
+              hardware/main/rev_b/reports/main_rev_b_autorouted_drc.json \
+              hardware/main/rev_b/reports/main_rev_b_autorouted_layout_audit.json \
+              hardware/main/rev_b/reports/main_rev_b_plane_net_filter.json \
+              hardware/main/rev_b/reports/main_rev_b_autorouted_checkpoint_status.json
+            git diff --cached --check
+            if git diff --cached --quiet; then
+              echo 'Recovered main checkpoint is already preserved.'
+              exit 0
+            fi
+            git commit -m 'route: preserve recovered Rev-B main checkpoint'
+            if git push origin HEAD:agent/rev-b-fab-ready; then
+              exit 0
+            fi
+            echo "Push race on attempt ${attempt}; retrying from latest branch head."
+          done
+          exit 1

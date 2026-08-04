@@ -18,6 +18,8 @@ from pathlib import Path
 
 import pcbnew
 
+from audit_routed_paths import audit_main_signal_paths
+
 
 MM = 1_000_000.0
 
@@ -129,31 +131,7 @@ def audit_main(board: pcbnew.BOARD, routes: dict[str, dict], checks: list[dict])
         {"audited_nets": len(rf_routes), "failures": rf_failures},
     )
 
-    pair_check(
-        checks,
-        routes,
-        "USB connector-side pair skew",
-        "/Power and USB/USB_DP_CONN",
-        "/Power and USB/USB_DN_CONN",
-        0.5,
-    )
-    pair_check(
-        checks,
-        routes,
-        "USB MCU-side pair skew",
-        "/USB_DP",
-        "/USB_DM",
-        0.5,
-    )
-    pair_check(checks, routes, "CAN connector pair skew", "/CANH", "/CANL", 2.0)
-    pair_check(
-        checks,
-        routes,
-        "CAN transceiver pair skew",
-        "/CAN interface/U50_CANH",
-        "/CAN interface/U50_CANL",
-        2.0,
-    )
+    audit_main_signal_paths(board, routes, checks, add_check)
 
 
 def motor_net(motor: int, suffix: str) -> str:

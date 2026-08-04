@@ -1,0 +1,298 @@
+name: Promote one safe Rev-B RF route
+
+on:
+  push:
+    branches:
+      - agent/rev-b-fab-ready
+    paths:
+      - .github/workflows/rev-b-promote-safe-rf-net.yml
+  workflow_dispatch:
+
+concurrency:
+  group: rev-b-promote-safe-rf-net
+  cancel-in-progress: false
+
+permissions:
+  actions: read
+  contents: write
+
+env:
+  DONOR_RUN_ID: 29726548399
+
+jobs:
+  validate-and-promote:
+    runs-on: ubuntu-latest
+    container: debian:trixie
+    timeout-minutes: 30
+    steps:
+      - name: Install KiCad and validation tools
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            git ca-certificates kicad kicad-symbols kicad-footprints python3 jq
+
+      - name: Check out guarded branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/rev-b-fab-ready
+          fetch-depth: 0
+
+      - name: Download focused-route donor artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: rev-b-main-focused-candidate
+          path: build/rf-donor
+          github-token: ${{ github.token }}
+          repository: iamdarshg/drone-arm
+          run-id: ${{ env.DONOR_RUN_ID }}
+
+      - name: Transplant and validate oscillator route
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=build/recovery/rf-transplant
+          mkdir -p "$root"
+          board=hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb
+          project=hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pro
+          donor=$(find build/rf-donor -type f -name main-filled.kicad_pcb -print -quit)
+          candidate=hardware/main/rev_b/main_rev_b_rf_candidate.kicad_pcb
+          candidate_project=hardware/main/rev_b/main_rev_b_rf_candidate.kicad_pro
+          test -s "$board"
+          test -s "$project"
+          test -n "$donor"
+          test -s "$donor"
+
+          cat > "$root/targets.json" <<'JSON'
+          ["/915 MHz RF/CC_DCPL_XOSC"]
+          JSON
+
+          set +e
+          kicad-cli pcb drc --severity-all --format json \
+            -o "$root/baseline-drc.json" "$board"
+          echo $? > "$root/baseline-drc.exit"
+          python3 tools/hardware/audit_rev_b_pcb.py --kind main \
+            --board "$board" --output "$root/baseline-layout-audit.json"
+          echo $? > "$root/baseline-layout-audit.exit"
+          set -e
+
+          python3 tools/hardware/transplant_kicad_net_copper.py \
+            --source "$board" --donor "$donor" --targets "$root/targets.json" \
+            --output "$candidate" --report "$root/transplant-report.json" \
+            --require-layer F.Cu --forbid-vias
+          cp "$project" "$candidate_project"
+
+          set +e
+          kicad-cli pcb drc --severity-all --format json \
+            -o "$root/candidate-drc.json" "$candidate"
+          echo $? > "$root/candidate-drc.exit"
+          python3 tools/hardware/audit_rev_b_pcb.py --kind main \
+            --board "$candidate" --output "$root/candidate-layout-audit.json"
+          echo $? > "$root/candidate-layout-audit.exit"
+          set -e
+
+          python3 - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          root = Path('build/recovery/rf-transplant')
+          target = '/915 MHz RF/CC_DCPL_XOSC'
+
+          def load(name):
+              return json.loads((root / name).read_text())
+
+          def drc(data):
+              return {
+                  'unconnected': len(data.get('unconnected_items', [])),
+                  'violations': len(data.get('violations', [])),
+                  'error_violations': sum(
+                      item.get('severity') == 'error'
+                      for item in data.get('violations', [])
+                  ),
+              }
+
+          def checks(audit):
+              return {item['name']: item for item in audit.get('checks', [])}
+
+          baseline_drc = drc(load('baseline-drc.json'))
+          candidate_drc = drc(load('candidate-drc.json'))
+          baseline_audit_raw = load('baseline-layout-audit.json')
+          candidate_audit_raw = load('candidate-layout-audit.json')
+          baseline_audit = checks(baseline_audit_raw)
+          candidate_audit = checks(candidate_audit_raw)
+          transplant = load('transplant-report.json')
+
+          rf_name = 'RF routes remain on F.Cu without vias'
+          baseline_rf = baseline_audit[rf_name]['detail']['failures']
+          candidate_rf = candidate_audit[rf_name]['detail']['failures']
+          expected_rf = {name: detail for name, detail in baseline_rf.items() if name != target}
+
+          protected_names = [
+              'USB connector-to-MCU pair skew',
+              'USB-C duplicate-pin branch balance',
+              'CAN transceiver-to-connector pair skew',
+          ]
+          protected = {
+              name: {
+                  'unchanged': baseline_audit[name] == candidate_audit[name],
+                  'before': baseline_audit[name],
+                  'after': candidate_audit[name],
+              }
+              for name in protected_names
+          }
+
+          checks_result = {
+              'baseline_is_preserved_checkpoint': baseline_drc == {
+                  'unconnected': 25,
+                  'violations': 10,
+                  'error_violations': 6,
+              },
+              'connectivity_non_regressed': candidate_drc['unconnected'] == 25,
+              'drc_non_regressed': (
+                  candidate_drc['violations'] <= 10
+                  and candidate_drc['error_violations'] <= 6
+              ),
+              'one_rf_failure_removed': (
+                  target in baseline_rf
+                  and target not in candidate_rf
+                  and candidate_rf == expected_rf
+              ),
+              'donor_route_is_top_only': transplant['donor_target_copper']['by_layer'] == {'F.Cu': 6},
+              'donor_route_has_no_vias': transplant['donor_target_copper']['by_kind'].get('via', 0) == 0,
+              'non_target_board_text_preserved': transplant['non_target_source_text_preserved'],
+              'protected_signal_evidence_unchanged': all(
+                  item['unchanged'] for item in protected.values()
+              ),
+              'track_count_preserved': candidate_audit_raw['summary']['track_count'] == 1982,
+              'only_two_vias_removed': candidate_audit_raw['summary']['via_count'] == 405,
+          }
+          summary = {
+              'baseline': baseline_drc,
+              'candidate': candidate_drc,
+              'target': target,
+              'baseline_rf_failures': baseline_rf,
+              'candidate_rf_failures': candidate_rf,
+              'protected_evidence': protected,
+              'transplant': transplant,
+              'candidate_board_sha256': hashlib.sha256(
+                  Path('hardware/main/rev_b/main_rev_b_rf_candidate.kicad_pcb').read_bytes()
+              ).hexdigest(),
+              'checks': checks_result,
+              'accepted': all(checks_result.values()),
+              'fabrication_ready': False,
+          }
+          (root / 'summary.json').write_text(json.dumps(summary, indent=2) + '\n')
+          print(json.dumps(summary, indent=2))
+          if not summary['accepted']:
+              raise SystemExit('selective RF transplant rejected by safety gates')
+          PY
+
+          cp "$candidate" /tmp/main_rev_b_rf_candidate.kicad_pcb
+          cp "$root/transplant-report.json" /tmp/main_rev_b_rf_transplant.json
+          cp "$root/summary.json" /tmp/main_rev_b_rf_transplant_summary.json
+          rm -f "$candidate" "$candidate_project" \
+            hardware/main/rev_b/main_rev_b_rf_candidate.kicad_prl
+
+      - name: Commit validated route improvement
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Rev-B Hardware Bot"
+          git config user.email "actions@users.noreply.github.com"
+          expected_source_sha=$(sha256sum hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb | awk '{print $1}')
+
+          for attempt in 1 2 3; do
+            git fetch origin agent/rev-b-fab-ready
+            git reset --hard origin/agent/rev-b-fab-ready
+            actual_source_sha=$(sha256sum hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb | awk '{print $1}')
+            test "$actual_source_sha" = "$expected_source_sha"
+
+            cp /tmp/main_rev_b_rf_candidate.kicad_pcb \
+              hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb
+            mkdir -p hardware/main/rev_b/reports build/final-rf-validation
+
+            set +e
+            kicad-cli pcb drc --severity-all --format json \
+              -o hardware/main/rev_b/reports/main_rev_b_autorouted_drc.json \
+              hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb
+            drc_rc=$?
+            python3 tools/hardware/audit_rev_b_pcb.py --kind main \
+              --board hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb \
+              --output hardware/main/rev_b/reports/main_rev_b_autorouted_layout_audit.json
+            audit_rc=$?
+            set -e
+            echo "$drc_rc" > build/final-rf-validation/drc.exit
+            echo "$audit_rc" > build/final-rf-validation/audit.exit
+
+            cp /tmp/main_rev_b_rf_transplant.json \
+              hardware/main/rev_b/reports/main_rev_b_rf_transplant.json
+            python3 - <<'PY'
+            import hashlib
+            import json
+            from pathlib import Path
+
+            board = Path('hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb')
+            drc = json.loads(Path('hardware/main/rev_b/reports/main_rev_b_autorouted_drc.json').read_text())
+            audit = json.loads(Path('hardware/main/rev_b/reports/main_rev_b_autorouted_layout_audit.json').read_text())
+            status = {
+                'summary': {
+                    'unconnected': len(drc.get('unconnected_items', [])),
+                    'violations': len(drc.get('violations', [])),
+                    'error_violations': sum(
+                        item.get('severity') == 'error'
+                        for item in drc.get('violations', [])
+                    ),
+                    'tracks': audit['summary']['track_count'],
+                    'vias': audit['summary']['via_count'],
+                    'board_sha256': hashlib.sha256(board.read_bytes()).hexdigest(),
+                    'source_run_id': 29696163068,
+                    'rf_donor_artifact_id': 8454880334,
+                    'selective_improvements': ['/915 MHz RF/CC_DCPL_XOSC'],
+                    'layout_audit_passed': audit['passed'],
+                    'checkpoint_only': True,
+                    'fabrication_ready': False,
+                },
+                'checks': {
+                    'connectivity_preserved': len(drc.get('unconnected_items', [])) == 25,
+                    'drc_preserved': (
+                        len(drc.get('violations', [])) <= 10
+                        and sum(item.get('severity') == 'error' for item in drc.get('violations', [])) <= 6
+                    ),
+                    'track_count_preserved': audit['summary']['track_count'] == 1982,
+                    'unsafe_vias_reduced': audit['summary']['via_count'] == 405,
+                    'explicitly_not_fabrication_ready': not audit['passed'],
+                },
+            }
+            status['accepted_as_checkpoint'] = all(status['checks'].values())
+            if not status['accepted_as_checkpoint']:
+                raise SystemExit(json.dumps(status, indent=2))
+            Path('hardware/main/rev_b/reports/main_rev_b_autorouted_checkpoint_status.json').write_text(
+                json.dumps(status, indent=2) + '\n'
+            )
+            PY
+
+            rm -f .github/workflows/rev-b-promote-safe-rf-net.yml
+            git add -f \
+              hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb \
+              hardware/main/rev_b/reports/main_rev_b_autorouted_drc.json \
+              hardware/main/rev_b/reports/main_rev_b_autorouted_layout_audit.json \
+              hardware/main/rev_b/reports/main_rev_b_autorouted_checkpoint_status.json \
+              hardware/main/rev_b/reports/main_rev_b_rf_transplant.json \
+              .github/workflows/rev-b-promote-safe-rf-net.yml
+            git diff --cached --check
+            git commit -m 'route: clean Rev-B CC oscillator path'
+            if git push origin HEAD:agent/rev-b-fab-ready; then
+              exit 0
+            fi
+            echo "Push race on attempt ${attempt}; retrying."
+          done
+          exit 1
+
+      - name: Upload RF transplant evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rev-b-main-rf-transplant
+          path: build/recovery/rf-transplant
+          if-no-files-found: error
+          retention-days: 3

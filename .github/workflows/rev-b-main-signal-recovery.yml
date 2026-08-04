@@ -1,0 +1,305 @@
+name: Recover Rev-B main signal gaps
+
+on:
+  push:
+    branches:
+      - agent/rev-b-fab-ready
+    paths:
+      - .github/workflows/rev-b-main-signal-recovery.yml
+      - tools/hardware/focus_specctra_named_nets.py
+  workflow_dispatch:
+
+concurrency:
+  group: rev-b-main-signal-recovery
+  cancel-in-progress: true
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  ROUTER_SOURCE_RUN_ID: 29693302481
+  JAVA_HOME: /opt/java25
+  PATH: /opt/java25/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+jobs:
+  route-main-signals:
+    runs-on: ubuntu-latest
+    container: debian:trixie
+    timeout-minutes: 95
+    steps:
+      - name: Install KiCad and runtime tools
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            git ca-certificates kicad kicad-symbols kicad-footprints \
+            python3 curl jq tar gzip
+
+      - name: Install Temurin JRE 25
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /opt/java25
+          jre_url=$(curl -fsSL \
+            'https://api.adoptium.net/v3/assets/latest/25/hotspot?architecture=x64&image_type=jre&os=linux&vendor=eclipse' \
+            | jq -r '.[0].binary.package.link')
+          test -n "$jre_url"
+          test "$jre_url" != "null"
+          curl -fL "$jre_url" -o /tmp/temurin25-jre.tar.gz
+          tar -xzf /tmp/temurin25-jre.tar.gz --strip-components=1 -C /opt/java25
+          java -version
+
+      - name: Check out guarded branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/rev-b-fab-ready
+          fetch-depth: 0
+
+      - name: Verify recovery guards remain active
+        run: |
+          test -f .github/workflows/rev-b-esc-recovery.yml/guard
+          test -f .github/workflows/rev-b-main-recovery.yml/guard
+
+      - name: Download fixed router
+        uses: actions/download-artifact@v4
+        with:
+          name: fixed-freerouting
+          path: build/fixed-freerouting
+          github-token: ${{ github.token }}
+          run-id: ${{ env.ROUTER_SOURCE_RUN_ID }}
+
+      - name: Route point-to-point signal gaps
+        shell: bash
+        env:
+          FREEROUTING__ROUTER__MAX_PASSES: '15'
+          FREEROUTING__ROUTER__FANOUT_MAX_PASSES: '0'
+          FREEROUTING__ROUTER__MAX_ITEMS: '120'
+          FREEROUTING__ROUTER__START_RIPUP_COSTS: '10000'
+        run: |
+          set -euo pipefail
+          root=build/recovery/main-signals
+          mkdir -p "$root"
+          exec > >(tee "$root/stage.log") 2>&1
+
+          board=hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb
+          candidate=hardware/main/rev_b/main_rev_b_signal_candidate.kicad_pcb
+          no_zones="$root/main-signal-nozones.kicad_pcb"
+          raw_dsn="$root/main-with-plane-nets.dsn"
+          no_planes="$root/main-no-plane-demand.dsn"
+          focused_dsn="$root/main-signals.dsn"
+          router=build/fixed-freerouting/freerouting-current-executable.jar
+          test -s "$board"
+          test -s hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pro
+          test -s "$router"
+
+          cat > "$root/targets.json" <<'JSON'
+          [
+            "/CAN_nCS",
+            "/GNSS_PPS",
+            "/GNSS_RX",
+            "/HGM",
+            "/ICM_INT2",
+            "/LSM_nCS",
+            "/RF_MOSI",
+            "/RP2354B MCU/RUN",
+            "/RP2354B MCU/SWCLK",
+            "/RP2354B MCU/XOUT",
+            "/SENS_SCLK"
+          ]
+          JSON
+
+          set +e
+          kicad-cli pcb drc --severity-all --format json \
+            -o "$root/baseline-drc.json" "$board"
+          echo $? > "$root/baseline-drc.exit"
+          python3 tools/hardware/audit_rev_b_pcb.py --kind main \
+            --board "$board" --output "$root/baseline-layout-audit.json"
+          echo $? > "$root/baseline-layout-audit.exit"
+          set -e
+          test "$(jq '.unconnected_items | length' "$root/baseline-drc.json")" = 25
+          test "$(jq '.violations | length' "$root/baseline-drc.json")" = 10
+
+          python3 tools/hardware/route_rev_b_sections.py strip-zones \
+            --board "$board" --output "$no_zones"
+          python3 tools/hardware/route_rev_b_sections.py export-main \
+            --board "$no_zones" --dsn "$raw_dsn"
+          python3 tools/hardware/filter_specctra_plane_nets.py \
+            --board "$board" --input "$raw_dsn" --output "$no_planes" \
+            --report "$root/plane-net-filter.json"
+          python3 tools/hardware/focus_specctra_named_nets.py \
+            --input "$no_planes" --targets "$root/targets.json" \
+            --output "$focused_dsn" --report "$root/focus-report.json"
+          test "$(jq -r '.target_net_count' "$root/focus-report.json")" = 11
+          test "$(jq -r '.target_network_entries_preserved_byte_for_byte' "$root/focus-report.json")" = true
+          test "$(jq -r '.all_existing_wiring_preserved' "$root/focus-report.json")" = true
+
+          set +e
+          timeout --signal=INT --kill-after=5m 55m \
+            java -Xmx6g -Djava.awt.headless=true -jar "$router" \
+            --gui.enabled=false \
+            --router.fanout_max_passes=0 \
+            --router.start_ripup_costs=10000 \
+            -de "$focused_dsn" -do "$root/main-signals.ses" \
+            -mp 15 -mt 1 -oit 0.001 -us hybrid -hr 1:2 -is prioritized \
+            -da -dct 1 --logging.console.level=INFO --logging.file.enabled=false \
+            > "$root/freerouting.log" 2>&1
+          router_rc=$?
+          set -e
+          echo "$router_rc" > "$root/freerouting.exit"
+          test -s "$root/main-signals.ses"
+
+          python3 tools/hardware/route_rev_b_sections.py import-main \
+            --board "$board" --ses "$root/main-signals.ses" \
+            --output hardware/main/rev_b/main_rev_b_signal_imported.kicad_pcb
+          python3 tools/hardware/route_rev_b_sections.py clean-main-import \
+            --board hardware/main/rev_b/main_rev_b_signal_imported.kicad_pcb \
+            --output hardware/main/rev_b/main_rev_b_signal_clean.kicad_pcb
+
+          set +e
+          python3 tools/hardware/route_rev_b_sections.py fill-zones \
+            --board hardware/main/rev_b/main_rev_b_signal_clean.kicad_pcb \
+            --output "$candidate"
+          fill_rc=$?
+          set -e
+          echo "$fill_rc" > "$root/fill-zones.exit"
+          if ! test -s "$candidate"; then
+            cp hardware/main/rev_b/main_rev_b_signal_clean.kicad_pcb "$candidate"
+          fi
+          cp hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pro \
+            hardware/main/rev_b/main_rev_b_signal_candidate.kicad_pro
+
+          set +e
+          kicad-cli pcb drc --severity-all --format json \
+            -o "$root/candidate-drc.json" "$candidate"
+          echo $? > "$root/candidate-drc.exit"
+          python3 tools/hardware/audit_rev_b_pcb.py --kind main \
+            --board "$candidate" --output "$root/candidate-layout-audit.json"
+          echo $? > "$root/candidate-layout-audit.exit"
+          set -e
+
+          cp "$candidate" "$root/main-signal-candidate.kicad_pcb"
+          rm -f \
+            hardware/main/rev_b/main_rev_b_signal_imported.kicad_pcb \
+            hardware/main/rev_b/main_rev_b_signal_imported.kicad_pro \
+            hardware/main/rev_b/main_rev_b_signal_imported.kicad_prl \
+            hardware/main/rev_b/main_rev_b_signal_clean.kicad_pcb \
+            hardware/main/rev_b/main_rev_b_signal_clean.kicad_pro \
+            hardware/main/rev_b/main_rev_b_signal_clean.kicad_prl \
+            hardware/main/rev_b/main_rev_b_signal_candidate.kicad_pcb \
+            hardware/main/rev_b/main_rev_b_signal_candidate.kicad_pro \
+            hardware/main/rev_b/main_rev_b_signal_candidate.kicad_prl
+
+          python3 - <<'PY'
+          import json
+          import re
+          from collections import Counter
+          from pathlib import Path
+
+          root = Path('build/recovery/main-signals')
+          targets = set(json.loads((root / 'targets.json').read_text()))
+
+          def load(name):
+              return json.loads((root / name).read_text())
+
+          def unconnected_counts(data):
+              counts = Counter()
+              for record in data.get('unconnected_items', []):
+                  names = set()
+                  for item in record.get('items', []):
+                      names.update(re.findall(r'\[([^\]]+)\]', item.get('description', '')))
+                  for name in names:
+                      counts[name] += 1
+              return counts
+
+          def drc_summary(data):
+              return {
+                  'unconnected': len(data.get('unconnected_items', [])),
+                  'violations': len(data.get('violations', [])),
+                  'error_violations': sum(
+                      item.get('severity') == 'error'
+                      for item in data.get('violations', [])
+                  ),
+              }
+
+          def copper(path):
+              text = path.read_text(errors='strict')
+              return {
+                  'tracks': len(re.findall(r'^\s*\(segment\b', text, re.M)),
+                  'vias': len(re.findall(r'^\s*\(via\b', text, re.M)),
+              }
+
+          def check_map(audit):
+              return {item['name']: item for item in audit.get('checks', [])}
+
+          baseline_drc = load('baseline-drc.json')
+          candidate_drc = load('candidate-drc.json')
+          baseline_counts = unconnected_counts(baseline_drc)
+          candidate_counts = unconnected_counts(candidate_drc)
+          baseline = drc_summary(baseline_drc)
+          candidate = drc_summary(candidate_drc)
+          baseline.update(copper(Path('hardware/main/rev_b/main_rev_b_routed_iter2_filled.kicad_pcb')))
+          candidate.update(copper(root / 'main-signal-candidate.kicad_pcb'))
+
+          target_before = {name: baseline_counts.get(name, 0) for name in sorted(targets)}
+          target_after = {name: candidate_counts.get(name, 0) for name in sorted(targets)}
+          non_target_regressions = {
+              name: {'before': baseline_counts.get(name, 0), 'after': count}
+              for name, count in sorted(candidate_counts.items())
+              if name not in targets and count > baseline_counts.get(name, 0)
+          }
+
+          baseline_audit = check_map(load('baseline-layout-audit.json'))
+          candidate_audit = check_map(load('candidate-layout-audit.json'))
+          protected_checks = [
+              'RF routes remain on F.Cu without vias',
+              'USB connector-to-MCU pair skew',
+              'USB-C duplicate-pin branch balance',
+              'CAN transceiver-to-connector pair skew',
+          ]
+          protected_evidence = {}
+          protected_unchanged = True
+          for name in protected_checks:
+              before = baseline_audit[name]
+              after = candidate_audit[name]
+              same = before == after
+              protected_unchanged = protected_unchanged and same
+              protected_evidence[name] = {'unchanged': same, 'before': before, 'after': after}
+
+          router_rc = int((root / 'freerouting.exit').read_text().strip())
+          checks = {
+              'ses_exists': (root / 'main-signals.ses').stat().st_size > 0,
+              'target_scope_exact': len(targets) == 11,
+              'target_unconnected_reduced': sum(target_after.values()) < sum(target_before.values()),
+              'total_unconnected_reduced': candidate['unconnected'] < baseline['unconnected'],
+              'no_non_target_unconnected_regression': not non_target_regressions,
+              'drc_errors_non_regressed': candidate['error_violations'] <= baseline['error_violations'],
+              'track_floor_preserved': candidate['tracks'] >= baseline['tracks'] - 10,
+              'via_floor_preserved': candidate['vias'] >= baseline['vias'] - 2,
+              'rf_usb_can_evidence_unchanged': protected_unchanged,
+              'router_not_timed_out': router_rc not in (124, 137),
+          }
+          summary = {
+              'baseline': baseline,
+              'candidate': candidate,
+              'target_unconnected_before': target_before,
+              'target_unconnected_after': target_after,
+              'non_target_regressions': non_target_regressions,
+              'protected_evidence': protected_evidence,
+              'checks': checks,
+              'accepted_as_improved_checkpoint': all(checks.values()),
+              'fabrication_ready': False,
+          }
+          (root / 'summary.json').write_text(json.dumps(summary, indent=2) + '\n')
+          print(json.dumps(summary, indent=2))
+          if not summary['accepted_as_improved_checkpoint']:
+              raise SystemExit('main signal candidate rejected by preservation gates')
+          PY
+
+      - name: Upload main signal candidate
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rev-b-main-signal-candidate
+          path: build/recovery/main-signals
+          if-no-files-found: error
+          retention-days: 3
