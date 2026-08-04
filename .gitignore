@@ -24,6 +24,7 @@ build*/
 *.jpg
 *.jpeg
 motor*
+!hardware/esc/esc/motor_*.kicad_sch
 .cache/
 main_out/
 *.pyc
