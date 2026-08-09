@@ -12,7 +12,9 @@ from __future__ import annotations
 import argparse
 from dataclasses import dataclass
 from pathlib import Path
+from types import SimpleNamespace
 import json
+import re
 import shutil
 
 import kicad_sch_api as ksa
@@ -128,10 +130,36 @@ LG77L_PINS = (
     ("42", "GND"), ("43", "GND"),
 )
 
-_rp2354_library_info = ksa.get_symbol_info("MCU_RaspberryPi:RP2354B")
-if _rp2354_library_info is None:
-    raise RuntimeError("Installed KiCad library does not contain MCU_RaspberryPi:RP2354B")
-RP2354B_PINS = tuple((pin.number, pin.name) for pin in _rp2354_library_info.pins)
+def load_rp2354_pins() -> tuple[tuple[str, str], ...]:
+    """Load RP2354B pins from KiCad or the committed audited symbol."""
+    library_info = ksa.get_symbol_info("MCU_RaspberryPi:RP2354B")
+    if library_info is not None:
+        return tuple((pin.number, pin.name) for pin in library_info.pins)
+    pin_pattern = re.compile(
+        r"\(pin\s+.*?\(name\s+\"([^\"]+)\".*?"
+        r"\(number\s+\"([^\"]+)\"",
+        re.DOTALL,
+    )
+    for path in (MAIN_DIR / "revb.kicad_sym", ESC_DIR / "revb.kicad_sym"):
+        if not path.exists():
+            continue
+        source = path.read_text(encoding="utf-8")
+        start = source.find('(symbol "RP2354B"')
+        if start < 0:
+            continue
+        end = source.find('\n  (symbol "', start + 1)
+        block = source[start:] if end < 0 else source[start:end]
+        matches = pin_pattern.findall(block)
+        pins = tuple((number, name) for name, number in matches)
+        if len(pins) == 81:
+            return pins
+    raise RuntimeError(
+        "RP2354B is absent from the installed KiCad library and the "
+        "committed Rev-B fallback symbol could not be parsed"
+    )
+
+
+RP2354B_PINS = load_rp2354_pins()
 
 
 SYMBOLS = (
@@ -1040,8 +1068,9 @@ def _make_esc_controller_legacy(parent_uuid: str, sheet_uuid: str) -> None:
             44: "M3_BUS", 45: "M4_BUS", 46: "M5_BUS", 47: "M6_BUS",
         }
     )
-    rp_info = ksa.get_symbol_info("MCU_RaspberryPi:RP2354B")
-    assert rp_info is not None
+    rp_info = SimpleNamespace(
+        pins=[SimpleNamespace(number=number, name=name) for number, name in RP2354B_PINS]
+    )
     power_map = {
         "VREG_AVDD": "VREG_AVDD", "USB_OTP_VDD": "3V3", "QSPI_IOVDD": "3V3",
         "IOVDD": "3V3", "VREG_PGND": "DGND", "GND": "DGND",
@@ -1263,7 +1292,7 @@ def add_can_fd_interface(
                 "Capacitor_SMD:C_0603_1608Metric")
     add_part(
         sch, "Device:L_Coupled", choke_ref, "ACT45B-110-2P-TL003",
-        (x + 120, y), "Inductor_SMD:L_CommonModeChoke_Coilank_ACM4532",
+        (x + 120, y), "Inductor_SMD:L_CommonModeChoke_Coilcraft_1812CAN",
         "TDK", "ACT45B-110-2P-TL003",
     )
     for pin, net in {
@@ -1308,8 +1337,9 @@ def make_esc_controller(parent_uuid: str, sheet_uuid: str) -> None:
         15: "CAN_nCS", 16: "CAN_INT", 17: "WDI",
         18: "ARM_CMD", 19: "STATUS_LED",
     }
-    rp_info = ksa.get_symbol_info("MCU_RaspberryPi:RP2354B")
-    assert rp_info is not None
+    rp_info = SimpleNamespace(
+        pins=[SimpleNamespace(number=number, name=name) for number, name in RP2354B_PINS]
+    )
     power_map = {
         "VREG_AVDD": "VREG_AVDD", "USB_OTP_VDD": "3V3", "QSPI_IOVDD": "3V3",
         "IOVDD": "3V3", "VREG_PGND": "DGND", "GND": "DGND",
@@ -1744,8 +1774,9 @@ def make_main_mcu(parent_uuid: str, sheet_uuid: str) -> None:
         27: "CAN_SCK", 28: "CAN_MOSI", 29: "CAN_MISO",
         30: "CAN_nCS", 31: "CAN_INT", 32: "STATUS_LED", 33: "GNSS_PWR_EN",
     }
-    info = ksa.get_symbol_info("MCU_RaspberryPi:RP2354B")
-    assert info is not None
+    info = SimpleNamespace(
+        pins=[SimpleNamespace(number=number, name=name) for number, name in RP2354B_PINS]
+    )
     power_map = {
         "VREG_AVDD": "VREG_AVDD", "USB_OTP_VDD": "3V3", "QSPI_IOVDD": "3V3",
         "IOVDD": "3V3", "VREG_PGND": "GND", "GND": "GND", "DVDD": "1V1",

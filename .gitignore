@@ -34,4 +34,5 @@ main_out/
 *.kicad_prl
 *.lck
 *-erc.rpt
-outputs/**/*.inspect.ndjson
+*-export/
+outputs/

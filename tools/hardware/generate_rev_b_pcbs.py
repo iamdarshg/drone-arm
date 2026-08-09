@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import math
+import os
 import re
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass
@@ -25,7 +26,27 @@ import pcbnew
 ROOT = Path(__file__).resolve().parents[2]
 ESC_DIR = ROOT / "hardware" / "esc" / "rev_b"
 MAIN_DIR = ROOT / "hardware" / "main" / "rev_b"
-KICAD_FP_ROOT = Path(r"C:\Program Files\KiCad\9.0\share\kicad\footprints")
+def discover_footprint_root() -> Path:
+    """Locate the standard KiCad footprint libraries on Windows or Linux."""
+    candidates = [
+        Path(value)
+        for key in ("KICAD_FOOTPRINT_DIR", "KICAD9_FOOTPRINT_DIR")
+        if (value := os.environ.get(key))
+    ]
+    candidates.extend(
+        [
+            Path(r"C:\Program Files\KiCad\9.0\share\kicad\footprints"),
+            Path("/usr/share/kicad/footprints"),
+            Path("/usr/local/share/kicad/footprints"),
+        ]
+    )
+    for candidate in candidates:
+        if candidate.is_dir():
+            return candidate
+    raise RuntimeError("Unable to locate KiCad footprints; set KICAD_FOOTPRINT_DIR")
+
+
+KICAD_FP_ROOT = discover_footprint_root()
 MM = pcbnew.FromMM
 
 
