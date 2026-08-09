@@ -1724,7 +1724,8 @@ def make_main_mcu(parent_uuid: str, sheet_uuid: str) -> None:
             "GNSS_PWR_EN",
             "RF_SCLK", "RF_MOSI", "RF_MISO", "RF_nCS", "RF_RESET_N", "RF_GPIO0",
             "RF_GPIO2", "RF_GPIO3", "PA_EN", "LNA_EN", "HGM",
-            "CAN_SCK", "CAN_MOSI", "CAN_MISO", "CAN_nCS", "CAN_INT"]
+            "CAN_SCK", "CAN_MOSI", "CAN_MISO", "CAN_nCS", "CAN_INT",
+            "CAN_5V", "CAN_GND"]
     add_hlabels(sch, nets)
     sch.add_text("RP2354B FLIGHT MCU\nInternal switcher and decoupling follow the Raspberry Pi hardware guide.",
                  (80, 16), size=1.1, bold=True)
@@ -1743,6 +1744,8 @@ def make_main_mcu(parent_uuid: str, sheet_uuid: str) -> None:
         24: "PA_EN", 25: "LNA_EN", 26: "HGM",
         27: "CAN_SCK", 28: "CAN_MOSI", 29: "CAN_MISO",
         30: "CAN_nCS", 31: "CAN_INT", 32: "STATUS_LED", 33: "GNSS_PWR_EN",
+        34: "PWM_ESC1", 35: "PWM_ESC2", 36: "PWM_ESC3",
+        37: "PWM_ESC4", 38: "PWM_ESC5", 39: "PWM_ESC6",
     }
     info = ksa.get_symbol_info("MCU_RaspberryPi:RP2354B")
     assert info is not None
@@ -1787,6 +1790,16 @@ def make_main_mcu(parent_uuid: str, sheet_uuid: str) -> None:
         add_two_pin(sch, "Device:C", f"C{30 + k}", "100n", (160 + (k % 4) * 20, 145 + (k // 4) * 10),
                     "3V3" if k < 9 else "1V1", "GND",
                     "Capacitor_SMD:C_0402_1005Metric")
+    for index in range(1, 7):
+        reference = f"J{59 + index}"
+        add_part(
+            sch, "Connector_Generic:Conn_01x03", reference, f"ESC_PWM_{index}",
+            (35.56 + (index - 1) * 35.56, 195.58),
+            "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical",
+        )
+        label_pin(sch, reference, "1", "CAN_GND")
+        label_pin(sch, reference, "2", "CAN_5V")
+        label_pin(sch, reference, "3", f"PWM_ESC{index}")
     add_two_pin(sch, "Device:C", "C42", "100n", (240, 165),
                 "3V3_ADC", "GND", "Capacitor_SMD:C_0402_1005Metric")
     add_power_flag(sch, "#FLG11", "VREG_AVDD", (220, 42))
@@ -2163,7 +2176,8 @@ def make_main_top() -> None:
     top = ksa.create_schematic("main_rev_b")
     top.add_text(
         "REV-B FLIGHT-CONTROL BOARD\n"
-        "Physically and electrically distinct from the ESC; CAN + protected 5 V are the only normal interconnects.",
+        "Physically and electrically distinct from the ESC; CAN + protected 5 V serve the custom ESC, "
+        "with six PWM outputs for standard ESCs.",
         (42, 12), size=1.4, bold=True,
     )
     sheet_specs = [
@@ -2179,7 +2193,8 @@ def make_main_top() -> None:
           "GNSS_PWR_EN",
           "RF_SCLK", "RF_MOSI", "RF_MISO", "RF_nCS", "RF_RESET_N", "RF_GPIO0",
           "RF_GPIO2", "RF_GPIO3", "PA_EN", "LNA_EN", "HGM",
-          "CAN_SCK", "CAN_MOSI", "CAN_MISO", "CAN_nCS", "CAN_INT"]),
+          "CAN_SCK", "CAN_MOSI", "CAN_MISO", "CAN_nCS", "CAN_INT",
+          "CAN_5V", "CAN_GND"]),
         ("Redundant sensors", "sensors.kicad_sch", (15.24, 91.44), (83.82, 45.72),
          ["3V3", "GND", "SENS_SCLK", "SENS_MOSI", "SENS_MISO", "ICM_nCS", "LSM_nCS",
           "ICM_INT1", "ICM_INT2", "LSM_INT1", "LSM_INT2", "BARO_SCL", "BARO_SDA", "BARO_DRDY"]),

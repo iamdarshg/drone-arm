@@ -1018,6 +1018,26 @@
 		)
 		(uuid "d1863622-3a3a-4a0c-9331-10168094a552")
 	)
+	(wire
+		(pts
+			(xy 287.02 76.2) (xy 289.56 76.2)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "025cfca6-a982-4fbb-9b2b-0850f9fa3404")
+	)
+	(wire
+		(pts
+			(xy 106.68 78.74) (xy 104.14 78.74)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0ec0d6b9-157e-42e6-bbf7-c5718eedcda3")
+	)
 	(label "CAN_5V"
 		(at 12.7 27.94 0)
 		(effects
@@ -2028,7 +2048,27 @@
 		)
 		(uuid "594daa67-82e3-4cc7-ade0-a415da97321b")
 	)
-	(text "REV-B FLIGHT-CONTROL BOARD\nPhysically and electrically distinct from the ESC; CAN + protected 5 V are the only normal interconnects."
+	(label "CAN_5V"
+		(at 289.56 76.2 0)
+		(effects
+			(font
+				(size 0.8 0.8)
+			)
+			(justify left bottom)
+		)
+		(uuid "2d50b97b-ea19-491e-b413-a528c4fe6b61")
+	)
+	(label "CAN_GND"
+		(at 104.14 78.74 0)
+		(effects
+			(font
+				(size 0.8 0.8)
+			)
+			(justify left bottom)
+		)
+		(uuid "6c6aa5cf-a793-4c12-8d13-386e1a103f49")
+	)
+	(text "REV-B FLIGHT-CONTROL BOARD\nCAN + protected 5 V serve the custom ESC; six PWM outputs support standard ESCs."
 		(exclude_from_sim no)
 		(at 42 12 0.0000)
 		(effects
@@ -2683,6 +2723,26 @@
 					(size 1.27 1.27)
 				)
 				(justify right)
+			)
+		)
+		(pin "CAN_5V" bidirectional
+			(at 287.02 76.2 0)
+			(uuid "3febec33-6570-4282-b9fa-8ba52ffa53b0")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "CAN_GND" bidirectional
+			(at 106.68 78.74 180)
+			(uuid "40302de3-b25e-470d-9875-5d5a5333a5fd")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 			)
 		)
 		(instances

@@ -4604,6 +4604,498 @@
 			)
 		)
 	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x03")
+		(at 35.56 195.58 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced no)
+		(uuid "81401bdd-f697-4632-8e9e-c484f9a9d991")
+		(property "Reference" "J60"
+			(at 35.56 200.66 0.0000)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "ESC_PWM_1"
+			(at 35.56 190.5 0.0000)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical"
+			(at 35.56 195.58 0.0000)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" ""
+			(at 38.1 200.6599 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "MPN" ""
+			(at 38.1 200.6599 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "hierarchy_path" "/1aef5005-7133-4d76-81ba-175878f4fb26/7a303a94-e964-458f-bca6-1be0374bae52"
+			(at 38.1 200.6599 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "1"
+			(uuid "536d3e83-3cd2-46f9-b0f4-98cc78b69021")
+		)
+		(pin "2"
+			(uuid "a6a72bd8-7951-4e80-b621-54229593dd3c")
+		)
+		(pin "3"
+			(uuid "59a748f6-307f-4071-b98b-cf53e4a5f89a")
+		)
+		(instances
+			(project "main_rev_b"
+				(path "/1aef5005-7133-4d76-81ba-175878f4fb26/7a303a94-e964-458f-bca6-1be0374bae52"
+					(reference "J60")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x03")
+		(at 71.12 195.58 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced no)
+		(uuid "2dd84589-6bf3-4630-a76d-c3ac77dd8bc6")
+		(property "Reference" "J61"
+			(at 71.12 200.66 0.0000)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "ESC_PWM_2"
+			(at 71.12 190.5 0.0000)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical"
+			(at 71.12 195.58 0.0000)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" ""
+			(at 73.66 200.6599 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "MPN" ""
+			(at 73.66 200.6599 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "hierarchy_path" "/1aef5005-7133-4d76-81ba-175878f4fb26/7a303a94-e964-458f-bca6-1be0374bae52"
+			(at 73.66 200.6599 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "1"
+			(uuid "ea97231d-fa29-4ea0-bca9-de2e08d51375")
+		)
+		(pin "2"
+			(uuid "8e5d7617-f583-4f67-bd05-f9a2c5d0c1df")
+		)
+		(pin "3"
+			(uuid "93d4a2d6-0539-4838-9545-df400069818b")
+		)
+		(instances
+			(project "main_rev_b"
+				(path "/1aef5005-7133-4d76-81ba-175878f4fb26/7a303a94-e964-458f-bca6-1be0374bae52"
+					(reference "J61")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x03")
+		(at 106.68 195.58 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced no)
+		(uuid "5595cc2e-a0be-430a-8ea9-bfab9c574a3d")
+		(property "Reference" "J62"
+			(at 106.68 200.66 0.0000)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "ESC_PWM_3"
+			(at 106.68 190.5 0.0000)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical"
+			(at 106.68 195.58 0.0000)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" ""
+			(at 109.22 200.6599 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "MPN" ""
+			(at 109.22 200.6599 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "hierarchy_path" "/1aef5005-7133-4d76-81ba-175878f4fb26/7a303a94-e964-458f-bca6-1be0374bae52"
+			(at 109.22 200.6599 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "1"
+			(uuid "aca21d2f-177a-48f5-8755-326e44119fff")
+		)
+		(pin "2"
+			(uuid "d17b6717-4c8f-455b-94fe-631c319ac970")
+		)
+		(pin "3"
+			(uuid "d901ae70-d280-4714-b246-dab7416e2c8a")
+		)
+		(instances
+			(project "main_rev_b"
+				(path "/1aef5005-7133-4d76-81ba-175878f4fb26/7a303a94-e964-458f-bca6-1be0374bae52"
+					(reference "J62")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x03")
+		(at 142.24 195.58 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced no)
+		(uuid "2571aa65-9083-4aee-ae98-1f0826b37237")
+		(property "Reference" "J63"
+			(at 142.24 200.66 0.0000)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "ESC_PWM_4"
+			(at 142.24 190.5 0.0000)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical"
+			(at 142.24 195.58 0.0000)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" ""
+			(at 144.78 200.6599 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "MPN" ""
+			(at 144.78 200.6599 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "hierarchy_path" "/1aef5005-7133-4d76-81ba-175878f4fb26/7a303a94-e964-458f-bca6-1be0374bae52"
+			(at 144.78 200.6599 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "1"
+			(uuid "8ebbc183-d776-4423-bd83-c42d540b9e69")
+		)
+		(pin "2"
+			(uuid "4bc5d743-95a7-4d70-984d-43a28110614f")
+		)
+		(pin "3"
+			(uuid "92f619e9-b13e-4031-93ab-a7c0cc3ff4da")
+		)
+		(instances
+			(project "main_rev_b"
+				(path "/1aef5005-7133-4d76-81ba-175878f4fb26/7a303a94-e964-458f-bca6-1be0374bae52"
+					(reference "J63")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x03")
+		(at 177.8 195.58 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced no)
+		(uuid "48e1f908-b9e5-43ba-aa1f-5e445b304dd3")
+		(property "Reference" "J64"
+			(at 177.8 200.66 0.0000)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "ESC_PWM_5"
+			(at 177.8 190.5 0.0000)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical"
+			(at 177.8 195.58 0.0000)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" ""
+			(at 180.34 200.6599 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "MPN" ""
+			(at 180.34 200.6599 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "hierarchy_path" "/1aef5005-7133-4d76-81ba-175878f4fb26/7a303a94-e964-458f-bca6-1be0374bae52"
+			(at 180.34 200.6599 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "1"
+			(uuid "ca8018bc-d297-4874-84a6-f67f96fa78c6")
+		)
+		(pin "2"
+			(uuid "83196ddf-ea7f-494d-b6c8-54379b498e73")
+		)
+		(pin "3"
+			(uuid "7240503b-1e48-4b1f-a263-3e0157982030")
+		)
+		(instances
+			(project "main_rev_b"
+				(path "/1aef5005-7133-4d76-81ba-175878f4fb26/7a303a94-e964-458f-bca6-1be0374bae52"
+					(reference "J64")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x03")
+		(at 213.36 195.58 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced no)
+		(uuid "296d841d-494e-49e8-9d83-bd1acba30026")
+		(property "Reference" "J65"
+			(at 213.36 200.66 0.0000)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "ESC_PWM_6"
+			(at 213.36 190.5 0.0000)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical"
+			(at 213.36 195.58 0.0000)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" ""
+			(at 215.9 200.6599 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "MPN" ""
+			(at 215.9 200.6599 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "hierarchy_path" "/1aef5005-7133-4d76-81ba-175878f4fb26/7a303a94-e964-458f-bca6-1be0374bae52"
+			(at 215.9 200.6599 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "1"
+			(uuid "c579fe4b-4d04-46ed-9df8-09a08ca93c3c")
+		)
+		(pin "2"
+			(uuid "7566ec5d-a245-4f83-bf9a-a8d05a1c5a25")
+		)
+		(pin "3"
+			(uuid "a27cf423-ba71-46b2-a00f-25cc92953ed7")
+		)
+		(instances
+			(project "main_rev_b"
+				(path "/1aef5005-7133-4d76-81ba-175878f4fb26/7a303a94-e964-458f-bca6-1be0374bae52"
+					(reference "J65")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(wire
 		(pts
 			(xy 20.32 20.32) (xy 25.4 20.32)
@@ -5013,6 +5505,26 @@
 			(type default)
 		)
 		(uuid "b392be3f-6d5d-44e7-b8be-336ade664718")
+	)
+	(wire
+		(pts
+			(xy 20.32 124.46) (xy 25.4 124.46)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cb0a3e33-08c6-4d9e-a0ba-dc6f6e9f3a27")
+	)
+	(wire
+		(pts
+			(xy 20.32 127) (xy 25.4 127)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3af0efde-ecde-4df7-987b-55e7c5d2903f")
 	)
 	(label "3V3"
 		(at 25.4 20.32 0)
@@ -6504,6 +7016,266 @@
 		)
 		(uuid "cc0edc6e-9f0f-46a1-8a5a-baed7947c320")
 	)
+	(label "CAN_5V"
+		(at 25.4 124.46 0)
+		(effects
+			(font
+				(size 0.8 0.8)
+			)
+			(justify left bottom)
+		)
+		(uuid "bea33fd1-c28a-4bb8-a5a9-69643e9d7369")
+	)
+	(label "CAN_GND"
+		(at 25.4 127 0)
+		(effects
+			(font
+				(size 0.8 0.8)
+			)
+			(justify left bottom)
+		)
+		(uuid "73afa3e5-876d-40b5-a1ec-4aaf1c0a58d2")
+	)
+	(label "PWM_ESC1"
+		(at 87.63 93.98 180)
+		(effects
+			(font
+				(size 0.9 0.9)
+			)
+			(justify left bottom)
+		)
+		(uuid "3a51281e-d875-441e-86ab-b0fc741c20e7")
+	)
+	(label "PWM_ESC2"
+		(at 87.63 96.52 180)
+		(effects
+			(font
+				(size 0.9 0.9)
+			)
+			(justify left bottom)
+		)
+		(uuid "f21ea783-4b6d-430f-9718-92a40d69a075")
+	)
+	(label "PWM_ESC3"
+		(at 87.63 99.06 180)
+		(effects
+			(font
+				(size 0.9 0.9)
+			)
+			(justify left bottom)
+		)
+		(uuid "2a00ccb4-f9d3-408b-87ba-671ee667fe4f")
+	)
+	(label "PWM_ESC4"
+		(at 87.63 101.6 180)
+		(effects
+			(font
+				(size 0.9 0.9)
+			)
+			(justify left bottom)
+		)
+		(uuid "011f48b2-b7c7-4120-8381-66333998af03")
+	)
+	(label "PWM_ESC5"
+		(at 87.63 104.14 180)
+		(effects
+			(font
+				(size 0.9 0.9)
+			)
+			(justify left bottom)
+		)
+		(uuid "5cae936f-bb03-400e-867f-b873645d3913")
+	)
+	(label "PWM_ESC6"
+		(at 87.63 106.68 180)
+		(effects
+			(font
+				(size 0.9 0.9)
+			)
+			(justify left bottom)
+		)
+		(uuid "ec0dcc05-18a0-42d4-b871-eb9e5c174ee9")
+	)
+	(label "CAN_GND"
+		(at 30.48 193.04 180)
+		(effects
+			(font
+				(size 0.9 0.9)
+			)
+			(justify left bottom)
+		)
+		(uuid "7b3b0d25-fb2d-4083-8f50-27b6ab6506d2")
+	)
+	(label "CAN_5V"
+		(at 30.48 195.58 180)
+		(effects
+			(font
+				(size 0.9 0.9)
+			)
+			(justify left bottom)
+		)
+		(uuid "68e7ff8c-d9d3-495e-89b4-2b8515d2bfc5")
+	)
+	(label "PWM_ESC1"
+		(at 30.48 198.12 180)
+		(effects
+			(font
+				(size 0.9 0.9)
+			)
+			(justify left bottom)
+		)
+		(uuid "ffca7db4-b8e4-4551-8b8d-ca8280a02ae1")
+	)
+	(label "CAN_GND"
+		(at 66.04 193.04 180)
+		(effects
+			(font
+				(size 0.9 0.9)
+			)
+			(justify left bottom)
+		)
+		(uuid "93ce2db3-6c6a-416b-9032-9e87460fd0c0")
+	)
+	(label "CAN_5V"
+		(at 66.04 195.58 180)
+		(effects
+			(font
+				(size 0.9 0.9)
+			)
+			(justify left bottom)
+		)
+		(uuid "761f4f7a-8d1d-4232-b045-85fa8cfeb179")
+	)
+	(label "PWM_ESC2"
+		(at 66.04 198.12 180)
+		(effects
+			(font
+				(size 0.9 0.9)
+			)
+			(justify left bottom)
+		)
+		(uuid "c120247a-2cad-4d8d-8530-267b3dece9f0")
+	)
+	(label "CAN_GND"
+		(at 101.6 193.04 180)
+		(effects
+			(font
+				(size 0.9 0.9)
+			)
+			(justify left bottom)
+		)
+		(uuid "f62e4375-fca3-457e-bd67-5d15db243a84")
+	)
+	(label "CAN_5V"
+		(at 101.6 195.58 180)
+		(effects
+			(font
+				(size 0.9 0.9)
+			)
+			(justify left bottom)
+		)
+		(uuid "5c5600c9-d4df-4976-981f-beb120c6211b")
+	)
+	(label "PWM_ESC3"
+		(at 101.6 198.12 180)
+		(effects
+			(font
+				(size 0.9 0.9)
+			)
+			(justify left bottom)
+		)
+		(uuid "dfebe6af-e460-4b82-b10e-4501d23160d0")
+	)
+	(label "CAN_GND"
+		(at 137.16 193.04 180)
+		(effects
+			(font
+				(size 0.9 0.9)
+			)
+			(justify left bottom)
+		)
+		(uuid "06dafeba-34c6-40bc-b533-f9bc0757dbe6")
+	)
+	(label "CAN_5V"
+		(at 137.16 195.58 180)
+		(effects
+			(font
+				(size 0.9 0.9)
+			)
+			(justify left bottom)
+		)
+		(uuid "d7cb20c3-67da-48f4-a333-a645269fa43f")
+	)
+	(label "PWM_ESC4"
+		(at 137.16 198.12 180)
+		(effects
+			(font
+				(size 0.9 0.9)
+			)
+			(justify left bottom)
+		)
+		(uuid "a275eaed-202d-4893-bf11-cf0c6c1df0e7")
+	)
+	(label "CAN_GND"
+		(at 172.72 193.04 180)
+		(effects
+			(font
+				(size 0.9 0.9)
+			)
+			(justify left bottom)
+		)
+		(uuid "0854fe9c-688c-43d1-b3fd-ef736fdadd05")
+	)
+	(label "CAN_5V"
+		(at 172.72 195.58 180)
+		(effects
+			(font
+				(size 0.9 0.9)
+			)
+			(justify left bottom)
+		)
+		(uuid "61933c3f-ec82-4a28-9e45-cd11ce46a847")
+	)
+	(label "PWM_ESC5"
+		(at 172.72 198.12 180)
+		(effects
+			(font
+				(size 0.9 0.9)
+			)
+			(justify left bottom)
+		)
+		(uuid "7da6c746-70c7-4ae9-989c-20db164dbe8f")
+	)
+	(label "CAN_GND"
+		(at 208.28 193.04 180)
+		(effects
+			(font
+				(size 0.9 0.9)
+			)
+			(justify left bottom)
+		)
+		(uuid "5f62f32b-14ff-44ba-95c1-d1f01ddff253")
+	)
+	(label "CAN_5V"
+		(at 208.28 195.58 180)
+		(effects
+			(font
+				(size 0.9 0.9)
+			)
+			(justify left bottom)
+		)
+		(uuid "86239af8-d9b9-4542-8521-39075f7ed532")
+	)
+	(label "PWM_ESC6"
+		(at 208.28 198.12 180)
+		(effects
+			(font
+				(size 0.9 0.9)
+			)
+			(justify left bottom)
+		)
+		(uuid "68f7bdb5-552e-4e28-8adc-e9eee9420fd2")
+	)
 	(hierarchical_label "3V3"
 		(shape input)
 		(at 20.32 20.32 0.0000)
@@ -6955,6 +7727,28 @@
 		)
 		(uuid "e07c0465-ab97-48e4-b779-a710b184d311")
 	)
+	(hierarchical_label "CAN_5V"
+		(shape input)
+		(at 20.32 124.46 0.0000)
+		(effects
+			(font
+				(size 0.9 0.9)
+			)
+			(justify left)
+		)
+		(uuid "755e1bf3-9e7c-4cd7-a40f-d33529aaab96")
+	)
+	(hierarchical_label "CAN_GND"
+		(shape input)
+		(at 20.32 127 0.0000)
+		(effects
+			(font
+				(size 0.9 0.9)
+			)
+			(justify left)
+		)
+		(uuid "77a5aa0b-6a21-452d-9fc4-104c8fd82063")
+	)
 	(no_connect
 		(at 87.63 40.64)
 		(uuid "614eed5f-df9d-45ca-812a-b45f6c0f9eb5")
@@ -6986,30 +7780,6 @@
 	(no_connect
 		(at 87.63 58.42)
 		(uuid "abe8e7af-8e7d-4b59-bcf7-72795a00eba6")
-	)
-	(no_connect
-		(at 87.63 93.98)
-		(uuid "cc11e4b5-7a71-4b12-96a6-38cdc2af2f88")
-	)
-	(no_connect
-		(at 87.63 96.52)
-		(uuid "fe502ad2-d645-4a8d-8bca-6616bb1393ae")
-	)
-	(no_connect
-		(at 87.63 99.06)
-		(uuid "d7b0cbd3-9096-410d-9baa-9383e9022194")
-	)
-	(no_connect
-		(at 87.63 101.6)
-		(uuid "f098fd5e-8604-41d1-a681-863a07783138")
-	)
-	(no_connect
-		(at 87.63 104.14)
-		(uuid "8cf00808-c01a-4683-96c2-29c9364bfe87")
-	)
-	(no_connect
-		(at 87.63 106.68)
-		(uuid "f49d7ea7-8e5a-4c30-92d4-c73a37a54887")
 	)
 	(no_connect
 		(at 87.63 116.84)
