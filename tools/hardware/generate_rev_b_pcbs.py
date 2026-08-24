@@ -102,7 +102,11 @@ def create_board(
     default.SetViaDrill(MM(0.35))
 
     netclasses = {
-        "POWER": (base_clearance, 0.80, 0.80, 0.40),
+        # Power nets must neck into the 0.4/0.5 mm-pitch MCU and RF pads.
+        # A blanket 0.80 mm rule makes those pads physically unroutable.
+        # The control board carries low-current rails; use 0.25 mm for pad
+        # escapes and widen trunks with copper zones where current warrants.
+        "POWER": (base_clearance, 0.25, 0.70, 0.35),
         "GATE_DRIVE": (base_clearance, 0.50, 0.70, 0.35),
         "CURRENT_SENSE": (base_clearance, 0.25, 0.60, 0.30),
         "CAN_DIFF": (base_clearance, 0.25, 0.60, 0.30),
