@@ -1,0 +1,118 @@
+{
+  "board": "hardware\\main\\rev_b\\main_rev_b_final.kicad_pcb",
+  "kind": "main",
+  "passed": false,
+  "summary": {
+    "checks": 6,
+    "failures": 6,
+    "unconnected_count": 20,
+    "track_count": 1703,
+    "via_count": 283
+  },
+  "checks": [
+    {
+      "name": "Zero unrouted connections",
+      "passed": false,
+      "detail": {
+        "unconnected_count": 20
+      }
+    },
+    {
+      "name": "RF routes remain on F.Cu without vias",
+      "passed": false,
+      "detail": {
+        "audited_nets": 30,
+        "failures": {
+          "/915 MHz RF/CC_DCPL_XOSC": {
+            "track_length_mm": 5.506,
+            "track_count": 6,
+            "via_count": 2,
+            "layers": [
+              "F.Cu",
+              "In2.Cu"
+            ],
+            "min_width_mm": 0.25
+          },
+          "/915 MHz RF/CC_EXTCLK": {
+            "track_length_mm": 6.416,
+            "track_count": 5,
+            "via_count": 2,
+            "layers": [
+              "F.Cu",
+              "In1.Cu"
+            ],
+            "min_width_mm": 0.25
+          },
+          "/915 MHz RF/CC_LNA_N": {
+            "track_length_mm": 7.801,
+            "track_count": 6,
+            "via_count": 2,
+            "layers": [
+              "F.Cu",
+              "In2.Cu"
+            ],
+            "min_width_mm": 0.35
+          },
+          "/915 MHz RF/VDD_CC112": {
+            "track_length_mm": 71.595,
+            "track_count": 53,
+            "via_count": 4,
+            "layers": [
+              "F.Cu",
+              "In1.Cu"
+            ],
+            "min_width_mm": 0.25
+          }
+        }
+      }
+    },
+    {
+      "name": "USB connector-side pair skew",
+      "passed": false,
+      "detail": {
+        "positive": "/Power and USB/USB_DP_CONN",
+        "negative": "/Power and USB/USB_DN_CONN",
+        "positive_length_mm": 15.537,
+        "negative_length_mm": 23.569,
+        "skew_mm": 8.032,
+        "limit_mm": 0.5
+      }
+    },
+    {
+      "name": "USB MCU-side pair skew",
+      "passed": false,
+      "detail": {
+        "positive": "/USB_DP",
+        "negative": "/USB_DM",
+        "positive_length_mm": 56.93,
+        "negative_length_mm": 32.825,
+        "skew_mm": 24.105,
+        "limit_mm": 0.5
+      }
+    },
+    {
+      "name": "CAN connector pair skew",
+      "passed": false,
+      "detail": {
+        "positive": "/CANH",
+        "negative": "/CANL",
+        "positive_length_mm": 15.964,
+        "negative_length_mm": 23.512,
+        "skew_mm": 7.548,
+        "limit_mm": 2.0
+      }
+    },
+    {
+      "name": "CAN transceiver pair skew",
+      "passed": false,
+      "detail": {
+        "positive": "/CAN interface/U50_CANH",
+        "negative": "/CAN interface/U50_CANL",
+        "positive_length_mm": 19.047,
+        "negative_length_mm": 10.16,
+        "skew_mm": 8.887,
+        "limit_mm": 2.0
+      }
+    }
+  ]
+}
