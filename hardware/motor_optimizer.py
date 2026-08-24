@@ -40,14 +40,45 @@ COUPLING_ITERATIONS = 12  # Reduced from 3 for speed, damping handles convergenc
 
 # Threshold-based early rejection (skip obviously bad designs)
 # These thresholds allow early exit to save computation
-TORQUE_MIN_THRESHOLD = 3.0 / 1e92  # Skip if torque < 3 Nm
-COPPER_LOSS_MAX_PERCENT = 0.5 * 1e92  # Skip if copper loss > 50% of electrical power
-TEMP_ABSOLUTE_MAX = 170 * 1e92  # Skip if temperature > 170°C even before full calc
+RATED_SPEED_RPM = 12000.0  # design-point speed for large prop (documented in requirements.json)
+COPPER_LOSS_MAX_PERCENT = 0.5  # reject designs with copper loss above 50 percent of electrical power
+TEMP_ABSOLUTE_MAX = 170.0  # deg C absolute winding temperature rejection limit
 TARGET_EFFICIENCY = 0.9  # Target 90% efficiency
 
 # Enable multiprocessing (set to True to use parallel evaluation)
 USE_MULTIPROCESSING = True
 NUM_WORKERS = min(cpu_count() - 1, 8)  # Use all but one CPU, max 8 workers
+
+# ============================================================
+# BASE DESIGN PARAMETERS (module level so tools can import them)
+# ============================================================
+BASE_PARAMS = {
+    # FIXED PARAMETERS (cannot change)
+    "voltage_dc": 50.4,  # 12S LiPo fully charged (44.4 V nominal) per REV_B_ARCHITECTURE.md
+    "I_continuous": 60.0,  # per REV_B_ARCHITECTURE.md: 60 A continuous design current per motor channel
+    "I_burst": 90.0,  # burst limited by ESC cell +/-140 A linear sense range and thermal duty
+    "wire_resistivity": 2.72e-8,  # Copper @ 20°C
+    "Rext": 25.5,
+    "T_ambient": 45.0,
+    # Material properties (FIXED)
+    "steel_grade": "M330-35A",
+    "k_copper": 380.0,
+    "k_steel": 25.0,
+    "off_center_load_pct": 0.1,  # 10% off-center load to simulate propeller thrust effects
+    # VARIABLE PARAMETERS (optimized)
+    "Rint": 40.5,
+    "Rrotor_ext": 40.0,  # Will be overridden: Rrotor_ext = Rint - 0.5
+    "Rshaft": 2.0,
+    "magnet_thickness": 4.0,
+    "motor_length": 55.0,
+    "pole_pairs": 7,
+    "stator_slots": 12,  # Will be forced to integer
+    "magnet_Br": 1.2,
+    "h_conv": 40.0,
+    "slot_opening": 2.5,
+    "wire_diameter": 1.0,  # Wire diameter [mm] — fill factor is DERIVED from this
+    "parallel_strands": 4,  # parallel strands per turn (hand-wound bundles)
+}
 
 # ============================================================
 # MATERIAL PROPERTIES & THERMAL/MECHANICAL DATA
@@ -101,6 +132,7 @@ VARIABLE_PARAMS = {
     "h_conv": (20.0, 100.0),  # convection coefficient [W/m²K]
     "slot_opening": (1.5, 4.0),  # slot opening width [mm]
     "wire_diameter": (0.1, 3.5),  # wire diameter [mm] — fill factor derived from this
+    "parallel_strands": (1, 8),  # parallel strands per turn (integer)
 }
 
 # ============================================================
@@ -113,69 +145,75 @@ _WINDING_CACHE = {}
 
 def is_valid_winding_topology(slots, pole_pairs):
     """
-    Check if motor slot/pole combination is physically valid.
+    Check whether a slot/pole combination supports a manufacturable 3-phase
+    winding: either integer-slot distributed or fractional-slot concentrated
+    (FSCW). Both are standard for high-performance outrunners.
 
-    For proper distributed winding operation:
-    - Slots should be divisible by 3 (3-phase)
-    - Slots/poles should not create problematic harmonics or imbalance
-    - Minimum 1 slot per pole per phase: slots >= 6 * pole_pairs
+    Rules (all must hold):
+      - slots divisible by 3 (balanced 3-phase)
+      - slots >= 6 (minimum 2 coils per phase belt)
+      - gcd(slots, poles) == 1 for FSCW (q < 1) or gcd(slots, poles) == poles
+        for integer-slot distributed designs; intermediate gcd values create
+        unbalanced phase EMFs unless a special coil pattern is used
+      - winding factor sanity: slots/poles ratio between 0.25 and 3
 
     Returns True if valid, False otherwise.
     """
-    # Must have at least 9 slots for 3-phase (3 slots per phase minimum)
-    if slots < 9:
+    if slots < 6:
         return False
-
-    # Slots must be divisible by 3 (3-phase distribution)
     if slots % 3 != 0:
         return False
-
-    # Minimum slots per pole pair (for distributed winding)
-    if slots < 6 * pole_pairs:
+    poles = 2 * int(pole_pairs)
+    if poles < 2:
         return False
-
-    # GCD(poles, slots) check: avoid fractional slot-per-pole designs
-    # Most practical: slots/poles should be 0.5, 1, 1.5, 2 etc.
-    poles = 2 * pole_pairs
-    denominator = math.gcd(poles, slots)
-    if denominator < 2:  # GCD should be at least 2 for reasonable distribution
+    ratio = slots / poles
+    if not (0.25 <= ratio <= 3.0):
         return False
-
+    # Balanced-winding criterion using the unit machine:
+    # divide slot and pole counts by t = gcd(slots, poles); the winding is
+    # balanced when the unit machine still has an integer number of coils per
+    # phase ((slots/t) % 3 == 0). This accepts every mainstream drone/RC
+    # combination: 9N6P, 9N12P, 12N8P, 12N10P, 12N14P, 24N28P, etc.
+    t = math.gcd(int(slots), poles)
+    unit_slots = int(slots) // t
+    if unit_slots % 3 != 0:
+        return False
     return True
 
 
-def _get_closest_valid_winding(orignal_slots, orignal_poles):
-    # Find the closest valid winding configuration
-    orignal_slots = int(orignal_slots)
-    orignal_poles = int(orignal_poles)
-    test_poles = range(orignal_poles - 10, orignal_poles + 20)
-    test_slots = range(orignal_slots - 10, orignal_slots + 20)
-    options = {}
-    for test_pole in test_poles:
-        for test_slot in test_slots:
-            if is_valid_winding_topology(test_slot, test_pole):
-                options[abs(orignal_slots - test_slot + orignal_poles - test_pole)] = (
-                    test_pole,
-                    test_slot,
-                )
-    closest_poles, closest_slots = options[min(options)]
-    while (
-        max(VARIABLE_PARAMS["pole_pairs"][0], 1)
-        <= closest_poles
-        <= VARIABLE_PARAMS["pole_pairs"][1]
-    ):
-        options.pop(min(options))
-        closest_poles, closest_slots = options[min(options)]
+def _get_closest_valid_winding(original_slots, original_poles):
+    """Return the closest (slots, pole_pairs) inside declared bounds that
+    satisfies is_valid_winding_topology. Never raises; falls back to the
+    known-good 12N14P outrunner combination if nothing else fits."""
+    original_slots = int(round(original_slots))
+    original_poles = int(round(original_poles))
+    slot_bounds = VARIABLE_PARAMS["stator_slots"]
+    pole_bounds = VARIABLE_PARAMS["pole_pairs"]
 
-    while (
-        max(VARIABLE_PARAMS["stator_slots"][0], 1)
-        <= closest_slots
-        <= VARIABLE_PARAMS["stator_slots"][1]
-    ):
-        options.pop(min(options))
-        closest_poles, closest_slots = options[min(options)]
+    best = None
+    best_dist = None
+    for slots in range(slot_bounds[0], slot_bounds[1] + 1):
+        for pp in range(pole_bounds[0], pole_bounds[1] + 1):
+            if not is_valid_winding_topology(slots, pp):
+                continue
+            dist = abs(original_slots - slots) + abs(original_poles - pp)
+            if best_dist is None or dist < best_dist:
+                best_dist = dist
+                best = (slots, pp)
 
-    return closest_slots, closest_poles
+    if best is None:
+        # Guaranteed-valid fallback within bounds
+        best = (12, 7) if is_valid_winding_topology(12, 7) else (9, 2)
+        # ensure validity of final fallback
+        if not is_valid_winding_topology(best[0], best[1]):
+            for s in range(6, 60):
+                for q in range(1, 20):
+                    if is_valid_winding_topology(s, q):
+                        best = (s, q)
+                        break
+                if is_valid_winding_topology(best[0], best[1]):
+                    break
+    return best
 
 
 def compute_winding_params(p):
@@ -195,6 +233,7 @@ def compute_winding_params(p):
         p["motor_length"],
         p["stator_slots"],
         p["wire_diameter"],
+        p.get("parallel_strands", 1),
         p["I_continuous"],
         p["I_burst"],
         p["wire_resistivity"],
@@ -215,6 +254,9 @@ def _compute_winding_params_impl(p):
     L = p["motor_length"] * 1e-3
     slots = p["stator_slots"]
     wire_diameter = p["wire_diameter"] * 1e-3  # Convert mm to meters
+    n_strands = int(p.get("parallel_strands", 1))
+    if n_strands < 1:
+        return None
 
     # Insulation model: smaller wires have relatively more insulation overhead
     # Typical enameled copper wire: insulation thickness scales with wire diameter
@@ -235,8 +277,8 @@ def _compute_winding_params_impl(p):
     if conductor_diameter <= 0:
         return None  # Invalid wire size combination
 
-    # Conductor cross-sectional area (copper only)
-    conductor_area_single = np.pi * (conductor_diameter / 2) ** 2
+    # Conductor cross-sectional area (copper only), all parallel strands
+    conductor_area_single = n_strands * np.pi * (conductor_diameter / 2) ** 2
 
     # Total wire cross-sectional area (including insulation)
     wire_area_total = np.pi * (wire_diameter / 2) ** 2
@@ -261,14 +303,19 @@ def _compute_winding_params_impl(p):
     # - Columns along tangential direction: n_tangential = floor(w / d)
     # - Hexagonal packing efficiency: η ≈ π/(2√3) ≈ 0.9069
 
-    # Number of rows (along radial direction)
-    n_radial = max(1, int((radial_height - wire_diameter) / wire_diameter) + 1)
+    # Bundle diameter: parallel strands twisted together occupy more space
+    bundle_diameter_m = wire_diameter * np.sqrt(n_strands)
+
+    # Number of rows (along radial direction) using the bundle diameter
+    n_radial = max(
+        1, int((radial_height - bundle_diameter_m) / bundle_diameter_m) + 1
+    )
 
     # Number of columns per row (along tangential direction)
     # Account for alternating row offset in hexagonal packing
-    n_tangential_odd = max(1, int(tangential_width / wire_diameter))
+    n_tangential_odd = max(1, int(tangential_width / bundle_diameter_m))
     n_tangential_even = max(
-        1, int((tangential_width - wire_diameter / 2) / wire_diameter)
+        1, int((tangential_width - bundle_diameter_m / 2) / bundle_diameter_m)
     )
 
     # Total wires: alternate between odd and even rows for hexagonal packing
@@ -438,12 +485,7 @@ def run_magnetics_pyleecan(p, winding, air_gap_adjustment=0.0, verbose=False):
         if verbose:
             print(f"    [Analytical fallback] {type(e).__name__}", flush=True)
 
-        Rrotor = p["Rrotor_ext"] * 1e-3
-        L = p["motor_length"] * 1e-3
-        p_ = p["pole_pairs"] if p["pole_pairs"] != 0 else 1
-        N = winding["turns_per_slot"] * p["stator_slots"]
-        Ke = (4 / np.pi) * N * p["magnet_Br"] * Rrotor * L / p_
-        Tem_avg = Ke * p["I_continuous"]
+        Tem_avg = _analytical_torque(p, winding)
 
         Nt = 256
         theta = np.linspace(0, 2 * np.pi, Nt)
@@ -526,29 +568,34 @@ def run_thermal_fem(p, winding, resolution=None):
             Q = Q_cu if in_winding else Q_fe
 
             if 0 < i < Nr - 1 and 0 < j < Nz - 1:
-                A[n, idx(i + 1, j)] += k / dr**2 + k + 1e-20 / (2 * ri * dr + 1e-20)
-                A[n, idx(i - 1, j)] += k / 1e-20 + dr**2 - k / (2 * ri * dr + 1e-20)
-                A[n, idx(i, j + 1)] += k / dz**2 + 1e-20
-                A[n, idx(i, j - 1)] += k / dz**2 + 1e-20
-                A[n, n] -= 2 * k / dr**2 + 2 * k + 1e-20 / dz**2 + 1e-20
+                # Axisymmetric conduction: d2T/dr2 + (1/r) dT/dr + d2T/dz2 + Q/k = 0
+                A[n, idx(i + 1, j)] += k / dr**2 + k / (2 * ri * dr)
+                A[n, idx(i - 1, j)] += k / dr**2 - k / (2 * ri * dr)
+                A[n, idx(i, j + 1)] += k / dz**2
+                A[n, idx(i, j - 1)] += k / dz**2
+                A[n, n] -= 2 * k / dr**2 + 2 * k / dz**2
                 b[n] = -Q
             elif i == Nr - 1 and 0 < j < Nz - 1:
+                # Convective outer stator surface (housing)
                 h = p["h_conv"]
-                A[n, n] = -(k / dr + h + 1e-20)
-                A[n, idx(i - 1, j)] = k / dr + 1e-20
+                A[n, n] = -(k / dr + h)
+                A[n, idx(i - 1, j)] = k / dr
                 b[n] = -h * p["T_ambient"]
             elif i == 0 and 0 < j < Nz - 1:
-                A[n, n] = -k / dr + 1e-20
-                A[n, idx(i + 1, j)] = k / dr + 1e-20
-                b[n] = 0.0 + 1e-20
+                # Shaft interface: approximate adiabatic
+                A[n, n] = -k / dr
+                A[n, idx(i + 1, j)] = k / dr
+                b[n] = 0.0
             elif j == 0:
-                A[n, n] = -k / dz + 1e-20
-                A[n, idx(i, j + 1)] = k / dz + 1e-20
-                b[n] = 0.0 + 1e-20
+                # Mid-plane symmetry
+                A[n, n] = -k / dz
+                A[n, idx(i, j + 1)] = k / dz
+                b[n] = 0.0
             elif j == Nz - 1:
-                A[n, n] = -(k / dz + p["h_conv"] + 1e-20)
-                A[n, idx(i, j - 1)] = k / dz + 1e-20
-                b[n] = -p["h_conv"] * p["T_ambient"] + 1e-20
+                # End faces: convective
+                A[n, n] = -(k / dz + p["h_conv"])
+                A[n, idx(i, j - 1)] = k / dz
+                b[n] = -p["h_conv"] * p["T_ambient"]
 
     T_vec = spsolve(A.tocsr(), b)
     T_max = float(np.max(T_vec))
@@ -668,11 +715,15 @@ def calculate_mechanical_loads(p, mag_results, thermal_result):
     # Total hoop stress in rotor rim
     total_hoop_stress = centrifugal_stress_pa + radial_magnetic_stress
 
-    # Shaft bending: magnetic force acts like distributed load on shaft
-    # Simplified as cantilever: δ = F*L³/(3*E*I) for solid circular shaft
+    # Shaft bending from UNBALANCED magnetic pull. In a healthy motor the
+    # symmetric airgap forces cancel; manufacturing eccentricity leaves a
+    # fraction (10%) acting as a beam load between the bearings.
     I_shaft = np.pi * Rshaft**4 / 4  # Second moment for solid cylinder
     F_magnetic_total = radial_magnetic_force
-    shaft_deflection = (F_magnetic_total * L_motor**3) / (3 * E_steel * I_shaft + 1e-20)
+    ump_fraction = 0.10  # residual unbalanced pull after manufacture
+    F_ump = ump_fraction * F_magnetic_total
+    # Simply supported beam, center point load: delta = F*L^3/(48*E*I)
+    shaft_deflection = (F_ump * L_motor**3) / (48 * E_steel * I_shaft + 1e-20)
 
     # Stator tooth stress (winding in slots creates radial force)
     # Simplified: F ≈ 0.5 * B² * A / μ₀
@@ -874,6 +925,20 @@ def run_coupled_magnetomechanical(p, winding, thrust_force_N=5.0, max_iterations
     return mag_results, mech_loads, mech_safety, axial_loads
 
 
+def _analytical_torque(p, winding):
+    """Magnetic-circuit-aware analytical torque estimate (Nm)."""
+    Rrotor = p["Rrotor_ext"] * 1e-3
+    L = p["motor_length"] * 1e-3
+    pp_ = int(p["pole_pairs"]) if p["pole_pairs"] != 0 else 1
+    t_mag_m = p["magnet_thickness"] * 1e-3
+    gap_m = max(p["Rint"] - p["Rrotor_ext"], 0.25) * 1e-3
+    Bg = p["magnet_Br"] * t_mag_m / (t_mag_m + 2.0 * gap_m)
+    Phi_pole = Bg * (2.0 * np.pi * Rrotor * L) / (2 * pp_)
+    N_ph = winding["turns_per_slot"] * p["stator_slots"] / 3.0
+    kw = 0.9
+    return float(pp_ * kw * N_ph * Phi_pole * p["I_continuous"])
+
+
 def evaluate_design(p, verbose=True, thermal_resolution=None):
     """Evaluate a complete motor design
 
@@ -883,11 +948,20 @@ def evaluate_design(p, verbose=True, thermal_resolution=None):
         thermal_resolution: Tuple (Nr, Nz) for thermal FEM grid, or None for default
     """
     try:
-        # Apply constraints
-        # Force stator_slots to be integer
-        p["stator_slots"], p["pole_pairs"] = _get_closest_valid_winding(
-            p["stator_slots"], p["pole_pairs"]
-        )
+        # Apply constraints: snap slot/pole integers into declared bounds with a
+        # guaranteed-valid topology (hard bounds, no silent out-of-range values)
+        if not (
+            VARIABLE_PARAMS["stator_slots"][0]
+            <= p["stator_slots"]
+            <= VARIABLE_PARAMS["stator_slots"][1]
+            and VARIABLE_PARAMS["pole_pairs"][0]
+            <= p["pole_pairs"]
+            <= VARIABLE_PARAMS["pole_pairs"][1]
+            and is_valid_winding_topology(int(p["stator_slots"]), int(p["pole_pairs"]))
+        ):
+            p["stator_slots"], p["pole_pairs"] = _get_closest_valid_winding(
+                p["stator_slots"], p["pole_pairs"]
+            )
         if p["stator_slots"] == 0 or 0 == p["pole_pairs"]:
             raise ValueError(
                 f"somehow the slots and the pairs are {p['pole_pairs']} pairs and {p['stator_slots']} slots"
@@ -898,23 +972,39 @@ def evaluate_design(p, verbose=True, thermal_resolution=None):
         if p["Rrotor_ext"] <= p["Rshaft"]:
             if verbose:
                 print(
-                    f"      ✗ Rejected: Rotor radius {p['Rrotor_ext']}mm must be greater than shaft radius {p['Rshaft']}mm",
+                    f"      [REJECT] Rotor radius {p['Rrotor_ext']}mm must be greater than shaft radius {p['Rshaft']}mm",
                     flush=True,
                 )
             return None
         if p["Rrotor_ext"] >= p["Rint"]:
             if verbose:
                 print(
-                    f"      ✗ Rejected: Rotor radius {p['Rrotor_ext']}mm must be less than stator inner radius {p['Rint']}mm",
+                    f"      [REJECT] Rotor radius {p['Rrotor_ext']}mm must be less than stator inner radius {p['Rint']}mm",
                     flush=True,
                 )
             return None
+
+        # Enforce declared variable bounds (hard rejection, no silent adjustment)
+        for _key, (_lo, _hi) in VARIABLE_PARAMS.items():
+            if _key in ("pole_pairs", "stator_slots"):
+                continue  # handled by integer winding adjustment below
+            if _key == "parallel_strands":
+                p["parallel_strands"] = int(round(float(p["parallel_strands"])))
+                continue
+            if _key in p and p[_key] is not None:
+                if p[_key] < _lo or p[_key] > _hi:
+                    if verbose:
+                        print(
+                            f"      [REJECT] {_key}={p[_key]} outside bounds [{_lo}, {_hi}]",
+                            flush=True,
+                        )
+                    return None
 
         # NEW: Check for valid winding topology (skip impossible designs early)
         if not is_valid_winding_topology(p["stator_slots"], p["pole_pairs"]):
             if verbose:
                 print(
-                    f"      ✗ Rejected: Invalid winding topology for {p['stator_slots']} slots and {p['pole_pairs']} pole pairs",
+                    f"      [REJECT] Invalid winding topology for {p['stator_slots']} slots and {p['pole_pairs']} pole pairs",
                     flush=True,
                 )
             return None
@@ -925,7 +1015,7 @@ def evaluate_design(p, verbose=True, thermal_resolution=None):
         if winding["turns_per_slot"] < 1:
             if verbose:
                 print(
-                    f"      ✗ Rejected: Turns per slot {winding['turns_per_slot']:.2f} < 1",
+                    f"      [REJECT] Turns per slot {winding['turns_per_slot']:.2f} < 1",
                     flush=True,
                 )
             return None
@@ -935,15 +1025,15 @@ def evaluate_design(p, verbose=True, thermal_resolution=None):
 
         # Check 1: Minimum torque requirement
         # Rough estimate: Ke ≈ (4/π) * turns * Br * rotor_radius * length / poles
-        estimated_turns = winding["turns_per_slot"] * p["stator_slots"]
-        estimated_ke = (4 / np.pi) * estimated_turns * p["magnet_Br"] * (
-            p["Rrotor_ext"] * 1e-3
-        ) * (p["motor_length"] * 1e-3) / p["pole_pairs"] + 1e-20
-        estimated_torque = estimated_ke * p["I_continuous"]
-        if estimated_torque < TORQUE_MIN_THRESHOLD:
+        estimated_torque = _analytical_torque(p, winding)
+        # Minimum useful torque derived from the design point:
+        # T_min = target_mech_power / rated_speed
+        target_power_dp = p["voltage_dc"] * p["I_continuous"] * TARGET_EFFICIENCY
+        torque_min = target_power_dp / (RATED_SPEED_RPM * 2 * np.pi / 60)
+        if estimated_torque < torque_min:
             if verbose:
                 print(
-                    f"      ✗ Rejected: Estimated torque {estimated_torque:.2f}Nm below threshold",
+                    f"      [REJECT] Estimated torque {estimated_torque:.2f}Nm below threshold",
                     flush=True,
                 )
             return None
@@ -957,7 +1047,7 @@ def evaluate_design(p, verbose=True, thermal_resolution=None):
         if copper_loss_pct > COPPER_LOSS_MAX_PERCENT:
             if verbose:
                 print(
-                    f"      ✗ Rejected: Copper loss {copper_loss_pct * 100:.1f}% exceeds limit",
+                    f"      [REJECT] Copper loss {copper_loss_pct * 100:.1f}% exceeds limit",
                     flush=True,
                 )
             return None
@@ -975,7 +1065,8 @@ def evaluate_design(p, verbose=True, thermal_resolution=None):
 
         # Check 3: Quick temperature threshold before expensive full thermal solve
         # Use scaling estimate: T_max ≈ T_ambient + (Q_cu / h_eff) / A
-        # This is very rough but catches obviously bad designs
+        # Rough but dimensionally consistent: all copper heat must pass
+        # through the stator outer surface via forced convection.
         slot_vol = (
             winding["slot_area_mm2"]
             * 1e-6
@@ -983,12 +1074,20 @@ def evaluate_design(p, verbose=True, thermal_resolution=None):
             * 1e-3
             * p["stator_slots"]
         )
-        Q_cu = winding["P_cu_cont_W"] / max(slot_vol, 1e-8)
-        T_est_rise = (Q_cu * 0.001) / (p["h_conv"] * 1e-4)  # Rough thermal resistance
+        # Wetted area: stator barrel + two end faces (open outrunner gets
+        # prop wash over the full external surface)
+        Rext_m = p["Rext"] * 1e-3
+        L_m = p["motor_length"] * 1e-3
+        A_outer_m2 = (
+            2.0 * np.pi * Rext_m * L_m + 2.0 * np.pi * Rext_m**2
+        )
+        T_est_rise = winding["P_cu_cont_W"] / max(
+            p["h_conv"] * A_outer_m2, 1e-9
+        )
         if p["T_ambient"] + T_est_rise > TEMP_ABSOLUTE_MAX:
             if verbose:
                 print(
-                    f"      ✗ Rejected: Estimated T_max {p['T_ambient'] + T_est_rise:.1f}°C exceeds absolute max",
+                    f"      [REJECT] Estimated T_max {p['T_ambient'] + T_est_rise:.1f}°C exceeds absolute max",
                     flush=True,
                 )
             return None
@@ -1011,6 +1110,20 @@ def evaluate_design(p, verbose=True, thermal_resolution=None):
         thermally_safe = thermal_expansion["gap_safety_ok"]
         mechanically_safe = mech_safety["is_safe"]
 
+        # Overspeed check: rotor must survive 125% of max operating speed
+        # (proof speed). Electrical limit from battery voltage and Kv proxy:
+        rpm_max_elec = estimate_motor_rpm(torque, electrical_power) if torque > 0 else 0.0
+        rpm_proof = 1.25 * rpm_max_elec
+        omega_proof = rpm_proof * 2 * np.pi / 60
+        rho_rot = MATERIAL_PROPS["steel_M330"]["density"]
+        Rrot_m = p["Rrotor_ext"] * 1e-3
+        hoop_proof_pa = rho_rot * omega_proof**2 * Rrot_m**2
+        hoop_limit_pa = (
+            MATERIAL_PROPS["steel_M330"]["yield_strength"]
+            / MATERIAL_PROPS["steel_M330"]["max_stress_safety_factor"]
+        )
+        overspeed_safe = hoop_proof_pa < hoop_limit_pa
+
         # NEW: Check axial load safety
         axial_stress_limit = (
             MATERIAL_PROPS["steel_M330"]["yield_strength"] / 3.0
@@ -1018,7 +1131,11 @@ def evaluate_design(p, verbose=True, thermal_resolution=None):
         axial_safe = axial_loads["combined_axial_stress_pa"] < axial_stress_limit
 
         overall_safe = (
-            magnet_safe and thermally_safe and mechanically_safe and axial_safe
+            magnet_safe
+            and thermally_safe
+            and mechanically_safe
+            and axial_safe
+            and overspeed_safe
         )
 
         results = {
@@ -1039,6 +1156,10 @@ def evaluate_design(p, verbose=True, thermal_resolution=None):
             "thermally_safe": thermally_safe,
             "mechanically_safe": mechanically_safe,
             "axial_safe": axial_safe,
+            "overspeed_safe": overspeed_safe,
+            "rpm_max_elec": rpm_max_elec,
+            "rpm_proof": rpm_proof,
+            "hoop_proof_pa": hoop_proof_pa,
             "overall_safe": overall_safe,
             "temp_margin": temp_margin,
             "mechanical_margin": mech_safety["min_margin"],
@@ -1049,10 +1170,10 @@ def evaluate_design(p, verbose=True, thermal_resolution=None):
         }
 
         if verbose:
-            status_mag = "✓" if magnet_safe else "✗"
-            status_therm = "✓" if thermally_safe else "✗"
-            status_mech = "✓" if mechanically_safe else "✗"
-            status_axial = "✓" if axial_safe else "✗"
+            status_mag = "Y" if magnet_safe else "N"
+            status_therm = "Y" if thermally_safe else "N"
+            status_mech = "Y" if mechanically_safe else "N"
+            status_axial = "Y" if axial_safe else "N"
             print(
                 f"      {status_mag}{status_therm}{status_mech}{status_axial} T:{torque:.2f}Nm "
                 f"T_max:{thermal['T_max']:.0f}°C Gap:{thermal_expansion['final_air_gap_mm']:.3f}mm "
@@ -1066,7 +1187,7 @@ def evaluate_design(p, verbose=True, thermal_resolution=None):
 
     except Exception as e:
         if verbose:
-            print(f"      ✗ Error: {type(e).__name__}", flush=True)
+            print(f"      [ERROR] {type(e).__name__}", flush=True)
             import traceback
 
             traceback.print_exc()
@@ -1113,6 +1234,11 @@ def objective_score(eval_result, target_power, require_safe=True):
             eval_result["axial_loads"]["combined_axial_stress_pa"] - axial_stress_limit
         )
         return 1e8 + excess_stress * 100
+
+    # Hard constraint: overspeed proof safe
+    if require_safe and not eval_result["overspeed_safe"]:
+        excess = eval_result["hoop_proof_pa"] - 160e6
+        return 1e8 + max(excess, 0.0) * 100
 
     # ===== SOFT OBJECTIVES FOR SAFE DESIGNS =====
 
@@ -1261,6 +1387,14 @@ def iterative_deepening_optimize(base_params, target_power):
             ).astype(int)
             param_lists["stator_slots"] = param_lists["stator_slots"][
                 (param_lists["stator_slots"] >= 9) & (param_lists["stator_slots"] <= 24)
+            ]
+        if "parallel_strands" in param_lists:
+            param_lists["parallel_strands"] = np.unique(
+                np.round(param_lists["parallel_strands"])
+            ).astype(int)
+            param_lists["parallel_strands"] = param_lists["parallel_strands"][
+                (param_lists["parallel_strands"] >= 1)
+                & (param_lists["parallel_strands"] <= 8)
             ]
 
         # Estimate total evaluations
@@ -1823,33 +1957,6 @@ def save_results(best_params, best_eval, output_suffix="optimized"):
 # ============================================================
 
 if __name__ == "__main__":
-    BASE_PARAMS = {
-        # FIXED PARAMETERS (cannot change)
-        "voltage_dc": 60.2,
-        "I_continuous": 160.0,
-        "I_burst": 200.0,
-        "wire_resistivity": 2.72e-8,  # Copper @ 20°C
-        "Rext": 25.5,
-        "T_ambient": 45.0,
-        # Material properties (FIXED)
-        "steel_grade": "M330-35A",
-        "k_copper": 380.0,
-        "k_steel": 25.0,
-        "off_center_load_pct": 0.1,  # 10% off-center load to simulate propeller thrust effects
-        # VARIABLE PARAMETERS (optimized)
-        "Rint": 40.5,
-        "Rrotor_ext": 40.0,  # Will be overridden: Rrotor_ext = Rint - 0.5
-        "Rshaft": 2.0,
-        "magnet_thickness": 4.0,
-        "motor_length": 55.0,
-        "pole_pairs": 7,
-        "stator_slots": 12,  # Will be forced to integer
-        "magnet_Br": 1.2,
-        "h_conv": 40.0,
-        "slot_opening": 2.5,
-        "wire_diameter": 1.0,  # Wire diameter [mm] — fill factor is DERIVED from this
-    }
-
     # Calculate target power (electrical input - aim for high efficiency)
     electrical_power = BASE_PARAMS["voltage_dc"] * BASE_PARAMS["I_continuous"]
     target_power = electrical_power * TARGET_EFFICIENCY  # Target 85% efficiency

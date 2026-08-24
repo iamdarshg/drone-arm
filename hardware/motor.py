@@ -18,9 +18,9 @@ import json
 # ============================================================
 PARAMS = {
     # Electrical
-    "voltage_dc"      : 60.2,    # 12S nominal [V]
-    "I_continuous"    : 120.0,    # per-motor continuous [A]
-    "I_burst"         : 180.0,   # per-motor burst [A]
+    "voltage_dc"      : 44.4,    # 12S nominal [V] (50.4 V max charged)
+    "I_continuous"    : 60.0,     # per-motor continuous [A] per REV_B ESC contract
+    "I_burst"         : 90.0,    # per-motor burst [A]
     "pole_pairs"      : 7,       # p  → 14 poles (12N14P config)
     "stator_slots"    : 12,
 

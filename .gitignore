@@ -1,6 +1,7 @@
 *.pdf
 !docs/datasheets/**/*.pdf
 !docs/reference-designs/**/*.pdf
+!hardware/motor_release/*.pdf
 build/
 tmp/
 .vscode/
@@ -25,6 +26,9 @@ build*/
 *.jpeg
 motor*
 !hardware/esc/esc/motor_*.kicad_sch
+!hardware/motor_release/
+!tools/motor_release_*.py
+!hardware/motor_release/motor_interface.json
 .cache/
 main_out/
 *.pyc

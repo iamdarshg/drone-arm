@@ -1,0 +1,17 @@
+item,description,specification,qty,material_source,notes
+1,Stator lamination stack,M-330-35A 0.35mm 24-slot 51.0mm OD,1,lamination house,see stator_lamination.dxf
+2,Stator winding,3 x 3.15mm class-H Cu per turn double-layer concentrated,1 set,winding shop,see winding_table.csv
+3,Permanent magnets,N42SH NdFeB arc segments 8-pole 6.5mm radial,8,magnet supplier,see magnet_specification.md
+4,Magnet bonding epoxy,high-temp structural adhesive class H rated,1 tube,adhesive supplier,bond line 0.10mm nominal
+5,Magnet retaining ring,0.5mm spring steel strap or bell lip crimp,1,metalwork,hoop SF >= 2 at proof speed
+6,Rotor bell,6061-T6 aluminum,1,CNC machined,integral back iron seat
+7,Shaft,42CrMo4 QT 8mm diameter,1,turned and ground,see shaft_drawing.pdf
+8,Bearing front,6901-2RS 12x24x6 mm thin section,1,bearing supplier,prop end thrust and radial
+9,Bearing rear,685-2RS 5x11x3 mm extra thin section,1,bearing supplier,cold-end axial location
+10,Preload wave washer,stainless wave washer for rear bearing,1,standard part,light axial preload
+11,Stator housing,6061-T6 aluminum with cooling fins optional,1,CNC machined,H7/g6 stator press fit
+12,Slot liners,Nomex 410 0.25mm cut insulators,24 set,laser cut,class H insulation
+13,VPI varnish,class H polyester-imide resin,as needed,chemical supplier,vacuum pressure impregnation
+14,Temperature sensor,NTC thermistor 10k B3435 end-turn mounted,3,sensor supplier,winding overtemp protection
+15,Lead wires,12 AWG silicone insulated 150mm,3,cable supplier,phase leads U V W
+16,Snap rings,DIN 471/472 per bearing seats,2,standard part,axial retention

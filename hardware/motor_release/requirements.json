@@ -1,0 +1,52 @@
+{
+  "document": "Propulsion motor requirements - derived from repository sources",
+  "revision": "A",
+  "date": "2026-08-24",
+  "source_of_truth_order": [
+    "docs/hardware/REV_B_ARCHITECTURE.md (explicit aircraft/ESC requirements)",
+    "hardware/esc/rev_b schematics and BOM",
+    "compact ESC layout spec (docs/superpowers/specs/2026-07-27-esc-compact-layout-design.md)",
+    "optimizer defaults (lowest priority)"
+  ],
+  "electrical_contract": {
+    "chemistry": "LiPo",
+    "cells_s": 12,
+    "vbus_nominal_V": 44.4,
+    "vbus_max_charged_V": 50.4,
+    "evidence": "REV_B_ARCHITECTURE.md design basis: '12S LiPo, 50.4 V maximum charged voltage'. The task prompt's 'six-cell' refers to the six independent ESC motor cells, not cell chemistry.",
+    "phase_current_continuous_A": 60.0,
+    "phase_current_burst_A": 90.0,
+    "burst_duration_s": 30,
+    "duty_note": "ESC cells are rated 60 A continuous each; burst limited by +/-140 A linear sense range, MOSFET thermal path, and battery C-rate."
+  },
+  "aircraft_requirements": {
+    "status": "NOT EXPLICITLY SPECIFIED IN REPO",
+    "motors": 6,
+    "note": "No explicit airframe mass/thrust requirement exists in the repository. The conservative documented design point below is parameterized; revisit when airframe data lands.",
+    "design_point": {
+      "type": "conservative parameterized point (not a validated propeller)",
+      "propeller": "UNSPECIFIED - no validated propeller data in repo; motor is designed around shaft torque/RPM, not a specific prop",
+      "target_shaft_power_continuous_W": 2200,
+      "target_shaft_power_burst_W": 3300,
+      "rated_speed_rpm": 12000,
+      "continuous_duration_s": 600,
+      "burst_duration_s": 30,
+      "cooling_airspeed_m_s": 10,
+      "ambient_temperature_C": 45,
+      "derivation": "2.2 kW continuous x 6 motors = 13.2 kW shaft power, consistent with a heavy-lift hexacopter in the class implied by the 6x60 A = 360 A aggregate electrical budget at 12S (~16 kW electrical)."
+    }
+  },
+  "mechanical_envelope": {
+    "max_stator_od_mm": 51.0,
+    "max_motor_length_mm": 90.0,
+    "max_mass_kg": 0.45,
+    "mounting": "standard outrunner face mount, pattern to be fixed in interface drawing"
+  },
+  "safety_constraints": {
+    "magnet_temp_limit_C": 120,
+    "winding_insulation_class": "H (180 C), operating limit 170 C with margin",
+    "min_airgap_clearance_mm": 0.1,
+    "overspeed_proof_factor": 1.25,
+    "rotor_hoop_safety_factor": 2.5
+  }
+}

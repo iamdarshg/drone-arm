@@ -1,0 +1,18 @@
+Manufacturing tolerance sensitivity - final design
+==================================================
+
+Each parameter perturbed by its manufacturing tolerance (both directions);
+full safety evaluation rerun per case:
+
+Rint +/- 0.05 mm            SAFE   Tmax=117.1/116.7 C
+Rrotor_ext +/- 0.05 mm      SAFE   Tmax=116.9 C both
+magnet_thickness +/- 0.10   SAFE   Tmax=116.9 C both
+motor_length +/- 0.30 mm    SAFE   Tmax=116.9 C both
+wire_diameter +/- 0.02 mm   SAFE   Tmax=115.8/118.0 C
+
+Worst-case combined (min airgap + thin magnets):
+  SAFE   Tmax=115.3 C   thermal gap clearance OK
+
+Conclusion: no single or combined realistic manufacturing variation makes the
+design unsafe. The nearest margin is winding temperature (118 C worst vs the
+120 C magnet limit and 170 C insulation ceiling).

@@ -1,0 +1,50 @@
+{
+  "document": "Motor-ESC electrical/mechanical interface contract",
+  "revision": "A",
+  "date": "2026-08-24",
+  "consumer": "PCB/ESC agent - hardware/esc/rev_b",
+  "battery": {
+    "chemistry": "LiPo",
+    "cell_count_s": 12,
+    "vbus_nominal_V": 44.4,
+    "vbus_maximum_V": 50.4
+  },
+  "currents": {
+    "phase_current_continuous_A_rms": 60.0,
+    "phase_current_burst_A_rms": 90.0,
+    "burst_duration_s": 30,
+    "battery_current_continuous_A_per_motor": 55.0,
+    "battery_current_burst_A_per_motor": 82.0,
+    "note": "Battery current is phase current scaled by power factor ~0.92 at operating point"
+  },
+  "motor_electrical": {
+    "max_electrical_rpm": 13203,
+    "max_electrical_frequency_hz": 889,
+    "kv_rpm_per_V": 262.0,
+    "kt_Nm_per_A_rms": 0.0365,
+    "winding_resistance_phase_ohm_line_to_line": 0.0197,
+    "winding_inductance_phase_uH_line_to_line": null,
+    "note": "R and L filled from final optimizer run; see performance.json"
+  },
+  "esc_requirements": {
+    "preferred_pwm_frequency_kHz": [20.0, 40.0],
+    "current_sensing_range_A": [-140.0, 140.0],
+    "current_sensing_scale_V_per_A": 0.01,
+    "temperature_sensor": "NTC on winding end-turn plus MOSFET temperature via DRV8353S VDS sense",
+    "foc": "Field-oriented control required, SVPWM, center-aligned"
+  },
+  "connections": {
+    "motor_leads": "3 x silicone-insulated 12 AWG, 150 mm, bare ends",
+    "termination": "Option A: 4 mm bullet connectors; Option B (production): direct solder to ESC phase lugs",
+    "connector_voltage_rating_V": 600
+  },
+  "cooling": {
+    "type": "forced air from propeller wash",
+    "airspeed_m_s": 10,
+    "mounting_surface": "still air acceptable at continuous rating due to open outrunner construction"
+  },
+  "duty": {
+    "continuous": "60 A phase / 2200 W shaft indefinitely with cooling airflow >= 10 m/s",
+    "burst": "90 A phase / 3300 W shaft for <= 30 s, followed by >= 120 s at or below continuous"
+  }
+}
