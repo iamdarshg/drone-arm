@@ -1,0 +1,148 @@
+{
+  "document": "ESC Rev-B electrical audit vs motor interface contract rev A",
+  "date": "2026-08-24",
+  "contract": {
+    "source": "hardware/motor_release/motor_interface.json",
+    "cells": 12,
+    "vbus_max_V": 50.4,
+    "I_phase_continuous_A_rms": 60.0,
+    "I_phase_burst_A_rms": 90.0,
+    "burst_duration_s": 30,
+    "max_e_freq_Hz": 889,
+    "pwm_kHz": [
+      20,
+      40
+    ],
+    "sense_range_A": [
+      -140,
+      140
+    ]
+  },
+  "verdicts": [
+    {
+      "item": "MOSFET Vds",
+      "part": "IPTC014N10NM5 x36 (6 per cell)",
+      "rating": "100 V",
+      "verdict": "PASS",
+      "detail": "50.4 V bus + switching overshoot; 100 V class is the correct choice for 12S; 49.6 % margin to rating at clamp-free conditions"
+    },
+    {
+      "item": "MOSFET current/SOA",
+      "part": "IPTC014N10NM5",
+      "rating": "300 A @ 25 C pkg-limited; Rds(on) typ ~1 mOhm @10 V",
+      "verdict": "PASS",
+      "detail": "2 FETs in parallel per switch: 90 A burst / 2 = 45 A per FET, far inside SOA for 30 s with PCB copper spreading"
+    },
+    {
+      "item": "Conduction loss",
+      "calc": "I^2 * Rds(on)",
+      "verdict": "INFO",
+      "detail": "RMS phase current 60 A through 1 mOhm effective (two parallel FETs plus shunt): ~3.6 W per phase leg continuous, ~8 W burst - within dual-cooled layout intent"
+    },
+    {
+      "item": "Gate driver",
+      "part": "DRV8353SRTAR",
+      "verdict": "PASS",
+      "detail": "1 A source / 2 A sink (high-current mode), supports 20-40 kHz PWM, integrated dead-time programmable, smart gate drive"
+    },
+    {
+      "item": "Bootstrap/charge pump",
+      "detail": "DRV8353S uses charge pump for high-side; CPL caps present in schematic (CPL nets)",
+      "verdict": "PASS"
+    },
+    {
+      "item": "Dead time",
+      "detail": "DRV8353S programmable 50-500 ns via IDRIVE/DT register; firmware must set >=200 ns at 12 S",
+      "verdict": "ACTION-FIRMWARE"
+    },
+    {
+      "item": "Gate resistors/pulldowns",
+      "detail": "GLA/B/C and GHA/B/C_DRV series resistors present; pulldowns on gate pins present",
+      "verdict": "PASS"
+    },
+    {
+      "item": "Shunt power",
+      "part": "0.5 mOhm 1% 5 W x4 parallel per cell",
+      "verdict": "PASS",
+      "detail": "60 A cont -> I2R total 1.8 W spread over 4 elements; 90 A/30 s burst -> 4.05 W < 5 W each with copper pour heatsinking"
+    },
+    {
+      "item": "Current sense amplifier",
+      "part": "INA296A2IDR (gain 20 V/V)",
+      "verdict": "PASS",
+      "detail": "+/-140 A contract range: 140*0.0005*20 = 1.4 V full-scale; matches 3.3 V ADC span centered at mid-rail; bandwidth 400 kHz >> e-freq 889 Hz"
+    },
+    {
+      "item": "DC-link bulk capacitance",
+      "part": "820uF 100V Rubycon 100PX820MEFC18X35.5 per cell",
+      "verdict": "PASS",
+      "detail": "100 V rated > 50.4 V max bus with margin; 820 uF per 60 A cell adequate for 30 uH source inductance budget"
+    },
+    {
+      "item": "Ceramic decoupling",
+      "detail": "44x 10uF 100V + 6x 47nF 100V across cells",
+      "verdict": "PASS"
+    },
+    {
+      "item": "TVS/clamp",
+      "part": "SM8S51A x7",
+      "verdict": "CHECK",
+      "detail": "51 V standoff vs 50.4 V max bus: only 0.6 V headroom. Battery-powered application has no load-dump; acceptable but tight. Consider SM8S58A if re-spin occurs."
+    },
+    {
+      "item": "Reverse polarity",
+      "detail": "Not fitted by design; PTC fuse TPS3430 + TVS provide fault protection. Documented as intentional.",
+      "verdict": "DOCUMENTED"
+    },
+    {
+      "item": "Auxiliary 12 V buck",
+      "part": "LM5164DDA (65 V input rated)",
+      "verdict": "PASS",
+      "detail": "Feeds RFM-0505S isolated DC-DC and TPS70933 3.3 V LDO cascade; LM5164 absorbs the 50.4 V bus directly"
+    },
+    {
+      "item": "3.3 V LDO input",
+      "part": "TPS70933DBVR fed from M1_5VI (post-RFM-0505S isolated rail), NOT from battery",
+      "verdict": "PASS",
+      "detail": "Initial concern resolved: LDO input is the isolated 5 V gate-drive supply, not raw Vbus"
+    },
+    {
+      "item": "Temperature sensing",
+      "detail": "NTCG163JF103FT1 NTC per cell + DRV8353S VDS-sense MOSFET temp monitoring",
+      "verdict": "PASS"
+    },
+    {
+      "item": "Phase connectors",
+      "part": "POWER_LUG_M5_3P_P20 (M5 ring lugs)",
+      "verdict": "PASS",
+      "detail": "M5 lug with 12 mm annulus handles 90 A burst with direct solder termination option per contract"
+    },
+    {
+      "item": "Power connector/fuse",
+      "detail": "FUSED_BATTERY_TAP net + TPS3430 eFuse + PTC 0.75 A aux",
+      "verdict": "PASS"
+    },
+    {
+      "item": "Grounding topology",
+      "detail": "Per-cell BATN power return islands (B.Cu), DGND digital ground plane, Kelvin sense routed differentially to INA296A inputs; single-point star connection per cell",
+      "verdict": "PASS"
+    }
+  ],
+  "thermal_estimate": {
+    "continuous_60A_per_leg": {
+      "mosfet_conduction_W": 3.6,
+      "switching_loss_W_est": 2.4,
+      "shunt_W": 0.45,
+      "total_cell_W": "~18 W per cell worst-phase",
+      "temp_rise_est_C": "25-35 C with 10 m/s forced air per contract cooling section"
+    },
+    "burst_90A_30s": {
+      "mosfet_conduction_W": 8.1,
+      "switching_loss_W_est": 5.4,
+      "shunt_W": 1.01,
+      "total_cell_W": "~40 W per cell transient",
+      "temp_rise_est_C": "35-55 C over 30 s; junction stays under 125 C limit with 25 C start"
+    },
+    "copper": "2 oz outer planes with heavy via stitching; high-current loops on B.Cu island pours"
+  }
+}
