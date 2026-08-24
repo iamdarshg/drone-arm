@@ -1,0 +1,208 @@
+{
+  "board": "main_rev_b",
+  "mcu": "RP2354B (U10, QFN-80)",
+  "source_netlist": "hardware/main/rev_b/reports/main_net.xml",
+  "generated": "2026-08-24",
+  "pins": {
+    "0": {
+      "pad": "77",
+      "pinfunction": "GPIO0",
+      "net": "/SENS_SCLK"
+    },
+    "1": {
+      "pad": "78",
+      "pinfunction": "GPIO1",
+      "net": "/SENS_MOSI"
+    },
+    "2": {
+      "pad": "79",
+      "pinfunction": "GPIO2",
+      "net": "/SENS_MISO"
+    },
+    "3": {
+      "pad": "80",
+      "pinfunction": "GPIO3",
+      "net": "/ICM_nCS"
+    },
+    "4": {
+      "pad": "1",
+      "pinfunction": "GPIO4",
+      "net": "/LSM_nCS"
+    },
+    "5": {
+      "pad": "2",
+      "pinfunction": "GPIO5",
+      "net": "/ICM_INT1"
+    },
+    "6": {
+      "pad": "3",
+      "pinfunction": "GPIO6",
+      "net": "/ICM_INT2"
+    },
+    "7": {
+      "pad": "4",
+      "pinfunction": "GPIO7",
+      "net": "/LSM_INT1"
+    },
+    "8": {
+      "pad": "6",
+      "pinfunction": "GPIO8",
+      "net": "/LSM_INT2"
+    },
+    "9": {
+      "pad": "7",
+      "pinfunction": "GPIO9",
+      "net": "/BARO_SCL"
+    },
+    "10": {
+      "pad": "8",
+      "pinfunction": "GPIO10",
+      "net": "/BARO_SDA"
+    },
+    "11": {
+      "pad": "9",
+      "pinfunction": "GPIO11",
+      "net": "/BARO_DRDY"
+    },
+    "12": {
+      "pad": "11",
+      "pinfunction": "GPIO12",
+      "net": "/GNSS_TX"
+    },
+    "13": {
+      "pad": "12",
+      "pinfunction": "GPIO13",
+      "net": "/GNSS_RX"
+    },
+    "14": {
+      "pad": "13",
+      "pinfunction": "GPIO14",
+      "net": "/GNSS_PPS"
+    },
+    "15": {
+      "pad": "14",
+      "pinfunction": "GPIO15",
+      "net": "/GNSS_RESET_N"
+    },
+    "16": {
+      "pad": "16",
+      "pinfunction": "GPIO16",
+      "net": "/RF_SCLK"
+    },
+    "17": {
+      "pad": "17",
+      "pinfunction": "GPIO17",
+      "net": "/RF_MOSI"
+    },
+    "18": {
+      "pad": "18",
+      "pinfunction": "GPIO18",
+      "net": "/RF_MISO"
+    },
+    "19": {
+      "pad": "19",
+      "pinfunction": "GPIO19",
+      "net": "/RF_nCS"
+    },
+    "20": {
+      "pad": "20",
+      "pinfunction": "GPIO20",
+      "net": "/RF_RESET_N"
+    },
+    "21": {
+      "pad": "21",
+      "pinfunction": "GPIO21",
+      "net": "/RF_GPIO0"
+    },
+    "22": {
+      "pad": "22",
+      "pinfunction": "GPIO22",
+      "net": "/RF_GPIO2"
+    },
+    "23": {
+      "pad": "23",
+      "pinfunction": "GPIO23",
+      "net": "/RF_GPIO3"
+    },
+    "24": {
+      "pad": "25",
+      "pinfunction": "GPIO24",
+      "net": "/PA_EN"
+    },
+    "25": {
+      "pad": "26",
+      "pinfunction": "GPIO25",
+      "net": "/LNA_EN"
+    },
+    "26": {
+      "pad": "27",
+      "pinfunction": "GPIO26",
+      "net": "/HGM"
+    },
+    "27": {
+      "pad": "28",
+      "pinfunction": "GPIO27",
+      "net": "/CAN_SCK"
+    },
+    "28": {
+      "pad": "36",
+      "pinfunction": "GPIO28",
+      "net": "/CAN_MOSI"
+    },
+    "29": {
+      "pad": "37",
+      "pinfunction": "GPIO29",
+      "net": "/CAN_MISO"
+    },
+    "30": {
+      "pad": "38",
+      "pinfunction": "GPIO30",
+      "net": "/CAN_nCS"
+    },
+    "31": {
+      "pad": "39",
+      "pinfunction": "GPIO31",
+      "net": "/CAN_INT"
+    },
+    "32": {
+      "pad": "40",
+      "pinfunction": "GPIO32",
+      "net": "/RP2354B MCU/STATUS_LED"
+    },
+    "33": {
+      "pad": "42",
+      "pinfunction": "GPIO33",
+      "net": "/GNSS_PWR_EN"
+    },
+    "34": {
+      "pad": "43",
+      "pinfunction": "GPIO34",
+      "net": "/RP2354B MCU/PWM_ESC1"
+    },
+    "35": {
+      "pad": "44",
+      "pinfunction": "GPIO35",
+      "net": "/RP2354B MCU/PWM_ESC2"
+    },
+    "36": {
+      "pad": "45",
+      "pinfunction": "GPIO36",
+      "net": "/RP2354B MCU/PWM_ESC3"
+    },
+    "37": {
+      "pad": "46",
+      "pinfunction": "GPIO37",
+      "net": "/RP2354B MCU/PWM_ESC4"
+    },
+    "38": {
+      "pad": "47",
+      "pinfunction": "GPIO38",
+      "net": "/RP2354B MCU/PWM_ESC5"
+    },
+    "39": {
+      "pad": "48",
+      "pinfunction": "GPIO39",
+      "net": "/RP2354B MCU/PWM_ESC6"
+    }
+  }
+}
