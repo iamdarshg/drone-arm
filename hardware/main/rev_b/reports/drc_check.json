@@ -1,7 +1,7 @@
 {
     "$schema": "https://schemas.kicad.org/drc.v1.json",
     "coordinate_units": "mm",
-    "date": "2026-08-25T13:44:48+0530",
+    "date": "2026-08-25T12:46:02+0530",
     "kicad_version": "9.0.7",
     "schematic_parity": [],
     "source": "main_rev_b_final.kicad_pcb",
@@ -33,12 +33,12 @@
             "description": "Missing connection between items",
             "items": [
                 {
-                    "description": "Pad 1 [/1V1] of C39 on F.Cu",
+                    "description": "Track [/1V1] on F.Cu, length 0.0141 mm",
                     "pos": {
-                        "x": 53.99,
-                        "y": 45.66
+                        "x": 53.98,
+                        "y": 45.65
                     },
-                    "uuid": "7bb853e4-a73a-424e-af98-1926c119fcca"
+                    "uuid": "9b046648-5b63-4a98-a14a-239da882dbb7"
                 },
                 {
                     "description": "Pad 32 [/1V1] of U10 on F.Cu",
@@ -171,12 +171,12 @@
             "description": "Missing connection between items",
             "items": [
                 {
-                    "description": "Pad 1 [/3V3] of C34 on F.Cu",
+                    "description": "Track [/3V3] on F.Cu, length 0.2638 mm",
                     "pos": {
-                        "x": 62.58,
-                        "y": 34.98
+                        "x": 62.7665,
+                        "y": 35.1665
                     },
-                    "uuid": "5b4e2aac-3e00-4510-a6cc-cad3fa88b1ec"
+                    "uuid": "e3199dce-e389-4eaa-b184-5411d6b7f65f"
                 },
                 {
                     "description": "Pad 60 [/3V3] of U10 on F.Cu",
@@ -401,12 +401,12 @@
             "description": "Missing connection between items",
             "items": [
                 {
-                    "description": "Track [/CAN_5V] on F.Cu, length 5.4500 mm",
+                    "description": "Track [/CAN_5V] on F.Cu, length 6.5000 mm",
                     "pos": {
-                        "x": 4.23,
+                        "x": 9.68,
                         "y": 32.0
                     },
-                    "uuid": "22dcd6ca-b223-483f-857d-3a320fafd401"
+                    "uuid": "9da5379f-77a8-479f-9e75-944e6a5d4abe"
                 },
                 {
                     "description": "Track [/CAN_5V] on F.Cu, length 1.4000 mm",
@@ -539,12 +539,12 @@
             "description": "Missing connection between items",
             "items": [
                 {
-                    "description": "Track [/GND] on In1.Cu, length 16.7174 mm",
+                    "description": "Track [/GND] on In1.Cu, length 2.7325 mm",
                     "pos": {
-                        "x": 67.4535,
+                        "x": 64.721,
                         "y": 64.821
                     },
-                    "uuid": "f470b6d1-c24d-4088-8a7a-906f450523e1"
+                    "uuid": "a7f26ea4-a54e-4987-aaa8-dc3e1e99cb46"
                 },
                 {
                     "description": "Pad 8 [/GND] of U22 on F.Cu",
@@ -846,12 +846,12 @@
                     "uuid": "af882b10-baff-4bdf-b877-28de10e2cfbe"
                 },
                 {
-                    "description": "Pad 1 [/RP2354B MCU/XIN] of Y1 on F.Cu",
+                    "description": "Track [/RP2354B MCU/XIN] on F.Cu, length 1.3612 mm",
                     "pos": {
-                        "x": 65.98,
-                        "y": 39.35
+                        "x": 66.9425,
+                        "y": 38.3875
                     },
-                    "uuid": "4b134767-96cd-49c1-98fe-0dd7835f8324"
+                    "uuid": "ef437b34-6260-4ed7-b8e4-11f9dfb07718"
                 }
             ],
             "severity": "error",
