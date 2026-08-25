@@ -1,7 +1,7 @@
 {
     "$schema": "https://schemas.kicad.org/drc.v1.json",
     "coordinate_units": "mm",
-    "date": "2026-08-25T14:23:05+0530",
+    "date": "2026-08-25T14:23:24+0530",
     "kicad_version": "9.0.7",
     "schematic_parity": [],
     "source": "esc_rev_b.kicad_pcb",
@@ -2724,12 +2724,35 @@
             "description": "Missing connection between items",
             "items": [
                 {
-                    "description": "Track [/Auxiliary power/LM2_RIPPLE] on In2.Cu, length 4.4500 mm",
+                    "description": "Pad 1 [/Auxiliary power/LM2_RIPPLE] of C715 on F.Cu",
                     "pos": {
                         "x": 35.15,
                         "y": 29.1
                     },
-                    "uuid": "fa8491e0-4e08-4a23-b33f-1aa1d9e24c77"
+                    "uuid": "088af442-7f06-4bc0-9684-67ade3f91889"
+                },
+                {
+                    "description": "Pad 1 [/Auxiliary power/LM2_RIPPLE] of C716 on F.Cu",
+                    "pos": {
+                        "x": 39.6,
+                        "y": 29.1
+                    },
+                    "uuid": "d85c971a-589f-4499-888f-1839dfac4722"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [/Auxiliary power/LM2_RIPPLE] of C716 on F.Cu",
+                    "pos": {
+                        "x": 39.6,
+                        "y": 29.1
+                    },
+                    "uuid": "d85c971a-589f-4499-888f-1839dfac4722"
                 },
                 {
                     "description": "Pad 2 [/Auxiliary power/LM2_RIPPLE] of R713 on F.Cu",
@@ -4164,6 +4187,29 @@
                         "y": 13.0
                     },
                     "uuid": "fd80b18f-150c-404e-86c4-0972b3127dc9"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [/Controller and ADC/VREG_LX] of L201 on F.Cu",
+                    "pos": {
+                        "x": 342.9375,
+                        "y": 13.0
+                    },
+                    "uuid": "0fa52db5-98e0-423e-86d8-e208c37ac516"
+                },
+                {
+                    "description": "Pad 63 [/Controller and ADC/VREG_LX] of U201 on F.Cu",
+                    "pos": {
+                        "x": 343.0,
+                        "y": 16.05
+                    },
+                    "uuid": "107d7014-3239-4b20-8421-d63dadd48dd3"
                 }
             ],
             "severity": "error",
@@ -7784,20 +7830,20 @@
             "description": "Missing connection between items",
             "items": [
                 {
-                    "description": "Pad 2 [/M1_PHASE_B] of R1106 on F.Cu",
-                    "pos": {
-                        "x": 90.5,
-                        "y": 74.675
-                    },
-                    "uuid": "039d22fb-a7fd-4ef4-8f9c-b06c3da2b80c"
-                },
-                {
                     "description": "Zone [/M1_PHASE_B] on F.Cu, priority 4",
                     "pos": {
                         "x": 77.8,
                         "y": 70.8
                     },
                     "uuid": "753865b5-5c02-4ab5-b80a-0dfbb2ad58d3"
+                },
+                {
+                    "description": "Pad 2 [/M1_PHASE_B] of R1106 on F.Cu",
+                    "pos": {
+                        "x": 90.5,
+                        "y": 74.675
+                    },
+                    "uuid": "039d22fb-a7fd-4ef4-8f9c-b06c3da2b80c"
                 }
             ],
             "severity": "error",
@@ -7830,6 +7876,29 @@
             "description": "Missing connection between items",
             "items": [
                 {
+                    "description": "Pad 17 [/M1_PHASE_C] of U1101 on F.Cu",
+                    "pos": {
+                        "x": 95.9,
+                        "y": 85.25
+                    },
+                    "uuid": "2f3f2b9e-db2b-4a12-9223-2daa3334ddfc"
+                },
+                {
+                    "description": "Zone [/M1_PHASE_C] on F.Cu, priority 4",
+                    "pos": {
+                        "x": 97.8,
+                        "y": 87.8
+                    },
+                    "uuid": "dc4290db-27d9-4f9f-84a2-b725229b4115"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
                     "description": "Zone [/M1_PHASE_C] on In2.Cu, priority 4",
                     "pos": {
                         "x": 97.8,
@@ -7853,20 +7922,20 @@
             "description": "Missing connection between items",
             "items": [
                 {
-                    "description": "Zone [/M1_PHASE_C] on F.Cu, priority 4",
-                    "pos": {
-                        "x": 97.8,
-                        "y": 78.8
-                    },
-                    "uuid": "d8c0f82f-af03-4962-a755-a7a00ca86444"
-                },
-                {
                     "description": "Pad 2 [/M1_PHASE_C] of R1110 on F.Cu",
                     "pos": {
                         "x": 110.5,
                         "y": 82.675
                     },
                     "uuid": "79c5e07e-94cd-446a-83b9-973f97626fbe"
+                },
+                {
+                    "description": "Zone [/M1_PHASE_C] on F.Cu, priority 4",
+                    "pos": {
+                        "x": 97.8,
+                        "y": 78.8
+                    },
+                    "uuid": "d8c0f82f-af03-4962-a755-a7a00ca86444"
                 }
             ],
             "severity": "error",
@@ -9624,20 +9693,20 @@
             "description": "Missing connection between items",
             "items": [
                 {
-                    "description": "Pad 2 [/M2_PHASE_B] of R1206 on F.Cu",
-                    "pos": {
-                        "x": 247.5,
-                        "y": 74.675
-                    },
-                    "uuid": "c7dbe420-5eed-495a-8f9d-a89d0794002e"
-                },
-                {
                     "description": "Zone [/M2_PHASE_B] on F.Cu, priority 4",
                     "pos": {
                         "x": 234.8,
                         "y": 70.8
                     },
                     "uuid": "877211e9-78d1-42d0-aba6-67c9add9de73"
+                },
+                {
+                    "description": "Pad 2 [/M2_PHASE_B] of R1206 on F.Cu",
+                    "pos": {
+                        "x": 247.5,
+                        "y": 74.675
+                    },
+                    "uuid": "c7dbe420-5eed-495a-8f9d-a89d0794002e"
                 }
             ],
             "severity": "error",
@@ -9661,6 +9730,29 @@
                         "y": 74.675
                     },
                     "uuid": "c7dbe420-5eed-495a-8f9d-a89d0794002e"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 17 [/M2_PHASE_C] of U1201 on F.Cu",
+                    "pos": {
+                        "x": 252.9,
+                        "y": 85.25
+                    },
+                    "uuid": "7f3c2908-aad7-4f49-9855-efa07328ff3d"
+                },
+                {
+                    "description": "Zone [/M2_PHASE_C] on F.Cu, priority 4",
+                    "pos": {
+                        "x": 254.8,
+                        "y": 87.8
+                    },
+                    "uuid": "f136ed37-86ac-4412-a6a2-172329017fd8"
                 }
             ],
             "severity": "error",
@@ -11390,331 +11482,9 @@
             ],
             "severity": "error",
             "type": "unconnected_items"
-        },
-        {
-            "description": "Missing connection between items",
-            "items": [
-                {
-                    "description": "Zone [/M3_PHASE_A] on F.Cu, priority 4",
-                    "pos": {
-                        "x": 371.8,
-                        "y": 78.8
-                    },
-                    "uuid": "24402d94-7c3e-4d3f-a72c-318b13d8810f"
-                },
-                {
-                    "description": "Pad 2 [/M3_PHASE_A] of R1302 on F.Cu",
-                    "pos": {
-                        "x": 384.5,
-                        "y": 82.675
-                    },
-                    "uuid": "00379da2-e99f-4325-88af-5e6f205b709a"
-                }
-            ],
-            "severity": "error",
-            "type": "unconnected_items"
-        },
-        {
-            "description": "Missing connection between items",
-            "items": [
-                {
-                    "description": "Pad 7 [/M3_PHASE_A] of U1301 on F.Cu",
-                    "pos": {
-                        "x": 407.75,
-                        "y": 88.9
-                    },
-                    "uuid": "0ce3b8de-7745-4ec9-8c15-98a6c47352f9"
-                },
-                {
-                    "description": "Pad 2 [/M3_PHASE_A] of R1302 on F.Cu",
-                    "pos": {
-                        "x": 384.5,
-                        "y": 82.675
-                    },
-                    "uuid": "00379da2-e99f-4325-88af-5e6f205b709a"
-                }
-            ],
-            "severity": "error",
-            "type": "unconnected_items"
-        },
-        {
-            "description": "Missing connection between items",
-            "items": [
-                {
-                    "description": "Zone [/M3_PHASE_B] on In2.Cu, priority 4",
-                    "pos": {
-                        "x": 391.8,
-                        "y": 45.0
-                    },
-                    "uuid": "97995d18-441f-4ef0-8ba2-d8ef3bcb7a41"
-                },
-                {
-                    "description": "Zone [/M3_PHASE_B] on In2.Cu, priority 4",
-                    "pos": {
-                        "x": 391.8,
-                        "y": 45.0
-                    },
-                    "uuid": "97995d18-441f-4ef0-8ba2-d8ef3bcb7a41"
-                }
-            ],
-            "severity": "error",
-            "type": "unconnected_items"
-        },
-        {
-            "description": "Missing connection between items",
-            "items": [
-                {
-                    "description": "Zone [/M3_PHASE_B] on F.Cu, priority 4",
-                    "pos": {
-                        "x": 391.8,
-                        "y": 70.8
-                    },
-                    "uuid": "09bf9864-ea1f-4b72-b631-32f253c3eafc"
-                },
-                {
-                    "description": "Pad 2 [/M3_PHASE_B] of R1306 on F.Cu",
-                    "pos": {
-                        "x": 404.5,
-                        "y": 74.675
-                    },
-                    "uuid": "65f6d6f1-f803-4558-924c-877d9ddcd893"
-                }
-            ],
-            "severity": "error",
-            "type": "unconnected_items"
         }
     ],
     "violations": [
-        {
-            "description": "Items shorting two nets (nets /Controller and ADC/VREG_LX and /DGND)",
-            "items": [
-                {
-                    "description": "Via [/Controller and ADC/VREG_LX] on F.Cu - B.Cu",
-                    "pos": {
-                        "x": 343.0,
-                        "y": 16.05
-                    },
-                    "uuid": "2a6cdfa5-f82f-4073-a717-9e7c959556c9"
-                },
-                {
-                    "description": "Pad 62 [/DGND] of U201 on F.Cu",
-                    "pos": {
-                        "x": 343.4,
-                        "y": 16.05
-                    },
-                    "uuid": "6245d29b-b135-4185-a1d0-ce1e45450a19"
-                }
-            ],
-            "severity": "error",
-            "type": "shorting_items"
-        },
-        {
-            "description": "Hole clearance violation (board setup constraints hole clearance 0.2000 mm; actual 0.1500 mm)",
-            "items": [
-                {
-                    "description": "Pad 62 [/DGND] of U201 on F.Cu",
-                    "pos": {
-                        "x": 343.4,
-                        "y": 16.05
-                    },
-                    "uuid": "6245d29b-b135-4185-a1d0-ce1e45450a19"
-                },
-                {
-                    "description": "Via [/Controller and ADC/VREG_LX] on F.Cu - B.Cu",
-                    "pos": {
-                        "x": 343.0,
-                        "y": 16.05
-                    },
-                    "uuid": "2a6cdfa5-f82f-4073-a717-9e7c959556c9"
-                }
-            ],
-            "severity": "error",
-            "type": "hole_clearance"
-        },
-        {
-            "description": "Items shorting two nets (nets /Controller and ADC/VREG_LX and /3V3)",
-            "items": [
-                {
-                    "description": "Via [/Controller and ADC/VREG_LX] on F.Cu - B.Cu",
-                    "pos": {
-                        "x": 343.0,
-                        "y": 16.05
-                    },
-                    "uuid": "2a6cdfa5-f82f-4073-a717-9e7c959556c9"
-                },
-                {
-                    "description": "Pad 64 [/3V3] of U201 on F.Cu",
-                    "pos": {
-                        "x": 342.6,
-                        "y": 16.05
-                    },
-                    "uuid": "31f76093-dd6d-48c2-8e93-b9ef1ae4f38b"
-                }
-            ],
-            "severity": "error",
-            "type": "shorting_items"
-        },
-        {
-            "description": "Hole clearance violation (board setup constraints hole clearance 0.2000 mm; actual 0.1500 mm)",
-            "items": [
-                {
-                    "description": "Pad 64 [/3V3] of U201 on F.Cu",
-                    "pos": {
-                        "x": 342.6,
-                        "y": 16.05
-                    },
-                    "uuid": "31f76093-dd6d-48c2-8e93-b9ef1ae4f38b"
-                },
-                {
-                    "description": "Via [/Controller and ADC/VREG_LX] on F.Cu - B.Cu",
-                    "pos": {
-                        "x": 343.0,
-                        "y": 16.05
-                    },
-                    "uuid": "2a6cdfa5-f82f-4073-a717-9e7c959556c9"
-                }
-            ],
-            "severity": "error",
-            "type": "hole_clearance"
-        },
-        {
-            "description": "Clearance violation (netclass 'HIGH_CURRENT' clearance 0.2000 mm; actual 0.0900 mm)",
-            "items": [
-                {
-                    "description": "Via [/M2_PHASE_C] on F.Cu - B.Cu",
-                    "pos": {
-                        "x": 252.9,
-                        "y": 85.25
-                    },
-                    "uuid": "26ef7599-e7d9-4226-b087-280c7d2a7c6e"
-                },
-                {
-                    "description": "Pad 16 [/Motor 2 power cell/M2_GHC_DRV] of U1201 on F.Cu",
-                    "pos": {
-                        "x": 252.9,
-                        "y": 85.75
-                    },
-                    "uuid": "dd8daacf-1b9a-4dd2-aacb-34cf966f6ddf"
-                }
-            ],
-            "severity": "error",
-            "type": "clearance"
-        },
-        {
-            "description": "Clearance violation (netclass 'HIGH_CURRENT' clearance 0.2000 mm; actual 0.0900 mm)",
-            "items": [
-                {
-                    "description": "Via [/M2_PHASE_C] on F.Cu - B.Cu",
-                    "pos": {
-                        "x": 252.9,
-                        "y": 85.25
-                    },
-                    "uuid": "26ef7599-e7d9-4226-b087-280c7d2a7c6e"
-                },
-                {
-                    "description": "Pad 18 [/Motor 2 power cell/M2_GLC_DRV] of U1201 on F.Cu",
-                    "pos": {
-                        "x": 252.9,
-                        "y": 84.75
-                    },
-                    "uuid": "bb895cd8-022b-451d-be80-7c0dc44463e4"
-                }
-            ],
-            "severity": "error",
-            "type": "clearance"
-        },
-        {
-            "description": "Clearance violation (netclass 'HIGH_CURRENT' clearance 0.2000 mm; actual 0.0900 mm)",
-            "items": [
-                {
-                    "description": "Via [/M1_PHASE_C] on F.Cu - B.Cu",
-                    "pos": {
-                        "x": 95.9,
-                        "y": 85.25
-                    },
-                    "uuid": "461d2687-9e1b-4635-98e1-939dfa49763c"
-                },
-                {
-                    "description": "Pad 16 [/Motor 1 power cell/M1_GHC_DRV] of U1101 on F.Cu",
-                    "pos": {
-                        "x": 95.9,
-                        "y": 85.75
-                    },
-                    "uuid": "74004b41-b156-4527-a7af-d110d8ab31f2"
-                }
-            ],
-            "severity": "error",
-            "type": "clearance"
-        },
-        {
-            "description": "Clearance violation (netclass 'HIGH_CURRENT' clearance 0.2000 mm; actual 0.0900 mm)",
-            "items": [
-                {
-                    "description": "Pad 18 [/Motor 1 power cell/M1_GLC_DRV] of U1101 on F.Cu",
-                    "pos": {
-                        "x": 95.9,
-                        "y": 84.75
-                    },
-                    "uuid": "3a2a075a-d0b0-4e3f-b82e-b20f5358e4c2"
-                },
-                {
-                    "description": "Via [/M1_PHASE_C] on F.Cu - B.Cu",
-                    "pos": {
-                        "x": 95.9,
-                        "y": 85.25
-                    },
-                    "uuid": "461d2687-9e1b-4635-98e1-939dfa49763c"
-                }
-            ],
-            "severity": "error",
-            "type": "clearance"
-        },
-        {
-            "description": "Hole clearance violation (board setup constraints hole clearance 0.2000 mm; actual 0.1500 mm)",
-            "items": [
-                {
-                    "description": "Pad 62 [/DGND] of U201 on F.Cu",
-                    "pos": {
-                        "x": 343.4,
-                        "y": 16.05
-                    },
-                    "uuid": "6245d29b-b135-4185-a1d0-ce1e45450a19"
-                },
-                {
-                    "description": "Via [/Controller and ADC/VREG_LX] on F.Cu - B.Cu",
-                    "pos": {
-                        "x": 343.0,
-                        "y": 16.05
-                    },
-                    "uuid": "2a6cdfa5-f82f-4073-a717-9e7c959556c9"
-                }
-            ],
-            "severity": "error",
-            "type": "hole_clearance"
-        },
-        {
-            "description": "Hole clearance violation (board setup constraints hole clearance 0.2000 mm; actual 0.1500 mm)",
-            "items": [
-                {
-                    "description": "Pad 64 [/3V3] of U201 on F.Cu",
-                    "pos": {
-                        "x": 342.6,
-                        "y": 16.05
-                    },
-                    "uuid": "31f76093-dd6d-48c2-8e93-b9ef1ae4f38b"
-                },
-                {
-                    "description": "Via [/Controller and ADC/VREG_LX] on F.Cu - B.Cu",
-                    "pos": {
-                        "x": 343.0,
-                        "y": 16.05
-                    },
-                    "uuid": "2a6cdfa5-f82f-4073-a717-9e7c959556c9"
-                }
-            ],
-            "severity": "error",
-            "type": "hole_clearance"
-        },
         {
             "description": "Track has unconnected end",
             "items": [
@@ -14296,52 +14066,6 @@
             ],
             "severity": "warning",
             "type": "silk_edge_clearance"
-        },
-        {
-            "description": "Drilled holes co-located",
-            "items": [
-                {
-                    "description": "Via [/M1_PHASE_B] on F.Cu - B.Cu",
-                    "pos": {
-                        "x": 77.8,
-                        "y": 45.0
-                    },
-                    "uuid": "8835d62a-5c8f-499f-962e-60b774a250d5"
-                },
-                {
-                    "description": "Via [/M1_PHASE_B] on F.Cu - B.Cu",
-                    "pos": {
-                        "x": 77.8,
-                        "y": 45.0
-                    },
-                    "uuid": "e0c2208f-7f25-426e-bc12-ab5816b30e98"
-                }
-            ],
-            "severity": "warning",
-            "type": "holes_co_located"
-        },
-        {
-            "description": "Drilled holes co-located",
-            "items": [
-                {
-                    "description": "Via [/M2_PHASE_B] on F.Cu - B.Cu",
-                    "pos": {
-                        "x": 234.8,
-                        "y": 45.0
-                    },
-                    "uuid": "5a82eca6-7de1-4fbd-bf48-68b2d7e1b502"
-                },
-                {
-                    "description": "Via [/M2_PHASE_B] on F.Cu - B.Cu",
-                    "pos": {
-                        "x": 234.8,
-                        "y": 45.0
-                    },
-                    "uuid": "9f6b52e0-4941-4b2b-9641-bbc1589b5ec5"
-                }
-            ],
-            "severity": "warning",
-            "type": "holes_co_located"
         },
         {
             "description": "Silkscreen clipped by solder mask",
