@@ -25,9 +25,11 @@ def main():
     net_hits = {}
     tracks = list(board.GetTracks())
     for t in tracks:
-        if t.GetClass() not in ("PCB_TRACK", "PCB_VIA"):
+        is_via = isinstance(t, pcbnew.PCB_VIA)
+        is_track = isinstance(t, pcbnew.PCB_TRACK)
+        if not (is_track or is_via):
             continue
-        if t.GetClass() == "PCB_VIA" and not do_vias:
+        if is_via and not do_vias:
             continue
         name = t.GetNetname()
         if not name:
@@ -38,7 +40,7 @@ def main():
                 net_hits[name] = net_hits.get(name, 0) + 1
                 continue
             board.Remove(t)
-            if t.GetClass() == "PCB_VIA":
+            if is_via:
                 removed_v += 1
             else:
                 removed_t += 1
