@@ -1,4 +1,10 @@
-# Acceptance Test Plan
+# Acceptance Test Plan — Superseded Custom Motor
+
+> **Superseded 2026-08-26:** The fixed resistance, speed, air-gap and thermal
+> values below belong to the older custom motor. Use the staged FA4119 gates in
+> [FA4119_PROPULSION_DECISION.md](FA4119_PROPULSION_DECISION.md) for the selected
+> prototype. This file remains historical until a measurement-based FA4119
+> acceptance plan replaces it.
 
 Every motor (or sample per sampling plan noted) must pass these tests before
 shipment. Flight release additionally requires the system-level tests at the end.

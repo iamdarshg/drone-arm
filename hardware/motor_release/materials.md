@@ -1,4 +1,10 @@
-# Materials Specification
+# Materials Specification — Superseded Custom Motor
+
+> **Superseded 2026-08-26:** These materials specify the former custom motor,
+> not the purchased Flycci FA4119 platform. See
+> [FA4119_PROPULSION_DECISION.md](FA4119_PROPULSION_DECISION.md). In particular,
+> do not purchase the custom stator steel, back iron, bell, shaft or magnets for
+> the current prototype.
 
 ## Stator laminations
 
