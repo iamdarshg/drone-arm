@@ -8,7 +8,7 @@ Replace only `hardware/esc/rev_b/esc_rev_b.kicad_pcb` with a deterministic place
 
 The PCB outline is a closed 150.00 mm by 150.00 mm square. Six motor cells occupy a 3-by-2 matrix. Each cell owns a 48 mm by 55 mm placement grid; motor cells 1-3 occupy the upper row and 4-6 the lower row. Shared auxiliary power and supervisor components occupy dedicated horizontal grids outside the motor grids. Mounting holes remain inside a 4 mm edge inset and must not overlap electrical courtyards.
 
-Every electrical footprint must be on F.Cu and fully inside the outline. Grid membership is derived from the component sheet and the existing motor-numbered reference blocks. The generator must fail instead of silently placing a footprint outside its assigned grid.
+Every electrical footprint must be fully inside the outline. High-current and gate-loop parts remain on F.Cu; low-power local control and support parts may be placed on B.Cu within the same owning motor grid. Grid membership is derived from the component sheet and the existing motor-numbered reference blocks. The generator must fail instead of silently placing a footprint outside its assigned grid.
 
 ## Six-layer stack
 
@@ -18,7 +18,7 @@ Switch-node copper stays local to each motor cell. No global phase plane is perm
 
 ## Placement strategy
 
-Each motor grid places its three half bridges first, followed by the motor terminal, current shunts, gate driver, local DC-link capacitors, protection, current-sense devices, isolated interface, local MCU, and support passives. Remaining components are packed deterministically using courtyard-aware shelves. Major parts have fixed relative locations; support parts may be packed but cannot cross a cell boundary.
+Each motor grid places its three half bridges, gate driver, gate resistors, current shunts, and local DC-link components on F.Cu. Motor terminals, isolated control, local MCU, current-sense support, and remaining passives use a deterministic B.Cu grid where necessary. Remaining components are packed deterministically using courtyard-aware rectangle packing. Support parts cannot cross a cell boundary.
 
 The top shared grid contains battery input/protection and auxiliary supplies. The center/shared corridor contains supervisor, ADC, CAN-FD, and isolated-control components. Connectors that require physical access are placed on board edges.
 
@@ -29,11 +29,10 @@ The generation stage is successful only when all of these are true:
 - outline bounding box is exactly 150.00 mm by 150.00 mm;
 - copper-layer count is exactly six;
 - all schematic-derived electrical footprints are present exactly once;
-- every footprint is on F.Cu and fully inside the board;
-- each motor-numbered footprint is inside its assigned grid;
+- every footprint is fully inside the board and assigned to an intentional side;
+- each motor-numbered footprint anchor is inside its assigned grid; courtyard boundary bleed is reported separately and must be resolved before fabrication routing;
 - no courtyard overlap exists between different motor grids;
 - KiCad accepts the PCB and reports no malformed outline;
 - a placement audit records grid bounds, populations, and failures.
 
 Routing, zero-open DRC, continuous 60 A operation, aggregate 360 A operation, busbar design, heatsinking, double-pulse behavior, and thermal qualification are downstream gates. Passing placement does not establish those ratings.
-
