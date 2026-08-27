@@ -1,0 +1,82 @@
+{
+  "passed": true,
+  "checks": {
+    "outline_exact_150mm": true,
+    "six_copper_layers": true,
+    "footprint_parity": true,
+    "all_footprints_outside_edge_cuts": true,
+    "zero_tracks_and_vias": true,
+    "zero_copper_zones": true
+  },
+  "outline_extents_mm": [
+    0.0,
+    0.0,
+    150.0,
+    150.0
+  ],
+  "copper_layers": 6,
+  "footprint_count": 646,
+  "inside_or_overlapping_refs": [],
+  "track_via_count": 0,
+  "zone_count": 0,
+  "group_populations": {
+    "power": 35,
+    "controller": 47,
+    "motor_1": 94,
+    "motor_2": 94,
+    "motor_3": 94,
+    "motor_4": 94,
+    "motor_5": 94,
+    "motor_6": 94
+  },
+  "group_bounds_mm": {
+    "power": [
+      170.0,
+      0.0,
+      348.95,
+      20.25
+    ],
+    "controller": [
+      370.0,
+      0.0,
+      550.02,
+      15.7
+    ],
+    "motor_1": [
+      570.0,
+      0.0,
+      751.5,
+      89.22
+    ],
+    "motor_2": [
+      170.0,
+      35.25,
+      351.5,
+      124.47
+    ],
+    "motor_3": [
+      370.0,
+      30.7,
+      551.5,
+      119.92
+    ],
+    "motor_4": [
+      570.0,
+      104.22,
+      751.5,
+      193.44
+    ],
+    "motor_5": [
+      170.0,
+      139.47,
+      351.5,
+      228.69
+    ],
+    "motor_6": [
+      370.0,
+      134.92,
+      551.5,
+      224.14
+    ]
+  }
+}
