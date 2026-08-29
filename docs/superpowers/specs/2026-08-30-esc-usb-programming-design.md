@@ -82,14 +82,15 @@ Each STM32G431 motor sheet receives the same replicated USB interface:
 
 - PA12 is assigned to `M<n>_USB_DP`.
 - PA11 is assigned to `M<n>_USB_DM`.
-- D+ and D- each receive a 27 Ohm series resistor placed adjacent to the MCU.
+- PA11 and PA12 are reserved exclusively for native USB on every motor cell.
+- The STM32G431 integrated USB Full-Speed transceiver termination is used; no external D+/D- series termination resistors are fitted on the motor-cell interfaces.
 - A local low-capacitance ESD array protects the cell-side lines at the service-header boundary.
 - `M<n>_USB_VBUS_SENSE` is current-limited and clamped to the selected cell logic domain.
 - Existing `M<n>_BOOT0` and `M<n>_NRST` connect to the selector while retaining their current local bias networks.
 - Existing `J<n>03 LOCAL_SWD` remains unchanged and available for recovery/debugging.
 - Native STM32 ROM USB DFU is the programming path. SWD is not removed.
 
-The replicated design must preserve the current PWM, break input, gate-driver, ADC, CAN isolation, and power-stage pin assignments. If PA11 or PA12 is already assigned to a conflicting function in a motor sheet, implementation stops and reports the conflict instead of silently remapping a safety-critical signal.
+The replicated design preserves the current PWM, break input, gate-driver, ADC, CAN isolation, and power-stage functions. The existing PA11 gate-driver fault assignment moves to PB10, LQFP-48 package pin 22, using its `TIM1_BKIN` alternate function so the hardware PWM shutdown path remains available. The existing PA12 arm-isolation assignment moves to PB11, LQFP-48 package pin 25. PA11 and PA12 are then dedicated to USB DM and DP respectively.
 
 ## Symbols, footprints, and generated sources
 
