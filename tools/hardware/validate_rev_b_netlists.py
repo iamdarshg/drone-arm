@@ -249,21 +249,22 @@ def audit_esc(netlist: Netlist, audit: Audit) -> None:
             f"M{motor}: driver fault to TIM1 break",
         )
         audit.require_nodes(
-            netlist, f"/M{motor}_USB_DM", {(mcu, "33"), (f"J{base + 4}", "2")},
-            f"M{motor}: native USB DM and service header",
+            netlist, f"/M{motor}_USB_DM", {(mcu, "33")},
+            f"M{motor}: native USB DM",
         )
         audit.require_nodes(
-            netlist, f"/M{motor}_USB_DP", {(mcu, "34"), (f"J{base + 4}", "1")},
-            f"M{motor}: native USB DP and service header",
+            netlist, f"/M{motor}_USB_DP", {(mcu, "34")},
+            f"M{motor}: native USB DP",
         )
         audit.require_nodes(
             netlist, f"/M{motor}_ARM_ISO", {(mcu, "25"), (arm_gate, "1")},
             f"M{motor}: isolated arm permission moved to PB11",
         )
         audit.check(
-            f"M{motor}: SWD and USB service headers retained",
-            {f"J{base + 3}", f"J{base + 4}", f"U{base + 7}"} <= netlist.components.keys(),
-            "local SWD, keyed USB/DFU header, and cell-side ESD present",
+            f"M{motor}: SWD retained and cell-side USB ESD present",
+            {f"J{base + 3}", f"U{base + 7}"} <= netlist.components.keys()
+            and f"J{base + 4}" not in netlist.components,
+            "local SWD and cell-side ESD present; no redundant per-cell USB connector",
         )
         audit.require_nodes(
             netlist,

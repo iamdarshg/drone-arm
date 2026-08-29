@@ -44,6 +44,7 @@ def test_controller_has_native_usb_c_and_keeps_swd():
 def test_service_port_and_break_before_make_selector_exist():
     refs, _ = load_netlist()
     assert {"J203", "SW201"} <= refs
+    assert not ({f"J{1000 + cell * 100 + 4}" for cell in range(1, 7)} & refs)
 
 
 def test_each_motor_mcu_uses_usb_pins_and_preserves_debug_and_safety():

@@ -74,8 +74,13 @@ def reconcile(source: Path, output: Path, netlist: Path) -> dict[str, int]:
     before = {ref: snapshot(fp) for ref, fp in existing.items()}
 
     stale = sorted(set(existing) - set(components))
-    if stale:
-        raise RuntimeError(f"refusing to remove non-contract footprints: {stale}")
+    removable_service_headers = {f"J{1000 + cell * 100 + 4}" for cell in range(1, 7)}
+    unexpected_stale = sorted(set(stale) - removable_service_headers)
+    if unexpected_stale:
+        raise RuntimeError(f"refusing to remove non-contract footprints: {unexpected_stale}")
+    for ref in stale:
+        board.Remove(existing[ref])
+        before.pop(ref)
 
     edge_box = board.GetBoardEdgesBoundingBox()
     edge_right = pcbnew.ToMM(edge_box.GetRight())
@@ -110,6 +115,7 @@ def reconcile(source: Path, output: Path, netlist: Path) -> dict[str, int]:
     return {
         "source_footprints": len(existing),
         "added_footprints": len(missing),
+        "removed_redundant_service_headers": len(stale),
         "output_footprints": len(after),
         "existing_transforms_changed": changed,
         "missing_references": len(missing_after),

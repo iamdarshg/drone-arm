@@ -824,17 +824,7 @@ def make_motor_sheet(index: int, parent_uuid: str, sheet_uuid: str) -> None:
     }.items():
         label_pin(sch, f"J{base + 3}", pin, net)
 
-    # Keyed six-wire service header to the external break-before-make selector.
-    add_part(
-        sch, "Connector_Generic:Conn_01x06", f"J{base + 4}", "USB_DFU_SERVICE",
-        (280, 230), "Connector_JST:JST_GH_SM06B-GHS-TB_1x06-1MP_P1.25mm_Horizontal",
-        "JST", "SM06B-GHS-TB",
-    )
-    for pin, net in {
-        "1": f"M{n}_USB_DP", "2": f"M{n}_USB_DM", "3": f"M{n}_USB_GND",
-        "4": f"M{n}_USB_VBUS", "5": f"M{n}_USB_BOOT0", "6": f"M{n}_USB_NRST",
-    }.items():
-        label_pin(sch, f"J{base + 4}", pin, net)
+    # Cell USB nets connect directly to the shared break-before-make selector.
     add_custom(
         sch, "USBLC6-2SC6", f"U{base + 7}", "USBLC6-2SC6", (270, 205),
         {

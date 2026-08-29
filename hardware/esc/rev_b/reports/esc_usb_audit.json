@@ -214,12 +214,12 @@
       "detail": "/M1_DRV_nFAULT: missing=none"
     },
     {
-      "name": "M1: native USB DM and service header",
+      "name": "M1: native USB DM",
       "status": "PASS",
       "detail": "/M1_USB_DM: missing=none"
     },
     {
-      "name": "M1: native USB DP and service header",
+      "name": "M1: native USB DP",
       "status": "PASS",
       "detail": "/M1_USB_DP: missing=none"
     },
@@ -229,9 +229,9 @@
       "detail": "/M1_ARM_ISO: missing=none"
     },
     {
-      "name": "M1: SWD and USB service headers retained",
+      "name": "M1: SWD retained and cell-side USB ESD present",
       "status": "PASS",
-      "detail": "local SWD, keyed USB/DFU header, and cell-side ESD present"
+      "detail": "local SWD and cell-side ESD present; no redundant per-cell USB connector"
     },
     {
       "name": "M1: hardware-gated driver enable",
@@ -389,12 +389,12 @@
       "detail": "/M2_DRV_nFAULT: missing=none"
     },
     {
-      "name": "M2: native USB DM and service header",
+      "name": "M2: native USB DM",
       "status": "PASS",
       "detail": "/M2_USB_DM: missing=none"
     },
     {
-      "name": "M2: native USB DP and service header",
+      "name": "M2: native USB DP",
       "status": "PASS",
       "detail": "/M2_USB_DP: missing=none"
     },
@@ -404,9 +404,9 @@
       "detail": "/M2_ARM_ISO: missing=none"
     },
     {
-      "name": "M2: SWD and USB service headers retained",
+      "name": "M2: SWD retained and cell-side USB ESD present",
       "status": "PASS",
-      "detail": "local SWD, keyed USB/DFU header, and cell-side ESD present"
+      "detail": "local SWD and cell-side ESD present; no redundant per-cell USB connector"
     },
     {
       "name": "M2: hardware-gated driver enable",
@@ -564,12 +564,12 @@
       "detail": "/M3_DRV_nFAULT: missing=none"
     },
     {
-      "name": "M3: native USB DM and service header",
+      "name": "M3: native USB DM",
       "status": "PASS",
       "detail": "/M3_USB_DM: missing=none"
     },
     {
-      "name": "M3: native USB DP and service header",
+      "name": "M3: native USB DP",
       "status": "PASS",
       "detail": "/M3_USB_DP: missing=none"
     },
@@ -579,9 +579,9 @@
       "detail": "/M3_ARM_ISO: missing=none"
     },
     {
-      "name": "M3: SWD and USB service headers retained",
+      "name": "M3: SWD retained and cell-side USB ESD present",
       "status": "PASS",
-      "detail": "local SWD, keyed USB/DFU header, and cell-side ESD present"
+      "detail": "local SWD and cell-side ESD present; no redundant per-cell USB connector"
     },
     {
       "name": "M3: hardware-gated driver enable",
@@ -739,12 +739,12 @@
       "detail": "/M4_DRV_nFAULT: missing=none"
     },
     {
-      "name": "M4: native USB DM and service header",
+      "name": "M4: native USB DM",
       "status": "PASS",
       "detail": "/M4_USB_DM: missing=none"
     },
     {
-      "name": "M4: native USB DP and service header",
+      "name": "M4: native USB DP",
       "status": "PASS",
       "detail": "/M4_USB_DP: missing=none"
     },
@@ -754,9 +754,9 @@
       "detail": "/M4_ARM_ISO: missing=none"
     },
     {
-      "name": "M4: SWD and USB service headers retained",
+      "name": "M4: SWD retained and cell-side USB ESD present",
       "status": "PASS",
-      "detail": "local SWD, keyed USB/DFU header, and cell-side ESD present"
+      "detail": "local SWD and cell-side ESD present; no redundant per-cell USB connector"
     },
     {
       "name": "M4: hardware-gated driver enable",
@@ -914,12 +914,12 @@
       "detail": "/M5_DRV_nFAULT: missing=none"
     },
     {
-      "name": "M5: native USB DM and service header",
+      "name": "M5: native USB DM",
       "status": "PASS",
       "detail": "/M5_USB_DM: missing=none"
     },
     {
-      "name": "M5: native USB DP and service header",
+      "name": "M5: native USB DP",
       "status": "PASS",
       "detail": "/M5_USB_DP: missing=none"
     },
@@ -929,9 +929,9 @@
       "detail": "/M5_ARM_ISO: missing=none"
     },
     {
-      "name": "M5: SWD and USB service headers retained",
+      "name": "M5: SWD retained and cell-side USB ESD present",
       "status": "PASS",
-      "detail": "local SWD, keyed USB/DFU header, and cell-side ESD present"
+      "detail": "local SWD and cell-side ESD present; no redundant per-cell USB connector"
     },
     {
       "name": "M5: hardware-gated driver enable",
@@ -1089,12 +1089,12 @@
       "detail": "/M6_DRV_nFAULT: missing=none"
     },
     {
-      "name": "M6: native USB DM and service header",
+      "name": "M6: native USB DM",
       "status": "PASS",
       "detail": "/M6_USB_DM: missing=none"
     },
     {
-      "name": "M6: native USB DP and service header",
+      "name": "M6: native USB DP",
       "status": "PASS",
       "detail": "/M6_USB_DP: missing=none"
     },
@@ -1104,9 +1104,9 @@
       "detail": "/M6_ARM_ISO: missing=none"
     },
     {
-      "name": "M6: SWD and USB service headers retained",
+      "name": "M6: SWD retained and cell-side USB ESD present",
       "status": "PASS",
-      "detail": "local SWD, keyed USB/DFU header, and cell-side ESD present"
+      "detail": "local SWD and cell-side ESD present; no redundant per-cell USB connector"
     },
     {
       "name": "M6: hardware-gated driver enable",
