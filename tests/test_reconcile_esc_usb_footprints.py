@@ -6,7 +6,7 @@ import subprocess
 
 REPO = Path(__file__).resolve().parents[1]
 SOURCE = REPO / "hardware/esc/rev_b/reports/esc_165mm_hybrid_newtop_oldbottom_tight.kicad_pcb"
-OUTPUT = REPO / "hardware/esc/rev_b/reports/esc_165mm_usb_reconciled.kicad_pcb"
+OUTPUT = REPO / ".superpowers/sdd/2026-08-30-esc-usb-programming/reconcile-test.kicad_pcb"
 SCRIPT = REPO / "tools/hardware/reconcile_esc_usb_footprints.py"
 KICAD_PYTHON = Path(r"C:\Program Files\KiCad\9.0\bin\python.exe")
 
