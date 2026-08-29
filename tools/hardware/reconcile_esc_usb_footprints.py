@@ -74,13 +74,41 @@ def reconcile(source: Path, output: Path, netlist: Path) -> dict[str, int]:
     before = {ref: snapshot(fp) for ref, fp in existing.items()}
 
     stale = sorted(set(existing) - set(components))
-    removable_service_headers = {f"J{1000 + cell * 100 + 4}" for cell in range(1, 7)}
+    removable_service_headers = (
+        {f"J{1000 + cell * 100 + 4}" for cell in range(1, 7)}
+        | {"J204"}
+        | {f"R{1000 + cell * 100 + offset}" for cell in range(1, 7) for offset in (82, 83, 84)}
+    )
     unexpected_stale = sorted(set(stale) - removable_service_headers)
     if unexpected_stale:
         raise RuntimeError(f"refusing to remove non-contract footprints: {unexpected_stale}")
     for ref in stale:
         board.Remove(existing[ref])
         before.pop(ref)
+
+    replaced = 0
+    if "SW201" in existing and components["SW201"][0].split(":", 1)[-1] != existing["SW201"].GetFPIDAsString():
+        old = existing["SW201"]
+        old_position = old.GetPosition()
+        old_orientation = old.GetOrientation()
+        old_layer = old.GetLayer()
+        board.Remove(old)
+        before.pop("SW201")
+        footprint_id, value = components["SW201"]
+        replacement = load_footprint(footprint_id)
+        replacement.SetReference("SW201")
+        replacement.SetValue(value)
+        replacement.SetPosition(old_position)
+        replacement.SetOrientation(old_orientation)
+        if old_layer == pcbnew.B_Cu:
+            replacement.Flip(old_position, False)
+        board.Add(replacement)
+        for pad in replacement.Pads():
+            name = pin_nets.get(("SW201", pad.GetNumber()))
+            if name is not None:
+                pad.SetNet(get_or_add_net(board, name))
+        existing["SW201"] = replacement
+        replaced = 1
 
     edge_box = board.GetBoardEdgesBoundingBox()
     edge_right = pcbnew.ToMM(edge_box.GetRight())
@@ -116,6 +144,7 @@ def reconcile(source: Path, output: Path, netlist: Path) -> dict[str, int]:
         "source_footprints": len(existing),
         "added_footprints": len(missing),
         "removed_redundant_service_headers": len(stale),
+        "replaced_selector_footprints": replaced,
         "output_footprints": len(after),
         "existing_transforms_changed": changed,
         "missing_references": len(missing_after),

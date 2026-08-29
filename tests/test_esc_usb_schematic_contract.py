@@ -42,9 +42,22 @@ def test_controller_has_native_usb_c_and_keeps_swd():
 
 
 def test_service_port_and_break_before_make_selector_exist():
-    refs, _ = load_netlist()
+    refs, nets = load_netlist()
     assert {"J203", "SW201"} <= refs
     assert not ({f"J{1000 + cell * 100 + 4}" for cell in range(1, 7)} & refs)
+    selector_pins = {
+        pin
+        for nodes in nets.values()
+        for ref, pin in nodes
+        if ref == "SW201"
+    }
+    assert selector_pins == {str(pin) for pin in range(1, 8)}
+    assert net_for_pin(nets, "SW201", 1).endswith("DGND")
+    for cell in range(1, 7):
+        select_net = f"SVC_CELL{cell}_SEL_N"
+        assert net_for_pin(nets, "SW201", cell + 1).endswith(select_net)
+        assert net_for_pin(nets, f"R{213 + cell}", 2).endswith(select_net)
+        assert net_for_pin(nets, f"R{213 + cell}", 1).endswith("3V3")
 
 
 def test_each_motor_mcu_uses_usb_pins_and_preserves_debug_and_safety():

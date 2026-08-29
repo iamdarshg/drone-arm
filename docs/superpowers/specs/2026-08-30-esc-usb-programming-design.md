@@ -49,9 +49,9 @@ Electrical implementation:
 
 Add one USB-C receptacle, `J203`, as a USB 2.0 device service port for the six STM32G431 cells.
 
-The service port connects to one and only one motor cell through `SW201`, a six-position, six-pole, break-before-make service selector. The selector is a panel/harness component represented in the schematic and connected to the PCB through keyed service headers. The PCB does not assume that an uncontrolled generic analog multiplexer can tolerate the six floating cell domains.
+`SW201` is a seven-pin, six-position control selector: pin 1 is controller `DGND`, and pins 2 through 7 are the six active-low cell-select outputs. Every select output has its own 10 kOhm pull-up to controller 3.3 V. The selector controls an external galvanically isolated USB switching module; its seven pins never carry USB data, VBUS, BOOT0, NRST, or a motor-cell return.
 
-The six switched conductors are:
+The external isolated switching module must switch these six conductors:
 
 1. USB D+
 2. USB D-
@@ -60,9 +60,11 @@ The six switched conductors are:
 5. BOOT0
 6. NRST
 
-Selector requirements:
+Selector and external switching-module requirements:
 
-- Break-before-make operation is mandatory on every pole.
+- The external switching module must enforce break-before-make operation on every switched conductor.
+- At most one active-low selector output may be asserted at a time.
+- Each of the six active-low outputs has an independent 10 kOhm pull-up so an open selector or disconnected cable selects no cell.
 - No position may connect two cell grounds simultaneously.
 - The selected USB ground connects only to the selected cell's BATN-referenced logic ground.
 - The selector and harness must be rated for the maximum common-mode voltage that can exist between motor-cell domains and must maintain adequate creepage and clearance.

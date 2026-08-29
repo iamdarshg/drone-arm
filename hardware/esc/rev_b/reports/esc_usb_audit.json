@@ -1,6 +1,6 @@
 {
   "status": "PASS",
-  "checks": 306,
+  "checks": 283,
   "failures": 0,
   "results": [
     {
@@ -59,7 +59,7 @@
       "detail": "expected=8, actual=8"
     },
     {
-      "name": "ESC population: 6P6T BBM SERVICE SELECTOR",
+      "name": "ESC population: 6-WAY ACTIVE-LOW SELECTOR",
       "status": "PASS",
       "detail": "expected=1, actual=1"
     },
@@ -71,7 +71,7 @@
     {
       "name": "Controller and service USB interfaces are populated",
       "status": "PASS",
-      "detail": "requires controller SWD, two USB-C ports, selected-cell control header, selector, and ESD"
+      "detail": "requires controller SWD, two USB-C ports, seven-pin selector, and ESD"
     },
     {
       "name": "ESC supervisor: controller USB DM reaches RP2354B",
@@ -1209,184 +1209,69 @@
       "detail": "shared=none"
     },
     {
-      "name": "Selector position 1: DP reaches only motor 1",
+      "name": "Selector common is controller ground",
       "status": "PASS",
-      "detail": "/M1_USB_DP: missing=none"
+      "detail": "/DGND: missing=none"
     },
     {
-      "name": "Selector position 1: DM reaches only motor 1",
+      "name": "Selector position 1: active-low control and pull-up",
       "status": "PASS",
-      "detail": "/M1_USB_DM: missing=none"
+      "detail": "/SVC_CELL1_SEL_N: missing=none"
     },
     {
-      "name": "Selector position 1: GND reaches only motor 1",
+      "name": "Selector position 1: independent 3.3 V pull-up",
       "status": "PASS",
-      "detail": "/M1_USB_GND: missing=none"
+      "detail": "/3V3: missing=none"
     },
     {
-      "name": "Selector position 1: VBUS reaches only motor 1",
+      "name": "Selector position 2: active-low control and pull-up",
       "status": "PASS",
-      "detail": "/M1_USB_VBUS: missing=none"
+      "detail": "/SVC_CELL2_SEL_N: missing=none"
     },
     {
-      "name": "Selector position 1: BOOT0 reaches only motor 1",
+      "name": "Selector position 2: independent 3.3 V pull-up",
       "status": "PASS",
-      "detail": "/M1_USB_BOOT0: missing=none"
+      "detail": "/3V3: missing=none"
     },
     {
-      "name": "Selector position 1: NRST reaches only motor 1",
+      "name": "Selector position 3: active-low control and pull-up",
       "status": "PASS",
-      "detail": "/M1_USB_NRST: missing=none"
+      "detail": "/SVC_CELL3_SEL_N: missing=none"
     },
     {
-      "name": "Selector position 2: DP reaches only motor 2",
+      "name": "Selector position 3: independent 3.3 V pull-up",
       "status": "PASS",
-      "detail": "/M2_USB_DP: missing=none"
+      "detail": "/3V3: missing=none"
     },
     {
-      "name": "Selector position 2: DM reaches only motor 2",
+      "name": "Selector position 4: active-low control and pull-up",
       "status": "PASS",
-      "detail": "/M2_USB_DM: missing=none"
+      "detail": "/SVC_CELL4_SEL_N: missing=none"
     },
     {
-      "name": "Selector position 2: GND reaches only motor 2",
+      "name": "Selector position 4: independent 3.3 V pull-up",
       "status": "PASS",
-      "detail": "/M2_USB_GND: missing=none"
+      "detail": "/3V3: missing=none"
     },
     {
-      "name": "Selector position 2: VBUS reaches only motor 2",
+      "name": "Selector position 5: active-low control and pull-up",
       "status": "PASS",
-      "detail": "/M2_USB_VBUS: missing=none"
+      "detail": "/SVC_CELL5_SEL_N: missing=none"
     },
     {
-      "name": "Selector position 2: BOOT0 reaches only motor 2",
+      "name": "Selector position 5: independent 3.3 V pull-up",
       "status": "PASS",
-      "detail": "/M2_USB_BOOT0: missing=none"
+      "detail": "/3V3: missing=none"
     },
     {
-      "name": "Selector position 2: NRST reaches only motor 2",
+      "name": "Selector position 6: active-low control and pull-up",
       "status": "PASS",
-      "detail": "/M2_USB_NRST: missing=none"
+      "detail": "/SVC_CELL6_SEL_N: missing=none"
     },
     {
-      "name": "Selector position 3: DP reaches only motor 3",
+      "name": "Selector position 6: independent 3.3 V pull-up",
       "status": "PASS",
-      "detail": "/M3_USB_DP: missing=none"
-    },
-    {
-      "name": "Selector position 3: DM reaches only motor 3",
-      "status": "PASS",
-      "detail": "/M3_USB_DM: missing=none"
-    },
-    {
-      "name": "Selector position 3: GND reaches only motor 3",
-      "status": "PASS",
-      "detail": "/M3_USB_GND: missing=none"
-    },
-    {
-      "name": "Selector position 3: VBUS reaches only motor 3",
-      "status": "PASS",
-      "detail": "/M3_USB_VBUS: missing=none"
-    },
-    {
-      "name": "Selector position 3: BOOT0 reaches only motor 3",
-      "status": "PASS",
-      "detail": "/M3_USB_BOOT0: missing=none"
-    },
-    {
-      "name": "Selector position 3: NRST reaches only motor 3",
-      "status": "PASS",
-      "detail": "/M3_USB_NRST: missing=none"
-    },
-    {
-      "name": "Selector position 4: DP reaches only motor 4",
-      "status": "PASS",
-      "detail": "/M4_USB_DP: missing=none"
-    },
-    {
-      "name": "Selector position 4: DM reaches only motor 4",
-      "status": "PASS",
-      "detail": "/M4_USB_DM: missing=none"
-    },
-    {
-      "name": "Selector position 4: GND reaches only motor 4",
-      "status": "PASS",
-      "detail": "/M4_USB_GND: missing=none"
-    },
-    {
-      "name": "Selector position 4: VBUS reaches only motor 4",
-      "status": "PASS",
-      "detail": "/M4_USB_VBUS: missing=none"
-    },
-    {
-      "name": "Selector position 4: BOOT0 reaches only motor 4",
-      "status": "PASS",
-      "detail": "/M4_USB_BOOT0: missing=none"
-    },
-    {
-      "name": "Selector position 4: NRST reaches only motor 4",
-      "status": "PASS",
-      "detail": "/M4_USB_NRST: missing=none"
-    },
-    {
-      "name": "Selector position 5: DP reaches only motor 5",
-      "status": "PASS",
-      "detail": "/M5_USB_DP: missing=none"
-    },
-    {
-      "name": "Selector position 5: DM reaches only motor 5",
-      "status": "PASS",
-      "detail": "/M5_USB_DM: missing=none"
-    },
-    {
-      "name": "Selector position 5: GND reaches only motor 5",
-      "status": "PASS",
-      "detail": "/M5_USB_GND: missing=none"
-    },
-    {
-      "name": "Selector position 5: VBUS reaches only motor 5",
-      "status": "PASS",
-      "detail": "/M5_USB_VBUS: missing=none"
-    },
-    {
-      "name": "Selector position 5: BOOT0 reaches only motor 5",
-      "status": "PASS",
-      "detail": "/M5_USB_BOOT0: missing=none"
-    },
-    {
-      "name": "Selector position 5: NRST reaches only motor 5",
-      "status": "PASS",
-      "detail": "/M5_USB_NRST: missing=none"
-    },
-    {
-      "name": "Selector position 6: DP reaches only motor 6",
-      "status": "PASS",
-      "detail": "/M6_USB_DP: missing=none"
-    },
-    {
-      "name": "Selector position 6: DM reaches only motor 6",
-      "status": "PASS",
-      "detail": "/M6_USB_DM: missing=none"
-    },
-    {
-      "name": "Selector position 6: GND reaches only motor 6",
-      "status": "PASS",
-      "detail": "/M6_USB_GND: missing=none"
-    },
-    {
-      "name": "Selector position 6: VBUS reaches only motor 6",
-      "status": "PASS",
-      "detail": "/M6_USB_VBUS: missing=none"
-    },
-    {
-      "name": "Selector position 6: BOOT0 reaches only motor 6",
-      "status": "PASS",
-      "detail": "/M6_USB_BOOT0: missing=none"
-    },
-    {
-      "name": "Selector position 6: NRST reaches only motor 6",
-      "status": "PASS",
-      "detail": "/M6_USB_NRST: missing=none"
+      "detail": "/3V3: missing=none"
     },
     {
       "name": "Controller USB VBUS cannot power ESC rails",

@@ -100,7 +100,7 @@ def audit_esc(netlist: Netlist, audit: Audit) -> None:
         "TPS70933DBVR": 6,
         "SM8S51A": 7,
         "USBLC6-2SC6": 8,
-        "6P6T BBM SERVICE SELECTOR": 1,
+        "6-WAY ACTIVE-LOW SELECTOR": 1,
     }
     for value, expected in expected_counts.items():
         actual = sum(component == value for component in netlist.components.values())
@@ -119,9 +119,9 @@ def audit_esc(netlist: Netlist, audit: Audit) -> None:
     )
     audit.check(
         "Controller and service USB interfaces are populated",
-        {"J201", "J202", "J203", "J204", "SW201", "U208", "U209"}
+        {"J201", "J202", "J203", "SW201", "U208", "U209"}
         <= netlist.components.keys(),
-        "requires controller SWD, two USB-C ports, selected-cell control header, selector, and ESD",
+        "requires controller SWD, two USB-C ports, seven-pin selector, and ESD",
     )
     audit.require_nodes(
         netlist, "/CTRL_USB_DM_MCU", {("U201", "66"), ("R206", "2")},
@@ -333,13 +333,18 @@ def audit_esc(netlist: Netlist, audit: Audit) -> None:
                 f"shared={combined or 'none'}",
             )
 
+    audit.require_nodes(netlist, "/DGND", {("SW201", "1")},
+                        "Selector common is controller ground")
     for motor in range(1, 7):
-        for signal, pole in (("DP", 1), ("DM", 2), ("GND", 3), ("VBUS", 4), ("BOOT0", 5), ("NRST", 6)):
-            selector_pin = str(6 + (motor - 1) * 6 + pole)
-            audit.require_nodes(
-                netlist, f"/M{motor}_USB_{signal}", {("SW201", selector_pin)},
-                f"Selector position {motor}: {signal} reaches only motor {motor}",
-            )
+        audit.require_nodes(
+            netlist, f"/SVC_CELL{motor}_SEL_N",
+            {("SW201", str(motor + 1)), (f"R{213 + motor}", "2")},
+            f"Selector position {motor}: active-low control and pull-up",
+        )
+        audit.require_nodes(
+            netlist, "/3V3", {(f"R{213 + motor}", "1")},
+            f"Selector position {motor}: independent 3.3 V pull-up",
+        )
 
     try:
         ctrl_vbus = {(node.ref, node.pin) for node in netlist.suffix("/CTRL_USB_VBUS")}

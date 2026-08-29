@@ -227,17 +227,10 @@ SYMBOLS = (
         (("1", "IO1"), ("2", "GND"), ("3", "IO2"), ("4", "IO2"), ("5", "VBUS"), ("6", "IO1")),
     ),
     SymbolSpec(
-        "USB_CELL_SELECTOR_6P6T_BBM", "SW",
-        "Connector_PinHeader_2.54mm:PinHeader_2x21_P2.54mm_Vertical",
-        "Panel-mounted, six-position, six-pole break-before-make service selector",
-        tuple(
-            [(str(pole), f"COMMON_{pole}") for pole in range(1, 7)]
-            + [
-                (str(6 + (position - 1) * 6 + pole), f"P{position}_{pole}")
-                for position in range(1, 7)
-                for pole in range(1, 7)
-            ]
-        ),
+        "USB_CELL_SELECTOR_6WAY_ACTIVE_LOW", "SW",
+        "Connector_PinHeader_2.54mm:PinHeader_1x07_P2.54mm_Vertical",
+        "Six-position selector: one ground common and six active-low outputs",
+        (("1", "GND"),) + tuple((str(cell + 1), f"CELL{cell}_SEL_N") for cell in range(1, 7)),
     ),
     SymbolSpec(
         "SN74LVC1G08", "U", "Package_TO_SOT_SMD:SOT-23-5",
@@ -668,8 +661,6 @@ def make_motor_sheet(index: int, parent_uuid: str, sheet_uuid: str) -> None:
     interface = [
         f"M{n}_BATP", f"M{n}_BATN", f"M{n}_PHASE_A", f"M{n}_PHASE_B", f"M{n}_PHASE_C",
         f"M{n}_CMD", f"M{n}_STATUS", "ARM_SAFE", "5V", "3V3", "DGND",
-        f"M{n}_USB_DP", f"M{n}_USB_DM", f"M{n}_USB_GND",
-        f"M{n}_USB_VBUS", f"M{n}_USB_BOOT0", f"M{n}_USB_NRST",
     ]
     add_hlabels(sch, interface)
     sch.add_text(
@@ -839,12 +830,6 @@ def make_motor_sheet(index: int, parent_uuid: str, sheet_uuid: str) -> None:
     add_two_pin(sch, "Device:R", f"R{base + 81}", "47k", (288, 190),
                 f"M{n}_USB_VBUS_SENSE", batn,
                 "Resistor_SMD:R_0603_1608Metric")
-    add_two_pin(sch, "Device:R", f"R{base + 82}", "0", (270, 180),
-                f"M{n}_USB_GND", batn, "Resistor_SMD:R_0603_1608Metric")
-    add_two_pin(sch, "Device:R", f"R{base + 83}", "0", (288, 180),
-                f"M{n}_USB_BOOT0", f"M{n}_BOOT0", "Resistor_SMD:R_0603_1608Metric")
-    add_two_pin(sch, "Device:R", f"R{base + 84}", "0", (306, 180),
-                f"M{n}_USB_NRST", f"M{n}_NRST", "Resistor_SMD:R_0603_1608Metric")
 
     # Both the isolated central watchdog and the local MCU must grant ARM.
     add_custom(
@@ -1323,10 +1308,7 @@ def make_esc_controller(parent_uuid: str, sheet_uuid: str) -> None:
     sch.set_hierarchy_context(parent_uuid, sheet_uuid)
     nets = ["5V", "3V3", "DGND", "CANH", "CANL", "ARM_SAFE"]
     for n in range(1, 7):
-        nets += [
-            f"M{n}_CMD", f"M{n}_STATUS", f"M{n}_USB_DP", f"M{n}_USB_DM",
-            f"M{n}_USB_GND", f"M{n}_USB_VBUS", f"M{n}_USB_BOOT0", f"M{n}_USB_NRST",
-        ]
+        nets += [f"M{n}_CMD", f"M{n}_STATUS"]
     add_hlabels(sch, nets)
     sch.add_text(
         "CENTRAL ESC SUPERVISOR\n"
@@ -1484,34 +1466,24 @@ def make_esc_controller(parent_uuid: str, sheet_uuid: str) -> None:
                 "Resistor_SMD:R_0603_1608Metric")
     add_custom(sch, "USBLC6-2SC6", "U209", "USBLC6-2SC6", (335, 120),
                {"1": "SVC_USB_DM_CONN", "2": "SVC_USB_GND", "3": "SVC_USB_DP_CONN",
-                "4": "SVC_USB_DP", "5": "SVC_USB_VBUS", "6": "SVC_USB_DM"},
+                "4": "SVC_USB_DP_CONN", "5": "SVC_USB_VBUS", "6": "SVC_USB_DM_CONN"},
                "STMicroelectronics", "USBLC6-2SC6")
     add_two_pin(sch, "Device:R", "R213", "1M", (335, 140), "SVC_USB_SHIELD", "SVC_USB_GND",
                 "Resistor_SMD:R_0603_1608Metric")
     add_two_pin(sch, "Device:C", "C235", "1n 2kV", (355, 140), "SVC_USB_SHIELD", "SVC_USB_GND",
                 "Capacitor_SMD:C_1206_3216Metric")
-    selector_nets = {
-        "1": "SVC_USB_DP", "2": "SVC_USB_DM", "3": "SVC_USB_GND",
-        "4": "SVC_USB_VBUS", "5": "SVC_USB_BOOT0", "6": "SVC_USB_NRST",
-    }
-    for position in range(1, 7):
-        targets = (
-            f"M{position}_USB_DP", f"M{position}_USB_DM", f"M{position}_USB_GND",
-            f"M{position}_USB_VBUS", f"M{position}_USB_BOOT0", f"M{position}_USB_NRST",
-        )
-        for pole, net in enumerate(targets, start=1):
-            selector_nets[str(6 + (position - 1) * 6 + pole)] = net
-    add_custom(sch, "USB_CELL_SELECTOR_6P6T_BBM", "SW201", "6P6T BBM SERVICE SELECTOR",
-               (410, 120), selector_nets, "External harness", "6P6T-BBM")
-    add_part(
-        sch, "Connector_Generic:Conn_01x03", "J204", "SELECTED_CELL_BOOT_RESET",
-        (380, 180), "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical",
-    )
-    for pin, net in {"1": "SVC_USB_BOOT0", "2": "SVC_USB_NRST", "3": "SVC_USB_GND"}.items():
-        label_pin(sch, "J204", pin, net)
+    selector_nets = {"1": "DGND"}
+    for cell in range(1, 7):
+        select_net = f"SVC_CELL{cell}_SEL_N"
+        selector_nets[str(cell + 1)] = select_net
+        add_two_pin(sch, "Device:R", f"R{213 + cell}", "10k", (330, 180 + cell * 12),
+                    "3V3", select_net, "Resistor_SMD:R_0603_1608Metric")
+    add_custom(sch, "USB_CELL_SELECTOR_6WAY_ACTIVE_LOW", "SW201", "6-WAY ACTIVE-LOW SELECTOR",
+               (410, 120), selector_nets, "External selector", "6WAY-ACTIVE-LOW")
     sch.add_text(
-        "SW201 MUST BE 6P6T BREAK-BEFORE-MAKE. Disconnect USB before changing position. "
-        "Selector and harness must be rated for full cell-to-cell common-mode voltage.",
+        "SW201 has one DGND common and six active-low outputs with individual pull-ups. "
+        "These are CONTROL SIGNALS ONLY: an external galvanically isolated USB switching module "
+        "must switch D+/D-/selected ground/VBUS/BOOT0/NRST and enforce break-before-make.",
         (355, 165), size=0.9, bold=True,
     )
     add_two_pin(sch, "Device:R", "R203", "1k", (58, 192),
@@ -1702,10 +1674,7 @@ def make_esc_top() -> None:
     power_nets = ["AUX_BATT", "AUX_GND", "5V", "3V3", "DGND", "CANH", "CANL"]
     controller_nets = ["5V", "3V3", "DGND", "CANH", "CANL", "ARM_SAFE"]
     for n in range(1, 7):
-        controller_nets += [
-            f"M{n}_CMD", f"M{n}_STATUS", f"M{n}_USB_DP", f"M{n}_USB_DM",
-            f"M{n}_USB_GND", f"M{n}_USB_VBUS", f"M{n}_USB_BOOT0", f"M{n}_USB_NRST",
-        ]
+        controller_nets += [f"M{n}_CMD", f"M{n}_STATUS"]
     power_uuid = add_sheet_with_pins(top, "Auxiliary power", "power.kicad_sch",
                                      (15.24, 25.40), (71.12, 40.64), power_nets, "esc_rev_b")
     controller_uuid = add_sheet_with_pins(top, "Controller and ADC", "controller.kicad_sch",
@@ -1715,8 +1684,6 @@ def make_esc_top() -> None:
         motor_nets = [
             f"M{n}_BATP", f"M{n}_BATN", f"M{n}_PHASE_A", f"M{n}_PHASE_B", f"M{n}_PHASE_C",
             f"M{n}_CMD", f"M{n}_STATUS", "ARM_SAFE", "5V", "3V3", "DGND",
-            f"M{n}_USB_DP", f"M{n}_USB_DM", f"M{n}_USB_GND",
-            f"M{n}_USB_VBUS", f"M{n}_USB_BOOT0", f"M{n}_USB_NRST",
         ]
         x = 15.24 + ((n - 1) % 3) * 93.98
         y = 109.22 + ((n - 1) // 3) * 50.80

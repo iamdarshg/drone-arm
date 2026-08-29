@@ -13,7 +13,7 @@
     165.0
   ],
   "copper_layers": 6,
-  "footprint_count": 694,
+  "footprint_count": 681,
   "inside_or_overlapping_refs": [
     "C1101",
     "C1102",
@@ -318,6 +318,8 @@
     "J1602",
     "J1603",
     "J201",
+    "J202",
+    "J203",
     "J701",
     "J702",
     "L201",
@@ -401,6 +403,7 @@
     "R1157",
     "R1158",
     "R1159",
+    "R1180",
     "R1201",
     "R1202",
     "R1203",
@@ -661,12 +664,12 @@
   "source_layout_preserved": true,
   "group_populations": {
     "power": 35,
-    "controller": 65,
-    "motor_1": 99,
-    "motor_2": 99,
-    "motor_3": 99,
-    "motor_4": 99,
-    "motor_5": 99,
-    "motor_6": 99
+    "controller": 70,
+    "motor_1": 96,
+    "motor_2": 96,
+    "motor_3": 96,
+    "motor_4": 96,
+    "motor_5": 96,
+    "motor_6": 96
   }
 }
