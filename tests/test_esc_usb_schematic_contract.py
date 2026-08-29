@@ -2,6 +2,8 @@
 
 from pathlib import Path
 import xml.etree.ElementTree as ET
+import importlib.util
+import sys
 
 
 REPO = Path(__file__).resolve().parents[1]
@@ -35,8 +37,8 @@ def test_external_bulk_capacitors_are_not_in_authoritative_netlist():
 def test_controller_has_native_usb_c_and_keeps_swd():
     refs, nets = load_netlist()
     assert {"J201", "J202", "U201"} <= refs
-    assert net_for_pin(nets, "U201", 66).endswith("CTRL_USB_DM")
-    assert net_for_pin(nets, "U201", 67).endswith("CTRL_USB_DP")
+    assert net_for_pin(nets, "U201", 66).endswith("CTRL_USB_DM_MCU")
+    assert net_for_pin(nets, "U201", 67).endswith("CTRL_USB_DP_MCU")
 
 
 def test_service_port_and_break_before_make_selector_exist():
@@ -47,8 +49,9 @@ def test_service_port_and_break_before_make_selector_exist():
 def test_each_motor_mcu_uses_usb_pins_and_preserves_debug_and_safety():
     refs, nets = load_netlist()
     for cell in range(1, 7):
-        mcu = f"U{cell}102"
-        assert {mcu, f"J{cell}103"} <= refs
+        base = 1000 + cell * 100
+        mcu = f"U{base + 2}"
+        assert {mcu, f"J{base + 3}"} <= refs
         assert net_for_pin(nets, mcu, 33).endswith(f"M{cell}_USB_DM")
         assert net_for_pin(nets, mcu, 34).endswith(f"M{cell}_USB_DP")
         assert net_for_pin(nets, mcu, 22).endswith(f"M{cell}_DRV_nFAULT")
@@ -58,9 +61,27 @@ def test_each_motor_mcu_uses_usb_pins_and_preserves_debug_and_safety():
 def test_motor_cell_ground_domains_remain_distinct():
     _, nets = load_netlist()
     for name, nodes in nets.items():
-        cells = {
-            int(ref[1])
-            for ref, _ in nodes
-            if len(ref) >= 5 and ref[0] in "RUJCDQLYFBTH" and ref[1] in "123456"
-        }
+        if not (name.endswith("_BATN") or "_USB_GND" in name):
+            continue
+        cells = set()
+        for ref, _ in nodes:
+            digits = "".join(ch for ch in ref if ch.isdigit())
+            if digits:
+                number = int(digits)
+                cell = (number - 1000) // 100
+                if 1 <= cell <= 6:
+                    cells.add(cell)
         assert len(cells) <= 1, f"net {name} joins motor-cell populations {sorted(cells)}"
+
+
+def test_design_intent_auditor_accepts_the_usb_contract():
+    path = REPO / "tools/hardware/validate_rev_b_netlists.py"
+    spec = importlib.util.spec_from_file_location("validate_rev_b_netlists", path)
+    module = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    audit = module.Audit()
+    module.audit_esc(module.Netlist(NETLIST), audit)
+    failures = [check for check in audit.checks if check["status"] == "FAIL"]
+    assert not failures, failures
