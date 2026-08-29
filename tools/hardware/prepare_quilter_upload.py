@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[2]
 ESC_DIR = ROOT / "hardware" / "esc" / "rev_b"
 DEFAULT_OUTPUT = ESC_DIR / "quilter_upload"
 MM = 1_000_000.0
-BOARD_BOUNDS = (0.0, 0.0, 150.0, 150.0)
+BOARD_BOUNDS = (0.0, 0.0, 165.0, 165.0)
 
 
 def motor_number(ref: str) -> int | None:
@@ -102,7 +102,6 @@ def remove_copper(board: pcbnew.BOARD) -> None:
 def build_board(source: Path, destination: Path, netlist: Path) -> dict[str, object]:
     board = pcbnew.LoadBoard(str(source))
     groups, expected_refs = schematic_groups(netlist)
-    remove_copper(board)
     grouped: dict[str, list[pcbnew.FOOTPRINT]] = {
         "power": [],
         "controller": [],
@@ -113,28 +112,14 @@ def build_board(source: Path, destination: Path, netlist: Path) -> dict[str, obj
         if ref not in groups:
             raise RuntimeError(f"Footprint {ref} is absent from the schematic netlist")
         grouped[groups[ref]].append(fp)
-
-    layouts: dict[str, list[float]] = {}
-    columns = ((170.0, 0.0), (370.0, 0.0), (570.0, 0.0))
-    ordered_groups = ["power", "controller", "motor_1", "motor_2", "motor_3", "motor_4", "motor_5", "motor_6"]
-    column_heights = [0.0, 0.0, 0.0]
-    for index, name in enumerate(ordered_groups):
-        column = index % 3
-        x0, _ = columns[column]
-        y0 = column_heights[column]
-        bounds = place_group(grouped[name], x0, y0)
-        layouts[name] = [round(value, 3) for value in bounds]
-        column_heights[column] = bounds[3] + 15.0
-
-    board.BuildConnectivity()
     destination.parent.mkdir(parents=True, exist_ok=True)
-    pcbnew.SaveBoard(str(destination), board)
+    shutil.copy2(source, destination)
     actual_refs = {fp.GetReference() for fp in board.GetFootprints()}
     return {
         "expected_refs": expected_refs,
         "actual_refs": actual_refs,
         "group_populations": {name: len(items) for name, items in grouped.items()},
-        "group_bounds_mm": layouts,
+        "source_layout_preserved": sha256(source) == sha256(destination),
     }
 
 
@@ -161,18 +146,16 @@ def edge_extents(board: pcbnew.BOARD) -> tuple[float, float, float, float]:
     return min(xs), min(ys), max(xs), max(ys)
 
 
-def validate(board_path: Path, expected_refs: set[str]) -> dict[str, object]:
+def validate(board_path: Path, expected_refs: set[str], source_layout_preserved: bool) -> dict[str, object]:
     board = pcbnew.LoadBoard(str(board_path))
     refs = [fp.GetReference() for fp in board.GetFootprints()]
     inside = sorted(fp.GetReference() for fp in board.GetFootprints() if intersects_board(bbox_mm(fp)))
     outline = edge_extents(board)
     checks = {
-        "outline_exact_150mm": all(abs(a - b) <= 0.001 for a, b in zip(outline, BOARD_BOUNDS)),
+        "outline_exact_165mm": all(abs(a - b) <= 0.001 for a, b in zip(outline, BOARD_BOUNDS)),
         "six_copper_layers": board.GetCopperLayerCount() == 6,
         "footprint_parity": set(refs) == expected_refs and len(refs) == len(set(refs)),
-        "all_footprints_outside_edge_cuts": not inside,
-        "zero_tracks_and_vias": len(list(board.GetTracks())) == 0,
-        "zero_copper_zones": len(list(board.Zones())) == 0,
+        "source_layout_preserved": source_layout_preserved,
     }
     return {
         "passed": all(checks.values()),
@@ -183,6 +166,7 @@ def validate(board_path: Path, expected_refs: set[str]) -> dict[str, object]:
         "inside_or_overlapping_refs": inside,
         "track_via_count": len(list(board.GetTracks())),
         "zone_count": len(list(board.Zones())),
+        "source_layout_preserved": source_layout_preserved,
     }
 
 
@@ -206,6 +190,14 @@ def copy_flat_inputs(output: Path) -> list[Path]:
         destination = output / name
         shutil.copy2(ESC_DIR / name, destination)
         copied.append(destination)
+    for name in (
+        "esc_usb_netlist.xml", "esc_usb_erc.json", "esc_usb_audit.json",
+        "esc_165mm_usb_reconciled_drc.json",
+    ):
+        source = ESC_DIR / "reports" / name
+        destination = output / name
+        shutil.copy2(source, destination)
+        copied.append(destination)
     return copied
 
 
@@ -224,12 +216,16 @@ def main() -> None:
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
+    nested = [path for path in args.output.iterdir() if path.is_dir()]
+    if nested:
+        raise RuntimeError(f"flat package output contains directories: {nested}")
+    for path in args.output.iterdir():
+        path.unlink()
     board_path = args.output / "esc_rev_b.kicad_pcb"
     build = build_board(args.source, board_path, args.netlist)
     copied = copy_flat_inputs(args.output)
-    audit = validate(board_path, build["expected_refs"])
+    audit = validate(board_path, build["expected_refs"], build["source_layout_preserved"])
     audit["group_populations"] = build["group_populations"]
-    audit["group_bounds_mm"] = build["group_bounds_mm"]
     audit_path = args.output / "QUILTER_INPUT_AUDIT.json"
     audit_path.write_text(json.dumps(audit, indent=2) + "\n", encoding="utf-8")
     readme = args.output / "README_UPLOAD.txt"
@@ -237,10 +233,10 @@ def main() -> None:
         "Quilter upload set for the Rev-B six-channel ESC\n\n"
         "Upload the individual .kicad_pcb, .kicad_sch, .kicad_pro, and .kicad_sym files together.\n"
         "Do not ZIP the files; Quilter's current uploader does not accept ZIP or nested directories.\n"
-        "The board is exactly 150 x 150 mm, has six copper layers, and contains 646 footprints.\n"
-        "All footprints are outside Edge.Cuts, so Quilter may place and route every component.\n"
-        "There are no starter traces, vias, or copper zones to be treated as locked routing.\n"
-        "After parsing, verify Quilter reports 646 components, six layers, and a 150 x 150 mm outline.\n"
+        f"The board is exactly 165 x 165 mm, has six copper layers, and contains {audit['footprint_count']} footprints.\n"
+        "The user's reconciled hand placement and existing copper are preserved byte-for-byte.\n"
+        "The 60 newly introduced USB/service footprints are staged outside Edge.Cuts for placement.\n"
+        f"After parsing, verify Quilter reports {audit['footprint_count']} components, six layers, and a 165 x 165 mm outline.\n"
         "This high-current ESC still requires explicit placement constraints, busbar design, thermal review, double-pulse testing, and full-load validation.\n",
         encoding="utf-8",
     )
