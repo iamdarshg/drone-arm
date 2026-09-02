@@ -1,0 +1,92 @@
+{
+  "board": "D:\\CodeProjects\\drone-arm\\.worktrees\\esc-freerouting-800mb\\hardware\\esc\\rev_b\\quilter_upload_freerouting_bestpass_800mb_servicefixed_pins_onboard\\esc_rev_b.kicad_pcb",
+  "source_cell": "M1",
+  "replicated_cells": [
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+  ],
+  "nets": [
+    "/M#_BATP",
+    "/M#_BATN",
+    "/M#_PHASE_A",
+    "/M#_PHASE_B",
+    "/M#_PHASE_C",
+    "/Motor # power cell/M#_BATP_IN"
+  ],
+  "source_routes": {
+    "segments": 353,
+    "vias": 376
+  },
+  "target_route_counts_after": {
+    "M1": {
+      "segments": 353,
+      "vias": 376
+    },
+    "M2": {
+      "segments": 353,
+      "vias": 376
+    },
+    "M3": {
+      "segments": 353,
+      "vias": 376
+    },
+    "M4": {
+      "segments": 353,
+      "vias": 376
+    },
+    "M5": {
+      "segments": 353,
+      "vias": 376
+    },
+    "M6": {
+      "segments": 353,
+      "vias": 376
+    }
+  },
+  "geometry_verified_against_translated_M1": {
+    "M1": true,
+    "M2": true,
+    "M3": true,
+    "M4": true,
+    "M5": true,
+    "M6": true
+  },
+  "via_comparison": {
+    "M2": {
+      "source_vias": 376,
+      "target_vias_before": 376,
+      "translated_geometry_exact": true,
+      "replaced": false
+    },
+    "M3": {
+      "source_vias": 376,
+      "target_vias_before": 376,
+      "translated_geometry_exact": true,
+      "replaced": false
+    },
+    "M4": {
+      "source_vias": 376,
+      "target_vias_before": 376,
+      "translated_geometry_exact": true,
+      "replaced": false
+    },
+    "M5": {
+      "source_vias": 376,
+      "target_vias_before": 376,
+      "translated_geometry_exact": true,
+      "replaced": false
+    },
+    "M6": {
+      "source_vias": 376,
+      "target_vias_before": 376,
+      "translated_geometry_exact": true,
+      "replaced": false
+    }
+  },
+  "target_segments_replaced": 1765,
+  "footprint_hash_unchanged": true,
+  "board_sha256": "f811b0809d47822e0f7ca374f4b7ec6f9d1b83cc69c05a2868a90731bdd7b895"
+}
