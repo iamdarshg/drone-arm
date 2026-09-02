@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate placed four-layer Rev-B PCBs from the validated KiCad XML netlists.
+"""Generate placed Rev-B PCBs from the validated KiCad XML netlists.
 
 Run this script with KiCad's bundled Python, not the system Python:
   "C:/Program Files/KiCad/9.0/bin/python.exe" tools/hardware/generate_rev_b_pcbs.py
@@ -80,10 +80,10 @@ def load_footprint(project_dir: Path, footprint_id: str) -> pcbnew.FOOTPRINT:
 
 
 def create_board(
-    netlist: ParsedNetlist, project_dir: Path
+    netlist: ParsedNetlist, project_dir: Path, copper_layers: int = 4
 ) -> tuple[pcbnew.BOARD, dict[str, pcbnew.FOOTPRINT], dict[str, pcbnew.NETINFO_ITEM]]:
     board = pcbnew.BOARD()
-    board.SetCopperLayerCount(4)
+    board.SetCopperLayerCount(copper_layers)
     settings = board.GetDesignSettings()
     base_clearance = 0.20 if project_dir == ESC_DIR else 0.125
     settings.m_HasStackup = True
@@ -212,15 +212,31 @@ def place(
 def move_footprint_silks_to_fab(board: pcbnew.BOARD) -> None:
     """Keep dense boards DRC-clean while retaining an assembly reference layer."""
     for footprint in board.GetFootprints():
+        front = footprint.GetLayer() == pcbnew.F_Cu
+        fab_layer = pcbnew.F_Fab if front else pcbnew.B_Fab
+        silk_layer = pcbnew.F_SilkS if front else pcbnew.B_SilkS
         reference = footprint.Reference()
-        reference.SetLayer(pcbnew.F_Fab)
+        reference.SetLayer(fab_layer)
         reference.SetVisible(True)
         value = footprint.Value()
-        value.SetLayer(pcbnew.F_Fab)
+        value.SetLayer(fab_layer)
         value.SetVisible(False)
         for item in footprint.GraphicalItems():
-            if item.GetLayer() == pcbnew.F_SilkS:
-                item.SetLayer(pcbnew.F_Fab)
+            if item.GetLayer() == silk_layer:
+                item.SetLayer(fab_layer)
+
+
+def clamp_footprints_to_outline(board: pcbnew.BOARD, width: float, height: float) -> None:
+    """Move complete footprint graphics inside the fabrication outline."""
+    margin = MM(0.10)
+    max_x, max_y = MM(width) - margin, MM(height) - margin
+    for footprint in board.GetFootprints():
+        box = footprint.GetBoundingBox()
+        dx = max(margin - box.GetX(), 0) + min(max_x - box.GetRight(), 0)
+        dy = max(margin - box.GetY(), 0) + min(max_y - box.GetBottom(), 0)
+        if dx or dy:
+            position = footprint.GetPosition()
+            footprint.SetPosition(pcbnew.VECTOR2I(position.x + dx, position.y + dy))
 
 
 def courtyard_size(fp: pcbnew.FOOTPRINT) -> tuple[float, float]:
@@ -237,6 +253,20 @@ def courtyard_size(fp: pcbnew.FOOTPRINT) -> tuple[float, float]:
     # Extra margin avoids borderline courtyard collisions from cached polygon
     # bounds in KiCad's SWIG API.
     return max(width, pad_width, 1.2) + 1.0, max(height, pad_height, 1.2) + 1.0
+
+
+def compact_courtyard_size(fp: pcbnew.FOOTPRINT) -> tuple[float, float]:
+    """Exact courtyard/pad envelope plus a small assembly packing margin."""
+    pad_bbox = fp.GetFpPadsLocalBbox()
+    pad_width = pcbnew.ToMM(pad_bbox.GetWidth())
+    pad_height = pcbnew.ToMM(pad_bbox.GetHeight())
+    try:
+        bbox = fp.GetCourtyard(pcbnew.F_CrtYd).BBox()
+        width = pcbnew.ToMM(bbox.GetWidth())
+        height = pcbnew.ToMM(bbox.GetHeight())
+    except Exception:
+        width, height = pad_width, pad_height
+    return max(width, pad_width, 0.8) + 0.10, max(height, pad_height, 0.8) + 0.10
 
 
 def pack_region(
@@ -642,7 +672,7 @@ def add_esc_power_copper(
     add_via_grid(board, batp, (x0 + 22, y0 + 64), 5, 3)
 
 
-def generate_esc() -> Path:
+def generate_esc_legacy() -> Path:
     netlist = parse_netlist(ESC_DIR / "reports" / "esc_rev_b_netlist.xml")
     board, footprints, board_nets = create_board(netlist, ESC_DIR)
     width, height = 474.0, 246.0
@@ -749,6 +779,220 @@ def generate_esc() -> Path:
     output = ESC_DIR / "esc_rev_b.kicad_pcb"
     pcbnew.SaveBoard(str(output), board)
     apply_stackup(output, outer_oz=4.0, inner_oz=1.5)
+    return output
+
+
+class RectPacker:
+    """Small deterministic MaxRects-style packer for component courtyards."""
+
+    def __init__(self, bounds: tuple[float, float, float, float], gap: float = 0.20):
+        x0, y0, x1, y1 = bounds
+        self.free = [(x0, y0, x1 - x0, y1 - y0)]
+        self.gap = gap
+
+    def candidates(self, width: float, height: float) -> list[tuple[tuple[float, float, float, float], bool, float, float]]:
+        result = []
+        for free in self.free:
+            fx, fy, fw, fh = free
+            for rotated, (w, h) in ((False, (width, height)), (True, (height, width))):
+                rw, rh = w + self.gap, h + self.gap
+                if rw <= fw + 1e-9 and rh <= fh + 1e-9:
+                    score = (fw * fh - rw * rh, min(fw - rw, fh - rh), fy, fx)
+                    result.append((free, rotated, rw, rh, score))
+        return sorted(result, key=lambda item: item[4])
+
+    def place(self, width: float, height: float) -> tuple[float, float, bool] | None:
+        choices = self.candidates(width, height)
+        if not choices:
+            return None
+        free, rotated, rw, rh, _ = choices[0]
+        x, y, _, _ = free
+        used = (x, y, rw, rh)
+        _, _, fw, fh = free
+        self.free.remove(free)
+        # Guillotine the selected free rectangle into two non-overlapping
+        # rectangles.  This keeps the candidate set linear in component count.
+        if fw - rw > fh - rh:
+            additions = [
+                (x + rw, y, fw - rw, fh),
+                (x, y + rh, rw, fh - rh),
+            ]
+        else:
+            additions = [
+                (x + rw, y, fw - rw, rh),
+                (x, y + rh, fw, fh - rh),
+            ]
+        self.free.extend(rect for rect in additions if rect[2] > 0.05 and rect[3] > 0.05)
+        actual_w, actual_h = (height, width) if rotated else (width, height)
+        return x + actual_w / 2, y + actual_h / 2, rotated
+
+
+def compact_motor_number(ref: str) -> int | None:
+    if match := re.fullmatch(r"TH([1-6])", ref):
+        return int(match.group(1))
+    match = re.search(r"(\d+)$", ref)
+    if not match:
+        return None
+    number = int(match.group(1))
+    for motor in range(1, 7):
+        if 1000 + motor * 100 <= number < 1100 + motor * 100:
+            return motor
+    return None
+
+
+def compact_power_priority(ref: str, motor: int) -> bool:
+    match = re.search(r"(\d+)$", ref)
+    if not match:
+        return ref == f"TH{motor}"
+    number = int(match.group(1))
+    base = 1000 + motor * 100
+    prefix = ref.rstrip("0123456789")
+    offset = number - base
+    return (
+        prefix == "Q"
+        or (prefix == "U" and offset == 1)
+        or (prefix == "D" and offset == 1)
+        or (prefix == "C" and (1 <= offset <= 7 or 30 <= offset <= 36))
+        or (prefix == "R" and 1 <= offset <= 23)
+    )
+
+
+def place_on_side(fp: pcbnew.FOOTPRINT, x: float, y: float, rotated: bool, layer: int) -> None:
+    fp.SetPosition(vec(x, y))
+    fp.SetOrientationDegrees(90.0 if rotated else 0.0)
+    if layer == pcbnew.B_Cu:
+        fp.Flip(fp.GetPosition(), False)
+    courtyard_layer = pcbnew.F_CrtYd if layer == pcbnew.F_Cu else pcbnew.B_CrtYd
+    courtyard = fp.GetCourtyard(courtyard_layer).BBox()
+    if courtyard.GetWidth() and courtyard.GetHeight():
+        actual_x = (courtyard.GetX() + courtyard.GetRight()) / 2
+        actual_y = (courtyard.GetY() + courtyard.GetBottom()) / 2
+        current = fp.GetPosition()
+        fp.SetPosition(
+            pcbnew.VECTOR2I(
+                int(round(current.x + MM(x) - actual_x)),
+                int(round(current.y + MM(y) - actual_y)),
+            )
+        )
+
+
+def pack_footprints_in_bins(
+    footprints: dict[str, pcbnew.FOOTPRINT],
+    refs: list[str],
+    bins: list[tuple[str, int, RectPacker]],
+    preferred_bin: dict[str, str] | None = None,
+) -> dict[str, int]:
+    preferred_bin = preferred_bin or {}
+    dimensions = {ref: compact_courtyard_size(footprints[ref]) for ref in refs}
+    ordered = sorted(refs, key=lambda ref: (-dimensions[ref][0] * dimensions[ref][1], ref))
+    populations = {name: 0 for name, _, _ in bins}
+    for ref in ordered:
+        width, height = dimensions[ref]
+        preferred = preferred_bin.get(ref)
+        ranked = sorted(bins, key=lambda item: (item[0] != preferred, item[0]))
+        placement = None
+        selected = None
+        for candidate in ranked:
+            result = candidate[2].place(width, height)
+            if result is not None:
+                selected = candidate
+                placement = result
+                break
+        if selected is None or placement is None:
+            raise RuntimeError(f"No placement space for {ref} ({width:.2f} x {height:.2f} mm)")
+        x, y, rotated = placement
+        place_on_side(footprints[ref], x, y, rotated, selected[1])
+        populations[selected[0]] += 1
+    return populations
+
+
+def has_drilled_pad(fp: pcbnew.FOOTPRINT) -> bool:
+    return any(pad.GetDrillSize().x > 0 or pad.GetDrillSize().y > 0 for pad in fp.Pads())
+
+
+def pack_motor_grid(
+    footprints: dict[str, pcbnew.FOOTPRINT],
+    refs: list[str],
+    motor: int,
+    bounds: tuple[float, float, float, float],
+) -> None:
+    front = RectPacker(bounds)
+    back = RectPacker(bounds)
+    dimensions = {ref: compact_courtyard_size(footprints[ref]) for ref in refs}
+    drilled = sorted(
+        (ref for ref in refs if has_drilled_pad(footprints[ref])),
+        key=lambda ref: (-dimensions[ref][0] * dimensions[ref][1], ref),
+    )
+    placed: set[str] = set()
+    for ref in drilled:
+        width, height = dimensions[ref]
+        front_result = front.place(width, height)
+        back_reservation = back.place(width, height)
+        if front_result is None or back_reservation is None:
+            raise RuntimeError(f"No dual-side drilled clearance for {ref}")
+        if front_result != back_reservation:
+            raise RuntimeError(f"Asymmetric drilled reservation for {ref}")
+        x, y, rotated = front_result
+        place_on_side(footprints[ref], x, y, rotated, pcbnew.F_Cu)
+        placed.add(ref)
+
+    remaining = sorted(
+        (ref for ref in refs if ref not in placed),
+        key=lambda ref: (-dimensions[ref][0] * dimensions[ref][1], ref),
+    )
+    for ref in remaining:
+        width, height = dimensions[ref]
+        preferred = front if compact_power_priority(ref, motor) else back
+        alternate = back if preferred is front else front
+        result = preferred.place(width, height)
+        layer = pcbnew.F_Cu if preferred is front else pcbnew.B_Cu
+        if result is None:
+            result = alternate.place(width, height)
+            layer = pcbnew.F_Cu if alternate is front else pcbnew.B_Cu
+        if result is None:
+            raise RuntimeError(f"No placement space for {ref} in motor {motor}")
+        x, y, rotated = result
+        place_on_side(footprints[ref], x, y, rotated, layer)
+
+
+def generate_esc() -> Path:
+    netlist = parse_netlist(ESC_DIR / "reports" / "esc_rev_b_netlist.xml")
+    board, footprints, board_nets = create_board(netlist, ESC_DIR, copper_layers=6)
+    width = height = 150.0
+    add_outline(board, width, height)
+    grids = {
+        1: (2.0, 24.0, 50.0, 78.0),
+        2: (51.0, 24.0, 99.0, 78.0),
+        3: (100.0, 24.0, 148.0, 78.0),
+        4: (2.0, 79.0, 50.0, 133.0),
+        5: (51.0, 79.0, 99.0, 133.0),
+        6: (100.0, 79.0, 148.0, 133.0),
+    }
+    for motor, bounds in grids.items():
+        refs = sorted(ref for ref in footprints if compact_motor_number(ref) == motor)
+        pack_motor_grid(footprints, refs, motor, bounds)
+        x0, y0, x1, y1 = bounds
+        add_text(board, f"M{motor}", (x0 + x1) / 2, y0 + 1.2, 1.0, pcbnew.F_Fab)
+
+    shared = sorted(ref for ref in footprints if compact_motor_number(ref) is None)
+    shared_bins = [
+        ("shared-top-front", pcbnew.F_Cu, RectPacker((2.0, 2.0, 148.0, 23.0))),
+        ("shared-top-back", pcbnew.B_Cu, RectPacker((2.0, 2.0, 148.0, 23.0))),
+        ("shared-bottom-front", pcbnew.F_Cu, RectPacker((2.0, 134.0, 148.0, 148.0))),
+        ("shared-bottom-back", pcbnew.B_Cu, RectPacker((2.0, 134.0, 148.0, 148.0))),
+    ]
+    pack_footprints_in_bins(footprints, shared, shared_bins)
+
+    for x in (50.5, 99.5):
+        add_silk_line(board, (x, 24.0), (x, 133.0), 0.15)
+    for y in (23.5, 78.5, 133.5):
+        add_silk_line(board, (0.5, y), (149.5, y), 0.15)
+    add_text(board, "REV-B 150MM SIX-LAYER ESC PLACEMENT CANDIDATE", 75, 0.8, 1.0, pcbnew.F_Fab)
+    move_footprint_silks_to_fab(board)
+    clamp_footprints_to_outline(board, width, height)
+    output = ESC_DIR / "esc_rev_b.kicad_pcb"
+    pcbnew.SaveBoard(str(output), board)
+    apply_stackup(output, outer_oz=4.0, inner_oz=2.0, copper_layers=6)
     return output
 
 
@@ -996,25 +1240,40 @@ def generate_main() -> Path:
     return output
 
 
-def apply_stackup(path: Path, outer_oz: float, inner_oz: float) -> None:
-    """Persist an explicit 1.6 mm four-layer stackup in KiCad's board file."""
+def apply_stackup(
+    path: Path, outer_oz: float, inner_oz: float, copper_layers: int = 4
+) -> None:
+    """Persist an explicit nominal 1.6 mm stackup in KiCad's board file."""
+    if copper_layers not in (4, 6):
+        raise ValueError(f"Unsupported copper layer count: {copper_layers}")
     outer = 0.035 * outer_oz
     inner = 0.035 * inner_oz
-    dielectric_total = 1.6 - 2 * outer - 2 * inner - 0.02
-    prepreg = 0.20
-    core = dielectric_total - 2 * prepreg
+    inner_count = copper_layers - 2
+    dielectric_count = copper_layers - 1
+    dielectric = (1.6 - 2 * outer - inner_count * inner - 0.02) / dielectric_count
+    copper_rows = [
+        f'\t\t\t(layer \"F.Cu\" (type \"copper\") (thickness {outer:.4f}))'
+    ]
+    for index in range(1, copper_layers - 1):
+        copper_rows.append(
+            f'\t\t\t(layer \"dielectric {index}\" (type \"core\") (thickness {dielectric:.4f}) (material \"FR4\") (epsilon_r 4.2) (loss_tangent 0.02))'
+        )
+        copper_rows.append(
+            f'\t\t\t(layer \"In{index}.Cu\" (type \"copper\") (thickness {inner:.4f}))'
+        )
+    copper_rows.append(
+        f'\t\t\t(layer \"dielectric {dielectric_count}\" (type \"prepreg\") (thickness {dielectric:.4f}) (material \"FR4\") (epsilon_r 4.2) (loss_tangent 0.02))'
+    )
+    copper_rows.append(
+        f'\t\t\t(layer \"B.Cu\" (type \"copper\") (thickness {outer:.4f}))'
+    )
+    copper_stack = "\n".join(copper_rows)
     stackup = f"""
 \t\t(stackup
 \t\t\t(layer \"F.SilkS\" (type \"Top Silk Screen\"))
 \t\t\t(layer \"F.Paste\" (type \"Top Solder Paste\"))
 \t\t\t(layer \"F.Mask\" (type \"Top Solder Mask\") (thickness 0.01))
-\t\t\t(layer \"F.Cu\" (type \"copper\") (thickness {outer:.4f}))
-\t\t\t(layer \"dielectric 1\" (type \"prepreg\") (thickness {prepreg:.4f}) (material \"FR4\") (epsilon_r 4.2) (loss_tangent 0.02))
-\t\t\t(layer \"In1.Cu\" (type \"copper\") (thickness {inner:.4f}))
-\t\t\t(layer \"dielectric 2\" (type \"core\") (thickness {core:.4f}) (material \"FR4\") (epsilon_r 4.2) (loss_tangent 0.02))
-\t\t\t(layer \"In2.Cu\" (type \"copper\") (thickness {inner:.4f}))
-\t\t\t(layer \"dielectric 3\" (type \"prepreg\") (thickness {prepreg:.4f}) (material \"FR4\") (epsilon_r 4.2) (loss_tangent 0.02))
-\t\t\t(layer \"B.Cu\" (type \"copper\") (thickness {outer:.4f}))
+{copper_stack}
 \t\t\t(layer \"B.Mask\" (type \"Bottom Solder Mask\") (thickness 0.01))
 \t\t\t(layer \"B.Paste\" (type \"Bottom Solder Paste\"))
 \t\t\t(layer \"B.SilkS\" (type \"Bottom Silk Screen\"))

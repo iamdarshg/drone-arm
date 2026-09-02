@@ -1,0 +1,54 @@
+{
+    "$schema": "https://schemas.kicad.org/erc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-08-30T03:13:17+0530",
+    "kicad_version": "9.0.7",
+    "sheets": [
+        {
+            "path": "/",
+            "uuid_path": "/5e323666-3ad9-4dd7-b28a-403d3185198c",
+            "violations": []
+        },
+        {
+            "path": "/Auxiliary power/",
+            "uuid_path": "/5e323666-3ad9-4dd7-b28a-403d3185198c/864f49fd-cc7f-4dce-9cc0-59f31d0ab5fc",
+            "violations": []
+        },
+        {
+            "path": "/Motor 1 power cell/",
+            "uuid_path": "/5e323666-3ad9-4dd7-b28a-403d3185198c/82b02ebb-fa40-47cf-9b85-75ebe8508a57",
+            "violations": []
+        },
+        {
+            "path": "/Motor 4 power cell/",
+            "uuid_path": "/5e323666-3ad9-4dd7-b28a-403d3185198c/3f9c3405-670a-42f6-96e4-864203ed2154",
+            "violations": []
+        },
+        {
+            "path": "/Controller and ADC/",
+            "uuid_path": "/5e323666-3ad9-4dd7-b28a-403d3185198c/9e40c478-f178-4dbc-81ec-0c629e60d7ec",
+            "violations": []
+        },
+        {
+            "path": "/Motor 2 power cell/",
+            "uuid_path": "/5e323666-3ad9-4dd7-b28a-403d3185198c/dcdcf72e-f1cb-4fcf-b651-7770e5a13127",
+            "violations": []
+        },
+        {
+            "path": "/Motor 5 power cell/",
+            "uuid_path": "/5e323666-3ad9-4dd7-b28a-403d3185198c/0b53785b-714d-47e0-89b8-ec76d767bc78",
+            "violations": []
+        },
+        {
+            "path": "/Motor 3 power cell/",
+            "uuid_path": "/5e323666-3ad9-4dd7-b28a-403d3185198c/de188998-b89e-4b7f-bce6-78b007df1ba9",
+            "violations": []
+        },
+        {
+            "path": "/Motor 6 power cell/",
+            "uuid_path": "/5e323666-3ad9-4dd7-b28a-403d3185198c/096ae313-f3f2-4d1e-a9d4-392478ae7de6",
+            "violations": []
+        }
+    ],
+    "source": "esc_rev_b.kicad_sch"
+}

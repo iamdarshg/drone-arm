@@ -99,6 +99,8 @@ def audit_esc(netlist: Netlist, audit: Audit) -> None:
         "RFM-0505S": 6,
         "TPS70933DBVR": 6,
         "SM8S51A": 7,
+        "USBLC6-2SC6": 8,
+        "6-WAY ACTIVE-LOW SELECTOR": 1,
     }
     for value, expected in expected_counts.items():
         actual = sum(component == value for component in netlist.components.values())
@@ -107,6 +109,28 @@ def audit_esc(netlist: Netlist, audit: Audit) -> None:
             actual == expected,
             f"expected={expected}, actual={actual}",
         )
+
+    obsolete_caps = {f"C{1000 + motor * 100 + 30}" for motor in range(1, 7)}
+    present_obsolete = sorted(obsolete_caps & netlist.components.keys())
+    audit.check(
+        "External motor bulk capacitors are absent",
+        not present_obsolete,
+        f"present={present_obsolete or 'none'}",
+    )
+    audit.check(
+        "Controller and service USB interfaces are populated",
+        {"J201", "J202", "J203", "SW201", "U208", "U209"}
+        <= netlist.components.keys(),
+        "requires controller SWD, two USB-C ports, seven-pin selector, and ESD",
+    )
+    audit.require_nodes(
+        netlist, "/CTRL_USB_DM_MCU", {("U201", "66"), ("R206", "2")},
+        "ESC supervisor: controller USB DM reaches RP2354B",
+    )
+    audit.require_nodes(
+        netlist, "/CTRL_USB_DP_MCU", {("U201", "67"), ("R207", "2")},
+        "ESC supervisor: controller USB DP reaches RP2354B",
+    )
 
     for motor in range(1, 7):
         base = 1000 + motor * 100
@@ -221,8 +245,26 @@ def audit_esc(netlist: Netlist, audit: Audit) -> None:
         audit.require_nodes(
             netlist,
             f"/M{motor}_DRV_nFAULT",
-            {(driver, "26"), (mcu, "33")},
+            {(driver, "26"), (mcu, "22")},
             f"M{motor}: driver fault to TIM1 break",
+        )
+        audit.require_nodes(
+            netlist, f"/M{motor}_USB_DM", {(mcu, "33")},
+            f"M{motor}: native USB DM",
+        )
+        audit.require_nodes(
+            netlist, f"/M{motor}_USB_DP", {(mcu, "34")},
+            f"M{motor}: native USB DP",
+        )
+        audit.require_nodes(
+            netlist, f"/M{motor}_ARM_ISO", {(mcu, "25"), (arm_gate, "1")},
+            f"M{motor}: isolated arm permission moved to PB11",
+        )
+        audit.check(
+            f"M{motor}: SWD retained and cell-side USB ESD present",
+            {f"J{base + 3}", f"U{base + 7}"} <= netlist.components.keys()
+            and f"J{base + 4}" not in netlist.components,
+            "local SWD and cell-side ESD present; no redundant per-cell USB connector",
         )
         audit.require_nodes(
             netlist,
@@ -290,6 +332,27 @@ def audit_esc(netlist: Netlist, audit: Audit) -> None:
                 not combined,
                 f"shared={combined or 'none'}",
             )
+
+    audit.require_nodes(netlist, "/DGND", {("SW201", "1")},
+                        "Selector common is controller ground")
+    for motor in range(1, 7):
+        audit.require_nodes(
+            netlist, f"/SVC_CELL{motor}_SEL_N",
+            {("SW201", str(motor + 1)), (f"R{213 + motor}", "2")},
+            f"Selector position {motor}: active-low control and pull-up",
+        )
+        audit.require_nodes(
+            netlist, "/3V3", {(f"R{213 + motor}", "1")},
+            f"Selector position {motor}: independent 3.3 V pull-up",
+        )
+
+    try:
+        ctrl_vbus = {(node.ref, node.pin) for node in netlist.suffix("/CTRL_USB_VBUS")}
+        forbidden = {node for node in ctrl_vbus if node[0] in {"U201", "L201", "U204", "U205", "U206", "U207"}}
+        audit.check("Controller USB VBUS cannot power ESC rails", not forbidden,
+                    f"forbidden={sorted(forbidden) or 'none'}")
+    except AssertionError as exc:
+        audit.check("Controller USB VBUS cannot power ESC rails", False, str(exc))
 
     audit.require_nodes(
         netlist,

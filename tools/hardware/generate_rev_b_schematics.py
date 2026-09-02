@@ -227,6 +227,12 @@ SYMBOLS = (
         (("1", "IO1"), ("2", "GND"), ("3", "IO2"), ("4", "IO2"), ("5", "VBUS"), ("6", "IO1")),
     ),
     SymbolSpec(
+        "USB_CELL_SELECTOR_6WAY_ACTIVE_LOW", "SW",
+        "Connector_PinHeader_2.54mm:PinHeader_1x07_P2.54mm_Vertical",
+        "Six-position selector: one ground common and six active-low outputs",
+        (("1", "GND"),) + tuple((str(cell + 1), f"CELL{cell}_SEL_N") for cell in range(1, 7)),
+    ),
+    SymbolSpec(
         "SN74LVC1G08", "U", "Package_TO_SOT_SMD:SOT-23-5",
         "https://www.ti.com/lit/ds/symlink/sn74lvc1g08.pdf",
         (("1", "A"), ("2", "B"), ("3", "GND"), ("4", "Y"), ("5", "VCC")),
@@ -735,7 +741,7 @@ def make_motor_sheet(index: int, parent_uuid: str, sheet_uuid: str) -> None:
                 local_3v3, batn, "Capacitor_SMD:C_0603_1608Metric")
 
     # TIM1 provides six complementary PWM outputs with hardware dead time.
-    # PA11 is TIM1_BKIN2, so a DRV fault can stop PWM without firmware.
+    # PB10/TIM1_BKIN retains hardware fault shutdown while PA11/PA12 serve USB.
     mcu_ref = f"U{base + 2}"
     add_part(
         sch, "MCU_ST_STM32G4:STM32G431CBTx", mcu_ref, "STM32G431CBT6",
@@ -750,11 +756,11 @@ def make_motor_sheet(index: int, parent_uuid: str, sheet_uuid: str) -> None:
         "13": f"M{n}_DRV_SCLK", "14": f"M{n}_DRV_SDO", "15": f"M{n}_DRV_SDI",
         "16": f"M{n}_NTC", "17": None, "18": None,
         "19": batn, "20": local_3v3a, "21": local_3v3a,
-        "22": None, "23": batn, "24": local_3v3,
-        "25": None, "26": f"M{n}_DRV_nCS",
+        "22": f"M{n}_DRV_nFAULT", "23": batn, "24": local_3v3,
+        "25": f"M{n}_ARM_ISO", "26": f"M{n}_DRV_nCS",
         "27": f"M{n}_PWM_AL", "28": f"M{n}_PWM_BL", "29": f"M{n}_PWM_CL",
         "30": f"M{n}_PWM_AH", "31": f"M{n}_PWM_BH", "32": f"M{n}_PWM_CH",
-        "33": f"M{n}_DRV_nFAULT", "34": f"M{n}_ARM_ISO",
+        "33": f"M{n}_USB_DM", "34": f"M{n}_USB_DP",
         "35": batn, "36": local_3v3,
         "37": f"M{n}_SWDIO", "38": f"M{n}_SWCLK", "39": None,
         "40": None, "41": f"M{n}_MCU_ARM", "42": f"M{n}_STATUS_LED",
@@ -808,6 +814,22 @@ def make_motor_sheet(index: int, parent_uuid: str, sheet_uuid: str) -> None:
         "4": f"M{n}_NRST", "5": batn,
     }.items():
         label_pin(sch, f"J{base + 3}", pin, net)
+
+    # Cell USB nets connect directly to the shared break-before-make selector.
+    add_custom(
+        sch, "USBLC6-2SC6", f"U{base + 7}", "USBLC6-2SC6", (270, 205),
+        {
+            "1": f"M{n}_USB_DM", "2": batn, "3": f"M{n}_USB_DP",
+            "4": f"M{n}_USB_DP", "5": f"M{n}_USB_VBUS", "6": f"M{n}_USB_DM",
+        },
+        "STMicroelectronics", "USBLC6-2SC6",
+    )
+    add_two_pin(sch, "Device:R", f"R{base + 80}", "100k", (270, 190),
+                f"M{n}_USB_VBUS", f"M{n}_USB_VBUS_SENSE",
+                "Resistor_SMD:R_0603_1608Metric")
+    add_two_pin(sch, "Device:R", f"R{base + 81}", "47k", (288, 190),
+                f"M{n}_USB_VBUS_SENSE", batn,
+                "Resistor_SMD:R_0603_1608Metric")
 
     # Both the isolated central watchdog and the local MCU must grant ARM.
     add_custom(
@@ -938,12 +960,12 @@ def make_motor_sheet(index: int, parent_uuid: str, sheet_uuid: str) -> None:
                     (125, 160 + sense_i * 10), out_net, batn,
                     "Capacitor_SMD:C_0603_1608Metric")
 
-    # Local DC-link capacitance and clamping; the commutation loop stays inside
-    # this cell and never traverses the external distribution harness.
-    add_two_pin(sch, "Device:C_Polarized", f"C{base + 30}", "820u 100V",
-                (238, 58), f"M{n}_BATP", batn,
-                "Capacitor_THT:CP_Radial_D18.0mm_P7.50mm",
-                "Rubycon", "100PX820MEFC18X35.5")
+    # Bulk capacitance is external, directly across this cell's BATP/BATN leads.
+    sch.add_text(
+        f"C{base + 30} is external: connect bulk capacitance directly across M{n}_BATP/M{n}_BATN "
+        "with the shortest practical high-current loop.",
+        (225, 52), size=0.8, bold=True,
+    )
     for k in range(6):
         add_two_pin(sch, "Device:C", f"C{base + 31 + k}", "10u 100V",
                     (238, 72 + k * 10), f"M{n}_BATP", batn,
@@ -1306,7 +1328,7 @@ def make_esc_controller(parent_uuid: str, sheet_uuid: str) -> None:
         **{motor + 5: f"M{motor}_STATUS" for motor in range(1, 7)},
         12: "CAN_SCK", 13: "CAN_MOSI", 14: "CAN_MISO",
         15: "CAN_nCS", 16: "CAN_INT", 17: "WDI",
-        18: "ARM_CMD", 19: "STATUS_LED",
+        18: "ARM_CMD", 19: "STATUS_LED", 20: "CTRL_USB_VBUS_SENSE",
     }
     rp_info = ksa.get_symbol_info("MCU_RaspberryPi:RP2354B")
     assert rp_info is not None
@@ -1317,6 +1339,7 @@ def make_esc_controller(parent_uuid: str, sheet_uuid: str) -> None:
         "VREG_FB": "1V1", "ADC_AVDD": "3V3_ADC", "RUN": "ESC_RUN",
         "SWCLK": "SWCLK", "SWDIO": "SWDIO",
         "XIN": "ESC_XIN", "XOUT": "ESC_XOUT",
+        "USB_DM": "CTRL_USB_DM_MCU", "USB_DP": "CTRL_USB_DP_MCU",
     }
     for pin in rp_info.pins:
         if pin.name.startswith("GPIO"):
@@ -1384,6 +1407,85 @@ def make_esc_controller(parent_uuid: str, sheet_uuid: str) -> None:
              "Connector_JST:JST_SH_SM03B-SRSS-TB_1x03-1MP_P1.00mm_Horizontal")
     for pin, net in {"1": "SWCLK", "2": "SWDIO", "3": "DGND"}.items():
         label_pin(sch, "J201", pin, net)
+    # Native controller-domain USB-C. VBUS is sensed only and cannot power the ESC.
+    add_part(
+        sch, "Connector:USB_C_Receptacle_USB2.0_16P", "J202", "CTRL_USB_C",
+        (300, 55), "Connector_USB:USB_C_Receptacle_GCT_USB4105-xx-A_16P_TopMnt_Horizontal",
+        "GCT", "USB4105-GF-A",
+    )
+    for pin, net in {
+        "A1": "DGND", "A12": "DGND", "B1": "DGND", "B12": "DGND", "S1": "CTRL_USB_SHIELD",
+        "A4": "CTRL_USB_VBUS", "A9": "CTRL_USB_VBUS", "B4": "CTRL_USB_VBUS", "B9": "CTRL_USB_VBUS",
+        "A5": "CTRL_USB_CC1", "B5": "CTRL_USB_CC2",
+        "A7": "CTRL_USB_DM_CONN", "B7": "CTRL_USB_DM_CONN",
+        "A6": "CTRL_USB_DP_CONN", "B6": "CTRL_USB_DP_CONN",
+    }.items():
+        label_pin(sch, "J202", pin, net)
+    no_connect_pin(sch, "J202", "A8")
+    no_connect_pin(sch, "J202", "B8")
+    add_two_pin(sch, "Device:R", "R204", "5.1k", (325, 35), "CTRL_USB_CC1", "DGND",
+                "Resistor_SMD:R_0603_1608Metric")
+    add_two_pin(sch, "Device:R", "R205", "5.1k", (325, 45), "CTRL_USB_CC2", "DGND",
+                "Resistor_SMD:R_0603_1608Metric")
+    add_custom(sch, "USBLC6-2SC6", "U208", "USBLC6-2SC6", (335, 60),
+               {"1": "CTRL_USB_DM_CONN", "2": "DGND", "3": "CTRL_USB_DP_CONN",
+                "4": "CTRL_USB_DP", "5": "CTRL_USB_VBUS", "6": "CTRL_USB_DM"},
+               "STMicroelectronics", "USBLC6-2SC6")
+    add_two_pin(sch, "Device:R", "R206", "27", (360, 55), "CTRL_USB_DM", "CTRL_USB_DM_MCU",
+                "Resistor_SMD:R_0402_1005Metric")
+    add_two_pin(sch, "Device:R", "R207", "27", (360, 65), "CTRL_USB_DP", "CTRL_USB_DP_MCU",
+                "Resistor_SMD:R_0402_1005Metric")
+    add_two_pin(sch, "Device:R", "R208", "100k", (335, 78), "CTRL_USB_VBUS", "CTRL_USB_VBUS_SENSE",
+                "Resistor_SMD:R_0603_1608Metric")
+    add_two_pin(sch, "Device:R", "R209", "47k", (355, 78), "CTRL_USB_VBUS_SENSE", "DGND",
+                "Resistor_SMD:R_0603_1608Metric")
+    add_two_pin(sch, "Device:R", "R210", "1M", (335, 25), "CTRL_USB_SHIELD", "DGND",
+                "Resistor_SMD:R_0603_1608Metric")
+    add_two_pin(sch, "Device:C", "C234", "1n 2kV", (355, 25), "CTRL_USB_SHIELD", "DGND",
+                "Capacitor_SMD:C_1206_3216Metric")
+
+    # Shared service USB-C and external six-position, six-pole BBM selector.
+    add_part(
+        sch, "Connector:USB_C_Receptacle_USB2.0_16P", "J203", "MOTOR_DFU_USB_C",
+        (300, 115), "Connector_USB:USB_C_Receptacle_GCT_USB4105-xx-A_16P_TopMnt_Horizontal",
+        "GCT", "USB4105-GF-A",
+    )
+    for pin, net in {
+        "A1": "SVC_USB_GND", "A12": "SVC_USB_GND", "B1": "SVC_USB_GND", "B12": "SVC_USB_GND", "S1": "SVC_USB_SHIELD",
+        "A4": "SVC_USB_VBUS", "A9": "SVC_USB_VBUS", "B4": "SVC_USB_VBUS", "B9": "SVC_USB_VBUS",
+        "A5": "SVC_USB_CC1", "B5": "SVC_USB_CC2",
+        "A7": "SVC_USB_DM_CONN", "B7": "SVC_USB_DM_CONN",
+        "A6": "SVC_USB_DP_CONN", "B6": "SVC_USB_DP_CONN",
+    }.items():
+        label_pin(sch, "J203", pin, net)
+    no_connect_pin(sch, "J203", "A8")
+    no_connect_pin(sch, "J203", "B8")
+    add_two_pin(sch, "Device:R", "R211", "5.1k", (325, 98), "SVC_USB_CC1", "SVC_USB_GND",
+                "Resistor_SMD:R_0603_1608Metric")
+    add_two_pin(sch, "Device:R", "R212", "5.1k", (325, 108), "SVC_USB_CC2", "SVC_USB_GND",
+                "Resistor_SMD:R_0603_1608Metric")
+    add_custom(sch, "USBLC6-2SC6", "U209", "USBLC6-2SC6", (335, 120),
+               {"1": "SVC_USB_DM_CONN", "2": "SVC_USB_GND", "3": "SVC_USB_DP_CONN",
+                "4": "SVC_USB_DP_CONN", "5": "SVC_USB_VBUS", "6": "SVC_USB_DM_CONN"},
+               "STMicroelectronics", "USBLC6-2SC6")
+    add_two_pin(sch, "Device:R", "R213", "1M", (335, 140), "SVC_USB_SHIELD", "SVC_USB_GND",
+                "Resistor_SMD:R_0603_1608Metric")
+    add_two_pin(sch, "Device:C", "C235", "1n 2kV", (355, 140), "SVC_USB_SHIELD", "SVC_USB_GND",
+                "Capacitor_SMD:C_1206_3216Metric")
+    selector_nets = {"1": "DGND"}
+    for cell in range(1, 7):
+        select_net = f"SVC_CELL{cell}_SEL_N"
+        selector_nets[str(cell + 1)] = select_net
+        add_two_pin(sch, "Device:R", f"R{213 + cell}", "10k", (330, 180 + cell * 12),
+                    "3V3", select_net, "Resistor_SMD:R_0603_1608Metric")
+    add_custom(sch, "USB_CELL_SELECTOR_6WAY_ACTIVE_LOW", "SW201", "6-WAY ACTIVE-LOW SELECTOR",
+               (410, 120), selector_nets, "External selector", "6WAY-ACTIVE-LOW")
+    sch.add_text(
+        "SW201 has one DGND common and six active-low outputs with individual pull-ups. "
+        "These are CONTROL SIGNALS ONLY: an external galvanically isolated USB switching module "
+        "must switch D+/D-/selected ground/VBUS/BOOT0/NRST and enforce break-before-make.",
+        (355, 165), size=0.9, bold=True,
+    )
     add_two_pin(sch, "Device:R", "R203", "1k", (58, 192),
                 "STATUS_LED", "ESC_LED_A", "Resistor_SMD:R_0603_1608Metric")
     add_part(sch, "Device:LED", "D201", "GREEN", (82, 192),
