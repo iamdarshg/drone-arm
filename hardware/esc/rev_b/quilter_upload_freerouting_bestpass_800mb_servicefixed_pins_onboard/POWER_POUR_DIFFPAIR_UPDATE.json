@@ -1,0 +1,133 @@
+{
+  "board": "hardware\\esc\\rev_b\\quilter_upload_freerouting_bestpass_800mb_servicefixed_pins_onboard\\esc_rev_b.kicad_pcb",
+  "backup": "hardware\\esc\\rev_b\\quilter_upload_freerouting_bestpass_800mb_servicefixed_pins_onboard\\esc_rev_b.before_bus_sh_ripup.kicad_pcb",
+  "source_zone": {
+    "net": "/M1_BATN",
+    "net_id": 47
+  },
+  "power_zones": [
+    {
+      "motor": 1,
+      "net": "/M1_BATN",
+      "net_id": 47,
+      "origin": [
+        1.59,
+        3.75
+      ],
+      "copied_from_m1": false,
+      "verified_after": true
+    },
+    {
+      "motor": 2,
+      "net": "/M2_BATN",
+      "net_id": 54,
+      "origin": [
+        58.33,
+        3.75
+      ],
+      "copied_from_m1": false,
+      "verified_after": true
+    },
+    {
+      "motor": 3,
+      "net": "/M3_BATN",
+      "net_id": 61,
+      "origin": [
+        115.07,
+        3.75
+      ],
+      "copied_from_m1": false,
+      "verified_after": true
+    },
+    {
+      "motor": 4,
+      "net": "/M4_BATN",
+      "net_id": 68,
+      "origin": [
+        1.59,
+        82.96
+      ],
+      "copied_from_m1": false,
+      "verified_after": true
+    },
+    {
+      "motor": 5,
+      "net": "/M5_BATN",
+      "net_id": 75,
+      "origin": [
+        58.33,
+        82.96
+      ],
+      "copied_from_m1": false,
+      "verified_after": true
+    },
+    {
+      "motor": 6,
+      "net": "/M6_BATN",
+      "net_id": 82,
+      "origin": [
+        115.07,
+        82.96
+      ],
+      "copied_from_m1": false,
+      "verified_after": true
+    }
+  ],
+  "power_pour_action": "verified_existing_translated_copies",
+  "differential_pairs_ripped_up": [
+    [
+      "/Motor 1 power cell/M1_BUS_SH_P",
+      "/Motor 1 power cell/M1_BUS_SH_N"
+    ],
+    [
+      "/Motor 2 power cell/M2_BUS_SH_P",
+      "/Motor 2 power cell/M2_BUS_SH_N"
+    ],
+    [
+      "/Motor 3 power cell/M3_BUS_SH_P",
+      "/Motor 3 power cell/M3_BUS_SH_N"
+    ],
+    [
+      "/Motor 4 power cell/M4_BUS_SH_P",
+      "/Motor 4 power cell/M4_BUS_SH_N"
+    ],
+    [
+      "/Motor 5 power cell/M5_BUS_SH_P",
+      "/Motor 5 power cell/M5_BUS_SH_N"
+    ],
+    [
+      "/Motor 6 power cell/M6_BUS_SH_P",
+      "/Motor 6 power cell/M6_BUS_SH_N"
+    ]
+  ],
+  "selected_pair_net_ids": [
+    101,
+    102,
+    171,
+    172,
+    241,
+    242,
+    311,
+    312,
+    381,
+    382,
+    451,
+    452
+  ],
+  "copper_before": {
+    "segments": 184,
+    "vias": 24
+  },
+  "copper_removed": {
+    "segments": 184,
+    "vias": 24
+  },
+  "copper_after": {
+    "segments": 0,
+    "vias": 0
+  },
+  "footprint_hash_unchanged": true,
+  "footprint_count": 681,
+  "zone_count": 54,
+  "board_sha256": "6f27496b3d50fc1d43f2f935defcc8667b547ff92f5265a498ebfe344e24f384"
+}
