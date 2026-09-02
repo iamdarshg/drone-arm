@@ -1,0 +1,87 @@
+{
+  "board": "D:\\CodeProjects\\drone-arm\\.worktrees\\esc-freerouting-800mb\\hardware\\main\\rev_b\\main_rev_b_final.kicad_pcb",
+  "removed_pair_groups": [
+    "USB MCU-side pair",
+    "CAN connector pair",
+    "CAN transceiver pair"
+  ],
+  "kept_pair_group": {
+    "name": "USB connector-side pair",
+    "positive": "/Power and USB/USB_DP_CONN",
+    "negative": "/Power and USB/USB_DN_CONN",
+    "reason": "live audit passed the 0.5 mm skew limit"
+  },
+  "pair_limits_mm": {
+    "USB MCU-side pair": 0.5,
+    "CAN connector pair": 2.0,
+    "CAN transceiver pair": 2.0
+  },
+  "route_stats_before": {
+    "/USB_DP": {
+      "segments": 4,
+      "vias": 2,
+      "length_mm": 49.394
+    },
+    "/CAN interface/U50_CANH": {
+      "segments": 12,
+      "vias": 0,
+      "length_mm": 19.11
+    },
+    "/CAN interface/U50_CANL": {
+      "segments": 4,
+      "vias": 0,
+      "length_mm": 10.16
+    },
+    "/USB_DM": {
+      "segments": 9,
+      "vias": 2,
+      "length_mm": 33.652
+    },
+    "/CANH": {
+      "segments": 5,
+      "vias": 0,
+      "length_mm": 15.964
+    },
+    "/CANL": {
+      "segments": 8,
+      "vias": 0,
+      "length_mm": 23.533
+    }
+  },
+  "route_stats_after": {
+    "/USB_DP": {
+      "segments": 0,
+      "vias": 0,
+      "length_mm": 0.0
+    },
+    "/CAN interface/U50_CANH": {
+      "segments": 0,
+      "vias": 0,
+      "length_mm": 0.0
+    },
+    "/CAN interface/U50_CANL": {
+      "segments": 0,
+      "vias": 0,
+      "length_mm": 0.0
+    },
+    "/USB_DM": {
+      "segments": 0,
+      "vias": 0,
+      "length_mm": 0.0
+    },
+    "/CANH": {
+      "segments": 0,
+      "vias": 0,
+      "length_mm": 0.0
+    },
+    "/CANL": {
+      "segments": 0,
+      "vias": 0,
+      "length_mm": 0.0
+    }
+  },
+  "removed_segments": 42,
+  "removed_vias": 4,
+  "footprints_unchanged": true,
+  "board_sha256": "e48d85be91bde4fbd10b19ba1ce6ad60c16c9a6659c15cf5f564703f2e8c16d9"
+}
