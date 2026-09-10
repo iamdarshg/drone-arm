@@ -402,6 +402,9 @@ def main() -> None:
     parser.add_argument("--board", type=Path, required=True)
     parser.add_argument("--drc", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--net", action="append", dest="nets")
+    parser.add_argument("--max-distance", type=float)
+    parser.add_argument("--max-routes", type=int)
     args = parser.parse_args()
 
     board = pcbnew.LoadBoard(str(args.board))
@@ -415,17 +418,23 @@ def main() -> None:
         net_name = item_net(items[0]) or item_net(items[1])
         if not net_name:
             continue
+        if args.nets and net_name not in args.nets:
+            continue
         first, second = items
         distance = math.hypot(
             float(second["pos"]["x"]) - float(first["pos"]["x"]),
             float(second["pos"]["y"]) - float(first["pos"]["y"]),
         )
+        if args.max_distance is not None and distance > args.max_distance:
+            continue
         issues.append((not top_only(net_name), distance, net_name, items))
     issues.sort(key=lambda value: (value[0], value[1]))
 
     routed = []
     failed = []
     for _, _, net_name, items in issues:
+        if args.max_routes is not None and len(routed) >= args.max_routes:
+            break
         net = board.FindNet(net_name)
         if net is None:
             failed.append({"net": net_name, "reason": "net not found"})
@@ -544,6 +553,10 @@ def main() -> None:
             }
         )
 
+    # Route insertion invalidates cached zone fills.  Saving stale fills makes
+    # KiCad report false copper/zone shorts around every new via or inner-layer
+    # track, so refill the exact candidate before DRC.
+    pcbnew.ZONE_FILLER(board).Fill(board.Zones())
     pcbnew.SaveBoard(str(args.output), board)
     print(
         json.dumps(
