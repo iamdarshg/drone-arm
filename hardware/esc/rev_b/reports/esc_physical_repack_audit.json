@@ -1,0 +1,35 @@
+{
+  "board": "hardware/esc/rev_b/esc_rev_b.kicad_pcb",
+  "generated_utc": "2026-09-10T13:46:01Z",
+  "board_sha256": "6a5efbd273fa3abcb4edc3aac6d9b011b1554710a0ea6b6bf9cf6a5865ce89d2",
+  "outcome": "accepted_structural_placement_checkpoint",
+  "baseline": {
+    "violations": 199,
+    "courtyard_overlaps": 199,
+    "unconnected": 499
+  },
+  "accepted": {
+    "violations": 0,
+    "unconnected": 499,
+    "schematic_parity_items": 0,
+    "copper_layers": 6,
+    "footprint_count": 646,
+    "pad_count": 2277
+  },
+  "parity_checks": {
+    "same_reference_set": true,
+    "same_values": true,
+    "same_footprint_ids": true,
+    "same_pad_to_net_map": true,
+    "same_net_name_set": true,
+    "six_copper_layers": true,
+    "six_populated_motor_cells": true
+  },
+  "physical_strategy": {
+    "component_sides": "front_and_back",
+    "through_hole_clearance": "full courtyard reserved on both sides",
+    "motor_cell_placement": "high-current and gate-drive components remain local",
+    "overflow_placement": "low-current motor control parts use adjacent top or bottom service strips",
+    "routing": "not_started_in_this_checkpoint"
+  }
+}
