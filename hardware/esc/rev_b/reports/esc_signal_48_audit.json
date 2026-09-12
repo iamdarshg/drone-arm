@@ -1,0 +1,38 @@
+{
+  "board_sha256": "2E9B2EB5CEF718E4B1E4EEC108E2E238EAAC92A04A56308520C5FAD63245C163",
+  "drc_errors": 0,
+  "raw_unconnected_items": 499,
+  "parity_errors": 0,
+  "parity_warnings": 284,
+  "parity_signature_added": 0,
+  "parity_signature_removed": 0,
+  "footprints": 646,
+  "backside_footprints": 0,
+  "total_vias": 34,
+  "duplicate_via_positions": 0,
+  "local_rail_links": {
+    "logical_links": 7,
+    "segments": 22,
+    "added_vias": 0,
+    "drc_visible_open_reduction": 7,
+    "net_open_counts": {
+      "/3V3": {
+        "before": 53,
+        "after": 47
+      },
+      "/5V": {
+        "before": 17,
+        "after": 16
+      }
+    },
+    "connections": [
+      "C242.1 to C243.1",
+      "C233.1 to C232.1",
+      "R240.1 to R241.1",
+      "C207.1 to C206.1",
+      "C201.1 to U201.5",
+      "U204.1 to U204.10",
+      "U702.1 to U702.3"
+    ]
+  }
+}
