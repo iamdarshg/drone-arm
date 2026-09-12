@@ -1,0 +1,34 @@
+{
+  "board_sha256": "8BB2A9C1EAA5D709EA2C5515B5397B0C98A9CE76E53D2959E539F4F18137620D",
+  "drc_errors": 0,
+  "raw_unconnected_items": 499,
+  "parity_errors": 0,
+  "parity_warnings": 284,
+  "parity_signature_added": 0,
+  "parity_signature_removed": 0,
+  "footprints": 646,
+  "backside_footprints": 0,
+  "total_vias": 40,
+  "duplicate_via_positions": 0,
+  "adc_rail_links": {
+    "logical_links": 2,
+    "segments": 8,
+    "added_vias": 2,
+    "drc_visible_open_reduction": 2,
+    "net_open_counts": {
+      "/Controller and ADC/3V3_ADC": {
+        "before": 2,
+        "after": 0
+      }
+    },
+    "connections": [
+      "FB201.2 filter output to C204/C219 ADC decoupling island on F.Cu",
+      "U201.59 ADC supply pin to FB201.2 using a localized In2.Cu leg"
+    ],
+    "internal_route_length_mm": 10.8,
+    "route_layers": [
+      "F.Cu",
+      "In2.Cu"
+    ]
+  }
+}
