@@ -1,0 +1,40 @@
+{
+  "board_sha256": "63F3D9210F9407198E6821FB086005C1C4D63B12111278092DB587527BD2E7C5",
+  "drc_errors": 0,
+  "reported_unconnected_items_capped": 499,
+  "connectivity_graph_unconnected_before": 1950,
+  "connectivity_graph_unconnected_after": 1926,
+  "connectivity_graph_open_reduction": 24,
+  "parity_errors": 0,
+  "parity_warnings": 284,
+  "parity_signature_added": 0,
+  "parity_signature_removed": 0,
+  "footprints": 646,
+  "backside_footprints": 0,
+  "tracks_before": 772,
+  "tracks_after": 796,
+  "total_vias": 41,
+  "duplicate_via_positions": 0,
+  "route_checkpoint": {
+    "nets_completed": [
+      "/Motor 1 power cell/M1_GLA",
+      "/Motor 1 power cell/M1_GLB",
+      "/Motor 2 power cell/M2_GLA",
+      "/Motor 2 power cell/M2_GLB",
+      "/Motor 3 power cell/M3_GLA",
+      "/Motor 3 power cell/M3_GLB",
+      "/Motor 4 power cell/M4_GLA",
+      "/Motor 4 power cell/M4_GLB",
+      "/Motor 5 power cell/M5_GLA",
+      "/Motor 5 power cell/M5_GLB",
+      "/Motor 6 power cell/M6_GLA",
+      "/Motor 6 power cell/M6_GLB"
+    ],
+    "added_segments": 24,
+    "added_vias": 0,
+    "route_layers": [
+      "F.Cu"
+    ],
+    "routing_note": "Short local low-side MOSFET gate nets joined through their placed gate resistors."
+  }
+}
