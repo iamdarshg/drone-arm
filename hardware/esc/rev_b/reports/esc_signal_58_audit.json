@@ -1,0 +1,48 @@
+{
+  "board_sha256": "7F1D79764058CA2676908DB692C69FD2C5848819F8CF06A9C595902A0225BE52",
+  "drc_errors": 0,
+  "reported_unconnected_items_capped": 499,
+  "connectivity_graph_unconnected_before": 1872,
+  "connectivity_graph_unconnected_after": 1854,
+  "connectivity_graph_open_reduction": 18,
+  "parity_errors": 0,
+  "parity_warnings": 284,
+  "parity_signature_added": 0,
+  "parity_signature_removed": 0,
+  "footprints": 646,
+  "front_footprints": 646,
+  "backside_footprints": 0,
+  "tracks_before": 916,
+  "tracks_after": 940,
+  "total_vias": 47,
+  "duplicate_via_positions": 0,
+  "route_checkpoint": {
+    "nets_completed": [
+      "/Motor 1 power cell/M1_SWCLK",
+      "/Motor 2 power cell/M2_SWCLK",
+      "/Motor 3 power cell/M3_SWCLK",
+      "/Motor 4 power cell/M4_SWCLK",
+      "/Motor 5 power cell/M5_SWCLK",
+      "/Motor 6 power cell/M6_SWCLK",
+      "/Motor 1 power cell/M1_BUS_DIV_0",
+      "/Motor 1 power cell/M1_BUS_DIV_1",
+      "/Motor 2 power cell/M2_BUS_DIV_0",
+      "/Motor 2 power cell/M2_BUS_DIV_1",
+      "/Motor 3 power cell/M3_BUS_DIV_0",
+      "/Motor 3 power cell/M3_BUS_DIV_1",
+      "/Motor 4 power cell/M4_BUS_DIV_0",
+      "/Motor 4 power cell/M4_BUS_DIV_1",
+      "/Motor 5 power cell/M5_BUS_DIV_0",
+      "/Motor 5 power cell/M5_BUS_DIV_1",
+      "/Motor 6 power cell/M6_BUS_DIV_0",
+      "/Motor 6 power cell/M6_BUS_DIV_1"
+    ],
+    "added_segments": 24,
+    "added_vias": 6,
+    "route_layers": [
+      "F.Cu",
+      "B.Cu"
+    ],
+    "routing_note": "Six SWCLK links use their through-hole debug pads, one via per channel, and short front-layer MCU fan-in; twelve bus-divider sensing links remain front-layer local."
+  }
+}
