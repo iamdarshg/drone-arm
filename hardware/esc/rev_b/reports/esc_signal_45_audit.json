@@ -1,0 +1,25 @@
+{
+  "board_sha256": "30C795F8B77E8E1B8A343B824BE945C62F903D2D8CF7593EE0898933D2F64099",
+  "drc_errors": 0,
+  "raw_unconnected_items": 499,
+  "parity_errors": 0,
+  "parity_warnings": 284,
+  "parity_signature_added": 0,
+  "parity_signature_removed": 0,
+  "footprints": 646,
+  "backside_footprints": 0,
+  "total_vias": 34,
+  "duplicate_via_positions": 0,
+  "core_1v1": {
+    "baseline_opens": 7,
+    "candidate_opens": 5,
+    "closed_links": 2,
+    "added_length_mm": 10.5,
+    "segments": 7,
+    "added_vias": 0,
+    "connections": [
+      "U201.10 to C202.1",
+      "U201.51 to C210.1"
+    ]
+  }
+}
