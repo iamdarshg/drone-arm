@@ -1,0 +1,36 @@
+{
+  "board_sha256": "AD577F1B8A6BB928688AC35C66C01EE1645776FFBE460BF1B81FD3EA5C2CDAC0",
+  "drc_errors": 0,
+  "raw_unconnected_items": 499,
+  "parity_errors": 0,
+  "parity_warnings": 284,
+  "parity_signature_added": 0,
+  "parity_signature_removed": 0,
+  "footprints": 646,
+  "backside_footprints": 0,
+  "total_vias": 34,
+  "duplicate_via_positions": 0,
+  "mcu_local_links": {
+    "logical_links": 5,
+    "segments": 15,
+    "added_vias": 0,
+    "drc_visible_open_reduction": 5,
+    "net_open_counts": {
+      "/Controller and ADC/1V1": {
+        "before": 5,
+        "after": 4
+      },
+      "/3V3": {
+        "before": 47,
+        "after": 43
+      }
+    },
+    "connections": [
+      "C211.1 to the U201.51 1V1 branch",
+      "C217.1 to C216.1",
+      "C205.1 to C206.1",
+      "U201.24 to C218.1",
+      "U201.64 to C208.1"
+    ]
+  }
+}
