@@ -1,0 +1,37 @@
+{
+  "board_sha256": "04E38DE0ACBC73698CCE2E696D3F2CB329993AB5CB1D6CCF961A19E3935A6B7E",
+  "drc_errors": 0,
+  "reported_unconnected_items_capped": 499,
+  "connectivity_graph_unconnected_before": 1965,
+  "connectivity_graph_unconnected_after": 1950,
+  "connectivity_graph_open_reduction": 15,
+  "parity_errors": 0,
+  "parity_warnings": 284,
+  "parity_signature_added": 0,
+  "parity_signature_removed": 0,
+  "footprints": 646,
+  "backside_footprints": 0,
+  "tracks_before": 767,
+  "tracks_after": 772,
+  "total_vias": 41,
+  "duplicate_via_positions": 0,
+  "route_checkpoint": {
+    "logical_groups": 2,
+    "added_segments": 5,
+    "added_vias": 1,
+    "connections": [
+      "U201.32 1V1 pin to the existing U201.51/L201 1V1 island using a short B.Cu leg and one tentable via outside the exposed pad",
+      "Q1205 and Q1206 M2_PHASE_C source-pad rows stitched locally on F.Cu with 1.0 mm copper"
+    ],
+    "route_layers": [
+      "F.Cu",
+      "B.Cu"
+    ],
+    "selected_net_open_counts": {
+      "/Controller and ADC/1V1": {
+        "before": 1,
+        "after": 0
+      }
+    }
+  }
+}
