@@ -1,0 +1,30 @@
+{
+  "board_sha256": "9BB241E042670334E59E4E13A93E9B94D75FE3B0F9D2B1E32325AF622093D9CD",
+  "drc_errors": 0,
+  "raw_unconnected_items": 499,
+  "parity_errors": 0,
+  "parity_warnings": 284,
+  "parity_signature_added": 0,
+  "parity_signature_removed": 0,
+  "footprints": 646,
+  "backside_footprints": 0,
+  "total_vias": 36,
+  "duplicate_via_positions": 0,
+  "mcu_1v1_links": {
+    "logical_links": 2,
+    "segments": 6,
+    "added_vias": 2,
+    "drc_visible_open_reduction": 2,
+    "internal_route_length_mm": 6.336,
+    "net_open_counts": {
+      "/Controller and ADC/1V1": {
+        "before": 4,
+        "after": 2
+      }
+    },
+    "connections": [
+      "U201.51/C210/C211 1V1 branch to U201.65/L201.2 using a local In2.Cu bridge",
+      "R201.1 to the U201.65/L201.2 1V1 branch on F.Cu"
+    ]
+  }
+}
