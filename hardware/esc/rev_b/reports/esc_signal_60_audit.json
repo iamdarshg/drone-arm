@@ -1,0 +1,43 @@
+{
+  "board_sha256": "8D9C5903A0C35CC80C171FE24D22A14BED7D40781847B75B681214F70FA55F63",
+  "drc_errors": 0,
+  "reported_unconnected_items_capped": 499,
+  "connectivity_graph_unconnected_before": 1842,
+  "connectivity_graph_unconnected_after": 1830,
+  "connectivity_graph_open_reduction": 12,
+  "parity_errors": 0,
+  "parity_warnings": 284,
+  "parity_signature_added": 0,
+  "parity_signature_removed": 0,
+  "footprints": 646,
+  "front_footprints": 646,
+  "backside_footprints": 0,
+  "tracks_before": 982,
+  "tracks_after": 1030,
+  "total_vias": 95,
+  "duplicate_via_positions": 0,
+  "route_checkpoint": {
+    "nets_completed": [
+      "/Motor 1 power cell/M1_CSA_A_RAW",
+      "/Motor 1 power cell/M1_CSA_B_RAW",
+      "/Motor 2 power cell/M2_CSA_A_RAW",
+      "/Motor 2 power cell/M2_CSA_B_RAW",
+      "/Motor 3 power cell/M3_CSA_A_RAW",
+      "/Motor 3 power cell/M3_CSA_B_RAW",
+      "/Motor 4 power cell/M4_CSA_A_RAW",
+      "/Motor 4 power cell/M4_CSA_B_RAW",
+      "/Motor 5 power cell/M5_CSA_A_RAW",
+      "/Motor 5 power cell/M5_CSA_B_RAW",
+      "/Motor 6 power cell/M6_CSA_A_RAW",
+      "/Motor 6 power cell/M6_CSA_B_RAW"
+    ],
+    "added_segments": 48,
+    "added_vias": 24,
+    "route_layers": [
+      "F.Cu",
+      "In1.Cu",
+      "In2.Cu"
+    ],
+    "routing_note": "CSA A/B raw outputs use staggered dogbone fanouts and internal-layer trunks; A trunks detour around the plated thermal-via grid."
+  }
+}
