@@ -1,0 +1,41 @@
+{
+  "board_sha256": "21B0D7684FF5F9E0A6DD8EA88BAC1E7CCCCE80AEFE672F45BB3D1D4326776D57",
+  "drc_errors": 0,
+  "raw_unconnected_items": 499,
+  "parity_errors": 0,
+  "parity_warnings": 284,
+  "footprints": 646,
+  "backside_footprints": 0,
+  "total_vias": 34,
+  "duplicate_via_positions": 0,
+  "nets": {
+    "/Controller and ADC/CAN_SCK": {
+      "baseline_opens": 0,
+      "candidate_opens": 0,
+      "length_mm": 76.51958875297927,
+      "segments": 11,
+      "vias": 2
+    },
+    "/Controller and ADC/CAN_MOSI": {
+      "baseline_opens": 1,
+      "candidate_opens": 0,
+      "length_mm": 98.45,
+      "segments": 7,
+      "vias": 2
+    },
+    "/Controller and ADC/CAN_MISO": {
+      "baseline_opens": 0,
+      "candidate_opens": 0,
+      "length_mm": 75.33693972257268,
+      "segments": 17,
+      "vias": 4
+    },
+    "/Controller and ADC/STATUS_LED": {
+      "baseline_opens": 0,
+      "candidate_opens": 0,
+      "length_mm": 38.68000000000001,
+      "segments": 6,
+      "vias": 2
+    }
+  }
+}
