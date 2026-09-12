@@ -1,0 +1,39 @@
+{
+  "board_sha256": "C68670F0DCACB3DD23420FE6A82CF4EB24EE933419601E30B79A03F2186E75A0",
+  "drc_errors": 0,
+  "raw_unconnected_items": 499,
+  "parity_errors": 0,
+  "parity_warnings": 284,
+  "parity_signature_added": 0,
+  "parity_signature_removed": 0,
+  "footprints": 646,
+  "backside_footprints": 0,
+  "total_vias": 34,
+  "duplicate_via_positions": 0,
+  "local_supply_links": {
+    "segments": 5,
+    "added_vias": 0,
+    "drc_visible_open_reduction": 3,
+    "net_open_counts": {
+      "/Controller and ADC/3V3_ADC": {
+        "before": 3,
+        "after": 2
+      },
+      "/AUX_BATT": {
+        "before": 10,
+        "after": 8
+      },
+      "/3V3": {
+        "before": 54,
+        "after": 54
+      }
+    },
+    "connections": [
+      "C204.1 to C219.1",
+      "U201.68 to U201.69",
+      "U703.3 to U703.2",
+      "U701.3 to U701.2",
+      "C216.1 to C215.1"
+    ]
+  }
+}
