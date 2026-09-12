@@ -1,0 +1,41 @@
+{
+  "board_sha256": "F14839A43CB40F846358498A7C9077271A07B9185D8065BFE39E1AEFF73509E7",
+  "drc_errors": 0,
+  "reported_unconnected_items_capped": 499,
+  "connectivity_graph_unconnected_before": 1914,
+  "connectivity_graph_unconnected_after": 1896,
+  "connectivity_graph_open_reduction": 18,
+  "parity_errors": 0,
+  "parity_warnings": 284,
+  "parity_signature_added": 0,
+  "parity_signature_removed": 0,
+  "footprints": 646,
+  "front_footprints": 646,
+  "backside_footprints": 0,
+  "tracks_before": 826,
+  "tracks_after": 868,
+  "total_vias": 41,
+  "duplicate_via_positions": 0,
+  "route_checkpoint": {
+    "nets_completed": [
+      "/Motor 1 power cell/M1_SWDIO",
+      "/Motor 2 power cell/M2_SWDIO",
+      "/Motor 3 power cell/M3_SWDIO",
+      "/Motor 4 power cell/M4_SWDIO",
+      "/Motor 5 power cell/M5_SWDIO",
+      "/Motor 6 power cell/M6_SWDIO",
+      "/Motor 1 power cell/M1_GHC",
+      "/Motor 2 power cell/M2_GHC",
+      "/Motor 3 power cell/M3_GHC",
+      "/Motor 4 power cell/M4_GHC",
+      "/Motor 5 power cell/M5_GHC",
+      "/Motor 6 power cell/M6_GHC"
+    ],
+    "added_segments": 42,
+    "added_vias": 0,
+    "route_layers": [
+      "F.Cu"
+    ],
+    "routing_note": "Six local SWDIO links and six high-side C gate branches routed on the front layer."
+  }
+}
