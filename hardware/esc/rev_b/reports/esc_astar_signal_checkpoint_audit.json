@@ -1,0 +1,218 @@
+{
+  "checkpoint": "ESC compact signal routing - bidirectional A-star batch 1",
+  "board_sha256": "e19f8c518cdab5bc93ebddbb56a14d9636f4f1f7175f095caad2b1a592574ea4",
+  "board_size_mm": [
+    173.95,
+    296.15
+  ],
+  "footprints": 646,
+  "front": 646,
+  "back": 0,
+  "segments": 458,
+  "vias": 360,
+  "duplicate_vias": 0,
+  "zones": 78,
+  "true_opens": 1325,
+  "high_current_opens": {
+    "/Motor 1 power cell/M1_BATP_IN": 0,
+    "/M1_BATP": 7,
+    "/M1_BATN": 54,
+    "/M1_PHASE_A": 3,
+    "/M1_PHASE_B": 3,
+    "/M1_PHASE_C": 2,
+    "/Motor 1 power cell/M1_SHA_I": 1,
+    "/Motor 1 power cell/M1_SHB_I": 3,
+    "/Motor 1 power cell/M1_SHC_I": 4,
+    "/Motor 2 power cell/M2_BATP_IN": 0,
+    "/M2_BATP": 7,
+    "/M2_BATN": 54,
+    "/M2_PHASE_A": 3,
+    "/M2_PHASE_B": 3,
+    "/M2_PHASE_C": 2,
+    "/Motor 2 power cell/M2_SHA_I": 1,
+    "/Motor 2 power cell/M2_SHB_I": 3,
+    "/Motor 2 power cell/M2_SHC_I": 4,
+    "/Motor 3 power cell/M3_BATP_IN": 0,
+    "/M3_BATP": 7,
+    "/M3_BATN": 54,
+    "/M3_PHASE_A": 3,
+    "/M3_PHASE_B": 3,
+    "/M3_PHASE_C": 2,
+    "/Motor 3 power cell/M3_SHA_I": 1,
+    "/Motor 3 power cell/M3_SHB_I": 3,
+    "/Motor 3 power cell/M3_SHC_I": 4,
+    "/Motor 4 power cell/M4_BATP_IN": 0,
+    "/M4_BATP": 7,
+    "/M4_BATN": 54,
+    "/M4_PHASE_A": 3,
+    "/M4_PHASE_B": 3,
+    "/M4_PHASE_C": 2,
+    "/Motor 4 power cell/M4_SHA_I": 1,
+    "/Motor 4 power cell/M4_SHB_I": 3,
+    "/Motor 4 power cell/M4_SHC_I": 4,
+    "/Motor 5 power cell/M5_BATP_IN": 0,
+    "/M5_BATP": 7,
+    "/M5_BATN": 54,
+    "/M5_PHASE_A": 3,
+    "/M5_PHASE_B": 3,
+    "/M5_PHASE_C": 2,
+    "/Motor 5 power cell/M5_SHA_I": 1,
+    "/Motor 5 power cell/M5_SHB_I": 3,
+    "/Motor 5 power cell/M5_SHC_I": 4,
+    "/Motor 6 power cell/M6_BATP_IN": 0,
+    "/M6_BATP": 7,
+    "/M6_BATN": 54,
+    "/M6_PHASE_A": 3,
+    "/M6_PHASE_B": 3,
+    "/M6_PHASE_C": 2,
+    "/Motor 6 power cell/M6_SHA_I": 1,
+    "/Motor 6 power cell/M6_SHB_I": 3,
+    "/Motor 6 power cell/M6_SHC_I": 4
+  },
+  "routing": {
+    "algorithm": "bounded bidirectional A-star",
+    "grid_mm": 0.25,
+    "track_width_mm": 0.2,
+    "turn_cost_mm_equivalent": 1.35,
+    "layers": [
+      "F.Cu"
+    ],
+    "via_cost": "not applicable; no vias permitted in this batch",
+    "obstacles": [
+      "foreign pads",
+      "foreign tracks",
+      "all vias",
+      "foreign filled F.Cu zones",
+      "board edge",
+      "protected BATP input and SHB current corridors"
+    ],
+    "acceptance": [
+      "true opens decreases",
+      "KiCad ordinary DRC errors remain zero",
+      "post-refill duplicate vias remain zero",
+      "per-net high-current open vector unchanged"
+    ]
+  },
+  "route_result": {
+    "true_opens": 1325,
+    "segments": 458,
+    "vias": 360,
+    "completed_nets": 12,
+    "open_reduction": 12
+  },
+  "completed_routes": [
+    {
+      "net": "/Auxiliary power/LM2_BST",
+      "segments": 7,
+      "length_mm": 5.943,
+      "layers": [
+        "F.Cu"
+      ],
+      "vias": 0
+    },
+    {
+      "net": "/Auxiliary power/LM2_RON",
+      "segments": 6,
+      "length_mm": 28.568,
+      "layers": [
+        "F.Cu"
+      ],
+      "vias": 0
+    },
+    {
+      "net": "/Auxiliary power/LM_RON",
+      "segments": 5,
+      "length_mm": 12.809,
+      "layers": [
+        "F.Cu"
+      ],
+      "vias": 0
+    },
+    {
+      "net": "/Controller and ADC/ESC_LED_A",
+      "segments": 6,
+      "length_mm": 10.067,
+      "layers": [
+        "F.Cu"
+      ],
+      "vias": 0
+    },
+    {
+      "net": "/Controller and ADC/U207_RXCAN",
+      "segments": 6,
+      "length_mm": 11.148,
+      "layers": [
+        "F.Cu"
+      ],
+      "vias": 0
+    },
+    {
+      "net": "/Controller and ADC/U207_TXCAN",
+      "segments": 5,
+      "length_mm": 6.459,
+      "layers": [
+        "F.Cu"
+      ],
+      "vias": 0
+    },
+    {
+      "net": "/Motor 1 power cell/M1_SWCLK",
+      "segments": 8,
+      "length_mm": 10.233,
+      "layers": [
+        "F.Cu"
+      ],
+      "vias": 0
+    },
+    {
+      "net": "/Motor 2 power cell/M2_SWCLK",
+      "segments": 8,
+      "length_mm": 10.233,
+      "layers": [
+        "F.Cu"
+      ],
+      "vias": 0
+    },
+    {
+      "net": "/Motor 3 power cell/M3_SWCLK",
+      "segments": 8,
+      "length_mm": 10.233,
+      "layers": [
+        "F.Cu"
+      ],
+      "vias": 0
+    },
+    {
+      "net": "/Motor 4 power cell/M4_SWCLK",
+      "segments": 8,
+      "length_mm": 10.234,
+      "layers": [
+        "F.Cu"
+      ],
+      "vias": 0
+    },
+    {
+      "net": "/Motor 5 power cell/M5_SWCLK",
+      "segments": 8,
+      "length_mm": 10.233,
+      "layers": [
+        "F.Cu"
+      ],
+      "vias": 0
+    },
+    {
+      "net": "/Motor 6 power cell/M6_SWCLK",
+      "segments": 8,
+      "length_mm": 10.234,
+      "layers": [
+        "F.Cu"
+      ],
+      "vias": 0
+    }
+  ],
+  "high_current_invariant": {
+    "reference": "esc_compact_signal_checkpoint_audit.json",
+    "unchanged": true,
+    "note": "All 54 isolated high-current open counts match the accepted 1337-open compact baseline after zone refill."
+  }
+}
