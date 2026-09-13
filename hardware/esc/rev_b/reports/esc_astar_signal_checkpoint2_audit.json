@@ -1,0 +1,187 @@
+{
+  "checkpoint": "ESC compact routing - four-layer A-star batch 2",
+  "board_sha256": "04b9cf9192eb1357001485e168eec11c167281d634016bf6b760ef75a3edf544",
+  "baseline_true_opens": 1325,
+  "true_opens": 1315,
+  "open_reduction": 10,
+  "completed_nets": 10,
+  "routes": [
+    {
+      "net": "/Auxiliary power/CAN_5V_OUT",
+      "segments": 8,
+      "vias": 2,
+      "length_mm_by_layer": {
+        "F.Cu": 9.205,
+        "In1.Cu": 2.828
+      },
+      "max_plane_layer_run_mm": 2.828
+    },
+    {
+      "net": "/Auxiliary power/LM_BST",
+      "segments": 3,
+      "vias": 0,
+      "length_mm_by_layer": {
+        "F.Cu": 6.34
+      },
+      "max_plane_layer_run_mm": 0
+    },
+    {
+      "net": "/Controller and ADC/CAN_SCK",
+      "segments": 12,
+      "vias": 2,
+      "length_mm_by_layer": {
+        "F.Cu": 48.024,
+        "In1.Cu": 5.5
+      },
+      "max_plane_layer_run_mm": 5.5
+    },
+    {
+      "net": "/Controller and ADC/STATUS_LED",
+      "segments": 7,
+      "vias": 2,
+      "length_mm_by_layer": {
+        "F.Cu": 11.202,
+        "In1.Cu": 8.25
+      },
+      "max_plane_layer_run_mm": 8.25
+    },
+    {
+      "net": "/Motor 1 power cell/M1_STATUS_LED",
+      "segments": 7,
+      "vias": 2,
+      "length_mm_by_layer": {
+        "F.Cu": 5.511,
+        "In2.Cu": 7.846
+      },
+      "max_plane_layer_run_mm": 7.846
+    },
+    {
+      "net": "/Motor 2 power cell/M2_STATUS_LED",
+      "segments": 7,
+      "vias": 2,
+      "length_mm_by_layer": {
+        "F.Cu": 5.511,
+        "In2.Cu": 7.846
+      },
+      "max_plane_layer_run_mm": 7.846
+    },
+    {
+      "net": "/Motor 3 power cell/M3_STATUS_LED",
+      "segments": 7,
+      "vias": 2,
+      "length_mm_by_layer": {
+        "F.Cu": 5.511,
+        "In2.Cu": 7.846
+      },
+      "max_plane_layer_run_mm": 7.846
+    },
+    {
+      "net": "/Motor 4 power cell/M4_STATUS_LED",
+      "segments": 7,
+      "vias": 2,
+      "length_mm_by_layer": {
+        "F.Cu": 5.513,
+        "In2.Cu": 7.846
+      },
+      "max_plane_layer_run_mm": 7.846
+    },
+    {
+      "net": "/Motor 5 power cell/M5_STATUS_LED",
+      "segments": 7,
+      "vias": 2,
+      "length_mm_by_layer": {
+        "F.Cu": 5.512,
+        "In2.Cu": 7.846
+      },
+      "max_plane_layer_run_mm": 7.846
+    },
+    {
+      "net": "/Motor 6 power cell/M6_STATUS_LED",
+      "segments": 7,
+      "vias": 2,
+      "length_mm_by_layer": {
+        "F.Cu": 5.513,
+        "In2.Cu": 7.846
+      },
+      "max_plane_layer_run_mm": 7.846
+    }
+  ],
+  "routing_method": {
+    "algorithm": "bounded bidirectional A-star plus one clearance-screened LM5164 bootstrap hand route",
+    "grid_mm": 0.25,
+    "turn_cost_mm_equivalent": 1.35,
+    "via_cost_mm_equivalent": 24.0,
+    "through_via_mm": [
+      0.6,
+      0.3
+    ],
+    "plane_layer_run_limit_mm": 20.0,
+    "maximum_accepted_plane_layer_run_mm": 8.25
+  },
+  "verification": {
+    "drc_errors": 0,
+    "reported_unconnected_items_capped": 499,
+    "duplicate_vias": 0,
+    "front_footprints": 646,
+    "back_footprints": 0,
+    "footprint_geometry_identical": true,
+    "pad_net_signature_identical": true,
+    "high_current_open_vector_unchanged": true
+  },
+  "high_current_opens": {
+    "/Motor 1 power cell/M1_BATP_IN": 0,
+    "/M1_BATP": 7,
+    "/M1_BATN": 54,
+    "/M1_PHASE_A": 3,
+    "/M1_PHASE_B": 3,
+    "/M1_PHASE_C": 2,
+    "/Motor 1 power cell/M1_SHA_I": 1,
+    "/Motor 1 power cell/M1_SHB_I": 3,
+    "/Motor 1 power cell/M1_SHC_I": 4,
+    "/Motor 2 power cell/M2_BATP_IN": 0,
+    "/M2_BATP": 7,
+    "/M2_BATN": 54,
+    "/M2_PHASE_A": 3,
+    "/M2_PHASE_B": 3,
+    "/M2_PHASE_C": 2,
+    "/Motor 2 power cell/M2_SHA_I": 1,
+    "/Motor 2 power cell/M2_SHB_I": 3,
+    "/Motor 2 power cell/M2_SHC_I": 4,
+    "/Motor 3 power cell/M3_BATP_IN": 0,
+    "/M3_BATP": 7,
+    "/M3_BATN": 54,
+    "/M3_PHASE_A": 3,
+    "/M3_PHASE_B": 3,
+    "/M3_PHASE_C": 2,
+    "/Motor 3 power cell/M3_SHA_I": 1,
+    "/Motor 3 power cell/M3_SHB_I": 3,
+    "/Motor 3 power cell/M3_SHC_I": 4,
+    "/Motor 4 power cell/M4_BATP_IN": 0,
+    "/M4_BATP": 7,
+    "/M4_BATN": 54,
+    "/M4_PHASE_A": 3,
+    "/M4_PHASE_B": 3,
+    "/M4_PHASE_C": 2,
+    "/Motor 4 power cell/M4_SHA_I": 1,
+    "/Motor 4 power cell/M4_SHB_I": 3,
+    "/Motor 4 power cell/M4_SHC_I": 4,
+    "/Motor 5 power cell/M5_BATP_IN": 0,
+    "/M5_BATP": 7,
+    "/M5_BATN": 54,
+    "/M5_PHASE_A": 3,
+    "/M5_PHASE_B": 3,
+    "/M5_PHASE_C": 2,
+    "/Motor 5 power cell/M5_SHA_I": 1,
+    "/Motor 5 power cell/M5_SHB_I": 3,
+    "/Motor 5 power cell/M5_SHC_I": 4,
+    "/Motor 6 power cell/M6_BATP_IN": 0,
+    "/M6_BATP": 7,
+    "/M6_BATN": 54,
+    "/M6_PHASE_A": 3,
+    "/M6_PHASE_B": 3,
+    "/M6_PHASE_C": 2,
+    "/Motor 6 power cell/M6_SHA_I": 1,
+    "/Motor 6 power cell/M6_SHB_I": 3,
+    "/Motor 6 power cell/M6_SHC_I": 4
+  }
+}
