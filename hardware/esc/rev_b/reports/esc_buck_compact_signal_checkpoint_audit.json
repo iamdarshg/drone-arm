@@ -1,0 +1,327 @@
+{
+  "checkpoint": "ESC buck floorplan compaction and quiet-signal routing",
+  "board_sha256": "947208748c3753ba5345f075a98c78aef5ecd6d3eef1569f0961ec6b068ae484",
+  "baseline_commit": "0a112801edf7fefea14a34009bebc24d712f130a",
+  "baseline_true_opens": 1303,
+  "true_opens": 1293,
+  "open_reduction": 10,
+  "placement": {
+    "algorithm": "sequence-pair simulated annealing",
+    "footprint_model": "exact axis-aligned F.CrtYd sequence-pair packing",
+    "annealing_seeds": 16,
+    "iterations_per_seed": 50000,
+    "gap_mm": 0.15,
+    "old_buck_courtyard_mm": [
+      50.01,
+      36.45
+    ],
+    "new_buck_courtyard_mm": [
+      44.72,
+      38.10999999999999
+    ],
+    "all_buck_footprints_front": true,
+    "critical_pad_distance_checks": 20,
+    "critical_pad_distances_all_pass": true,
+    "critical_pad_distances": [
+      {
+        "pair": "U701.8-L701.1",
+        "distance_mm": 4.72,
+        "limit_mm": 4.8,
+        "pass": true
+      },
+      {
+        "pair": "U701.7-C703.1",
+        "distance_mm": 2.029,
+        "limit_mm": 4.6,
+        "pass": true
+      },
+      {
+        "pair": "U701.8-C703.2",
+        "distance_mm": 2.022,
+        "limit_mm": 4.6,
+        "pass": true
+      },
+      {
+        "pair": "U701.2-C702.1",
+        "distance_mm": 3.178,
+        "limit_mm": 4.8,
+        "pass": true
+      },
+      {
+        "pair": "L701.2-C704.1",
+        "distance_mm": 4.361,
+        "limit_mm": 5.2,
+        "pass": true
+      },
+      {
+        "pair": "U703.8-L702.1",
+        "distance_mm": 4.72,
+        "limit_mm": 4.8,
+        "pass": true
+      },
+      {
+        "pair": "U703.7-C712.1",
+        "distance_mm": 2.029,
+        "limit_mm": 4.6,
+        "pass": true
+      },
+      {
+        "pair": "U703.8-C712.2",
+        "distance_mm": 2.022,
+        "limit_mm": 4.6,
+        "pass": true
+      },
+      {
+        "pair": "U703.2-C711.1",
+        "distance_mm": 4.308,
+        "limit_mm": 4.8,
+        "pass": true
+      },
+      {
+        "pair": "L702.2-C713.1",
+        "distance_mm": 3.225,
+        "limit_mm": 5.2,
+        "pass": true
+      },
+      {
+        "pair": "U701.4-R701.1",
+        "distance_mm": 1.809,
+        "limit_mm": 3.8,
+        "pass": true
+      },
+      {
+        "pair": "U701.5-R702.2",
+        "distance_mm": 1.957,
+        "limit_mm": 3.8,
+        "pass": true
+      },
+      {
+        "pair": "U701.5-R703.1",
+        "distance_mm": 2.211,
+        "limit_mm": 4.6,
+        "pass": true
+      },
+      {
+        "pair": "U701.5-C709.2",
+        "distance_mm": 4.206,
+        "limit_mm": 4.6,
+        "pass": true
+      },
+      {
+        "pair": "U703.4-R710.1",
+        "distance_mm": 3.314,
+        "limit_mm": 3.8,
+        "pass": true
+      },
+      {
+        "pair": "U703.5-R711.2",
+        "distance_mm": 2.155,
+        "limit_mm": 3.8,
+        "pass": true
+      },
+      {
+        "pair": "U703.5-R712.1",
+        "distance_mm": 3.555,
+        "limit_mm": 4.6,
+        "pass": true
+      },
+      {
+        "pair": "U703.5-C716.2",
+        "distance_mm": 4.206,
+        "limit_mm": 4.6,
+        "pass": true
+      },
+      {
+        "pair": "U702.1-C706.1",
+        "distance_mm": 1.732,
+        "limit_mm": 3.8,
+        "pass": true
+      },
+      {
+        "pair": "U702.5-C707.1",
+        "distance_mm": 3.752,
+        "limit_mm": 3.8,
+        "pass": true
+      }
+    ]
+  },
+  "routing": {
+    "algorithm": "Euclidean minimum spanning tree terminals plus fine-grid bidirectional A-star",
+    "grid_mm": 0.2,
+    "trace_width_mm": 0.2,
+    "turn_cost": 1.35,
+    "via_cost": 24.0,
+    "restored_two_pad_nets": 5,
+    "new_signal_open_reduction": 10,
+    "fully_connected_signal_nets": [
+      "/Auxiliary power/LM_FB",
+      "/Auxiliary power/LM2_FB",
+      "/Auxiliary power/LM_RIPPLE",
+      "/Auxiliary power/LM2_RIPPLE"
+    ],
+    "routes": [
+      {
+        "net": "/Auxiliary power/LM_BST",
+        "segments": 4,
+        "vias": 0,
+        "total_length_mm": 2.168,
+        "longest_continuous_segment_mm": 1.8,
+        "length_mm_by_layer": {
+          "F.Cu": 2.168
+        }
+      },
+      {
+        "net": "/Auxiliary power/LM2_BST",
+        "segments": 3,
+        "vias": 0,
+        "total_length_mm": 2.105,
+        "longest_continuous_segment_mm": 1.8,
+        "length_mm_by_layer": {
+          "F.Cu": 2.105
+        }
+      },
+      {
+        "net": "/Auxiliary power/LM_RON",
+        "segments": 4,
+        "vias": 0,
+        "total_length_mm": 1.992,
+        "longest_continuous_segment_mm": 1.2,
+        "length_mm_by_layer": {
+          "F.Cu": 1.992
+        }
+      },
+      {
+        "net": "/Auxiliary power/LM2_RON",
+        "segments": 3,
+        "vias": 0,
+        "total_length_mm": 3.581,
+        "longest_continuous_segment_mm": 2.546,
+        "length_mm_by_layer": {
+          "F.Cu": 3.581
+        }
+      },
+      {
+        "net": "/Auxiliary power/CAN_5V_OUT",
+        "segments": 4,
+        "vias": 0,
+        "total_length_mm": 4.933,
+        "longest_continuous_segment_mm": 2.828,
+        "length_mm_by_layer": {
+          "F.Cu": 4.933
+        }
+      },
+      {
+        "net": "/Auxiliary power/LM_FB",
+        "segments": 8,
+        "vias": 0,
+        "total_length_mm": 6.953,
+        "longest_continuous_segment_mm": 2.316,
+        "length_mm_by_layer": {
+          "F.Cu": 6.953
+        }
+      },
+      {
+        "net": "/Auxiliary power/LM2_FB",
+        "segments": 10,
+        "vias": 0,
+        "total_length_mm": 7.838,
+        "longest_continuous_segment_mm": 2.6,
+        "length_mm_by_layer": {
+          "F.Cu": 7.838
+        }
+      },
+      {
+        "net": "/Auxiliary power/LM_RIPPLE",
+        "segments": 7,
+        "vias": 0,
+        "total_length_mm": 9.167,
+        "longest_continuous_segment_mm": 4.4,
+        "length_mm_by_layer": {
+          "F.Cu": 9.167
+        }
+      },
+      {
+        "net": "/Auxiliary power/LM2_RIPPLE",
+        "segments": 7,
+        "vias": 0,
+        "total_length_mm": 15.736,
+        "longest_continuous_segment_mm": 5.154,
+        "length_mm_by_layer": {
+          "F.Cu": 15.736
+        }
+      }
+    ],
+    "new_vias": 0
+  },
+  "verification": {
+    "drc_errors": 0,
+    "reported_unconnected_items_capped": 499,
+    "schematic_parity_errors": 0,
+    "schematic_parity_signature_unchanged": true,
+    "pad_net_signature_unchanged": true,
+    "package_and_layer_signature_unchanged": true,
+    "non_buck_footprints_unchanged": true,
+    "front_footprints": 646,
+    "back_footprints": 0,
+    "vias": 400,
+    "duplicate_vias": 0,
+    "zones": 78,
+    "high_current_open_vector_unchanged": true
+  },
+  "high_current_opens": {
+    "/Motor 1 power cell/M1_BATP_IN": 0,
+    "/M1_BATP": 7,
+    "/M1_BATN": 54,
+    "/M1_PHASE_A": 3,
+    "/M1_PHASE_B": 3,
+    "/M1_PHASE_C": 2,
+    "/Motor 1 power cell/M1_SHA_I": 1,
+    "/Motor 1 power cell/M1_SHB_I": 3,
+    "/Motor 1 power cell/M1_SHC_I": 4,
+    "/Motor 2 power cell/M2_BATP_IN": 0,
+    "/M2_BATP": 7,
+    "/M2_BATN": 54,
+    "/M2_PHASE_A": 3,
+    "/M2_PHASE_B": 3,
+    "/M2_PHASE_C": 2,
+    "/Motor 2 power cell/M2_SHA_I": 1,
+    "/Motor 2 power cell/M2_SHB_I": 3,
+    "/Motor 2 power cell/M2_SHC_I": 4,
+    "/Motor 3 power cell/M3_BATP_IN": 0,
+    "/M3_BATP": 7,
+    "/M3_BATN": 54,
+    "/M3_PHASE_A": 3,
+    "/M3_PHASE_B": 3,
+    "/M3_PHASE_C": 2,
+    "/Motor 3 power cell/M3_SHA_I": 1,
+    "/Motor 3 power cell/M3_SHB_I": 3,
+    "/Motor 3 power cell/M3_SHC_I": 4,
+    "/Motor 4 power cell/M4_BATP_IN": 0,
+    "/M4_BATP": 7,
+    "/M4_BATN": 54,
+    "/M4_PHASE_A": 3,
+    "/M4_PHASE_B": 3,
+    "/M4_PHASE_C": 2,
+    "/Motor 4 power cell/M4_SHA_I": 1,
+    "/Motor 4 power cell/M4_SHB_I": 3,
+    "/Motor 4 power cell/M4_SHC_I": 4,
+    "/Motor 5 power cell/M5_BATP_IN": 0,
+    "/M5_BATP": 7,
+    "/M5_BATN": 54,
+    "/M5_PHASE_A": 3,
+    "/M5_PHASE_B": 3,
+    "/M5_PHASE_C": 2,
+    "/Motor 5 power cell/M5_SHA_I": 1,
+    "/Motor 5 power cell/M5_SHB_I": 3,
+    "/Motor 5 power cell/M5_SHC_I": 4,
+    "/Motor 6 power cell/M6_BATP_IN": 0,
+    "/M6_BATP": 7,
+    "/M6_BATN": 54,
+    "/M6_PHASE_A": 3,
+    "/M6_PHASE_B": 3,
+    "/M6_PHASE_C": 2,
+    "/Motor 6 power cell/M6_SHA_I": 1,
+    "/Motor 6 power cell/M6_SHB_I": 3,
+    "/Motor 6 power cell/M6_SHC_I": 4
+  }
+}
