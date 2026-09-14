@@ -1,0 +1,383 @@
+{
+  "checkpoint": "ESC repeated charge-pump signal routing",
+  "board_sha256": "6c7d58e2142b2f2f9f2d543cfb45126e8f3ffe52944821b00f90f17d72b14bd0",
+  "baseline_commit": "12fd9355a5db709f8cdb45102c11e602cb7ae857",
+  "baseline_true_opens": 1293,
+  "true_opens": 1281,
+  "open_reduction": 12,
+  "completed_nets": 12,
+  "routing": {
+    "algorithm": "fine-grid bidirectional A-star with clearance walls and continuous pad-relative escapes",
+    "grid_mm": 0.2,
+    "trace_width_mm": 0.2,
+    "through_via_mm": [
+      0.6,
+      0.3
+    ],
+    "turn_cost": 1.35,
+    "via_cost": 24.0,
+    "layers": [
+      "F.Cu",
+      "In2.Cu"
+    ],
+    "vias_per_net": 2,
+    "reason_for_vias": "one descent and one return per net; dense F.Cu pad exits prevented a clearance-clean single-layer path",
+    "maximum_plane_layer_length_mm_per_net": 12.817,
+    "plane_layer_run_limit_mm": 20.0,
+    "all_plane_layer_lengths_within_limit": true,
+    "routes": [
+      {
+        "net": "/Motor 1 power cell/M1_CPL",
+        "segments": 7,
+        "vias": 2,
+        "total_length_mm": 12.643,
+        "longest_continuous_segment_mm": 6.788,
+        "length_mm_by_layer": {
+          "F.Cu": 5.855,
+          "In2.Cu": 6.788
+        },
+        "route_bbox_mm": [
+          41.656,
+          99.91,
+          49.097,
+          108.325
+        ]
+      },
+      {
+        "net": "/Motor 1 power cell/M1_VCP",
+        "segments": 6,
+        "vias": 2,
+        "total_length_mm": 15.689,
+        "longest_continuous_segment_mm": 9.617,
+        "length_mm_by_layer": {
+          "F.Cu": 2.873,
+          "In2.Cu": 12.817
+        },
+        "route_bbox_mm": [
+          44.2,
+          99.91,
+          51.097,
+          111.239
+        ]
+      },
+      {
+        "net": "/Motor 2 power cell/M2_CPL",
+        "segments": 7,
+        "vias": 2,
+        "total_length_mm": 12.643,
+        "longest_continuous_segment_mm": 8.202,
+        "length_mm_by_layer": {
+          "F.Cu": 4.241,
+          "In2.Cu": 8.402
+        },
+        "route_bbox_mm": [
+          126.656,
+          99.91,
+          134.097,
+          108.325
+        ]
+      },
+      {
+        "net": "/Motor 2 power cell/M2_VCP",
+        "segments": 6,
+        "vias": 2,
+        "total_length_mm": 15.689,
+        "longest_continuous_segment_mm": 9.617,
+        "length_mm_by_layer": {
+          "F.Cu": 2.873,
+          "In2.Cu": 12.817
+        },
+        "route_bbox_mm": [
+          129.2,
+          99.91,
+          136.097,
+          111.239
+        ]
+      },
+      {
+        "net": "/Motor 3 power cell/M3_CPL",
+        "segments": 7,
+        "vias": 2,
+        "total_length_mm": 12.643,
+        "longest_continuous_segment_mm": 8.202,
+        "length_mm_by_layer": {
+          "F.Cu": 4.241,
+          "In2.Cu": 8.402
+        },
+        "route_bbox_mm": [
+          41.656,
+          182.41,
+          49.097,
+          190.825
+        ]
+      },
+      {
+        "net": "/Motor 3 power cell/M3_VCP",
+        "segments": 6,
+        "vias": 2,
+        "total_length_mm": 15.689,
+        "longest_continuous_segment_mm": 9.617,
+        "length_mm_by_layer": {
+          "F.Cu": 2.873,
+          "In2.Cu": 12.817
+        },
+        "route_bbox_mm": [
+          44.2,
+          182.41,
+          51.097,
+          193.739
+        ]
+      },
+      {
+        "net": "/Motor 4 power cell/M4_CPL",
+        "segments": 7,
+        "vias": 2,
+        "total_length_mm": 12.643,
+        "longest_continuous_segment_mm": 6.788,
+        "length_mm_by_layer": {
+          "F.Cu": 5.855,
+          "In2.Cu": 6.788
+        },
+        "route_bbox_mm": [
+          126.656,
+          182.41,
+          134.097,
+          190.825
+        ]
+      },
+      {
+        "net": "/Motor 4 power cell/M4_VCP",
+        "segments": 6,
+        "vias": 2,
+        "total_length_mm": 15.689,
+        "longest_continuous_segment_mm": 9.617,
+        "length_mm_by_layer": {
+          "F.Cu": 2.873,
+          "In2.Cu": 12.817
+        },
+        "route_bbox_mm": [
+          129.2,
+          182.41,
+          136.097,
+          193.739
+        ]
+      },
+      {
+        "net": "/Motor 5 power cell/M5_CPL",
+        "segments": 7,
+        "vias": 2,
+        "total_length_mm": 12.643,
+        "longest_continuous_segment_mm": 8.202,
+        "length_mm_by_layer": {
+          "F.Cu": 4.241,
+          "In2.Cu": 8.402
+        },
+        "route_bbox_mm": [
+          41.656,
+          264.91,
+          49.097,
+          273.325
+        ]
+      },
+      {
+        "net": "/Motor 5 power cell/M5_VCP",
+        "segments": 6,
+        "vias": 2,
+        "total_length_mm": 15.689,
+        "longest_continuous_segment_mm": 9.617,
+        "length_mm_by_layer": {
+          "F.Cu": 2.873,
+          "In2.Cu": 12.817
+        },
+        "route_bbox_mm": [
+          44.2,
+          264.91,
+          51.097,
+          276.239
+        ]
+      },
+      {
+        "net": "/Motor 6 power cell/M6_CPL",
+        "segments": 7,
+        "vias": 2,
+        "total_length_mm": 12.643,
+        "longest_continuous_segment_mm": 8.202,
+        "length_mm_by_layer": {
+          "F.Cu": 4.241,
+          "In2.Cu": 8.402
+        },
+        "route_bbox_mm": [
+          126.656,
+          264.91,
+          134.097,
+          273.325
+        ]
+      },
+      {
+        "net": "/Motor 6 power cell/M6_VCP",
+        "segments": 6,
+        "vias": 2,
+        "total_length_mm": 15.689,
+        "longest_continuous_segment_mm": 9.617,
+        "length_mm_by_layer": {
+          "F.Cu": 2.873,
+          "In2.Cu": 12.817
+        },
+        "route_bbox_mm": [
+          129.2,
+          264.91,
+          136.097,
+          276.239
+        ]
+      }
+    ]
+  },
+  "internal_plane_and_power_zone_integrity": {
+    "zone_layer_count": 24,
+    "all_outline_counts_unchanged": true,
+    "maximum_area_loss_mm2": 8.079,
+    "maximum_area_loss_percent": 0.148,
+    "material_split_detected": false,
+    "changes": [
+      {
+        "net": "/M3_BATP",
+        "layer": "In1.Cu",
+        "outline_count_before": 1,
+        "outline_count_after": 1,
+        "area_before_mm2": 5458.236,
+        "area_after_mm2": 5450.157,
+        "area_loss_mm2": 8.079,
+        "area_loss_percent": 0.148
+      },
+      {
+        "net": "/M2_BATP",
+        "layer": "In1.Cu",
+        "outline_count_before": 1,
+        "outline_count_after": 1,
+        "area_before_mm2": 5457.612,
+        "area_after_mm2": 5449.534,
+        "area_loss_mm2": 8.079,
+        "area_loss_percent": 0.148
+      },
+      {
+        "net": "/M1_BATP",
+        "layer": "In1.Cu",
+        "outline_count_before": 1,
+        "outline_count_after": 1,
+        "area_before_mm2": 5472.293,
+        "area_after_mm2": 5464.214,
+        "area_loss_mm2": 8.079,
+        "area_loss_percent": 0.1476
+      },
+      {
+        "net": "/M4_BATP",
+        "layer": "In1.Cu",
+        "outline_count_before": 1,
+        "outline_count_after": 1,
+        "area_before_mm2": 5471.733,
+        "area_after_mm2": 5463.655,
+        "area_loss_mm2": 8.079,
+        "area_loss_percent": 0.1476
+      },
+      {
+        "net": "/M5_BATP",
+        "layer": "In1.Cu",
+        "outline_count_before": 1,
+        "outline_count_after": 1,
+        "area_before_mm2": 5456.799,
+        "area_after_mm2": 5448.72,
+        "area_loss_mm2": 8.079,
+        "area_loss_percent": 0.148
+      },
+      {
+        "net": "/M6_BATP",
+        "layer": "In1.Cu",
+        "outline_count_before": 1,
+        "outline_count_after": 1,
+        "area_before_mm2": 5470.296,
+        "area_after_mm2": 5462.217,
+        "area_loss_mm2": 8.079,
+        "area_loss_percent": 0.1477
+      }
+    ]
+  },
+  "verification": {
+    "authoritative_board_exactly_matches_verified_candidate": true,
+    "ordinary_drc_errors": 0,
+    "reported_unconnected_items_capped": 499,
+    "schematic_parity_errors": 0,
+    "pad_net_signature_unchanged": true,
+    "footprint_package_layer_position_rotation_unchanged": true,
+    "non_target_track_and_via_multiset_unchanged": true,
+    "front_footprints": 646,
+    "back_footprints": 0,
+    "board_size_mm": [
+      173.95,
+      293.15
+    ],
+    "segments": 671,
+    "vias": 424,
+    "duplicate_vias": 0,
+    "zones": 78,
+    "internal_zone_outline_counts_unchanged": true,
+    "maximum_internal_zone_area_loss_percent": 0.148,
+    "material_internal_zone_split_detected": false,
+    "high_current_open_vector_unchanged": true
+  },
+  "high_current_opens": {
+    "/Motor 1 power cell/M1_BATP_IN": 0,
+    "/M1_BATP": 7,
+    "/M1_BATN": 54,
+    "/M1_PHASE_A": 3,
+    "/M1_PHASE_B": 3,
+    "/M1_PHASE_C": 2,
+    "/Motor 1 power cell/M1_SHA_I": 1,
+    "/Motor 1 power cell/M1_SHB_I": 3,
+    "/Motor 1 power cell/M1_SHC_I": 4,
+    "/Motor 2 power cell/M2_BATP_IN": 0,
+    "/M2_BATP": 7,
+    "/M2_BATN": 54,
+    "/M2_PHASE_A": 3,
+    "/M2_PHASE_B": 3,
+    "/M2_PHASE_C": 2,
+    "/Motor 2 power cell/M2_SHA_I": 1,
+    "/Motor 2 power cell/M2_SHB_I": 3,
+    "/Motor 2 power cell/M2_SHC_I": 4,
+    "/Motor 3 power cell/M3_BATP_IN": 0,
+    "/M3_BATP": 7,
+    "/M3_BATN": 54,
+    "/M3_PHASE_A": 3,
+    "/M3_PHASE_B": 3,
+    "/M3_PHASE_C": 2,
+    "/Motor 3 power cell/M3_SHA_I": 1,
+    "/Motor 3 power cell/M3_SHB_I": 3,
+    "/Motor 3 power cell/M3_SHC_I": 4,
+    "/Motor 4 power cell/M4_BATP_IN": 0,
+    "/M4_BATP": 7,
+    "/M4_BATN": 54,
+    "/M4_PHASE_A": 3,
+    "/M4_PHASE_B": 3,
+    "/M4_PHASE_C": 2,
+    "/Motor 4 power cell/M4_SHA_I": 1,
+    "/Motor 4 power cell/M4_SHB_I": 3,
+    "/Motor 4 power cell/M4_SHC_I": 4,
+    "/Motor 5 power cell/M5_BATP_IN": 0,
+    "/M5_BATP": 7,
+    "/M5_BATN": 54,
+    "/M5_PHASE_A": 3,
+    "/M5_PHASE_B": 3,
+    "/M5_PHASE_C": 2,
+    "/Motor 5 power cell/M5_SHA_I": 1,
+    "/Motor 5 power cell/M5_SHB_I": 3,
+    "/Motor 5 power cell/M5_SHC_I": 4,
+    "/Motor 6 power cell/M6_BATP_IN": 0,
+    "/M6_BATP": 7,
+    "/M6_BATN": 54,
+    "/M6_PHASE_A": 3,
+    "/M6_PHASE_B": 3,
+    "/M6_PHASE_C": 2,
+    "/Motor 6 power cell/M6_SHA_I": 1,
+    "/Motor 6 power cell/M6_SHB_I": 3,
+    "/Motor 6 power cell/M6_SHC_I": 4
+  }
+}
