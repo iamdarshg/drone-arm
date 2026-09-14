@@ -1,0 +1,45 @@
+{
+  "board": "hardware\\esc\\rev_b\\esc_rev_b.kicad_pcb",
+  "board_sha256": "F7D4E65874F0540A0D6898236FB4D51CD8B56363C4C3FC67CFB33FA9057F72C9",
+  "footprints": 687,
+  "front_footprints": 687,
+  "back_footprints": 0,
+  "track_segments": 0,
+  "vias": 663,
+  "duplicate_via_positions": 0,
+  "zones": 81,
+  "true_unconnected_count": 1623,
+  "silkscreen_graphics": 0,
+  "drc": {
+    "errors": 0,
+    "shorts": 0,
+    "courtyard_overlaps": 0,
+    "warnings": 96,
+    "violation_groups": [
+      {
+        "type": "via_dangling",
+        "severity": "warning",
+        "count": 96
+      }
+    ],
+    "reported_unconnected_items_capped": 499
+  },
+  "netlist_parity": {
+    "matched_pads": 2990,
+    "missing_board_references": [],
+    "stale_board_references": [
+      "C1130",
+      "C1230",
+      "C1330",
+      "C1430",
+      "C1530",
+      "C1630"
+    ],
+    "pad_mismatches": 0
+  },
+  "notes": [
+    "The six board-only C1130/C1230/C1330/C1430/C1530/C1630 bulk capacitors are deliberately retained.",
+    "Dangling-via warnings are expected in this placement and zone checkpoint because signal track routing has not started."
+  ],
+  "gate_pass": true
+}

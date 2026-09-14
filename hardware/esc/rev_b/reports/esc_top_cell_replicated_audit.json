@@ -1,0 +1,27 @@
+{
+  "base_sha256": "B84B24EF9135A793BEEC0305E870D2ADD06BC56FDE22D600951DEC6E6DE18D67",
+  "candidate_sha256": "AD26EC66883FD67D09BD64A5D32F40EA232C75AA35557BCF5C4E5ACFAE2BA2F5",
+  "base_true_opens": 1493,
+  "true_opens": 1513,
+  "drc_errors": 0,
+  "short_circuit_errors": 0,
+  "schematic_parity_errors": 0,
+  "reported_unconnected_items_capped": 499,
+  "footprints": 646,
+  "front_footprints": 646,
+  "back_footprints": 0,
+  "board_size_mm": [
+    173.95,
+    293.15
+  ],
+  "segments": 0,
+  "vias": 663,
+  "duplicate_vias": 0,
+  "zones": 81,
+  "pad_net_signature_unchanged": true,
+  "via_net_counts_unchanged": true,
+  "only_expected_five_via_nudges": true,
+  "replicated_template_footprints": 94,
+  "replicated_transform_errors": [],
+  "gate_pass": true
+}

@@ -1,0 +1,276 @@
+{
+  "source_board": "hardware\\esc\\rev_b\\esc_rev_b.kicad_pcb",
+  "source_sha256": "AD26EC66883FD67D09BD64A5D32F40EA232C75AA35557BCF5C4E5ACFAE2BA2F5",
+  "candidate_board": "hardware\\esc\\rev_b\\reports\\esc_usb_reconciled_refilled.kicad_pcb",
+  "candidate_sha256": "F7D4E65874F0540A0D6898236FB4D51CD8B56363C4C3FC67CFB33FA9057F72C9",
+  "source": {
+    "footprints": 646,
+    "front_footprints": 646,
+    "back_footprints": 0,
+    "segments": 0,
+    "vias": 663,
+    "duplicate_via_positions": 0,
+    "zones": 81,
+    "true_opens": 1513,
+    "board_size_mm": [
+      173.95,
+      293.15
+    ],
+    "silkscreen_graphics": 0
+  },
+  "candidate": {
+    "footprints": 687,
+    "front_footprints": 687,
+    "back_footprints": 0,
+    "segments": 0,
+    "vias": 663,
+    "duplicate_via_positions": 0,
+    "zones": 81,
+    "true_opens": 1623,
+    "board_size_mm": [
+      173.95,
+      293.15
+    ],
+    "silkscreen_graphics": 0
+  },
+  "added_references": [
+    "C234",
+    "C235",
+    "J202",
+    "J203",
+    "R1180",
+    "R1181",
+    "R1280",
+    "R1281",
+    "R1380",
+    "R1381",
+    "R1480",
+    "R1481",
+    "R1580",
+    "R1581",
+    "R1680",
+    "R1681",
+    "R204",
+    "R205",
+    "R206",
+    "R207",
+    "R208",
+    "R209",
+    "R210",
+    "R211",
+    "R212",
+    "R213",
+    "R214",
+    "R215",
+    "R216",
+    "R217",
+    "R218",
+    "R219",
+    "SW201",
+    "U1107",
+    "U1207",
+    "U1307",
+    "U1407",
+    "U1507",
+    "U1607",
+    "U208",
+    "U209"
+  ],
+  "added_count": 41,
+  "existing_transform_changes": [],
+  "pad_net_updates": [
+    {
+      "ref": "U1102",
+      "pad": "22",
+      "from": "unconnected-(U1102-PB10-Pad22)",
+      "to": "/Motor 1 power cell/M1_DRV_nFAULT"
+    },
+    {
+      "ref": "U1102",
+      "pad": "25",
+      "from": "unconnected-(U1102-PB11-Pad25)",
+      "to": "/Motor 1 power cell/M1_ARM_ISO"
+    },
+    {
+      "ref": "U1102",
+      "pad": "33",
+      "from": "/Motor 1 power cell/M1_DRV_nFAULT",
+      "to": "/Motor 1 power cell/M1_USB_DM"
+    },
+    {
+      "ref": "U1102",
+      "pad": "34",
+      "from": "/Motor 1 power cell/M1_ARM_ISO",
+      "to": "/Motor 1 power cell/M1_USB_DP"
+    },
+    {
+      "ref": "U1202",
+      "pad": "22",
+      "from": "unconnected-(U1202-PB10-Pad22)",
+      "to": "/Motor 2 power cell/M2_DRV_nFAULT"
+    },
+    {
+      "ref": "U1202",
+      "pad": "25",
+      "from": "unconnected-(U1202-PB11-Pad25)",
+      "to": "/Motor 2 power cell/M2_ARM_ISO"
+    },
+    {
+      "ref": "U1202",
+      "pad": "33",
+      "from": "/Motor 2 power cell/M2_DRV_nFAULT",
+      "to": "/Motor 2 power cell/M2_USB_DM"
+    },
+    {
+      "ref": "U1202",
+      "pad": "34",
+      "from": "/Motor 2 power cell/M2_ARM_ISO",
+      "to": "/Motor 2 power cell/M2_USB_DP"
+    },
+    {
+      "ref": "U1302",
+      "pad": "22",
+      "from": "unconnected-(U1302-PB10-Pad22)",
+      "to": "/Motor 3 power cell/M3_DRV_nFAULT"
+    },
+    {
+      "ref": "U1302",
+      "pad": "25",
+      "from": "unconnected-(U1302-PB11-Pad25)",
+      "to": "/Motor 3 power cell/M3_ARM_ISO"
+    },
+    {
+      "ref": "U1302",
+      "pad": "33",
+      "from": "/Motor 3 power cell/M3_DRV_nFAULT",
+      "to": "/Motor 3 power cell/M3_USB_DM"
+    },
+    {
+      "ref": "U1302",
+      "pad": "34",
+      "from": "/Motor 3 power cell/M3_ARM_ISO",
+      "to": "/Motor 3 power cell/M3_USB_DP"
+    },
+    {
+      "ref": "U1402",
+      "pad": "22",
+      "from": "unconnected-(U1402-PB10-Pad22)",
+      "to": "/Motor 4 power cell/M4_DRV_nFAULT"
+    },
+    {
+      "ref": "U1402",
+      "pad": "25",
+      "from": "unconnected-(U1402-PB11-Pad25)",
+      "to": "/Motor 4 power cell/M4_ARM_ISO"
+    },
+    {
+      "ref": "U1402",
+      "pad": "33",
+      "from": "/Motor 4 power cell/M4_DRV_nFAULT",
+      "to": "/Motor 4 power cell/M4_USB_DM"
+    },
+    {
+      "ref": "U1402",
+      "pad": "34",
+      "from": "/Motor 4 power cell/M4_ARM_ISO",
+      "to": "/Motor 4 power cell/M4_USB_DP"
+    },
+    {
+      "ref": "U1502",
+      "pad": "22",
+      "from": "unconnected-(U1502-PB10-Pad22)",
+      "to": "/Motor 5 power cell/M5_DRV_nFAULT"
+    },
+    {
+      "ref": "U1502",
+      "pad": "25",
+      "from": "unconnected-(U1502-PB11-Pad25)",
+      "to": "/Motor 5 power cell/M5_ARM_ISO"
+    },
+    {
+      "ref": "U1502",
+      "pad": "33",
+      "from": "/Motor 5 power cell/M5_DRV_nFAULT",
+      "to": "/Motor 5 power cell/M5_USB_DM"
+    },
+    {
+      "ref": "U1502",
+      "pad": "34",
+      "from": "/Motor 5 power cell/M5_ARM_ISO",
+      "to": "/Motor 5 power cell/M5_USB_DP"
+    },
+    {
+      "ref": "U1602",
+      "pad": "22",
+      "from": "unconnected-(U1602-PB10-Pad22)",
+      "to": "/Motor 6 power cell/M6_DRV_nFAULT"
+    },
+    {
+      "ref": "U1602",
+      "pad": "25",
+      "from": "unconnected-(U1602-PB11-Pad25)",
+      "to": "/Motor 6 power cell/M6_ARM_ISO"
+    },
+    {
+      "ref": "U1602",
+      "pad": "33",
+      "from": "/Motor 6 power cell/M6_DRV_nFAULT",
+      "to": "/Motor 6 power cell/M6_USB_DM"
+    },
+    {
+      "ref": "U1602",
+      "pad": "34",
+      "from": "/Motor 6 power cell/M6_ARM_ISO",
+      "to": "/Motor 6 power cell/M6_USB_DP"
+    },
+    {
+      "ref": "U201",
+      "pad": "20",
+      "from": "unconnected-(U201-GPIO20-Pad20)",
+      "to": "/Controller and ADC/CTRL_USB_VBUS_SENSE"
+    },
+    {
+      "ref": "U201",
+      "pad": "66",
+      "from": "unconnected-(U201-USB_DM-Pad66)",
+      "to": "/Controller and ADC/CTRL_USB_DM_MCU"
+    },
+    {
+      "ref": "U201",
+      "pad": "67",
+      "from": "unconnected-(U201-USB_DP-Pad67)",
+      "to": "/Controller and ADC/CTRL_USB_DP_MCU"
+    }
+  ],
+  "pad_net_update_count": 27,
+  "netlist_parity": {
+    "missing_board_references": [],
+    "stale_board_references": [
+      "C1130",
+      "C1230",
+      "C1330",
+      "C1430",
+      "C1530",
+      "C1630"
+    ],
+    "mismatch_count": 0,
+    "matched_pads": 2990
+  },
+  "verification": {
+    "drc_errors": 0,
+    "shorts": 0,
+    "courtyard_overlaps": 0,
+    "drc_warning_signature_identical_to_source": true,
+    "via_geometry_and_net_identity_unchanged": true,
+    "existing_footprint_transforms_unchanged": true,
+    "all_footprints_front": true,
+    "no_duplicate_vias": true,
+    "silkscreen_remains_removed": true,
+    "zone_count_unchanged": true,
+    "board_size_unchanged": true,
+    "fresh_netlist_missing_refs_zero": true,
+    "fresh_netlist_pad_mismatches_zero": true
+  },
+  "retained_board_only_bulk_caps_note": "C1130/C1230/C1330/C1430/C1530/C1630 are deliberately preserved as board-only bulk capacitors; they are the only stale references.",
+  "gate_pass": true
+}
