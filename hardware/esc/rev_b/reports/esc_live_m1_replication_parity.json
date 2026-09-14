@@ -1,0 +1,19 @@
+{
+  "board": "hardware\\esc\\rev_b\\esc_rev_b.kicad_pcb",
+  "netlist": "hardware\\esc\\rev_b\\reports\\esc_live_current_netlist.xml",
+  "board_footprints": 687,
+  "schematic_components": 681,
+  "common_references": 681,
+  "missing_board_references": [],
+  "stale_board_references": [
+    "C1130",
+    "C1230",
+    "C1330",
+    "C1430",
+    "C1530",
+    "C1630"
+  ],
+  "matched_pads": 2990,
+  "mismatch_count": 0,
+  "mismatches": []
+}
