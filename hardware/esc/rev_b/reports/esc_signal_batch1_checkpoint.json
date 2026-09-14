@@ -1,0 +1,42 @@
+{
+  "source_user_layout_sha256": "BDE438597424B3B7FBFC44BD43D598A9446A9FCDE360EBD817F592F68B12F3E3",
+  "promoted_board_sha256": "A27312771E882825FE99AC40E019451FBD3423052D7A5DACB94B92ACA96523E1",
+  "true_unconnected_before": 1558,
+  "true_unconnected_after": 1546,
+  "connected_nets": [
+    "/Motor 1 power cell/M1_DRV_SDI",
+    "/Motor 2 power cell/M2_DRV_SDI",
+    "/Motor 3 power cell/M3_DRV_SDI",
+    "/Motor 4 power cell/M4_DRV_SDI",
+    "/Motor 5 power cell/M5_DRV_SDI",
+    "/Motor 6 power cell/M6_DRV_SDI",
+    "/Motor 1 power cell/M1_DRV_SCLK",
+    "/Motor 2 power cell/M2_DRV_SCLK",
+    "/Motor 3 power cell/M3_DRV_SCLK",
+    "/Motor 4 power cell/M4_DRV_SCLK",
+    "/Motor 5 power cell/M5_DRV_SCLK",
+    "/Motor 6 power cell/M6_DRV_SCLK"
+  ],
+  "added_track_segments": 150,
+  "added_vias": 12,
+  "duplicate_vias": 0,
+  "drc_errors": 0,
+  "drc_warnings": 16,
+  "drc_warning_types": [
+    "via_dangling"
+  ],
+  "footprints_front": 687,
+  "footprints_back": 0,
+  "endpoint_count": 2970,
+  "net_count": 666,
+  "pad_net_mismatches": 0,
+  "schematic_only_missing_references": [],
+  "intentional_board_only_bulk_caps": [
+    "C1130",
+    "C1230",
+    "C1330",
+    "C1430",
+    "C1530",
+    "C1630"
+  ]
+}
