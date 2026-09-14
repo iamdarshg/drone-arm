@@ -1,0 +1,232 @@
+{
+  "checkpoint": "ESC cell compaction and repeated gate-driver signal batch",
+  "board_sha256": "29c61aae1c16108de25b5ae02017357d2d173b05bfd74db9aa8136c339eeb665",
+  "baseline_commit": "f775bf65d6a4414375926057a380c03f01822682",
+  "baseline_true_opens": 1315,
+  "true_opens": 1303,
+  "open_reduction": 12,
+  "completed_nets": 12,
+  "routes": [
+    {
+      "net": "/Motor 1 power cell/M1_GLB_DRV",
+      "segments": 4,
+      "vias": 2,
+      "length_mm_by_layer": {
+        "B.Cu": 14.245,
+        "F.Cu": 2.42
+      },
+      "max_plane_layer_run_mm": 0
+    },
+    {
+      "net": "/Motor 1 power cell/M1_GHB_DRV",
+      "segments": 3,
+      "vias": 2,
+      "length_mm_by_layer": {
+        "F.Cu": 2.56,
+        "In1.Cu": 17.075
+      },
+      "max_plane_layer_run_mm": 17.075
+    },
+    {
+      "net": "/Motor 2 power cell/M2_GLB_DRV",
+      "segments": 4,
+      "vias": 2,
+      "length_mm_by_layer": {
+        "B.Cu": 14.245,
+        "F.Cu": 2.42
+      },
+      "max_plane_layer_run_mm": 0
+    },
+    {
+      "net": "/Motor 2 power cell/M2_GHB_DRV",
+      "segments": 3,
+      "vias": 2,
+      "length_mm_by_layer": {
+        "F.Cu": 2.56,
+        "In1.Cu": 17.075
+      },
+      "max_plane_layer_run_mm": 17.075
+    },
+    {
+      "net": "/Motor 3 power cell/M3_GLB_DRV",
+      "segments": 4,
+      "vias": 2,
+      "length_mm_by_layer": {
+        "B.Cu": 14.245,
+        "F.Cu": 2.42
+      },
+      "max_plane_layer_run_mm": 0
+    },
+    {
+      "net": "/Motor 3 power cell/M3_GHB_DRV",
+      "segments": 3,
+      "vias": 2,
+      "length_mm_by_layer": {
+        "F.Cu": 2.56,
+        "In1.Cu": 17.075
+      },
+      "max_plane_layer_run_mm": 17.075
+    },
+    {
+      "net": "/Motor 4 power cell/M4_GLB_DRV",
+      "segments": 4,
+      "vias": 2,
+      "length_mm_by_layer": {
+        "B.Cu": 14.245,
+        "F.Cu": 2.42
+      },
+      "max_plane_layer_run_mm": 0
+    },
+    {
+      "net": "/Motor 4 power cell/M4_GHB_DRV",
+      "segments": 3,
+      "vias": 2,
+      "length_mm_by_layer": {
+        "F.Cu": 2.56,
+        "In1.Cu": 17.075
+      },
+      "max_plane_layer_run_mm": 17.075
+    },
+    {
+      "net": "/Motor 5 power cell/M5_GLB_DRV",
+      "segments": 4,
+      "vias": 2,
+      "length_mm_by_layer": {
+        "B.Cu": 14.245,
+        "F.Cu": 2.42
+      },
+      "max_plane_layer_run_mm": 0
+    },
+    {
+      "net": "/Motor 5 power cell/M5_GHB_DRV",
+      "segments": 3,
+      "vias": 2,
+      "length_mm_by_layer": {
+        "F.Cu": 2.56,
+        "In1.Cu": 17.075
+      },
+      "max_plane_layer_run_mm": 17.075
+    },
+    {
+      "net": "/Motor 6 power cell/M6_GLB_DRV",
+      "segments": 4,
+      "vias": 2,
+      "length_mm_by_layer": {
+        "B.Cu": 14.245,
+        "F.Cu": 2.42
+      },
+      "max_plane_layer_run_mm": 0
+    },
+    {
+      "net": "/Motor 6 power cell/M6_GHB_DRV",
+      "segments": 3,
+      "vias": 2,
+      "length_mm_by_layer": {
+        "F.Cu": 2.56,
+        "In1.Cu": 17.075
+      },
+      "max_plane_layer_run_mm": 17.075
+    }
+  ],
+  "placement": {
+    "algorithm": "rigid lattice compaction bounded by exact F.CrtYd and high-current zone envelopes",
+    "old_cell_pitch_mm": [
+      87.0,
+      84.0
+    ],
+    "new_cell_pitch_mm": [
+      85.0,
+      82.5
+    ],
+    "old_board_size_mm": [
+      173.95,
+      296.15
+    ],
+    "new_board_size_mm": [
+      173.95,
+      293.15
+    ],
+    "shifted_footprints": 470,
+    "shifted_tracks_and_vias": 680,
+    "shifted_zones": 65
+  },
+  "routing_method": {
+    "algorithm": "clearance-screened continuous pad-relative gate-driver escapes after fine-grid bidirectional A-star proved the pad exits topologically sealed",
+    "width_mm": 0.2,
+    "through_via_mm": [
+      0.6,
+      0.3
+    ],
+    "maximum_plane_layer_run_mm": 17.075,
+    "plane_layer_run_limit_mm": 20.0
+  },
+  "verification": {
+    "drc_errors": 0,
+    "reported_unconnected_items_capped": 499,
+    "schematic_parity_errors": 0,
+    "schematic_parity_signature_unchanged": true,
+    "pad_net_signature_unchanged": true,
+    "footprint_package_layer_rotation_unchanged_during_routing": true,
+    "front_footprints": 646,
+    "back_footprints": 0,
+    "vias": 402,
+    "duplicate_vias": 0,
+    "high_current_open_vector_unchanged": true
+  },
+  "high_current_opens": {
+    "/Motor 1 power cell/M1_BATP_IN": 0,
+    "/M1_BATP": 7,
+    "/M1_BATN": 54,
+    "/M1_PHASE_A": 3,
+    "/M1_PHASE_B": 3,
+    "/M1_PHASE_C": 2,
+    "/Motor 1 power cell/M1_SHA_I": 1,
+    "/Motor 1 power cell/M1_SHB_I": 3,
+    "/Motor 1 power cell/M1_SHC_I": 4,
+    "/Motor 2 power cell/M2_BATP_IN": 0,
+    "/M2_BATP": 7,
+    "/M2_BATN": 54,
+    "/M2_PHASE_A": 3,
+    "/M2_PHASE_B": 3,
+    "/M2_PHASE_C": 2,
+    "/Motor 2 power cell/M2_SHA_I": 1,
+    "/Motor 2 power cell/M2_SHB_I": 3,
+    "/Motor 2 power cell/M2_SHC_I": 4,
+    "/Motor 3 power cell/M3_BATP_IN": 0,
+    "/M3_BATP": 7,
+    "/M3_BATN": 54,
+    "/M3_PHASE_A": 3,
+    "/M3_PHASE_B": 3,
+    "/M3_PHASE_C": 2,
+    "/Motor 3 power cell/M3_SHA_I": 1,
+    "/Motor 3 power cell/M3_SHB_I": 3,
+    "/Motor 3 power cell/M3_SHC_I": 4,
+    "/Motor 4 power cell/M4_BATP_IN": 0,
+    "/M4_BATP": 7,
+    "/M4_BATN": 54,
+    "/M4_PHASE_A": 3,
+    "/M4_PHASE_B": 3,
+    "/M4_PHASE_C": 2,
+    "/Motor 4 power cell/M4_SHA_I": 1,
+    "/Motor 4 power cell/M4_SHB_I": 3,
+    "/Motor 4 power cell/M4_SHC_I": 4,
+    "/Motor 5 power cell/M5_BATP_IN": 0,
+    "/M5_BATP": 7,
+    "/M5_BATN": 54,
+    "/M5_PHASE_A": 3,
+    "/M5_PHASE_B": 3,
+    "/M5_PHASE_C": 2,
+    "/Motor 5 power cell/M5_SHA_I": 1,
+    "/Motor 5 power cell/M5_SHB_I": 3,
+    "/Motor 5 power cell/M5_SHC_I": 4,
+    "/Motor 6 power cell/M6_BATP_IN": 0,
+    "/M6_BATP": 7,
+    "/M6_BATN": 54,
+    "/M6_PHASE_A": 3,
+    "/M6_PHASE_B": 3,
+    "/M6_PHASE_C": 2,
+    "/Motor 6 power cell/M6_SHA_I": 1,
+    "/Motor 6 power cell/M6_SHB_I": 3,
+    "/Motor 6 power cell/M6_SHC_I": 4
+  }
+}
