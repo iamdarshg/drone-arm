@@ -5,11 +5,24 @@ implementation. `PASS` below means the source/netlist/EDA check passed; it is
 not a substitute for the physical qualification listed in
 `REV_B_ARCHITECTURE.md`.
 
+## Current audit snapshot — 2026-09-29
+
+This section records a fresh repository review at commit
+`744994a096ca73e872b396a9b0636c58e7c1afe8`. It supersedes older statements
+below where they conflict, but it does not replace a fresh KiCad 9.0.7 run.
+
+| Gate | Current status | Evidence |
+| --- | --- | --- |
+| Main Rev-B routing | BLOCKED | Copperline direct-KiCad trial rejected; see [`COPPERLINE_ROUTE_TRIAL.md`](COPPERLINE_ROUTE_TRIAL.md). Do not use the candidate for fabrication. |
+| ESC Rev-B routing | NOT VERIFIED IN THIS AUDIT | No Copperline route was promoted and no fresh KiCad DRC was run. |
+| First-article physical qualification | NOT RUN | Operator procedure is in [`REV_B_FIRST_ARTICLE_TEST_PLAN.md`](REV_B_FIRST_ARTICLE_TEST_PLAN.md); measurements and numeric acceptance limits remain outstanding. |
+| Rail-noise, RF, conversion-efficiency, and route-level EM analyses | NOT RUN | See open GitHub issues #14 and #16 for the required reproducible analysis package. |
+
 ## Repository and change-source audit
 
 | Check | Result | Evidence |
 | --- | --- | --- |
-| Latest main | PASS | Fast-forwarded to `origin/main` commit `3b52fbe75671ab1cc6fcc1d298fd52cf6ec10704` before Rev-B work |
+| Historical pre-Rev-B base | REFERENCE ONLY | `3b52fbe75671ab1cc6fcc1d298fd52cf6ec10704`; current audit snapshot is recorded above |
 | Open hardware PR fix | NONE | No open PR contains a complete electrical correction |
 | Closed PR 6 | REJECTED | Mechanical/placeholder routing does not correct the schematics and includes unsafe scripts |
 | Other branch | NOT APPLICABLE | `sdk-recreation` is firmware-only |
