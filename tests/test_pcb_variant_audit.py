@@ -53,3 +53,37 @@ def test_erc_summary_flattens_sheet_violations_and_severities():
     assert result["violation_count"] == 2
     assert result["violation_count_by_severity"] == {"error": 1, "warning": 1}
     assert result["findings"] == 2
+
+
+def test_rectangular_edge_centerlines_exclude_stroke_and_match_pr34_reader():
+    # PR34's native reader bounds straight Edge.Cuts paths from GetStart/GetEnd.
+    rectangle_edges = [
+        {"start_mm": [0.0, 0.0], "end_mm": [140.0, 0.0]},
+        {"start_mm": [140.0, 0.0], "end_mm": [140.0, 100.0]},
+        {"start_mm": [140.0, 100.0], "end_mm": [0.0, 100.0]},
+        {"start_mm": [0.0, 100.0], "end_mm": [0.0, 0.0]},
+    ]
+    points = [point for edge in rectangle_edges for point in (edge["start_mm"], edge["end_mm"])]
+    measured = audit._point_bounds(points)
+    # This is PR34's endpoint/center envelope algorithm applied to straight paths.
+    pr34_points = [point for edge in rectangle_edges
+                   for point in (edge["start_mm"], edge["end_mm"], edge.get("center_mm"))
+                   if point is not None]
+    assert measured == audit._point_bounds(pr34_points) == [0.0, 0.0, 140.0, 100.0]
+    audit._validate_closed_edge_paths(rectangle_edges)
+    # A 0.15 mm graphic line has a separate stroke envelope.
+    assert [-0.075, -0.075, 140.075, 100.075] != audit._point_bounds(points)
+
+
+def test_arc_centerline_bounds_include_only_swept_cardinal_extrema():
+    points = audit._arc_centerline_points([10.0, 0.0], [0.0, 10.0], [0.0, 0.0], 10.0, False)
+    assert audit._point_bounds(points) == [0.0, 0.0, 10.0, 10.0]
+
+
+def test_open_edge_cuts_contour_fails_closed():
+    try:
+        audit._validate_closed_edge_paths([{"start_mm": [0.0, 0.0], "end_mm": [1.0, 0.0]}])
+    except ValueError as exc:
+        assert "open or branched" in str(exc)
+    else:
+        raise AssertionError("open Edge.Cuts path must not produce an outline measurement")

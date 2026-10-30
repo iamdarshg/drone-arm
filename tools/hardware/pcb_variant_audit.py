@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import os
 import re
 import subprocess
@@ -92,9 +93,68 @@ def _to_mm(pcbnew, value: int | float) -> float:
 
 
 def _bbox_mm(pcbnew, item) -> list[float]:
+    """Graphic bounding box, including line width."""
     box = item.GetBoundingBox()
     return [_to_mm(pcbnew, box.GetX()), _to_mm(pcbnew, box.GetY()),
             _to_mm(pcbnew, box.GetRight()), _to_mm(pcbnew, box.GetBottom())]
+
+
+def _point_bounds(points: list[list[float]]) -> list[float]:
+    if not points:
+        raise ValueError("Edge.Cuts geometry has no measurable points")
+    return [min(point[0] for point in points), min(point[1] for point in points),
+            max(point[0] for point in points), max(point[1] for point in points)]
+
+
+def _arc_centerline_points(start: list[float], end: list[float], center: list[float],
+                           radius: float, clockwise: bool) -> list[list[float]]:
+    """Return arc endpoints plus any cardinal extrema traversed by its sweep."""
+    start_angle = math.degrees(math.atan2(start[1] - center[1], start[0] - center[0])) % 360.0
+    end_angle = math.degrees(math.atan2(end[1] - center[1], end[0] - center[0])) % 360.0
+    sweep = (start_angle - end_angle) % 360.0 if clockwise else (end_angle - start_angle) % 360.0
+    points = [start, end]
+    for angle in (0.0, 90.0, 180.0, 270.0):
+        progress = (start_angle - angle) % 360.0 if clockwise else (angle - start_angle) % 360.0
+        if progress <= sweep + 1e-9:
+            radians = math.radians(angle)
+            points.append([center[0] + radius * math.cos(radians),
+                           center[1] + radius * math.sin(radians)])
+    return points
+
+
+def _edge_centerline_points(pcbnew, item) -> list[list[float]]:
+    """Extract actual Edge.Cuts path geometry, independent of graphic stroke width."""
+    shape = item.GetShape()
+    if shape == pcbnew.SHAPE_T_SEGMENT:
+        return [[_to_mm(pcbnew, item.GetStart().x), _to_mm(pcbnew, item.GetStart().y)],
+                [_to_mm(pcbnew, item.GetEnd().x), _to_mm(pcbnew, item.GetEnd().y)]]
+    if shape == pcbnew.SHAPE_T_ARC:
+        start = [_to_mm(pcbnew, item.GetStart().x), _to_mm(pcbnew, item.GetStart().y)]
+        end = [_to_mm(pcbnew, item.GetEnd().x), _to_mm(pcbnew, item.GetEnd().y)]
+        center = [_to_mm(pcbnew, item.GetCenter().x), _to_mm(pcbnew, item.GetCenter().y)]
+        return _arc_centerline_points(start, end, center, _to_mm(pcbnew, item.GetRadius()),
+                                      bool(item.IsClockwiseArc()))
+    if shape == pcbnew.SHAPE_T_CIRCLE:
+        center = [_to_mm(pcbnew, item.GetCenter().x), _to_mm(pcbnew, item.GetCenter().y)]
+        radius = _to_mm(pcbnew, item.GetRadius())
+        return [[center[0] + radius, center[1]], [center[0] - radius, center[1]],
+                [center[0], center[1] + radius], [center[0], center[1] - radius]]
+    raise ValueError(f"unsupported Edge.Cuts shape {shape!s}; refusing an incomplete outline envelope")
+
+
+def _validate_closed_edge_paths(primitives: list[dict[str, Any]]) -> None:
+    """Reject open segment/arc contours instead of reporting partial bounds as an outline."""
+    degrees: dict[tuple[int, int], int] = {}
+    for primitive in primitives:
+        start, end = primitive.get("start_mm"), primitive.get("end_mm")
+        if start is None or end is None:  # Closed circle primitive.
+            continue
+        for point in (start, end):
+            key = (round(float(point[0]) * 1000), round(float(point[1]) * 1000))
+            degrees[key] = degrees.get(key, 0) + 1
+    invalid = [point for point, degree in degrees.items() if degree != 2]
+    if invalid:
+        raise ValueError(f"Edge.Cuts contains open or branched paths at {len(invalid)} endpoint(s)")
 
 
 def _model_paths(pcbnew, footprint) -> tuple[list[dict[str, Any]], bool]:
@@ -165,16 +225,15 @@ def extract_board(board_path: Path, board_name: str, pinmap_path: Path | None = 
     edge_items = [drawing for drawing in board.GetDrawings() if drawing.GetLayer() == pcbnew.Edge_Cuts]
     if not edge_items:
         raise ValueError(f"no Edge.Cuts primitives in {board_path}")
-    # Bounding boxes include arc extrema, unlike a min/max of arc endpoints.
-    edge_boxes = [_bbox_mm(pcbnew, item) for item in edge_items]
-    outline_bbox = [min(b[0] for b in edge_boxes), min(b[1] for b in edge_boxes),
-                    max(b[2] for b in edge_boxes), max(b[3] for b in edge_boxes)]
-    width = outline_bbox[2] - outline_bbox[0]
-    height = outline_bbox[3] - outline_bbox[1]
     edge_records = []
+    centerline_points: list[list[float]] = []
+    stroke_boxes = []
     for item in edge_items:
         shape = item.GetShape()
-        record: dict[str, Any] = {"shape": str(shape), "bbox_mm": _bbox_mm(pcbnew, item)}
+        stroke_box = _bbox_mm(pcbnew, item)
+        stroke_boxes.append(stroke_box)
+        centerline_points.extend(_edge_centerline_points(pcbnew, item))
+        record: dict[str, Any] = {"shape": str(shape), "stroke_bbox_mm": stroke_box}
         if shape == pcbnew.SHAPE_T_SEGMENT:
             record.update(start_mm=[_to_mm(pcbnew, item.GetStart().x), _to_mm(pcbnew, item.GetStart().y)],
                           end_mm=[_to_mm(pcbnew, item.GetEnd().x), _to_mm(pcbnew, item.GetEnd().y)])
@@ -187,6 +246,12 @@ def extract_board(board_path: Path, board_name: str, pinmap_path: Path | None = 
             record.update(center_mm=[_to_mm(pcbnew, item.GetCenter().x), _to_mm(pcbnew, item.GetCenter().y)],
                           radius_mm=_to_mm(pcbnew, item.GetRadius()))
         edge_records.append(record)
+    _validate_closed_edge_paths(edge_records)
+    outline_bbox = _point_bounds(centerline_points)
+    stroke_bbox = [min(b[0] for b in stroke_boxes), min(b[1] for b in stroke_boxes),
+                   max(b[2] for b in stroke_boxes), max(b[3] for b in stroke_boxes)]
+    width = outline_bbox[2] - outline_bbox[0]
+    height = outline_bbox[3] - outline_bbox[1]
 
     footprints = [_footprint_record(pcbnew, fp) for fp in board.GetFootprints()]
     drilled_features = []
@@ -219,6 +284,9 @@ def extract_board(board_path: Path, board_name: str, pinmap_path: Path | None = 
             "pcbnew_version": pcbnew.GetBuildVersion(),
             "outline": {"source_layer": "Edge.Cuts", "primitive_count": len(edge_items),
                         "primitives": edge_records, "bbox_mm": outline_bbox,
+                        "bbox_source": "Edge.Cuts centerline geometry including arc/circle extrema",
+                        "stroke_bbox_mm": stroke_bbox,
+                        "stroke_bbox_source": "Edge.Cuts graphic bounds including line width",
                         "width_mm": round(width, 6), "height_mm": round(height, 6)},
             "thickness_mm": thickness, "copper_layer_count": board.GetCopperLayerCount(),
             "enabled_copper_layers": layers,
