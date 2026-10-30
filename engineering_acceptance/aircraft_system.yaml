@@ -33,13 +33,13 @@ battery:
   series_cells: 12
   nominal_voltage_V: 44.4
   maximum_voltage_V: 50.4
-  capacity_Ah: {value: null, status: BLOCKED, reason: no verified installed-pack source}
-  dc_resistance_ohm: {value: null, status: BLOCKED, reason: requires pack measurement}
+  capacity_Ah: {value: null, unit: Ah, status: BLOCKED, reason: no verified installed-pack source}
+  dc_resistance_ohm: {value: null, unit: ohm, status: BLOCKED, reason: requires pack measurement}
 motors:
   count: 6
   independent_power_stages: 6
-  installed_can_length_mm: {value: null, status: BLOCKED, reason: actual motor model/source is unresolved}
-  temperature_measurements: {value: null, status: BLOCKED, reason: installed sensors not evidenced}
+  installed_can_length_mm: {value: null, unit: mm, status: BLOCKED, reason: actual motor model/source is unresolved}
+  temperature_measurements: {value: null, unit: C, status: BLOCKED, reason: installed sensors not evidenced}
 boards:
   active_variant: {value: rev_b, status: KNOWN, reason: issue-23 selected Rev-B native candidates; exact authority remains gated on native export}
   selected_main_source: hardware/main/rev_b/main_rev_b.kicad_pcb
@@ -74,8 +74,8 @@ payload:
   cg_m: {value: null, status: BLOCKED, reason: no sourced aircraft CG coordinate}
   radar_active: false
 limits:
-  per_motor_battery_current_A: {value: null, status: BLOCKED, reason: actual motor/ESC limits and measurements required}
-  bus_current_A: {value: null, status: BLOCKED, reason: source architecture requires six independent fused inputs; no shared limit inferred}
-  temperature_C: {value: null, status: BLOCKED, reason: motor/ESC thermal limits unresolved}
+  per_motor_battery_current_A: {value: null, unit: A, status: BLOCKED, reason: actual motor/ESC limits and measurements required}
+  bus_current_A: {value: null, unit: A, status: BLOCKED, reason: source architecture requires six independent fused inputs; no shared limit inferred}
+  temperature_C: {value: null, unit: C, status: BLOCKED, reason: motor/ESC thermal limits unresolved}
 cost_policy: {remote_compute_budget_usd: 0, allow_remote_compute: false}
 overrides: []

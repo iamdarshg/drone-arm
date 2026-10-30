@@ -18,7 +18,10 @@
       }
     },
     "interfaces": {
-      "type": "array"
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/interface"
+      }
     },
     "evidence": {
       "type": "array",
@@ -57,7 +60,8 @@
       "required": [
         "value",
         "unit",
-        "provenance"
+        "provenance",
+        "evidence_id"
       ],
       "properties": {
         "value": {
@@ -68,7 +72,34 @@
           ]
         },
         "unit": {
-          "type": "string"
+          "enum": [
+            "1",
+            "m",
+            "mm",
+            "kg",
+            "g",
+            "s",
+            "A",
+            "V",
+            "W",
+            "Wh",
+            "J",
+            "K",
+            "C",
+            "degC",
+            "rad",
+            "deg",
+            "Hz",
+            "rpm",
+            "m2",
+            "mm2",
+            "kg*m2",
+            "Pa",
+            "USD",
+            "kg/m3",
+            "Ah",
+            "ohm"
+          ]
         },
         "provenance": {
           "enum": [
@@ -83,6 +114,104 @@
           "type": [
             "string",
             "null"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "provenance": {
+                "enum": [
+                  "measured",
+                  "sourced"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "evidence_id": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "provenance": {
+                "const": "unknown"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "const": null
+              },
+              "evidence_id": {
+                "const": null
+              }
+            }
+          }
+        }
+      ]
+    },
+    "interface": {
+      "type": "object",
+      "required": [
+        "id",
+        "direction",
+        "signal",
+        "unit"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "direction": {
+          "enum": [
+            "input",
+            "output",
+            "bidirectional"
+          ]
+        },
+        "signal": {
+          "type": "string",
+          "minLength": 1
+        },
+        "unit": {
+          "enum": [
+            "1",
+            "m",
+            "mm",
+            "kg",
+            "g",
+            "s",
+            "A",
+            "V",
+            "W",
+            "Wh",
+            "J",
+            "K",
+            "C",
+            "degC",
+            "rad",
+            "deg",
+            "Hz",
+            "rpm",
+            "m2",
+            "mm2",
+            "kg*m2",
+            "Pa",
+            "USD",
+            "kg/m3",
+            "Ah",
+            "ohm"
           ]
         }
       },

@@ -9,7 +9,16 @@
     "artifact",
     "sha256",
     "unit",
-    "provenance"
+    "provenance",
+    "timestamp_utc",
+    "command",
+    "runner",
+    "tool_versions",
+    "measured",
+    "required",
+    "tolerance",
+    "exit_code",
+    "source_signature"
   ],
   "properties": {
     "id": {
@@ -65,6 +74,35 @@
       "type": [
         "string",
         "null"
+      ],
+      "enum": [
+        "1",
+        "m",
+        "mm",
+        "kg",
+        "g",
+        "s",
+        "A",
+        "V",
+        "W",
+        "Wh",
+        "J",
+        "K",
+        "C",
+        "degC",
+        "rad",
+        "deg",
+        "Hz",
+        "rpm",
+        "m2",
+        "mm2",
+        "kg*m2",
+        "Pa",
+        "USD",
+        "kg/m3",
+        "Ah",
+        "ohm",
+        null
       ]
     },
     "provenance": {
@@ -81,7 +119,75 @@
         "string",
         "null"
       ]
+    },
+    "timestamp_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "command": {
+      "type": "string",
+      "minLength": 1
+    },
+    "runner": {
+      "type": "string"
+    },
+    "tool_versions": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "measured": {},
+    "required": {},
+    "tolerance": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "exit_code": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "source_signature": {
+      "type": "string",
+      "minLength": 1
+    },
+    "raw_receipt": {
+      "type": [
+        "string",
+        "null"
+      ]
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "PASS"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "raw_receipt"
+        ],
+        "properties": {
+          "raw_receipt": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      }
+    }
+  ]
 }

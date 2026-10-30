@@ -338,8 +338,32 @@
         },
         "units": {
           "enum": [
+            "1",
+            "m",
             "mm",
-            "m"
+            "kg",
+            "g",
+            "s",
+            "A",
+            "V",
+            "W",
+            "Wh",
+            "J",
+            "K",
+            "C",
+            "degC",
+            "rad",
+            "deg",
+            "Hz",
+            "rpm",
+            "m2",
+            "mm2",
+            "kg*m2",
+            "Pa",
+            "USD",
+            "kg/m3",
+            "Ah",
+            "ohm"
           ]
         },
         "origin": {
@@ -534,6 +558,36 @@
             "string",
             "null"
           ]
+        },
+        "unit": {
+          "enum": [
+            "1",
+            "m",
+            "mm",
+            "kg",
+            "g",
+            "s",
+            "A",
+            "V",
+            "W",
+            "Wh",
+            "J",
+            "K",
+            "C",
+            "degC",
+            "rad",
+            "deg",
+            "Hz",
+            "rpm",
+            "m2",
+            "mm2",
+            "kg*m2",
+            "Pa",
+            "USD",
+            "kg/m3",
+            "Ah",
+            "ohm"
+          ]
         }
       },
       "additionalProperties": false,
@@ -621,7 +675,34 @@
           ]
         },
         "unit": {
-          "type": "string"
+          "enum": [
+            "1",
+            "m",
+            "mm",
+            "kg",
+            "g",
+            "s",
+            "A",
+            "V",
+            "W",
+            "Wh",
+            "J",
+            "K",
+            "C",
+            "degC",
+            "rad",
+            "deg",
+            "Hz",
+            "rpm",
+            "m2",
+            "mm2",
+            "kg*m2",
+            "Pa",
+            "USD",
+            "kg/m3",
+            "Ah",
+            "ohm"
+          ]
         },
         "provenance": {
           "enum": [
@@ -639,7 +720,51 @@
           ]
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "provenance": {
+                "enum": [
+                  "measured",
+                  "sourced"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "evidence_id"
+            ],
+            "properties": {
+              "evidence_id": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "provenance": {
+                "const": "unknown"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "const": null
+              },
+              "evidence_id": {
+                "const": null
+              }
+            }
+          }
+        }
+      ]
     }
   }
 }

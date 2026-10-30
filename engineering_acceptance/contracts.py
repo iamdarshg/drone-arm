@@ -7,6 +7,8 @@ import re
 from pathlib import Path
 from typing import Any
 
+from .units import UNITS
+
 import yaml
 
 ROOT = Path(__file__).resolve().parent
@@ -52,6 +54,41 @@ def validate(config: Any) -> None:
         rev = item.get("source", {}).get("revision") if isinstance(item, dict) and isinstance(item.get("source"), dict) else None
         if rev not in refs:
             errors.append(f"$.overrides[{i}].source.revision: revision must match a declared source_of_truth revision")
+    for path, item in _walk(config):
+        if isinstance(item, dict) and {"repo", "revision", "path"}.issubset(item):
+            repo_name = "drone_arm" if item.get("repo") == "drone-arm" else "drone_mech" if item.get("repo") == "drone-mech" else None
+            if not SHA_RE.fullmatch(str(item.get("revision", ""))):
+                errors.append(f"{path}.revision: source reference needs a full git SHA")
+            elif repo_name and item["revision"] not in KNOWN_REVISIONS[repo_name]:
+                errors.append(f"{path}.revision: source revision is not registered in the pinned contract")
+    # Quantities whose source has not been established remain blocked; negative current or
+    # thermal limits are never meaningful engineering inputs.
+    for container, field_names in ((config.get("battery", {}), ("capacity_Ah", "dc_resistance_ohm")),
+                                   (config.get("motors", {}), ("installed_can_length_mm", "temperature_measurements")),
+                                   (config.get("limits", {}), ("per_motor_battery_current_A", "bus_current_A", "temperature_C"))):
+        if not isinstance(container, dict):
+            continue
+        for field in field_names:
+            item = container.get(field)
+            if not isinstance(item, dict) or "value" not in item:
+                continue
+            value = item.get("value")
+            if value is None and item.get("status") != "BLOCKED":
+                errors.append(f"$.{field}: unknown battery/thermal quantity must remain BLOCKED")
+            if value is not None and isinstance(value, (int, float)) and not isinstance(value, bool):
+                if field in ("per_motor_battery_current_A", "bus_current_A") and value < 0:
+                    errors.append(f"$.limits.{field}: current cannot be negative")
+                if field in ("capacity_Ah", "dc_resistance_ohm", "installed_can_length_mm") and value <= 0:
+                    errors.append(f"$.{field}: known physical quantity must be positive")
+                expected_unit = "A" if field in ("per_motor_battery_current_A", "bus_current_A") else "Ah" if field == "capacity_Ah" else "ohm" if field == "dc_resistance_ohm" else "mm" if field == "installed_can_length_mm" else None
+                if expected_unit and item.get("unit") is not None and item["unit"] != expected_unit:
+                    errors.append(f"$.{field}.unit: expected {expected_unit} for field {field}")
+    current_limits = config.get("limits", {})
+    if isinstance(current_limits, dict):
+        per_motor = current_limits.get("per_motor_battery_current_A", {})
+        bus = current_limits.get("bus_current_A", {})
+        if isinstance(per_motor, dict) and isinstance(bus, dict) and isinstance(per_motor.get("value"), (int, float)) and isinstance(bus.get("value"), (int, float)) and per_motor.get("value") > 0 and bus.get("value") == 6 * per_motor.get("value"):
+            errors.append("$.limits.bus_current_A: cannot promote six per-motor limits into an unsupported shared PCB trunk limit")
     propulsion = config.get("propulsion")
     if isinstance(propulsion, dict) and (type(propulsion.get("ducts")) is not int or propulsion.get("ducts") != 2):
         errors.append("$.propulsion.ducts: expected integer 2")
@@ -97,4 +134,60 @@ def _validate_shape(config: dict[str, Any]) -> list[str]:
             for field in sorted(fields-set(config[group])): errors.append(f"$.{group}.{field}: required property missing")
     return errors
 
-KNOWN_UNITS={"1","mm","m","kg","g","s","ms","A","mA","V","W","Wh","Ah","ohm","mohm","C","K","deg","rad","N","Nm","Pa","Hz","rpm","m/s","m2","m3","kg/m3","N/m2","USD"}
+KNOWN_UNITS=set(UNITS)
+
+RESULT_SCHEMA_PATH = ROOT / "schema" / "testresult.schema.json"
+MANIFEST_SCHEMA_PATH = ROOT / "schema" / "run_manifest.schema.json"
+
+def validate_result(row: Any) -> None:
+    """Validate one actual runner result before it is appended to the ledger."""
+    _validate_json_schema(row, RESULT_SCHEMA_PATH, "result")
+    errors: list[str] = []
+    if not isinstance(row, dict):
+        raise ContractError(["result: expected object"])
+    if row.get("status") not in {"PASS", "FAIL", "BLOCKED", "NOT_RUN", "NOT_APPLICABLE"}:
+        errors.append("result.status: invalid evidence state")
+    for field in ("run_id", "drone_arm_sha", "drone_mech_sha", "test_definition_sha256", "config_sha256"):
+        value = row.get(field)
+        length = 64 if field in ("run_id", "test_definition_sha256", "config_sha256") else 40
+        if not isinstance(value, str) or not re.fullmatch(rf"[0-9a-f]{{{length}}}", value):
+            errors.append(f"result.{field}: expected {length}-character lowercase hexadecimal digest")
+    source = row.get("source")
+    if not isinstance(source, dict) or not SHA_RE.fullmatch(str(source.get("revision", ""))):
+        errors.append("result.source.revision: full source revision is required")
+    if row.get("unit") is not None and row["unit"] not in UNITS:
+        errors.append(f"result.unit: unsupported unit {row['unit']!r}")
+    if isinstance(row.get("measured"), (int, float)) and not isinstance(row.get("measured"), bool) and row.get("unit") is None:
+        errors.append("result.unit: scalar measured quantities require an explicit unit")
+    artifacts = row.get("artifacts")
+    if not isinstance(artifacts, list): artifacts = []
+    artifact_hashes = []
+    for i, item in enumerate(artifacts):
+        if not isinstance(item, dict) or not isinstance(item.get("path"), str) or not re.fullmatch(r"(?:[0-9a-f]{40}|[0-9a-f]{64})", str(item.get("sha256", ""))):
+            errors.append(f"result.artifacts[{i}]: each evidence artifact needs a path and SHA-256")
+        else: artifact_hashes.append(item["sha256"])
+    expected_set_hash = __import__("hashlib").sha256("".join(artifact_hashes).encode()).hexdigest() if artifact_hashes else None
+    if row.get("artifact_sha256") != expected_set_hash:
+        errors.append("result.artifact_sha256: does not match ordered artifact SHA-256 receipt set")
+    if row.get("status") == "PASS" and row.get("evidence_required") and not artifacts:
+        errors.append("result: PASS requires at least one raw artifact receipt when evidence_required is true")
+    if errors:
+        raise ContractError(errors)
+
+def validate_manifest(manifest: Any) -> None:
+    _validate_json_schema(manifest, MANIFEST_SCHEMA_PATH, "run manifest")
+    if not isinstance(manifest, dict):
+        raise ContractError(["run manifest: expected object"])
+
+def _validate_json_schema(value: Any, schema_path: Path, label: str) -> None:
+    try:
+        import jsonschema
+    except ImportError as exc:
+        raise ContractError([f"{label}: jsonschema is required for contract validation"]) from exc
+    try:
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+        errors = sorted(jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker()).iter_errors(value), key=lambda e: list(map(str,e.absolute_path)))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ContractError([f"{label}: invalid installed schema: {exc}"]) from exc
+    if errors:
+        raise ContractError([f"{label}{_path(e.absolute_path)[1:]}: {e.message}" for e in errors])
