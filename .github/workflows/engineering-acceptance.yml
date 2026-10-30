@@ -29,14 +29,14 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: iamdarshg/drone-mech
-          ref: f851b20ae7d035c7fe417b2fc9f36c786163f5c2
+          ref: 4ca9af0674e40e5f3a097407d08bb3b47a2514db
           path: drone-mech
           fetch-depth: 0
           # A separately scoped read-only token is needed for the private companion.
           token: ${{ secrets.DRONE_MECH_READ_TOKEN }}
       - name: Require separately reviewed acceptance definitions
         working-directory: drone-arm
-        run: git diff --exit-code ee053c6 -- engineering_acceptance/catalog/
+        run: git diff --exit-code c026a7503268e44900ad62fc67f380ea1e32a161 -- engineering_acceptance/catalog/
       - name: Prepare pinned environment
         working-directory: drone-arm
         run: ./tools/prepare_acceptance.sh
