@@ -143,18 +143,34 @@ def _edge_centerline_points(pcbnew, item) -> list[list[float]]:
 
 
 def _validate_closed_edge_paths(primitives: list[dict[str, Any]]) -> None:
-    """Reject open segment/arc contours instead of reporting partial bounds as an outline."""
+    """Reject malformed, open, or branched contours instead of measuring partial paths."""
     degrees: dict[tuple[int, int], int] = {}
     for primitive in primitives:
         start, end = primitive.get("start_mm"), primitive.get("end_mm")
-        if start is None or end is None:  # Closed circle primitive.
+        center, radius = primitive.get("center_mm"), primitive.get("radius_mm")
+        for label, point in (("start", start), ("end", end), ("center", center)):
+            if point is not None and (len(point) != 2 or
+                                      not all(math.isfinite(float(value)) for value in point)):
+                raise ValueError(f"Edge.Cuts {label} point must contain two finite coordinates")
+        if radius is not None and (not math.isfinite(float(radius)) or float(radius) <= 0):
+            raise ValueError("Edge.Cuts arc/circle radius must be finite and positive")
+        if (start is None) != (end is None):
+            raise ValueError("Edge.Cuts path has only one endpoint")
+        if start is None:  # A circle is closed without path endpoints.
+            if center is None or radius is None:
+                raise ValueError("Edge.Cuts closed primitive requires a finite center and positive radius")
             continue
+        if start == end:
+            raise ValueError("Edge.Cuts contains a zero-length segment or arc")
+        if radius is not None and center is None:
+            raise ValueError("Edge.Cuts arc radius is present without its center")
         for point in (start, end):
             key = (round(float(point[0]) * 1000), round(float(point[1]) * 1000))
             degrees[key] = degrees.get(key, 0) + 1
     invalid = [point for point, degree in degrees.items() if degree != 2]
     if invalid:
         raise ValueError(f"Edge.Cuts contains open or branched paths at {len(invalid)} endpoint(s)")
+
 
 
 def _model_paths(pcbnew, footprint) -> tuple[list[dict[str, Any]], bool]:

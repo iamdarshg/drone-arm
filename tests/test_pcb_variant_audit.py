@@ -87,3 +87,20 @@ def test_open_edge_cuts_contour_fails_closed():
         assert "open or branched" in str(exc)
     else:
         raise AssertionError("open Edge.Cuts path must not produce an outline measurement")
+
+
+def test_zero_length_and_invalid_edge_primitives_fail_closed():
+    invalid_primitives = [
+        [{"start_mm": [0.0, 0.0], "end_mm": [0.0, 0.0]}],
+        [{"center_mm": [0.0, 0.0], "radius_mm": 0.0}],
+        [{"center_mm": [0.0, 0.0], "radius_mm": -1.0}],
+        [{"center_mm": [0.0, 0.0], "radius_mm": float("nan")}],
+        [{"center_mm": [float("inf"), 0.0], "radius_mm": 1.0}],
+        [{"center_mm": [0.0, 0.0]}],
+    ]
+    for primitives in invalid_primitives:
+        try:
+            audit._validate_closed_edge_paths(primitives)
+        except ValueError:
+            continue
+        raise AssertionError(f"invalid Edge.Cuts primitive was accepted: {primitives!r}")
