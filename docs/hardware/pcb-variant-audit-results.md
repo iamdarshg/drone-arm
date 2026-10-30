@@ -14,3 +14,29 @@ The outline envelope is calculated from Edge.Cuts centerline geometry: segment e
 PR17's PCB blobs produce the same measurements and native findings as the current-main reference. PR10 and PR11 produce the same geometry and DRC results, with different ERC results. KiCad returned exit code 5 for all native DRC and ERC runs. The audit parses ERC violations from the per-sheet `sheets[*].violations` arrays. Native solid component heights remain blocked because the exporter does not compute 3D solid bounds. The baseline and PR17 MCU pin map each expose six distinct PWM outputs for seven source-declared independent effectors; PR10 and PR11 do not include the pinned MCU pin map. No GPIO or missing output was invented.
 
 The DRC and ERC counts are raw native findings, not adjusted acceptance targets. Baseline/PR17 main DRC includes 4 errors and 3 warnings; ESC DRC includes 8 errors and 16 warnings. PR10/PR11 main DRC includes 4 errors and 154 warnings; their ESC DRC includes 207 warnings. ERC results are all warnings except PR11 ESC, which includes 154 errors and 84 warnings. The CLI JSON reports 499 unconnected items on some boards; that is the count returned by the native report. The source Edge.Cuts graphic stroke envelope is retained as a separate field in the machine-readable results. No component 3D solid-height evidence is available from these audits. These results do not establish physical fit, assembly, electrical safety, first-article function, or fabrication readiness.
+
+## Legacy KiCad launcher baseline probe
+
+This separate regression probe used a clean worktree at `744994a096ca73e872b396a9b0636c58e7c1afe8`. The unchanged Windows-targeted test run recorded **23 passed, 2 failed** because both tests tried to launch `C:\Program Files\KiCad\9.0\bin\python.exe`, which is unavailable in this Linux runner (`/workspace/issue2-motor-drive-screen/highspeed_edf/verification/evidence/baseline/arm-pytest.log`). No test assertions or source files were changed.
+
+To check the existing tests with the installed KiCad Python without editing them, an external pytest collection hook at `/workspace/legacy_probe.py` replaced only each collected module's `KICAD_PYTHON` value:
+
+```python
+from pathlib import Path
+
+def pytest_collection_modifyitems(items):
+    for item in items:
+        if hasattr(item.module, "KICAD_PYTHON"):
+            item.module.KICAD_PYTHON = Path("/usr/bin/python3")
+```
+
+Reproduce from that clean worktree with:
+
+```sh
+cd /workspace/legacy-baseline
+PYTHONPATH=/workspace pytest -p legacy_probe -q \
+  tests/test_prepare_esc_quilter_upload.py \
+  tests/test_reconcile_esc_usb_footprints.py
+```
+
+The portable-runtime probe recorded **1 passed, 1 failed** (`/workspace/legacy-portable-probe.log`). The reconciliation test now reaches `pcbnew`, then fails because its configured source PCB `hardware/esc/rev_b/reports/esc_165mm_hybrid_newtop_oldbottom_tight.kicad_pcb` is absent. `git log --all --` for that exact path returns no tracked history. The absent PCB was not created or substituted; the original one-pass/one-missing-file result is retained as a baseline finding.
