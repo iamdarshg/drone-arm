@@ -1,0 +1,770 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Strict versioned aircraft system config",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "source_of_truth",
+    "propulsion",
+    "battery",
+    "motors",
+    "boards",
+    "actuators",
+    "payload",
+    "limits",
+    "cost_policy",
+    "overrides",
+    "coordinates",
+    "source_artifacts",
+    "cad",
+    "materials",
+    "battery_installation",
+    "simulation"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "source_of_truth": {
+      "type": "object",
+      "required": [
+        "drone_arm",
+        "drone_mech"
+      ],
+      "properties": {
+        "drone_arm": {
+          "$ref": "#/$defs/source"
+        },
+        "drone_mech": {
+          "$ref": "#/$defs/source"
+        }
+      },
+      "additionalProperties": false
+    },
+    "propulsion": {
+      "type": "object",
+      "required": [
+        "architecture",
+        "ducts",
+        "nominal_stages_per_duct"
+      ],
+      "properties": {
+        "architecture": {
+          "const": "twin-electric-ducted-fan"
+        },
+        "ducts": {
+          "const": 2
+        },
+        "nominal_stages_per_duct": {
+          "const": 3
+        }
+      },
+      "additionalProperties": false
+    },
+    "battery": {
+      "type": "object",
+      "required": [
+        "series_cells",
+        "nominal_voltage_V",
+        "maximum_voltage_V",
+        "capacity_Ah",
+        "dc_resistance_ohm"
+      ],
+      "properties": {
+        "series_cells": {
+          "const": 12
+        },
+        "nominal_voltage_V": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "maximum_voltage_V": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "capacity_Ah": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "dc_resistance_ohm": {
+          "$ref": "#/$defs/unknownable"
+        }
+      },
+      "additionalProperties": false
+    },
+    "motors": {
+      "type": "object",
+      "required": [
+        "count",
+        "independent_power_stages",
+        "installed_can_length_mm",
+        "temperature_measurements"
+      ],
+      "properties": {
+        "count": {
+          "const": 6
+        },
+        "independent_power_stages": {
+          "const": 6
+        },
+        "installed_can_length_mm": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "temperature_measurements": {
+          "$ref": "#/$defs/unknownable"
+        }
+      },
+      "additionalProperties": false
+    },
+    "boards": {
+      "type": "object",
+      "required": [
+        "active_variant",
+        "selected_main_source",
+        "selected_esc_source",
+        "main_board_git_revision",
+        "esc_board_git_revision",
+        "native_sha256",
+        "dimensions_mm",
+        "thickness_mm",
+        "connector_heights_mm",
+        "mounting_holes",
+        "cable_keepouts"
+      ],
+      "properties": {
+        "active_variant": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "dimensions_mm": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "native_sha256": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "thickness_mm": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "connector_heights_mm": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "mounting_holes": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "cable_keepouts": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "selected_main_source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "selected_esc_source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "main_board_git_revision": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "esc_board_git_revision": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "actuators": {
+      "type": "object",
+      "required": [
+        "modeled_independent_effectors",
+        "controller_outputs",
+        "source",
+        "control_surfaces",
+        "servo_mounts",
+        "signal_map"
+      ],
+      "properties": {
+        "modeled_independent_effectors": {
+          "const": 7
+        },
+        "controller_outputs": {
+          "const": 6
+        },
+        "source": {
+          "type": "string"
+        },
+        "control_surfaces": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "servo_mounts": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "signal_map": {
+          "$ref": "#/$defs/unknownable"
+        }
+      },
+      "additionalProperties": false
+    },
+    "payload": {
+      "type": "object",
+      "required": [
+        "modeled_payload_mass_kg",
+        "cg_m"
+      ],
+      "properties": {
+        "modeled_payload_mass_kg": {
+          "type": "number",
+          "minimum": 0
+        },
+        "cg_m": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "radar_active": {
+          "const": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "limits": {
+      "type": "object",
+      "required": [
+        "per_motor_battery_current_A",
+        "bus_current_A",
+        "temperature_C"
+      ],
+      "properties": {
+        "per_motor_battery_current_A": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "bus_current_A": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "temperature_C": {
+          "$ref": "#/$defs/unknownable"
+        }
+      },
+      "additionalProperties": false
+    },
+    "cost_policy": {
+      "type": "object",
+      "required": [
+        "remote_compute_budget_usd",
+        "allow_remote_compute"
+      ],
+      "properties": {
+        "remote_compute_budget_usd": {
+          "type": "number",
+          "minimum": 0
+        },
+        "allow_remote_compute": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "overrides": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "path",
+          "value",
+          "unit",
+          "source"
+        ],
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "value": {},
+          "unit": {
+            "type": "string"
+          },
+          "source": {
+            "type": "object",
+            "required": [
+              "reference",
+              "revision"
+            ],
+            "properties": {
+              "reference": {
+                "type": "string"
+              },
+              "revision": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{40}$"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "coordinates": {
+      "type": "object",
+      "required": [
+        "frame_id",
+        "datum",
+        "axis_convention",
+        "units",
+        "origin",
+        "source"
+      ],
+      "properties": {
+        "frame_id": {
+          "type": "string"
+        },
+        "datum": {
+          "type": "string"
+        },
+        "axis_convention": {
+          "type": "object",
+          "required": [
+            "x",
+            "y",
+            "z"
+          ],
+          "properties": {
+            "x": {
+              "type": "string"
+            },
+            "y": {
+              "type": "string"
+            },
+            "z": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "units": {
+          "enum": [
+            "1",
+            "m",
+            "mm",
+            "kg",
+            "g",
+            "s",
+            "A",
+            "V",
+            "W",
+            "Wh",
+            "J",
+            "K",
+            "C",
+            "degC",
+            "rad",
+            "deg",
+            "Hz",
+            "rpm",
+            "m2",
+            "mm2",
+            "kg*m2",
+            "Pa",
+            "USD",
+            "kg/m3",
+            "Ah",
+            "ohm"
+          ]
+        },
+        "origin": {
+          "type": "object",
+          "required": [
+            "x",
+            "y",
+            "z"
+          ],
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            },
+            "z": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": false
+        },
+        "source": {
+          "$ref": "#/$defs/artifact_source"
+        }
+      },
+      "additionalProperties": false
+    },
+    "source_artifacts": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "#/$defs/artifact_source"
+      }
+    },
+    "cad": {
+      "type": "object",
+      "required": [
+        "generator",
+        "source_sha256",
+        "step_root",
+        "solid_manifest",
+        "envelope",
+        "mass_cg"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "generator": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "source_sha256": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "step_root": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "solid_manifest": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "envelope": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "mass_cg": {
+          "$ref": "#/$defs/unknownable"
+        }
+      }
+    },
+    "materials": {
+      "type": "object",
+      "required": [
+        "core",
+        "resin",
+        "fibers",
+        "ply_table",
+        "temperature_properties",
+        "manufacturing_process"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "core": {
+          "$ref": "#/$defs/typed_quantity"
+        },
+        "resin": {
+          "$ref": "#/$defs/typed_quantity"
+        },
+        "fibers": {
+          "$ref": "#/$defs/typed_quantity"
+        },
+        "ply_table": {
+          "$ref": "#/$defs/typed_quantity"
+        },
+        "temperature_properties": {
+          "$ref": "#/$defs/typed_quantity"
+        },
+        "manufacturing_process": {
+          "$ref": "#/$defs/typed_quantity"
+        }
+      }
+    },
+    "battery_installation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "pack_geometry": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "connectors": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "independent_fuse_paths": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "cooling": {
+          "$ref": "#/$defs/unknownable"
+        }
+      }
+    },
+    "simulation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scenarios": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "solver_capabilities": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "tool_versions": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "budget_policy": {
+          "$ref": "#/$defs/unknownable"
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "source": {
+      "type": "object",
+      "required": [
+        "repo",
+        "revision",
+        "revision_role"
+      ],
+      "properties": {
+        "repo": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "revision_role": {
+          "enum": [
+            "immutable_issue_baseline",
+            "selected_artifact",
+            "measured_source"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "unknownable": {
+      "type": "object",
+      "required": [
+        "value",
+        "status",
+        "reason"
+      ],
+      "properties": {
+        "value": {
+          "type": [
+            "number",
+            "integer",
+            "string",
+            "array",
+            "object",
+            "boolean",
+            "null"
+          ]
+        },
+        "status": {
+          "enum": [
+            "KNOWN",
+            "BLOCKED"
+          ]
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "unit": {
+          "enum": [
+            "1",
+            "m",
+            "mm",
+            "kg",
+            "g",
+            "s",
+            "A",
+            "V",
+            "W",
+            "Wh",
+            "J",
+            "K",
+            "C",
+            "degC",
+            "rad",
+            "deg",
+            "Hz",
+            "rpm",
+            "m2",
+            "mm2",
+            "kg*m2",
+            "Pa",
+            "USD",
+            "kg/m3",
+            "Ah",
+            "ohm"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "value": {
+                "const": null
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "status": {
+                "const": "BLOCKED"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "KNOWN"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "not": {
+                  "const": null
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "artifact_source": {
+      "type": "object",
+      "required": [
+        "repo",
+        "revision",
+        "path"
+      ],
+      "properties": {
+        "repo": {
+          "enum": [
+            "drone-arm",
+            "drone-mech"
+          ]
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "typed_quantity": {
+      "type": "object",
+      "required": [
+        "value",
+        "unit",
+        "provenance",
+        "evidence_id"
+      ],
+      "properties": {
+        "value": {
+          "type": [
+            "number",
+            "integer",
+            "string",
+            "null"
+          ]
+        },
+        "unit": {
+          "enum": [
+            "1",
+            "m",
+            "mm",
+            "kg",
+            "g",
+            "s",
+            "A",
+            "V",
+            "W",
+            "Wh",
+            "J",
+            "K",
+            "C",
+            "degC",
+            "rad",
+            "deg",
+            "Hz",
+            "rpm",
+            "m2",
+            "mm2",
+            "kg*m2",
+            "Pa",
+            "USD",
+            "kg/m3",
+            "Ah",
+            "ohm"
+          ]
+        },
+        "provenance": {
+          "enum": [
+            "measured",
+            "sourced",
+            "modeled",
+            "assumed",
+            "unknown"
+          ]
+        },
+        "evidence_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "provenance": {
+                "enum": [
+                  "measured",
+                  "sourced"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "evidence_id"
+            ],
+            "properties": {
+              "evidence_id": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "provenance": {
+                "const": "unknown"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "const": null
+              },
+              "evidence_id": {
+                "const": null
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

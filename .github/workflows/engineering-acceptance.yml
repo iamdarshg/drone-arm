@@ -1,0 +1,90 @@
+name: Engineering acceptance
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  acceptance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    container:
+      image: python:3.12.12-slim-trixie@sha256:f3fa41d74a768c2fce8016b98c191ae8c1bacd8f1152870a3f9f87d350920b7c
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: [smoke, pcb, software, cad, evidence]
+    steps:
+      - name: Check private companion credential
+        env:
+          COMPANION_TOKEN: ${{ secrets.DRONE_MECH_READ_TOKEN }}
+        run: |
+          if [ -z "$COMPANION_TOKEN" ]; then
+            echo '::error::Missing DRONE_MECH_READ_TOKEN: read-only Contents access to iamdarshg/drone-mech is required.'
+            exit 1
+          fi
+      - name: Install snapshot-pinned native tools
+        run: |
+          rm -f /etc/apt/sources.list.d/debian.sources
+          echo 'deb [check-valid-until=no] https://snapshot.debian.org/archive/debian/20251019T000000Z trixie main' > /etc/apt/sources.list
+          apt-get update
+          apt-get install -y --no-install-recommends git ca-certificates libgl1 libglu1-mesa kicad=9.0.2+dfsg-1
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          path: drone-arm
+          fetch-depth: 0
+      - name: Checkout mechanical counterpart
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: iamdarshg/drone-mech
+          ref: fd8decc7c6683692ab04150a06c201ee7138aa3a
+          path: drone-mech
+          fetch-depth: 0
+          # A separately scoped read-only token is needed for the private companion.
+          token: ${{ secrets.DRONE_MECH_READ_TOKEN }}
+      - name: Require separately reviewed acceptance definitions
+        working-directory: drone-arm
+        run: git diff --exit-code 3e10e84b321f6f8da6f72a1d177f3ddfd1a56886 -- engineering_acceptance/catalog/
+      - name: Prepare pinned environment
+        working-directory: drone-arm
+        run: ./tools/prepare_acceptance.sh
+      - name: Test framework and adversarial fixtures
+        working-directory: drone-arm
+        run: .venv-acceptance/bin/python -m pytest -q tests/acceptance tests/independent
+      - name: Exercise native negative fixtures
+        if: matrix.profile == 'cad'
+        working-directory: drone-mech
+        run: ../drone-arm/.venv-acceptance/bin/python -m highspeed_edf.verification.negative_fixtures
+      - name: Execute acceptance (engineering failures stay red)
+        working-directory: drone-arm
+        run: .venv-acceptance/bin/python -m engineering_acceptance run --profile ${{ matrix.profile }}
+      - name: Write JSON, JUnit and HTML
+        if: always()
+        env:
+          ACCEPTANCE_PROFILE: ${{ matrix.profile }}
+        run: |
+          if [ -x drone-arm/.venv-acceptance/bin/python ] && [ -f drone-arm/engineering_acceptance/reports/evidence.jsonl ]; then
+            cd drone-arm
+            .venv-acceptance/bin/python -m engineering_acceptance report --json engineering_acceptance/reports/latest.json --junit engineering_acceptance/reports/latest.xml --html engineering_acceptance/reports/latest.html
+          else
+            python3 - <<'PY'
+          import datetime, html, json, os, pathlib, xml.etree.ElementTree as ET
+          out = pathlib.Path('acceptance-infrastructure'); out.mkdir(exist_ok=True)
+          reason = 'Acceptance environment was not prepared; inspect the failed credential, checkout, dependency or framework step. No engineering checks were executed.'
+          report = {'kind': 'ci_environment', 'id': 'CI-ENVIRONMENT-001', 'status': 'BLOCKED', 'profile': os.environ['ACCEPTANCE_PROFILE'], 'engineering_checks_attempted': 0, 'source_revision': os.environ.get('GITHUB_SHA'), 'timestamp_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'run_url': os.environ.get('GITHUB_SERVER_URL', 'https://github.com') + '/' + os.environ.get('GITHUB_REPOSITORY', '') + '/actions/runs/' + os.environ.get('GITHUB_RUN_ID', ''), 'reason': reason}
+          (out/'report.json').write_text(json.dumps(report, indent=2)+'\n')
+          suite = ET.Element('testsuite', name='ci_environment', tests='1', failures='0', skipped='1')
+          ET.SubElement(ET.SubElement(suite, 'testcase', name=report['id']), 'skipped', message='BLOCKED').text = reason
+          (out/'report.xml').write_bytes(ET.tostring(suite, encoding='utf-8', xml_declaration=True))
+          (out/'report.html').write_text('<!doctype html><meta charset="utf-8"><title>CI environment</title><h1>BLOCKED: CI environment</h1><p>'+html.escape(reason)+'</p><p>Engineering checks attempted: 0</p>')
+          PY
+          fi
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: acceptance-${{ matrix.profile }}
+          path: |
+            drone-arm/engineering_acceptance/reports/
+            drone-mech/highspeed_edf/verification/evidence/
+            acceptance-infrastructure/
+          retention-days: 14

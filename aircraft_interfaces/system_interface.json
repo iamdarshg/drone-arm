@@ -1,0 +1,271 @@
+{
+  "actuators": {
+    "available_pwm_output_count": 6,
+    "command_limits": {
+      "reason": "per-effector command signs, ranges, rates, and failsafe positions require sourced interface definitions",
+      "source": {
+        "path": "highspeed_edf/design/PHASE15_CONTROL_SURFACES.md",
+        "repo": "drone-mech",
+        "revision": "5246c90657071772e220b118967fa5f3e7c9ff7c"
+      },
+      "status": "BLOCKED",
+      "unit": "deg",
+      "value": null
+    },
+    "effector_classes": {
+      "reason": "source configuration records seven independent effectors; stable per-effector IDs require cross-repository source reconciliation",
+      "source": {
+        "path": "highspeed_edf/design/PHASE15_CONTROL_SURFACES.md",
+        "repo": "drone-mech",
+        "revision": "5246c90657071772e220b118967fa5f3e7c9ff7c"
+      },
+      "status": "BLOCKED",
+      "value": null
+    },
+    "fault_behavior": {
+      "reason": "fault response and safe-state transitions are not verified in executable firmware",
+      "source": {
+        "path": "hardware/main/rev_b/main_rev_b.kicad_pcb",
+        "repo": "drone-arm",
+        "revision": "744994a096ca73e872b396a9b0636c58e7c1afe8"
+      },
+      "status": "BLOCKED",
+      "value": null
+    },
+    "feedback_interfaces": {
+      "reason": "position feedback sensors and telemetry IDs are not evidenced",
+      "source": {
+        "path": "hardware/main/rev_b/main_rev_b.kicad_pcb",
+        "repo": "drone-arm",
+        "revision": "744994a096ca73e872b396a9b0636c58e7c1afe8"
+      },
+      "status": "BLOCKED",
+      "value": null
+    },
+    "firmware_capabilities": {
+      "reason": "production firmware source and built target image are absent or not verified",
+      "source": {
+        "path": "hardware/main/rev_b/main_rev_b.kicad_pcb",
+        "repo": "drone-arm",
+        "revision": "744994a096ca73e872b396a9b0636c58e7c1afe8"
+      },
+      "status": "BLOCKED",
+      "value": null
+    },
+    "modeled_effector_count": 7,
+    "order": {
+      "reason": "actuator execution and allocation order is not established by the pinned firmware and airframe contract",
+      "source": {
+        "path": "highspeed_edf/design/PHASE15_CONTROL_SURFACES.md",
+        "repo": "drone-mech",
+        "revision": "5246c90657071772e220b118967fa5f3e7c9ff7c"
+      },
+      "status": "BLOCKED",
+      "value": null
+    }
+  },
+  "contract_id": "drone-arm-issue21-system-interface",
+  "contract_status": "PARTIAL_BLOCKED",
+  "coordinate_frame": {
+    "axis_convention": {
+      "x": "lateral_right",
+      "y": "vertical_up",
+      "z": "aft"
+    },
+    "datum": "fan_plane_center",
+    "frame_id": "phase15_aircraft",
+    "origin": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "source": {
+      "path": "highspeed_edf/design/PHASE15_DESIGN_SPEC.md",
+      "repo": "drone-mech",
+      "revision": "5246c90657071772e220b118967fa5f3e7c9ff7c"
+    },
+    "units": "mm"
+  },
+  "interfaces": [
+    {
+      "consumer": "six_esc_power_stages",
+      "id": "propulsion.esc_control",
+      "producer": "flight_controller",
+      "protocol": "CAN-FD",
+      "signal": "motor_command_and_telemetry",
+      "source": {
+        "path": "docs/hardware/REV_B_ARCHITECTURE.md",
+        "repo": "drone-arm",
+        "revision": "744994a096ca73e872b396a9b0636c58e7c1afe8"
+      },
+      "status": "KNOWN"
+    },
+    {
+      "capacity": 6,
+      "consumer": "servo_outputs",
+      "id": "actuators.pwm_capacity",
+      "producer": "flight_controller",
+      "protocol": "PWM",
+      "signal": "independent_pwm_command_paths",
+      "source": {
+        "path": "hardware/main/rev_b/main_rev_b.kicad_pcb",
+        "repo": "drone-arm",
+        "revision": "744994a096ca73e872b396a9b0636c58e7c1afe8"
+      },
+      "status": "KNOWN",
+      "unit": "1"
+    },
+    {
+      "capacity": null,
+      "consumer": "seven_independent_effectors",
+      "id": "actuators.mapping",
+      "producer": "flight_controller",
+      "protocol": null,
+      "reason": "seven modeled effectors exceed six PWM outputs; a unique realizable path and feedback assignment is unresolved",
+      "signal": "effector_command_and_feedback_assignment",
+      "source": {
+        "path": "highspeed_edf/design/PHASE15_CONTROL_SURFACES.md",
+        "repo": "drone-mech",
+        "revision": "5246c90657071772e220b118967fa5f3e7c9ff7c"
+      },
+      "status": "BLOCKED",
+      "unit": null
+    }
+  ],
+  "limitations": [
+    "This contract records source-backed interfaces and unresolved gates; it does not claim the actuator mapping or hardware interface is solved."
+  ],
+  "power_and_control": {
+    "bus_current_limit": {
+      "reason": "six independent fused inputs are required; no shared PCB trunk limit is established",
+      "status": "BLOCKED",
+      "unit": "A",
+      "value": null
+    },
+    "esc_control": {
+      "path": "CAN-FD",
+      "source": {
+        "path": "docs/hardware/REV_B_ARCHITECTURE.md",
+        "repo": "drone-arm",
+        "revision": "744994a096ca73e872b396a9b0636c58e7c1afe8"
+      },
+      "status": "KNOWN"
+    },
+    "pwm_capacity": {
+      "source": {
+        "path": "hardware/main/rev_b/main_rev_b.kicad_pcb",
+        "repo": "drone-arm",
+        "revision": "744994a096ca73e872b396a9b0636c58e7c1afe8"
+      },
+      "status": "KNOWN",
+      "unit": "1",
+      "value": 6
+    }
+  },
+  "propulsion": {
+    "architecture": "twin-electric-ducted-fan",
+    "ducts": 2,
+    "independent_power_stages": 6,
+    "motor_count": 6,
+    "motor_identity": {
+      "reason": "installed motor identity and source datasheet are unresolved",
+      "status": "BLOCKED",
+      "value": null
+    },
+    "stages_per_duct": 3
+  },
+  "schema_version": 1,
+  "source_artifacts": [
+    {
+      "id": "architecture",
+      "path": "docs/hardware/REV_B_ARCHITECTURE.md",
+      "reason": null,
+      "repo": "drone-arm",
+      "revision": "744994a096ca73e872b396a9b0636c58e7c1afe8",
+      "sha256": "a2bc568eec378645fdfe37582ca3d69fa23fca63e694a16889817969aff41001",
+      "status": "KNOWN"
+    },
+    {
+      "id": "actuator_interface",
+      "path": "highspeed_edf/design/PHASE15_CONTROL_SURFACES.md",
+      "reason": null,
+      "repo": "drone-mech",
+      "revision": "5246c90657071772e220b118967fa5f3e7c9ff7c",
+      "sha256": "fac431960f7458aff64f099d75bf1cda265765bc13dcb32d1906ffa5dba0bd72",
+      "status": "KNOWN"
+    },
+    {
+      "id": "geometry_generator",
+      "path": "highspeed_edf/phase15/optimization/phase15_generate_geometry.py",
+      "reason": null,
+      "repo": "drone-mech",
+      "revision": "5246c90657071772e220b118967fa5f3e7c9ff7c",
+      "sha256": "86275054adf53b862dd91bfb3a66b84da3470e8ea400af8e57d5e339ef124caf",
+      "status": "KNOWN"
+    },
+    {
+      "id": "geometry_step",
+      "path": "highspeed_edf/deliverables/phase15_geometry/step",
+      "reason": null,
+      "repo": "drone-mech",
+      "revision": "5246c90657071772e220b118967fa5f3e7c9ff7c",
+      "sha256": "251545d5e99f6ef83caa0e789f452a8013b028e82f8de689dca41f708a4c9b77",
+      "status": "KNOWN"
+    },
+    {
+      "id": "stock_nests",
+      "path": "highspeed_edf/deliverables/phase15_geometry/stock_nests",
+      "reason": null,
+      "repo": "drone-mech",
+      "revision": "5246c90657071772e220b118967fa5f3e7c9ff7c",
+      "sha256": "bbf66fcdedc5bb49746b96e70decaa02e8ae336d9b7931c4e0d8659e72ca4c69",
+      "status": "KNOWN"
+    },
+    {
+      "id": "mass_properties",
+      "path": "highspeed_edf/deliverables/phase15_geometry/reports/mass_cg.csv",
+      "reason": null,
+      "repo": "drone-mech",
+      "revision": "5246c90657071772e220b118967fa5f3e7c9ff7c",
+      "sha256": "f5fe8171121c9c5ee5777ec81504b89da62a465d9a4bd0e04be03e40dd547498",
+      "status": "KNOWN"
+    },
+    {
+      "id": "parameter_register",
+      "path": "highspeed_edf/deliverables/phase15_geometry/reports/phase15_parameter_register.json",
+      "reason": null,
+      "repo": "drone-mech",
+      "revision": "5246c90657071772e220b118967fa5f3e7c9ff7c",
+      "sha256": "aaac69bc1e8a614439ace408fac0430b9579f03563de208950ec3e20d95f011e",
+      "status": "KNOWN"
+    },
+    {
+      "id": "main_board",
+      "path": "hardware/main/rev_b/main_rev_b.kicad_pcb",
+      "reason": null,
+      "repo": "drone-arm",
+      "revision": "744994a096ca73e872b396a9b0636c58e7c1afe8",
+      "sha256": "6dd4a727e8d01b344d45afcbb34907a1895a705e2e8a31d2b6acbe28c0a19606",
+      "status": "KNOWN"
+    },
+    {
+      "id": "esc_board",
+      "path": "hardware/esc/rev_b/esc_rev_b.kicad_pcb",
+      "reason": null,
+      "repo": "drone-arm",
+      "revision": "744994a096ca73e872b396a9b0636c58e7c1afe8",
+      "sha256": "f29a6e12e82d9ec70c63ca5fce95e5cd4436479599c4c4069c4733e7d7af4805",
+      "status": "KNOWN"
+    }
+  ],
+  "sources": {
+    "drone-arm": {
+      "repo": "drone-arm",
+      "revision": "744994a096ca73e872b396a9b0636c58e7c1afe8"
+    },
+    "drone-mech": {
+      "repo": "drone-mech",
+      "revision": "5246c90657071772e220b118967fa5f3e7c9ff7c"
+    }
+  }
+}

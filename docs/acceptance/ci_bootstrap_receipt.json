@@ -1,0 +1,82 @@
+{
+  "conclusion": "failure",
+  "jobs": [
+    {
+      "conclusion": "failure",
+      "name": "acceptance (cad)",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Install snapshot-pinned native tools"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Checkout mechanical counterpart"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "name": "acceptance (smoke)",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Install snapshot-pinned native tools"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Checkout mechanical counterpart"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "name": "acceptance (pcb)",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Install snapshot-pinned native tools"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Checkout mechanical counterpart"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "name": "acceptance (evidence)",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Install snapshot-pinned native tools"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Checkout mechanical counterpart"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "name": "acceptance (software)",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Install snapshot-pinned native tools"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Checkout mechanical counterpart"
+        }
+      ]
+    }
+  ],
+  "run_id": 41008984994,
+  "source_revision": "271a5fc3323215457376b391a3b119320bca9293",
+  "status": "completed",
+  "observed_error": "Input required and not supplied: token",
+  "engineering_checks_attempted": 0,
+  "required_secret": "DRONE_MECH_READ_TOKEN",
+  "run_url": "https://github.com/iamdarshg/drone-arm/actions/runs/41008984994"
+}
