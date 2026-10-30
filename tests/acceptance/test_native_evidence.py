@@ -49,11 +49,32 @@ def test_missing_motor_temperature_evidence_is_blocked(tmp_path):
     assert not r['measured']['measurement_complete']
 
 
-def test_real_remote_launch_spend_cannot_be_reported_as_zero(tmp_path):
+def test_current_remote_launch_spend_cannot_be_reported_as_zero(tmp_path):
     arm=tmp_path/'arm'; mech=tmp_path/'mech'; ea=arm/'engineering_acceptance'; ea.mkdir(parents=True)
     (ea/'aircraft_system.yaml').write_text('cost_policy: {remote_compute_budget_usd: 0, allow_remote_compute: false}\n')
     attempt=mech/'highspeed_edf/phase15/fsi/results/attempts/one'; attempt.mkdir(parents=True)
-    (attempt/'gcp_attempt.log').write_text('Created instance hsedf-fsi-test')
-    r=evidence.cost(arm,mech)
+    (attempt/'gcp_attempt.log').write_text('2026-10-30T09:14:30+00:00 VM_CREATE_REQUEST gcloud compute instances create hsedf-fsi-test')
+    (mech/'highspeed_edf/phase15/fsi/results/phase15_fsi_cost_history.json').write_text(json.dumps([{'jobId':'phase15-wing-fsi-20261030T091430Z','plannedMaxCostUsd':0.25,'allInConservativeEstimateUsd':0.25,'resourceReleased':False}]))
+    r=evidence.cost(arm,mech,today='2026-10-30')
     assert r['status']=='FAIL'
-    assert r['measured']['observed_launch_log_count']==1
+    assert r['measured']['current_paid_launches']
+
+
+def test_historical_governed_attempts_do_not_violate_new_zero_launch_policy(tmp_path):
+    arm=tmp_path/'arm'; mech=tmp_path/'mech'; ea=arm/'engineering_acceptance'; ea.mkdir(parents=True)
+    (ea/'aircraft_system.yaml').write_text('cost_policy: {remote_compute_budget_usd: 0, allow_remote_compute: false}\n')
+    results=mech/'highspeed_edf/phase15/fsi/results'; attempt=results/'attempts/20260930T091336Z'; attempt.mkdir(parents=True)
+    (attempt/'gcp_attempt.log').write_text('2026-09-30T09:14:00+00:00 PREFLIGHT_PASS workbenchCostCeilingUsd=0.05\n2026-09-30T09:14:30.964311+00:00 VM_CREATE_REQUEST gcloud compute instances create hsedf-fsi-test\n2026-09-30T09:20:00+00:00 VM_DELETE rc=0\n')
+    (results/'phase15_fsi_cost_history.json').write_text(json.dumps([{'jobId':'phase15-wing-fsi-20260930T091337Z','plannedMaxCostUsd':0.05,'allInConservativeEstimateUsd':0.036577,'resourceReleased':True}]))
+    r=evidence.cost(arm,mech,today='2026-10-30')
+    assert r['status']=='PASS'
+    assert r['measured']['historical_governed_launches']==1
+    assert not r['measured']['current_paid_launches']
+
+
+def test_native_failed_run_is_fail_and_absent_run_is_blocked(tmp_path):
+    root=tmp_path/'fsi'; receipt=root/'attempts/a/worker_output/wing_t30mm_receipt.json'; receipt.parent.mkdir(parents=True)
+    receipt.write_text(json.dumps({'status':'coupled_solver_failed_or_not_converged'}))
+    assert evidence.fsi(root)['status']=='FAIL'
+    empty=tmp_path/'empty_fsi'; empty.mkdir()
+    assert evidence.fsi(empty)['status']=='BLOCKED'

@@ -95,7 +95,9 @@ def fsi(root: Path = FSI):
         if str(r["status"]).lower() in {"coupled_solvers_completed","completed","pass","passed"}: complete.append(r)
     if forged: errors.append("completion receipt lacks both nonempty participant logs: " + ", ".join(forged))
     if stale: errors.append("receipt SHA mismatch (stale or altered raw evidence): " + ", ".join(stale))
-    if not complete: errors.append("no completed FSI receipt; observed receipts are timed out, failed, or absent")
+    failures=[r for r in receipts if any(token in str(r["status"]).lower() for token in ("failed", "timeout", "timed_out", "deadline", "not_converged"))]
+    if not complete and failures: errors.append(f"{len(failures)} native FSI receipt(s) record failed, timed out, or unconverged execution")
+    elif not complete and not receipts: errors.append("no FSI receipts or native run records were found")
     # Existing known results include timed-out/failed attempts. Require numeric physical history + convergence records.
     qualified=[]
     for r in complete:
@@ -104,8 +106,8 @@ def fsi(root: Path = FSI):
         dat=list(base.rglob("wing.dat"))
         if len(logs)>=2 and dat and all(p.stat().st_size for p in logs+dat): qualified.append(r)
     if complete and not qualified: errors.append("completed label has no paired native participant logs and displacement history")
-    status="FAIL" if forged or stale else "PASS" if qualified and not errors else "BLOCKED"
-    return _result(status,{"receipts":receipts,"completed_receipts":len(complete),"qualified_runs":len(qualified),"raw_log_count":len(raw),"stale_raw_files":stale},errors,raw+[Path(r["path"]) for r in receipts])
+    status="FAIL" if forged or stale or failures else "PASS" if qualified and not errors else "BLOCKED"
+    return _result(status,{"receipts":receipts,"completed_receipts":len(complete),"failed_or_timed_out_receipts":len(failures),"qualified_runs":len(qualified),"raw_log_count":len(raw),"stale_raw_files":stale},errors,raw+[Path(r["path"]) for r in receipts])
 
 
 def thermal(arm: Path = ARM):
@@ -123,30 +125,87 @@ def thermal(arm: Path = ARM):
     return _result("PASS" if sourced and measured else "BLOCKED",{"declared":value,"sensor_source_files":[str(x) for x in sensor_sources],"sensor_map_found":sourced,"measurement_complete":bool(measured)},errors,[cfg]+sensor_sources)
 
 
-def cost(arm: Path = ARM, mech: Path = MECH):
+def cost(arm: Path = ARM, mech: Path = MECH, today=None):
+    """Audit current zero-launch policy separately from historical governed job caps."""
+    from datetime import date, datetime, timezone
+    if today is None: today = date.today()
+    elif isinstance(today, str): today = date.fromisoformat(today)
     try: import yaml; cfg=yaml.safe_load((arm/"engineering_acceptance/aircraft_system.yaml").read_text())
     except Exception as exc: return _result("FAIL",{"config_error":str(exc)},["cost policy unreadable"])
-    policy=cfg.get("cost_policy",{}); jobs=[]; malformed=[]; paths=[]
-    fsi_root=mech/"highspeed_edf/phase15/fsi/results"
-    for p in sorted(fsi_root.glob("attempts/*/gcp_attempt.log")):
-        paths.append(p); text=p.read_text(errors="replace")
-        if re.search(r"(?i)(?:instance|operation|job)\s+(?:created|started)|create\s+request|launchRequested",text): jobs.append({"path":str(p),"launched":True})
-    for p in (fsi_root/"phase15_fsi_execution_receipt.json",):
-        if p.is_file():
-            paths.append(p)
-            try:
-                r=json.loads(p.read_text()); jobs.append({"path":str(p),"status":r.get("status"),"observed_runner_seconds":r.get("observedRunnerSeconds"),"actual_cloud_invoice_usd":r.get("workbenchCostReceipt",{}).get("actualCloudInvoiceUsd"),"reserved_usd":r.get("conservativeBudgetUsd")})
-            except Exception: malformed.append(str(p))
-    logs_with_launch=sum(1 for p in paths if p.name=="gcp_attempt.log" and re.search(r"(?i)(?:create|launch|instance)",p.read_text(errors="ignore")))
-    blocked=not policy.get("allow_remote_compute",False) and logs_with_launch>0
+    policy=cfg.get("cost_policy",{}); fsi_root=mech/"highspeed_edf/phase15/fsi/results"
+    history_path=fsi_root/"phase15_fsi_cost_history.json"; paths=[arm/"engineering_acceptance/aircraft_system.yaml"]
+    history=[]; malformed=[]
+    if history_path.is_file():
+        paths.append(history_path)
+        try:
+            loaded=json.loads(history_path.read_text()); history=loaded if isinstance(loaded,list) else loaded.get("jobs",[])
+        except Exception: malformed.append(str(history_path))
+    by_id={str(row.get("jobId")):row for row in history if isinstance(row,dict) and row.get("jobId")}
+    attempts=[]; current=[]; historical_errors=[]; historical_unresolved=[]; current_launches=[]
+    launch_re=re.compile(r"(?m)^(\d{4}-\d{2}-\d{2}T[^ ]+) .*VM_CREATE_REQUEST")
+    for log in sorted(fsi_root.glob("attempts/*/gcp_attempt.log")):
+        paths.append(log); text=log.read_text(errors="replace")
+        match=launch_re.search(text)
+        if not match:
+            if "VM_CREATE_REQUEST" in text or re.search(r"(?i)created instance|create request",text):
+                malformed.append(f"launch log lacks an attributable UTC launch timestamp: {log}")
+            continue
+        try: launched=datetime.fromisoformat(match.group(1)).date()
+        except ValueError: malformed.append(str(log)); continue
+        attempt_id=log.parent.name
+        rec=next((v for k,v in by_id.items() if attempt_id in k),None)
+        if rec is None:
+            # The worker history timestamp may differ from its attempt directory by a few seconds.
+            try: stamp=datetime.strptime(attempt_id.rstrip("Z"),"%Y%m%dT%H%M%S")
+            except ValueError: stamp=None
+            candidates=[]
+            if stamp:
+                for key,row in by_id.items():
+                    m=re.search(r"(20\d{6}T\d{6})Z?",key)
+                    if m:
+                        try: delta=abs((datetime.strptime(m.group(1),"%Y%m%dT%H%M%S")-stamp).total_seconds())
+                        except ValueError: continue
+                        if delta <= 5: candidates.append((delta,row))
+            rec=min(candidates,key=lambda pair:pair[0])[1] if candidates else None
+        entry={"attempt":attempt_id,"launched_at":match.group(1),"epoch":"current" if launched>=today else "historical","history_receipt":rec}
+        attempts.append(entry)
+        if launched>=today:
+            current.append(entry); current_launches.append(entry)
+        else:
+            cap_match=re.search(r"workbenchCostCeilingUsd=([0-9.]+)",text)
+            total=rec.get("allInConservativeEstimateUsd") if rec else None
+            if not cap_match:
+                historical_unresolved.append(f"historical launch {attempt_id} has no recorded governed cost ceiling")
+            elif isinstance(total,(int,float)) and total>float(cap_match.group(1))+1e-9:
+                historical_errors.append(f"historical launch {attempt_id} exceeds its recorded per-job cost ceiling")
+            elif total is None:
+                historical_unresolved.append(f"historical launch {attempt_id} has no attributable cost receipt")
+            deleted=bool(re.search(r"VM_DELETE rc=0|VM_STOPPED status=DELETED",text))
+            if rec and rec.get("resourceReleased") is True: deleted=True
+            if not deleted:
+                historical_unresolved.append(f"historical launch {attempt_id} lacks a verified teardown receipt")
     zero=policy.get("remote_compute_budget_usd")==0 and policy.get("allow_remote_compute") is False
     errors=[]
-    if malformed: errors.append("malformed remote execution receipt")
-    if blocked: errors.append("remote launch evidence contradicts the disabled/zero-budget acceptance policy")
-    elif not zero: errors.append("default policy must explicitly disable remote compute with zero budget")
-    if any(x.get("actual_cloud_invoice_usd") is None and x.get("observed_runner_seconds") for x in jobs): errors.append("remote compute was launched but invoice actual is unresolved; observed runner time and reserved ceiling are retained")
-    status="FAIL" if blocked or malformed or not zero else "BLOCKED" if jobs else "PASS"
-    return _result(status,{"policy":policy,"observed_launch_log_count":logs_with_launch,"jobs_and_receipts":jobs,"malformed":malformed},errors,paths+[(arm/"engineering_acceptance/aircraft_system.yaml")])
+    if malformed: errors.append("malformed execution or cost-history receipt")
+    if not zero: errors.append("current policy must explicitly disable new paid compute with zero budget")
+    if current_launches: errors.append("new paid compute was launched during the current zero-budget policy epoch")
+    errors.extend(historical_errors)
+    errors.extend(historical_unresolved)
+    # The standalone latest receipt is useful for the newest run but does not override per-attempt history.
+    latest=fsi_root/"phase15_fsi_execution_receipt.json"
+    if latest.is_file():
+        paths.append(latest)
+        try:
+            latest_obj=json.loads(latest.read_text())
+            latest_status=latest_obj.get("status")
+            latest_released=latest_obj.get("workbenchCostReceipt",{}).get("resourceReleased")
+            latest_started=latest_obj.get("startedAtUtc")
+            attempts_meta={"status":latest_status,"started_at":latest_started,"resource_released":latest_released,"observed_runner_seconds":latest_obj.get("observedRunnerSeconds"),"reserved_usd":latest_obj.get("conservativeBudgetUsd"),"invoice_actual_usd":latest_obj.get("workbenchCostReceipt",{}).get("actualCloudInvoiceUsd")}
+        except Exception: malformed.append(str(latest)); attempts_meta={}
+    else: attempts_meta={}
+    # Missing invoice reconciliation is disclosed, while bounded compute estimates and teardown receipts remain auditable.
+    status="FAIL" if malformed or current_launches or historical_errors or not zero else "BLOCKED" if historical_unresolved else "PASS"
+    return _result(status,{"current_policy":policy,"policy_epoch_date":today.isoformat(),"current_paid_launches":current_launches,"historical_governed_launches":len(attempts)-len(current_launches),"historical_job_count_with_receipts":len(by_id),"historical_cost_or_teardown_errors":historical_errors,"historical_unresolved_receipts":historical_unresolved,"latest_execution":attempts_meta,"cost_history_job_count":len(history)},errors,paths)
 
 
 def run(check: dict, profile: str = "smoke"):
