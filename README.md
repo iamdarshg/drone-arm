@@ -49,11 +49,18 @@ meson setup build -Ddebug=enabled
 ```
 
 ### Building
-Build the firmware:
+The documented firmware targets are currently blocked: the tracked checkout is
+missing source and include paths required by `meson.build`, and the ARM GNU
+cross compiler is not available in the build environment. Do not treat this
+checkout as producing flight or ESC firmware. See the
+[Issue #22 source and build audit](docs/engineering/FIRMWARE_SOURCE_AUDIT.md)
+for the reproducible audit commands and recorded failures.
+
+When the required source and toolchain are restored, the intended build command
+is:
 ```bash
 ninja -C build
 ```
-This produces `firmware_main_board.uf2` and `firmware_esc_module.bin` in the `build` directory.
 
 ### Testing
 To build and run the unit tests:

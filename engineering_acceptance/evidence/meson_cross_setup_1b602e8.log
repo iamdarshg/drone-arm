@@ -1,0 +1,13 @@
+The Meson build system
+Version: 1.9.1
+Source dir: /workspace/issue22/drone-arm
+Build dir: /tmp/issue22-meson-cross-1b602e8
+Build type: cross build
+Project name: drone-arm
+Project version: 0.1.0
+
+meson.build:1:0: ERROR: Unknown compiler(s): [['arm-none-eabi-gcc']]
+The following exception(s) were encountered:
+Running `arm-none-eabi-gcc --version` gave "[Errno 2] No such file or directory: 'arm-none-eabi-gcc'"
+
+A full log can be found at /tmp/issue22-meson-cross-1b602e8/meson-logs/meson-log.txt

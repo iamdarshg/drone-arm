@@ -1,0 +1,18 @@
+{
+  "baseline_commit": "1b602e8f7984b3ed6103fe615422991f50b3dfd1",
+  "arm_toolchain_available": false,
+  "arm_tools": {
+    "arm-none-eabi-gcc": null,
+    "arm-none-eabi-nm": null,
+    "arm-none-eabi-objcopy": null,
+    "arm-none-eabi-readelf": null
+  },
+  "cross_build_status": "BLOCKED: ARM GNU compiler and binutils are absent; Meson cross setup stops at compiler discovery. Native setup also fails because required include/ is absent.",
+  "host_tools": {
+    "meson": {"path": "/home/agent/.local/bin/meson", "version": "1.9.1"},
+    "ninja": {"path": "/home/agent/.local/bin/ninja", "version": "1.13.0.git.kitware.jobserver-pipe-1"},
+    "python3": {"path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3", "version": "Python 3.12.14"}
+  },
+  "install_attempted": false,
+  "reason": "The source manifest is incomplete and the ARM toolchain is unavailable; package installation is outside this source-provenance audit."
+}
