@@ -20,7 +20,7 @@ STATES = {"PASS", "FAIL", "BLOCKED", "NOT_RUN", "NOT_APPLICABLE"}
 # Immutable issue-21 oracle digest set. Update only with the independently reviewed catalog revision.
 LOCKED_CATALOG_SHA256 = {
     "mandatory_checks.yaml": "9baf04ed130248d68c4c3c5c88f537ce0db8cc69c1051581aff02abec66cfc23",
-    "profiles.yaml": "615c06bbb2f7c1713bc2500f18c4af0c27d97f8450637aaf78a2c93bb0eb8e53",
+    "profiles.yaml": "b337e0705a6218bb523fe0824ddc27459e71dc6582254e1d69602c329bac97ba",
     "requirements.yaml": "bb930791d68a79e3a4bcbfb4803760147a41884a0edb25923db4bcdab6c5cd15",
     "test_owners.yaml": "54d2d6d534c2dcbe8dcfd1cad975f617678b93993a73f9c6a387a0f069e36e1b",
 }

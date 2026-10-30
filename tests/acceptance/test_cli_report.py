@@ -1,4 +1,8 @@
 import json
+from pathlib import Path
+
+import yaml
+
 from engineering_acceptance import cli
 
 def test_report_scorecard_counts_release_critical_and_excludes_unrun(tmp_path, monkeypatch):
@@ -14,3 +18,12 @@ def test_report_scorecard_counts_release_critical_and_excludes_unrun(tmp_path, m
     assert report["checks_attempted"]==1
     assert report["release_critical_pass"]==1 and report["release_critical_total"]==1
     assert report["counts"]["NOT_RUN"]==1
+
+
+def test_ci_matrix_profiles_are_defined_in_locked_catalog():
+    root = Path(__file__).resolve().parents[2]
+    workflow = yaml.safe_load((root / ".github/workflows/engineering-acceptance.yml").read_text())
+    profiles = yaml.safe_load((root / "engineering_acceptance/catalog/profiles.yaml").read_text())["profiles"]
+    ci_profiles = workflow["jobs"]["acceptance"]["strategy"]["matrix"]["profile"]
+    assert ci_profiles
+    assert set(ci_profiles) <= set(profiles)
