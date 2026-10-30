@@ -1,0 +1,17 @@
+catalog_version: 1
+schema_ref: ../schema/requirement.schema.json
+owners:
+  drone-arm:
+    owns: [firmware, pcb, esc, power_architecture, actuators, control_contracts, software, sil, telemetry, acceptance_runner, evidence_catalog, cloud_smoke]
+    issues: [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
+    checks: [BASE-001, BASE-002, BASE-003, BASE-005, BASE-006, BASE-007, BASE-013, BASE-014, BASE-015, BASE-016, BASE-017, BASE-018, BASE-023, BASE-024, BASE-025]
+  drone-mech:
+    owns: [airframe_geometry, propulsion_solids, battery_and_board_envelopes, thermal_mechanical_analysis, cfd, fsi, manufacturing, physical_assembly]
+    issues: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+    checks: [BASE-004, BASE-008, BASE-009, BASE-010, BASE-011, BASE-012, BASE-019, BASE-020, BASE-021, BASE-022]
+cross_repo:
+  coordination: [drone-arm#21, drone-mech#14, drone-mech#1]
+  contract_required: true
+  contract_path: aircraft_interfaces/system_interface.json
+  sha_pinning_required: true
+  duplicated_production_flight_control_forbidden: true
