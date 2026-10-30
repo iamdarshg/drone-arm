@@ -36,7 +36,7 @@ jobs:
           token: ${{ secrets.DRONE_MECH_READ_TOKEN }}
       - name: Require separately reviewed acceptance definitions
         working-directory: drone-arm
-        run: git diff --exit-code c026a7503268e44900ad62fc67f380ea1e32a161 -- engineering_acceptance/catalog/
+        run: git diff --exit-code 3e10e84b321f6f8da6f72a1d177f3ddfd1a56886 -- engineering_acceptance/catalog/
       - name: Prepare pinned environment
         working-directory: drone-arm
         run: ./tools/prepare_acceptance.sh
