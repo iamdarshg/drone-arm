@@ -1,0 +1,359 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Strict versioned aircraft system config",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "source_of_truth",
+    "propulsion",
+    "battery",
+    "motors",
+    "boards",
+    "actuators",
+    "payload",
+    "limits",
+    "cost_policy",
+    "overrides"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "source_of_truth": {
+      "type": "object",
+      "required": [
+        "drone_arm",
+        "drone_mech"
+      ],
+      "properties": {
+        "drone_arm": {
+          "$ref": "#/$defs/source"
+        },
+        "drone_mech": {
+          "$ref": "#/$defs/source"
+        }
+      },
+      "additionalProperties": false
+    },
+    "propulsion": {
+      "type": "object",
+      "required": [
+        "architecture",
+        "ducts",
+        "nominal_stages_per_duct"
+      ],
+      "properties": {
+        "architecture": {
+          "const": "twin-electric-ducted-fan"
+        },
+        "ducts": {
+          "const": 2
+        },
+        "nominal_stages_per_duct": {
+          "const": 3
+        }
+      },
+      "additionalProperties": false
+    },
+    "battery": {
+      "type": "object",
+      "required": [
+        "series_cells",
+        "nominal_voltage_V",
+        "maximum_voltage_V",
+        "capacity_Ah",
+        "dc_resistance_ohm"
+      ],
+      "properties": {
+        "series_cells": {
+          "const": 12
+        },
+        "nominal_voltage_V": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "maximum_voltage_V": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "capacity_Ah": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "dc_resistance_ohm": {
+          "$ref": "#/$defs/unknownable"
+        }
+      },
+      "additionalProperties": false
+    },
+    "motors": {
+      "type": "object",
+      "required": [
+        "count",
+        "independent_power_stages",
+        "installed_can_length_mm",
+        "temperature_measurements"
+      ],
+      "properties": {
+        "count": {
+          "const": 6
+        },
+        "independent_power_stages": {
+          "const": 6
+        },
+        "installed_can_length_mm": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "temperature_measurements": {
+          "$ref": "#/$defs/unknownable"
+        }
+      },
+      "additionalProperties": false
+    },
+    "boards": {
+      "type": "object",
+      "required": [
+        "active_variant",
+        "dimensions_mm",
+        "main_board_source",
+        "esc_board_candidates"
+      ],
+      "properties": {
+        "active_variant": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "dimensions_mm": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "main_board_source": {
+          "type": "string"
+        },
+        "esc_board_candidates": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "actuators": {
+      "type": "object",
+      "required": [
+        "modeled_independent_effectors",
+        "controller_outputs",
+        "source"
+      ],
+      "properties": {
+        "modeled_independent_effectors": {
+          "const": 7
+        },
+        "controller_outputs": {
+          "const": 6
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "payload": {
+      "type": "object",
+      "required": [
+        "modeled_payload_mass_kg",
+        "cg_m"
+      ],
+      "properties": {
+        "modeled_payload_mass_kg": {
+          "type": "number",
+          "minimum": 0
+        },
+        "cg_m": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "radar_active": {
+          "const": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "limits": {
+      "type": "object",
+      "required": [
+        "per_motor_battery_current_A",
+        "bus_current_A",
+        "temperature_C"
+      ],
+      "properties": {
+        "per_motor_battery_current_A": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "bus_current_A": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "temperature_C": {
+          "$ref": "#/$defs/unknownable"
+        }
+      },
+      "additionalProperties": false
+    },
+    "cost_policy": {
+      "type": "object",
+      "required": [
+        "remote_compute_budget_usd",
+        "allow_remote_compute"
+      ],
+      "properties": {
+        "remote_compute_budget_usd": {
+          "type": "number",
+          "minimum": 0
+        },
+        "allow_remote_compute": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "overrides": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "path",
+          "value",
+          "unit",
+          "source"
+        ],
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "value": {},
+          "unit": {
+            "type": "string"
+          },
+          "source": {
+            "type": "object",
+            "required": [
+              "reference",
+              "revision"
+            ],
+            "properties": {
+              "reference": {
+                "type": "string"
+              },
+              "revision": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{40}$"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "source": {
+      "type": "object",
+      "required": [
+        "repo",
+        "revision",
+        "revision_role"
+      ],
+      "properties": {
+        "repo": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "revision_role": {
+          "enum": [
+            "immutable_issue_baseline",
+            "selected_artifact",
+            "measured_source"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "unknownable": {
+      "type": "object",
+      "required": [
+        "value",
+        "status",
+        "reason"
+      ],
+      "properties": {
+        "value": {
+          "type": [
+            "number",
+            "integer",
+            "string",
+            "array",
+            "object",
+            "boolean",
+            "null"
+          ]
+        },
+        "status": {
+          "enum": [
+            "KNOWN",
+            "BLOCKED"
+          ]
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "value": {
+                "const": null
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "status": {
+                "const": "BLOCKED"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "KNOWN"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "not": {
+                  "const": null
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

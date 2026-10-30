@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Engineering interfaces",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "interfaces"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "interfaces": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "producer",
+          "consumer",
+          "signal",
+          "unit",
+          "coordinate_frame",
+          "source"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "producer": {
+            "type": "string"
+          },
+          "consumer": {
+            "type": "string"
+          },
+          "signal": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "coordinate_frame": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source": {
+            "type": "object",
+            "required": [
+              "repo",
+              "revision",
+              "path"
+            ],
+            "properties": {
+              "repo": {
+                "enum": [
+                  "drone-arm",
+                  "drone-mech"
+                ]
+              },
+              "revision": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{40}$"
+              },
+              "path": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

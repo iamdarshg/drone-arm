@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Acceptance testcase",
+  "type": "object",
+  "required": [
+    "id",
+    "requirement_id",
+    "source",
+    "runner",
+    "expected",
+    "unit",
+    "tolerance",
+    "applicability"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "requirement_id": {
+      "type": "string"
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "repo",
+        "revision",
+        "path"
+      ],
+      "properties": {
+        "repo": {
+          "enum": [
+            "drone-arm",
+            "drone-mech"
+          ]
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "path": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "runner": {
+      "type": "string"
+    },
+    "expected": {},
+    "unit": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "tolerance": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "applicability": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

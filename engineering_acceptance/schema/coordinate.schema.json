@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Engineering coordinate and frame",
+  "type": "object",
+  "required": [
+    "frame_id",
+    "datum",
+    "axis_convention",
+    "units",
+    "origin"
+  ],
+  "properties": {
+    "frame_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "datum": {
+      "type": "string",
+      "minLength": 1
+    },
+    "axis_convention": {
+      "type": "object",
+      "required": [
+        "x",
+        "y",
+        "z"
+      ],
+      "properties": {
+        "x": {
+          "type": "string"
+        },
+        "y": {
+          "type": "string"
+        },
+        "z": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "units": {
+      "enum": [
+        "mm",
+        "m"
+      ]
+    },
+    "origin": {
+      "type": "object",
+      "required": [
+        "x",
+        "y",
+        "z"
+      ],
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "z": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

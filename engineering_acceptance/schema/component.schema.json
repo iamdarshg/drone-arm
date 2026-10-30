@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "source": {
+      "$ref": "#/$defs/source"
+    },
+    "kind": {
+      "type": "string"
+    },
+    "properties": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/quantity"
+      }
+    },
+    "interfaces": {
+      "type": "array"
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "required": [
+        "repo",
+        "revision",
+        "path"
+      ],
+      "properties": {
+        "repo": {
+          "enum": [
+            "drone-arm",
+            "drone-mech"
+          ]
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "path": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "quantity": {
+      "type": "object",
+      "required": [
+        "value",
+        "unit",
+        "provenance"
+      ],
+      "properties": {
+        "value": {
+          "type": [
+            "number",
+            "integer",
+            "null"
+          ]
+        },
+        "unit": {
+          "type": "string"
+        },
+        "provenance": {
+          "enum": [
+            "measured",
+            "sourced",
+            "modeled",
+            "assumed",
+            "unknown"
+          ]
+        },
+        "evidence_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "title": "Typed engineering component",
+  "required": [
+    "id",
+    "kind",
+    "source",
+    "properties"
+  ],
+  "additionalProperties": false
+}
