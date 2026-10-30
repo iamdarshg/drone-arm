@@ -46,7 +46,7 @@ def claims(root: Path = MECH, kind: str = "release"):
     # limitation/do-not-claim list is evidence against promotion, not a claim.
     patterns = {
         "release": re.compile(r"(?i)\b(?:fabrication[- ]ready|manufacturing[- ]release|flight[- ]ready|certified)\b"),
-        "aero": re.compile(r"(?i)\b(?:validated\s+(?:aero|aerodynamic)|pressure[- ]recovery|recovery\s*(?:=|:|of)\s*0\.9)\b"),
+        "aero": re.compile(r"(?i)\b(?:validated\s+(?:aero|aerodynamic|pressure recovery)|(?:measured|achieved|demonstrated|confirmed)\s+(?:native\s+)?pressure recovery|pressure[- ]recovery\s*(?:=|:|of)\s*0\.9\d*)\b"),
     }
     found=[]; sources=[]; unsupported=[]
     negative_keys={"limitations","donotclaim","prohibitedclaims","claimsnotmade","unvalidatedclaims","notclaims","knownlimitations"}
@@ -76,9 +76,15 @@ def claims(root: Path = MECH, kind: str = "release"):
                 normalized=[re.sub(r"[^a-z]","",k.lower()) for k in keys]
                 neg=any(k in negative_keys for k in normalized)
                 positive=bool(set(normalized)&positive_keys)
-                record={"source":str(p.relative_to(root)),"location":".".join(keys),"text":value.strip()[:240],"context":"negative" if neg else "assertion" if positive else "unclassified"}
+                if kind=="aero":
+                    tokens=set(re.sub(r"[^a-z]"," ",value.lower()).split())
+                    negative=bool(tokens & {"pending","blocked","failed","invalid","unconverged","incomplete","missing","without","never","no","not"}) or "no valid" in value.lower() or "not yet" in value.lower()
+                    asserted=bool(patterns[kind].search(value))
+                else:
+                    negative=False; asserted=positive
+                record={"source":str(p.relative_to(root)),"location":".".join(keys),"text":value.strip()[:240],"context":"negative" if neg or negative else "assertion" if asserted else "unclassified"}
                 found.append(record)
-                if positive and not neg:
+                if asserted and not neg and not negative:
                     unsupported.append(record)
             continue
         # In prose, require an affirmative predicate tied to a release label.
@@ -91,8 +97,8 @@ def claims(root: Path = MECH, kind: str = "release"):
                 negated=re.search(r"(?i)\b(?:not|never|no|without|unvalidated|remains unvalidated|do not claim)\b",line)
                 if explicit and not negated: unsupported.append(record)
             else:
-                explicit=re.search(r"(?i)\b(?:validated\s+(?:aero|aerodynamic)|pressure[- ]recovery\s*(?:=|:|of)\s*0\.9)\b",line)
-                negated=re.search(r"(?i)\b(?:not|no|unvalidated|remains|without|never|not yet)\b",line)
+                explicit=patterns[kind].search(line)
+                negated=re.search(r"(?i)\b(?:not|no|unvalidated|remains|without|never|not yet|pending|blocked|failed|invalid|unconverged|incomplete)\b",line)
                 if explicit and not negated: unsupported.append(record)
     blockers=["no complete fabrication, structural, thermal, and physical qualification evidence bundle is indexed"] if kind=="release" else ["no converged applicable native aero result with raw fields, BCs, residual checks, and sensitivity evidence"]
     # Promotion cannot pass from claim text; only an independently verified evidence bundle can.

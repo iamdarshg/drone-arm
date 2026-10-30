@@ -126,3 +126,39 @@ def test_structured_do_not_claim_and_limitations_are_negative_context(tmp_path):
     r=evidence.claims(tmp_path)
     assert r['status']=='BLOCKED'
     assert not r['measured']['unsupported_positive_claims']
+
+
+def test_negative_aero_status_strings_are_not_positive_claims(tmp_path):
+    values=[
+        'pending pressure recovery; packaging start only',
+        'worker-finished-no-valid-pressure-recovery',
+        'no-converged-pressure-recovery',
+        'solver-batch-blocked-no-valid-pressure-recovery',
+        'execution-complete-no-valid-pressure-recovery',
+    ]
+    for index,value in enumerate(values):
+        (tmp_path/f'status-{index}.json').write_text(json.dumps({'status':value}))
+    r=evidence.claims(tmp_path,kind='aero')
+    assert r['status']=='BLOCKED'
+    assert r['measured']['unsupported_positive_claims']==[]
+
+
+def test_actual_aero_failure_statuses_are_not_claimed_as_recovery(tmp_path):
+    values=[
+        'highspeed_edf/deliverables/phase13/configs/phase13_fixed_powertrain_design.json',
+        'highspeed_edf/phase11/results/phase11_execution_receipt.json',
+        'highspeed_edf/phase11/results/phase11_solver_receipt.json',
+        'highspeed_edf/phase10/results/phase10_execution_receipt.json',
+        'highspeed_edf/phase10/configs/phase10_openfoam_study.json',
+    ]
+    r=evidence.claims(Path(evidence.MECH)/'highspeed_edf',kind='aero')
+    actual=[item for item in r['measured']['unsupported_positive_claims'] if item['source'] in values]
+    assert not actual
+    assert r['status']=='BLOCKED'
+
+
+def test_explicit_positive_pressure_recovery_claim_is_still_rejected(tmp_path):
+    (tmp_path/'result.json').write_text(json.dumps({'claim':'measured pressure recovery = 0.95'}))
+    r=evidence.claims(tmp_path,kind='aero')
+    assert r['status']=='FAIL'
+    assert len(r['measured']['unsupported_positive_claims'])==1
