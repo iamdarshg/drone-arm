@@ -1,0 +1,187 @@
+catalog_version: 1
+schema_ref: ../schema/requirement.schema.json
+oracle_policy:
+  immutable: true
+  threshold_change: separate-reviewed-catalog-change
+  baseline: drone-arm#21
+  evidence_states: [PASS, FAIL, BLOCKED, NOT_RUN, NOT_APPLICABLE]
+  blocked_or_unrun_counts_as_pass: false
+  actual_run_count_only: true
+  source_hierarchy:
+    - drone-arm#21 and its fixed initial gate suite
+    - drone-arm PR#32 master prompt and root AGENTS snapshot
+    - drone-mech#14 and drone-mech PR#15 root AGENTS snapshot
+    - current Phase-15 native source and machine-readable artifacts, pinned to repository revision
+    - PHASE15_DESIGN_SPEC.md and PHASE15_CONTROL_SURFACES.md per highspeed_edf/OBSOLETE.md
+  source_resolution:
+    obsolete_index: {path: ../drone-mech/highspeed_edf/OBSOLETE.md, blob_sha: "e56173a3bc757c83d495b6489e44721d312f449e"}
+    phase15_design_spec: {path: ../drone-mech/highspeed_edf/design/PHASE15_DESIGN_SPEC.md, blob_sha: "b297364a9af7cae863f872cb0f24c4236c3cd485"}
+    phase15_control_surfaces: {path: ../drone-mech/highspeed_edf/design/PHASE15_CONTROL_SURFACES.md, blob_sha: "e1b8ccaf24e9c013954454810dc397ced07c86ff"}
+    geometry_handoff: {path: ../drone-mech/highspeed_edf/design/HANDOFF_GEOMETRY_AGENT.md, blob_sha: "bb9061161afffdbd888e7c31d4707ce8b5f99c5c", status: conflicting_derived_brief}
+    excluded_as_active_authority: [highspeed_edf/requirements/requirements.yaml, highspeed_edf/requirements/requirements_r2.yaml, highspeed_edf/requirements/requirements_r3_candidate.yaml]
+    motor_envelope_conflict: "Program issue/HANDOFF cites Ø36×72 mm; geometry handoff cites Ø~42×72 mm. Do not resolve by assumption; import selected native motor solid and cite sourced motor identity/datasheet."
+    dimension_conflicts: "Geometry handoff and parameter register/design docs contain attributed dimension differences. Preserve provenance per value, prefer current pinned machine-readable generator/parameter register plus current design docs; disagreements must become explicit failing/BLOCKED checks pending reconciliation."
+  source_revisions:
+    drone_arm_main: 744994a096ca73e872b396a9b0636c58e7c1afe8
+    drone_arm_pr32_head: 8c83c0f216963db8462f6241baa3b1038e1c635e
+    drone_arm_master_prompt_blob: cacd427695f9412acfbe3e8ce759b36d744bc7be
+    drone_arm_agents_blob: 9b1e42c83432a4b951ff241af01f7b89d10e03ce
+    drone_mech_main: 5246c90657071772e220b118967fa5f3e7c9ff7c
+    drone_mech_pr15_head: 91946404f33daa1a77947b22b1b850f5aa765cac
+    drone_mech_root_agents_blob: 6e161bc8e50b3f328a8854f7bb52b5f19150e5d0
+    drone_mech_nested_agents_blob: 66f625dd59b911bfdf069012c1c93a2016644445
+    drone_mech_handoff_blob: 5c5f07ac56c108ad2021b6299b8c3da9bc56dd55
+requirements:
+  - id: REQ-PROVENANCE
+    kind: provenance
+    source: {repo: iamd.../drone-arm, issue: 21, url: https://github.com/iamdarshg/drone-arm/issues/21, revision: "744994a096ca73e872b396a9b0636c58e7c1afe8"}
+    severity: P0
+    input_paths: [".", "../drone-mech"]
+    runner: provenance
+    expected: {condition: "both repository HEADs and all referenced source/artifact revisions are identified and match the run manifest"}
+    tolerance: null
+    unit: null
+    applicability: all
+    blocking: true
+    evidence_required: [both_repo_git_shas, source_and_artifact_sha256, test_definition_sha256, tool_versions, command, exit_code, timestamp]
+    owner_repo: drone-arm
+
+  - id: REQ-SCHEMA-UNITS
+    kind: schema_and_units
+    source: {repo: iamd.../drone-arm, issue: 21, url: https://github.com/iamdarshg/drone-arm/issues/21, revision: "744994a096ca73e872b396a9b0636c58e7c1afe8"}
+    severity: P0
+    input_paths: [engineering_acceptance/schema]
+    runner: schema_validation
+    expected: {condition: "required fields and recognized units validate; nonfinite numbers, missing fields, unknown source revisions, invalid units and inconsistent coordinates are rejected"}
+    tolerance: null
+    unit: null
+    applicability: all
+    blocking: true
+    evidence_required: [validator_output, invalid_fixture_receipt]
+    owner_repo: drone-arm
+
+  - id: REQ-CAD-BASELINE
+    kind: cad_geometry
+    source: {repo: iamd.../drone-mech, issue: 14, url: https://github.com/iamdarshg/drone-mech/issues/14, revision: "5246c90657071772e220b118967fa5f3e7c9ff7c"}
+    severity: P0
+    input_paths: [../drone-mech/highspeed_edf/phase15/optimization/phase15_generate_geometry.py, ../drone-mech/highspeed_edf/deliverables/phase15_geometry]
+    runner: cad_occ
+    expected: {condition: "consume actual source solids and report units, datums, positive volume, interferences, clearances, mass and CG"}
+    tolerance: null
+    unit: null
+    applicability: all
+    blocking: true
+    evidence_required: [source_sha, imported_solid_ids, raw_geometry_receipt]
+    owner_repo: drone-mech
+
+  - id: REQ-PCB-AUTHORITY
+    kind: pcb_geometry
+    source: {repo: iamd.../drone-arm, issue: 23, url: https://github.com/iamdarshg/drone-arm/issues/23, revision: "744994a096ca73e872b396a9b0636c58e7c1afe8"}
+    severity: P0
+    input_paths: [hardware/esc/rev_b/esc_rev_b.kicad_pcb, hardware/main/rev_b/main_rev_b.kicad_pcb]
+    runner: kicad
+    expected: {condition: "board envelope comes from selected pinned native PCB Edge.Cuts and connectors; CAD placeholders cannot override it"}
+    tolerance: null
+    unit: mm
+    applicability: board_selected
+    blocking: true
+    evidence_required: [pcb_path, pcb_git_sha, pcb_sha256, kicad_export]
+    owner_repo: drone-arm
+
+  - id: REQ-POWER-TOPOLOGY
+    kind: electrical_topology
+    source: {repo: iamd.../drone-arm, issue: 21, url: https://github.com/iamdarshg/drone-arm/issues/21, revision: "744994a096ca73e872b396a9b0636c58e7c1afe8"}
+    severity: P0
+    input_paths: [docs/hardware/REV_B_ARCHITECTURE.md, hardware/esc/rev_b]
+    runner: electrical_contract
+    expected: {independent_power_stages: 6, ducts: 2, stages_per_duct: 3, condition: "preserve six separately controlled motor channels and sourced distribution topology; do not infer a single 360 A PCB trunk"}
+    tolerance: null
+    unit: "1"
+    applicability: current_powertrain
+    blocking: true
+    evidence_required: [architecture_source_sha, topology_manifest]
+    owner_repo: drone-arm
+
+  - id: REQ-BATTERY
+    kind: battery
+    source: {repo: iamd.../drone-arm, issue: 21, url: https://github.com/iamdarshg/drone-arm/issues/21, revision: "744994a096ca73e872b396a9b0636c58e7c1afe8"}
+    severity: P0
+    input_paths: [../drone-mech/highspeed_edf/deliverables/phase15_geometry/reports/phase15_parameter_register.json]
+    runner: battery_bounds
+    expected: {condition: "validate pack bounds, connectors/access, series arithmetic and sourced current topology; unknown DCIR, energy and thermal properties remain null/BLOCKED", measurements: "each battery property carries its own engineering unit"}
+    tolerance: null
+    unit: null
+    applicability: battery_configured
+    blocking: true
+    evidence_required: [pack_source, typed_units, geometry_receipt, measurement_or_blocker]
+    owner_repo: drone-mech
+
+  - id: REQ-MASS-CG
+    kind: mass_cg
+    source: {repo: iamd.../drone-mech, issue: 14, url: https://github.com/iamdarshg/drone-mech/issues/14, revision: "5246c90657071772e220b118967fa5f3e7c9ff7c"}
+    severity: P0
+    input_paths: [../drone-mech/highspeed_edf/deliverables/phase15_geometry/reports/mass_cg_summary.json, ../drone-mech/highspeed_edf/deliverables/phase15_geometry/step]
+    runner: cad_occ
+    expected: {quantities: [{name: payload_mass, value: 1.0, unit: kg}, {name: center_of_gravity, unit: m}], condition: "recompute modeled mass and CG from native solids including the 1 kg payload and reserve case; a static report alone is not proof"}
+    tolerance: null
+    unit: null
+    applicability: payload_case
+    blocking: true
+    evidence_required: [native_solid_mass_properties, payload_manifest, source_sha]
+    owner_repo: drone-mech
+
+  - id: REQ-ACTUATORS
+    kind: actuator_interface
+    source: {repo: iamd.../drone-arm, issue: 20, url: https://github.com/iamdarshg/drone-arm/issues/20, revision: "744994a096ca73e872b396a9b0636c58e7c1afe8"}
+    severity: P0
+    input_paths: [hardware/main/rev_b, ../drone-mech/highspeed_edf/design/PHASE15_CONTROL_SURFACES.md]
+    runner: interface_contract
+    expected: {effectors: 7, board_pwm_outputs: 6, condition: "each current-configuration effector has a unique realizable command and feedback path; do not invent a seventh pin"}
+    tolerance: null
+    unit: "1"
+    applicability: current_ruddered_configuration
+    blocking: true
+    evidence_required: [board_pinmap_sha, actuator_manifest_sha, cross_repo_contract_sha]
+    owner_repo: drone-arm
+
+  - id: REQ-FIRMWARE
+    kind: firmware_build
+    source: {repo: iamd.../drone-arm, issue: 22, url: https://github.com/iamdarshg/drone-arm/issues/22, revision: "744994a096ca73e872b396a9b0636c58e7c1afe8"}
+    severity: P0
+    input_paths: [meson.build, src, include, arm-none-eabi.ini]
+    runner: firmware_build
+    expected: {condition: "real source exists and clean pinned toolchain produces target-correct images; absent source is explicitly BLOCKED, stubs are not production firmware"}
+    tolerance: null
+    unit: null
+    applicability: firmware_target
+    blocking: true
+    evidence_required: [source_tree_listing, toolchain_version, command_exit_codes, elf_uf2_metadata]
+    owner_repo: drone-arm
+
+  - id: REQ-CLAIMS
+    kind: evidence_claim
+    source: {repo: iamd.../drone-mech, issue: 14, url: https://github.com/iamdarshg/drone-mech/issues/14, revision: "5246c90657071772e220b118967fa5f3e7c9ff7c"}
+    severity: P0
+    input_paths: [../drone-mech/highspeed_edf/phase15]
+    runner: claim_audit
+    expected: {condition: "validated, flight-ready, manufacturing-release and 720kmh-verified claims require applicable native and physical evidence; report-only claims are rejected"}
+    tolerance: null
+    unit: null
+    applicability: all_claims
+    blocking: true
+    evidence_required: [claim_source, native_raw_evidence, independent_review]
+    owner_repo: drone-mech
+
+  - id: REQ-CLOUD-BUDGET
+    kind: remote_compute_policy
+    source: {repo: iamd.../drone-arm, issue: 21, url: https://github.com/iamdarshg/drone-arm/issues/21, revision: "744994a096ca73e872b396a9b0636c58e7c1afe8"}
+    severity: P0
+    input_paths: [../drone-mech/HANDOFF.md]
+    runner: budget_receipt
+    expected: {default_budget: {value: 0, currency: USD}, condition: "smoke has no paid services; heavy compute requires explicit governed bounded opt-in and teardown receipt"}
+    tolerance: null
+    unit: null
+    applicability: remote_compute
+    blocking: true
+    evidence_required: [budget_policy, job_receipt, teardown_receipt, actual_cost]
+    owner_repo: drone-arm
