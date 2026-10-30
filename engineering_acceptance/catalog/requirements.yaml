@@ -68,7 +68,7 @@ requirements:
     runner: cad_occ
     expected: {condition: "consume actual source solids and report units, datums, positive volume, interferences, clearances, mass and CG"}
     tolerance: null
-    unit: SI_with_explicit_source_units
+    unit: null
     applicability: all
     blocking: true
     evidence_required: [source_sha, imported_solid_ids, raw_geometry_receipt]
@@ -96,7 +96,7 @@ requirements:
     runner: electrical_contract
     expected: {independent_power_stages: 6, ducts: 2, stages_per_duct: 3, condition: "preserve six separately controlled motor channels and sourced distribution topology; do not infer a single 360 A PCB trunk"}
     tolerance: null
-    unit: channel_count
+    unit: "1"
     applicability: current_powertrain
     blocking: true
     evidence_required: [architecture_source_sha, topology_manifest]
@@ -108,9 +108,9 @@ requirements:
     severity: P0
     input_paths: [../drone-mech/highspeed_edf/deliverables/phase15_geometry/reports/phase15_parameter_register.json]
     runner: battery_bounds
-    expected: {condition: "validate pack bounds, connectors/access, series arithmetic and sourced current topology; unknown DCIR, energy and thermal properties remain null/BLOCKED"}
+    expected: {condition: "validate pack bounds, connectors/access, series arithmetic and sourced current topology; unknown DCIR, energy and thermal properties remain null/BLOCKED", measurements: "each battery property carries its own engineering unit"}
     tolerance: null
-    unit: SI_with_explicit_Ah_Wh
+    unit: null
     applicability: battery_configured
     blocking: true
     evidence_required: [pack_source, typed_units, geometry_receipt, measurement_or_blocker]
@@ -122,9 +122,9 @@ requirements:
     severity: P0
     input_paths: [../drone-mech/highspeed_edf/deliverables/phase15_geometry/reports/mass_cg_summary.json, ../drone-mech/highspeed_edf/deliverables/phase15_geometry/step]
     runner: cad_occ
-    expected: {condition: "recompute modeled mass and CG from native solids including the 1 kg payload and reserve case; a static report alone is not proof"}
+    expected: {quantities: [{name: payload_mass, value: 1.0, unit: kg}, {name: center_of_gravity, unit: m}], condition: "recompute modeled mass and CG from native solids including the 1 kg payload and reserve case; a static report alone is not proof"}
     tolerance: null
-    unit: kg_and_m
+    unit: null
     applicability: payload_case
     blocking: true
     evidence_required: [native_solid_mass_properties, payload_manifest, source_sha]
@@ -138,7 +138,7 @@ requirements:
     runner: interface_contract
     expected: {effectors: 7, board_pwm_outputs: 6, condition: "each current-configuration effector has a unique realizable command and feedback path; do not invent a seventh pin"}
     tolerance: null
-    unit: channel_count
+    unit: "1"
     applicability: current_ruddered_configuration
     blocking: true
     evidence_required: [board_pinmap_sha, actuator_manifest_sha, cross_repo_contract_sha]
@@ -178,9 +178,9 @@ requirements:
     severity: P0
     input_paths: [../drone-mech/HANDOFF.md]
     runner: budget_receipt
-    expected: {default_budget_usd: 0, condition: "smoke has no paid services; heavy compute requires explicit governed bounded opt-in and teardown receipt"}
-    tolerance: 0
-    unit: USD
+    expected: {default_budget: {value: 0, currency: USD}, condition: "smoke has no paid services; heavy compute requires explicit governed bounded opt-in and teardown receipt"}
+    tolerance: null
+    unit: null
     applicability: remote_compute
     blocking: true
     evidence_required: [budget_policy, job_receipt, teardown_receipt, actual_cost]
