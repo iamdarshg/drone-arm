@@ -18,19 +18,26 @@ def digest(path: Path) -> str:
 
 
 def _result(status: str, measured: Any, errors: list[str] | None = None, paths=None):
-    paths = paths or []
+    paths = sorted(set(map(str, paths or [])))
     h = hashlib.sha256()
-    for p in sorted(set(map(str, paths))):
-        try: h.update(p.encode() + b"\0" + digest(Path(p)).encode())
-        except OSError: pass
+    manifest=[]
+    for value in paths:
+        try:
+            sha=digest(Path(value)); h.update(value.encode() + b"\0" + sha.encode())
+            manifest.append({"path":value,"sha256":sha})
+        except OSError: manifest.append({"path":value,"sha256":None})
+    if isinstance(measured,dict) and paths: measured.setdefault("source_artifacts",manifest)
     return {"status": status, "measured": measured, "errors": errors or [],
-            "artifact_paths": [str(p) for p in paths], "artifact_sha256": h.hexdigest() if paths else None}
+            "artifact_paths": paths, "artifact_sha256": h.hexdigest() if paths else None}
 
 
 def _source_files(root: Path):
-    skip = {".git", "__pycache__", "node_modules"}
+    skip = {".git", "__pycache__", "node_modules", ".pytest_cache", ".tox", ".mypy_cache", "build", "dist"}
+    extensions={".md", ".json", ".yaml", ".yml", ".csv", ".txt", ".log"}
     for p in root.rglob("*"):
-        if p.is_file() and not any(x in skip for x in p.parts) and p.suffix.lower() in {".md", ".json", ".yaml", ".yml", ".csv", ".txt", ".log"}:
+        parts=p.relative_to(root).parts
+        if any(part in skip or part.startswith(".venv") or part.startswith("venv") for part in parts): continue
+        if p.is_file() and p.suffix.lower() in extensions and p.stat().st_size <= 8*1024*1024:
             yield p
 
 
@@ -55,7 +62,8 @@ def claims(root: Path = MECH, kind: str = "release"):
     affirmative = re.compile(r'''(?i)(?:\b(?:is|are|status|result|pipeline status|claim)\s*[:=]?\s*(?:\*\*)?)(?:fabrication[- ]ready|manufacturing[- ]release|flight[- ]ready|certified|validated)|["\'](?:flight[- ]ready|manufacturing[- ]release|fabrication[- ]ready)["\']\s*[,} ]?''')
     unsupported=[c for c in found if affirmative.search(c["text"]) and not re.search(r"(?i)(?:not|no|unvalidated|remains|without|never|not yet|not .*validated)",c["text"])]
     status="FAIL" if unsupported else "BLOCKED" if found else "PASS"
-    return _result(status,{"claims":found,"unsupported_positive_claims":unsupported,"source_files_scanned":len(sources),"gates":blockers},["positive claim lacks required native and physical evidence" ] if unsupported else blockers if found else [])
+    errors=["positive claim lacks required native and physical evidence"] if unsupported else blockers if found else []
+    return _result(status,{"claims":found,"unsupported_positive_claims":unsupported,"source_files_scanned":len(sources),"gates":blockers},errors,sources)
 
 
 def _receipt_files(root: Path):
@@ -69,31 +77,53 @@ def fsi(root: Path = FSI):
         except Exception: errors.append(f"invalid receipt: {rp}"); continue
         status=str(obj.get("status", "")).lower()
         if ("complete" in status and "incomplete" not in status and "missing" not in status) or status in {"pass","passed","coupled_solvers_completed"}:
+            coupling=obj.get("coupling",{})
+            candidate_dir=rp.parent/str(obj.get("candidate", ""))
+            base=candidate_dir if candidate_dir.is_dir() else rp.parent
             logs=[]
-            base=rp.parent
             for key in ("fluidLog","solidLog"):
-                val=obj.get("coupling",{}).get(key) or obj.get(key)
-                if val:
-                    candidate=base / val
-                    if candidate.is_file(): logs.append(candidate)
-            if not logs or not all(p.stat().st_size > 0 for p in logs): forged.append(str(rp))
-        for item in obj.get("rawFiles", obj.get("files", [])):
+                val=coupling.get(key) or obj.get(key)
+                matches=list(base.rglob(Path(str(val)).name)) if val else []
+                if len(matches)==1 and matches[0].is_file(): logs.append(matches[0])
+            fluid=next((p for p in logs if p.name==Path(str(coupling.get("fluidLog",""))).name),None)
+            strong=(len(logs)==2 and all(p.stat().st_size>0 for p in logs)
+                    and coupling.get("fluidReturnCode")==0 and coupling.get("solidReturnCode")==0
+                    and coupling.get("timedOut") is False and coupling.get("fluidReachedEnd") is True
+                    and isinstance(coupling.get("preCICECompletionLogMarkers"),int) and coupling["preCICECompletionLogMarkers"]>0
+                    and isinstance(obj.get("tipDisplacement"),(int,float))
+                    and obj.get("forceHistoryLastLine") not in (None,"")
+                    and isinstance(obj.get("inputFiles"),list) and bool(obj["inputFiles"]))
+            fluid_ok=bool(fluid and re.search(r"(?m)^End\s*$",fluid.read_text(errors="replace"))) if fluid else False
+            input_ok=True
+            for item in obj.get("inputFiles", []):
+                if not isinstance(item,dict) or not item.get("path") or not item.get("sha256"):
+                    input_ok=False; break
+                source=rp.parent/item["path"]
+                if not source.is_file() or digest(source)!=item["sha256"]:
+                    stale.append(str(source)); input_ok=False; break
+                raw.append(source)
+            if not strong or not fluid_ok or not input_ok: forged.append(str(rp))
+        raw_entries=obj.get("rawFiles", obj.get("files", []))
+        for item in raw_entries:
             if isinstance(item,dict) and item.get("path"):
                 p=rp.parent/item["path"]
                 if not p.is_file(): errors.append(f"missing raw file {p}")
-                elif item.get("sha256") and digest(p)!=item["sha256"]: stale.append(str(p))
+                elif not item.get("sha256"): errors.append(f"raw evidence has no recorded SHA-256: {p}")
+                elif digest(p)!=item["sha256"]: stale.append(str(p))
                 else: raw.append(p)
+        raw.append(rp)
         receipts.append({"path":str(rp),"status":obj.get("status"),"keys":sorted(obj)})
     # Independently inspect actual candidate logs/data; summaries alone never count as solver completion.
-    for log in root.glob("attempts/*/worker_output/**/rhoPimpleFoam.log"):
-        raw.append(log)
-        try: text=log.read_text(errors="replace")
-        except OSError: continue
-        if re.search(r"End\s*\n",text): pass
+    for pattern in ("rhoPimpleFoam.log", "ccx_preCICE.log"):
+        for log in root.glob(f"attempts/*/worker_output/**/{pattern}"):
+            raw.append(log)
+            # File content is inspected here; receipt claims still decide whether a run completed.
+            try: log.read_text(errors="replace")
+            except OSError: continue
     complete=[]
     for r in receipts:
         if str(r["status"]).lower() in {"coupled_solvers_completed","completed","pass","passed"}: complete.append(r)
-    if forged: errors.append("completion receipt lacks both nonempty participant logs: " + ", ".join(forged))
+    if forged: errors.append("completion receipt is unsubstantiated: candidate logs, solver return/completion markers, input SHA provenance, or physical histories are missing or inconsistent: " + ", ".join(forged))
     if stale: errors.append("receipt SHA mismatch (stale or altered raw evidence): " + ", ".join(stale))
     failures=[r for r in receipts if any(token in str(r["status"]).lower() for token in ("failed", "timeout", "timed_out", "deadline", "not_converged"))]
     if not complete and failures: errors.append(f"{len(failures)} native FSI receipt(s) record failed, timed out, or unconverged execution")
@@ -110,9 +140,11 @@ def fsi(root: Path = FSI):
     return _result(status,{"receipts":receipts,"completed_receipts":len(complete),"failed_or_timed_out_receipts":len(failures),"qualified_runs":len(qualified),"raw_log_count":len(raw),"stale_raw_files":stale},errors,raw+[Path(r["path"]) for r in receipts])
 
 
-def thermal(arm: Path = ARM):
+def thermal(arm: Path = ARM, config=None):
     cfg=arm/"engineering_acceptance/aircraft_system.yaml"
-    try: import yaml; obj=yaml.safe_load(cfg.read_text())
+    try:
+        if config is None: import yaml; config=yaml.safe_load(cfg.read_text())
+        obj=config
     except Exception as exc: return _result("FAIL",{"config_error":str(exc)},["cannot parse declared system temperature evidence"])
     value=obj.get("motors",{}).get("temperature_measurements",{})
     # Need a real mapped sensor source and raw measurement, values in source units and provenance.
@@ -125,12 +157,14 @@ def thermal(arm: Path = ARM):
     return _result("PASS" if sourced and measured else "BLOCKED",{"declared":value,"sensor_source_files":[str(x) for x in sensor_sources],"sensor_map_found":sourced,"measurement_complete":bool(measured)},errors,[cfg]+sensor_sources)
 
 
-def cost(arm: Path = ARM, mech: Path = MECH, today=None):
+def cost(arm: Path = ARM, mech: Path = MECH, today=None, config=None):
     """Audit current zero-launch policy separately from historical governed job caps."""
     from datetime import date, datetime, timezone
     if today is None: today = date.today()
     elif isinstance(today, str): today = date.fromisoformat(today)
-    try: import yaml; cfg=yaml.safe_load((arm/"engineering_acceptance/aircraft_system.yaml").read_text())
+    try:
+        if config is None: import yaml; config=yaml.safe_load((arm/"engineering_acceptance/aircraft_system.yaml").read_text())
+        cfg=config
     except Exception as exc: return _result("FAIL",{"config_error":str(exc)},["cost policy unreadable"])
     policy=cfg.get("cost_policy",{}); fsi_root=mech/"highspeed_edf/phase15/fsi/results"
     history_path=fsi_root/"phase15_fsi_cost_history.json"; paths=[arm/"engineering_acceptance/aircraft_system.yaml"]
@@ -208,12 +242,12 @@ def cost(arm: Path = ARM, mech: Path = MECH, today=None):
     return _result(status,{"current_policy":policy,"policy_epoch_date":today.isoformat(),"current_paid_launches":current_launches,"historical_governed_launches":len(attempts)-len(current_launches),"historical_job_count_with_receipts":len(by_id),"historical_cost_or_teardown_errors":historical_errors,"historical_unresolved_receipts":historical_unresolved,"latest_execution":attempts_meta,"cost_history_job_count":len(history)},errors,paths)
 
 
-def run(check: dict, profile: str = "smoke"):
+def run(check: dict, profile: str = "smoke", config=None):
     """Direct runner API: execute only bounded local evidence inspection; never launches compute."""
     ident=check.get("id","")
     if ident=="BASE-019": return claims()
     if ident=="BASE-020": return claims(kind="aero")
     if ident=="BASE-021": return fsi()
-    if ident=="BASE-023": return thermal()
-    if ident=="BASE-024": return cost()
+    if ident=="BASE-023": return thermal(config=config)
+    if ident=="BASE-024": return cost(config=config)
     return _result("BLOCKED",{"check":ident,"profile":profile},[f"unsupported evidence check {ident}"])

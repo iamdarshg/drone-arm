@@ -12,7 +12,7 @@ def test_forged_solver_completed_receipt_is_not_pass(tmp_path):
     (out/'phase15_fsi_worker_receipt.json').write_text(json.dumps({'status':'coupled_solvers_completed'}))
     r=evidence.fsi(tmp_path)
     assert r['status'] in ('FAIL','BLOCKED')
-    assert 'lacks both nonempty participant logs' in ' '.join(r['errors'])
+    assert 'unsubstantiated' in ' '.join(r['errors'])
 
 
 def test_empty_right_name_log_does_not_prove_completion(tmp_path):
@@ -78,3 +78,33 @@ def test_native_failed_run_is_fail_and_absent_run_is_blocked(tmp_path):
     assert evidence.fsi(root)['status']=='FAIL'
     empty=tmp_path/'empty_fsi'; empty.mkdir()
     assert evidence.fsi(empty)['status']=='BLOCKED'
+
+
+def test_claim_audit_returns_source_paths_and_hash(tmp_path):
+    source=tmp_path/'status.yaml'; source.write_text('status: flight-ready\n')
+    ignored=tmp_path/'.venv/test/status.md'; ignored.parent.mkdir(parents=True); ignored.write_text('flight-ready: true\n')
+    r=evidence.claims(tmp_path)
+    assert str(source) in r['artifact_paths']
+    assert r['artifact_sha256']
+    assert str(ignored) not in r['artifact_paths']
+
+
+def test_completed_receipt_needs_matching_candidate_logs_and_input_hash(tmp_path):
+    out=tmp_path/'attempts/a/worker_output'; case=out/'wing_t30mm'; case.mkdir(parents=True)
+    (case/'rhoPimpleFoam.log').write_text('End\n')
+    (case/'ccx_preCICE.log').write_text('solver completed\n')
+    receipt={'candidate':'wing_t30mm','status':'coupled_solvers_completed','tipDisplacement':0.001,'forceHistoryLastLine':'0 1 2',
+             'inputFiles':[{'path':'input.dat','sha256':'0'*64}],
+             'coupling':{'fluidLog':'rhoPimpleFoam.log','solidLog':'ccx_preCICE.log','fluidReturnCode':0,'solidReturnCode':0,'timedOut':False,'fluidReachedEnd':True,'preCICECompletionLogMarkers':1}}
+    (out/'wing_t30mm_receipt.json').write_text(json.dumps(receipt))
+    r=evidence.fsi(tmp_path)
+    assert r['status']=='FAIL'
+    assert 'SHA mismatch' in ' '.join(r['errors']) or 'lacks both nonempty' in ' '.join(r['errors'])
+
+
+def test_completed_label_cannot_borrow_logs_from_another_candidate(tmp_path):
+    out=tmp_path/'attempts/a/worker_output'; wrong=out/'wing_t36mm'; right=out/'wing_t30mm'
+    wrong.mkdir(parents=True); right.mkdir()
+    (wrong/'rhoPimpleFoam.log').write_text('End\n'); (wrong/'ccx_preCICE.log').write_text('done')
+    (out/'wing_t30mm_receipt.json').write_text(json.dumps({'candidate':'wing_t30mm','status':'completed','coupling':{'fluidLog':'rhoPimpleFoam.log','solidLog':'ccx_preCICE.log'}}))
+    assert evidence.fsi(tmp_path)['status']!='PASS'
