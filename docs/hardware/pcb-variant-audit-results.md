@@ -17,7 +17,7 @@ The DRC and ERC counts are raw native findings, not adjusted acceptance targets.
 
 ## Legacy KiCad launcher baseline probe
 
-This separate regression probe used a clean worktree at `744994a096ca73e872b396a9b0636c58e7c1afe8`. The unchanged Windows-targeted test run recorded **23 passed, 2 failed** because both tests tried to launch `C:\Program Files\KiCad\9.0\bin\python.exe`, which is unavailable in this Linux runner (`/workspace/issue2-motor-drive-screen/highspeed_edf/verification/evidence/baseline/arm-pytest.log`). No test assertions or source files were changed.
+The fresh baseline rerun used a clean worktree at `744994a096ca73e872b396a9b0636c58e7c1afe8`. Running `python -m pytest -q` there recorded **23 passed, 2 failed** because both unchanged Windows-targeted tests tried to launch `C:\Program Files\KiCad\9.0\bin\python.exe`, which is unavailable in this Linux runner. Its log is `/workspace/legacy-original-baseline.log`. The earlier `/workspace/issue2-motor-drive-screen/highspeed_edf/verification/evidence/baseline/arm-pytest.log` came from an issue21-framework checkout; the two launcher test files are byte-identical to the baseline744 files, but that earlier log is not attributed to this baseline run. The fresh baseline worktree has no tracked changes; the portable probe below created only an untracked `.superpowers/` directory there. No test assertions or source files were changed.
 
 To check the existing tests with the installed KiCad Python without editing them, an external pytest collection hook at `/workspace/legacy_probe.py` replaced only each collected module's `KICAD_PYTHON` value:
 
@@ -39,4 +39,4 @@ PYTHONPATH=/workspace pytest -p legacy_probe -q \
   tests/test_reconcile_esc_usb_footprints.py
 ```
 
-The portable-runtime probe recorded **1 passed, 1 failed** (`/workspace/legacy-portable-probe.log`). The reconciliation test now reaches `pcbnew`, then fails because its configured source PCB `hardware/esc/rev_b/reports/esc_165mm_hybrid_newtop_oldbottom_tight.kicad_pcb` is absent. `git log --all --` for that exact path returns no tracked history. The absent PCB was not created or substituted; the original one-pass/one-missing-file result is retained as a baseline finding.
+The portable-runtime probe recorded **1 passed, 1 failed** (`/workspace/legacy-portable-probe.log`); it left the untracked `.superpowers/` artifacts noted above. The reconciliation test now reaches `pcbnew`, then fails because its configured source PCB `hardware/esc/rev_b/reports/esc_165mm_hybrid_newtop_oldbottom_tight.kicad_pcb` is absent. `git log --all --` for that exact path returns no tracked history. The absent PCB was not created or substituted; the original one-pass/one-missing-file result is retained as a baseline finding.
