@@ -106,3 +106,8 @@ def test_component_rejects_negative_stiffness_and_requires_evidence_for_measured
     with pytest.raises(ContractError): validate_component(component)
     component['properties']['stiffness']={'value':100,'unit':'Pa','provenance':'measured','evidence_id':None}
     with pytest.raises(ContractError): validate_component(component)
+
+def test_issue21_payload_case_is_preserved():
+    bad=deepcopy(CONFIG)
+    bad['payload']['modeled_payload_mass_kg']=0
+    with pytest.raises(ContractError): validate(bad)

@@ -1,77 +1,723 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Engineering interfaces",
+  "title": "Cross-repository system interface contract",
   "type": "object",
   "required": [
+    "actuators",
+    "contract_id",
+    "contract_status",
+    "coordinate_frame",
+    "interfaces",
+    "limitations",
+    "power_and_control",
+    "propulsion",
     "schema_version",
-    "interfaces"
+    "source_artifacts",
+    "sources"
   ],
   "properties": {
-    "schema_version": {
-      "const": 1
+    "sources": {
+      "type": "object",
+      "required": [
+        "drone-arm",
+        "drone-mech"
+      ],
+      "properties": {
+        "drone-mech": {
+          "type": "object",
+          "required": [
+            "repo",
+            "revision"
+          ],
+          "properties": {
+            "repo": {
+              "type": "string"
+            },
+            "revision": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            }
+          },
+          "additionalProperties": false
+        },
+        "drone-arm": {
+          "type": "object",
+          "required": [
+            "repo",
+            "revision"
+          ],
+          "properties": {
+            "repo": {
+              "type": "string"
+            },
+            "revision": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "source_artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "path",
+          "reason",
+          "repo",
+          "revision",
+          "sha256",
+          "status"
+        ],
+        "properties": {
+          "revision": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}$"
+          },
+          "repo": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "path": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "null"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "coordinate_frame": {
+      "type": "object",
+      "required": [
+        "axis_convention",
+        "datum",
+        "frame_id",
+        "origin",
+        "source",
+        "units"
+      ],
+      "properties": {
+        "units": {
+          "type": "string"
+        },
+        "frame_id": {
+          "type": "string"
+        },
+        "source": {
+          "type": "object",
+          "required": [
+            "path",
+            "repo",
+            "revision"
+          ],
+          "properties": {
+            "repo": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "revision": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            }
+          },
+          "additionalProperties": false
+        },
+        "origin": {
+          "type": "object",
+          "required": [
+            "x",
+            "y",
+            "z"
+          ],
+          "properties": {
+            "x": {
+              "type": "integer"
+            },
+            "y": {
+              "type": "integer"
+            },
+            "z": {
+              "type": "integer"
+            }
+          },
+          "additionalProperties": false
+        },
+        "datum": {
+          "type": "string"
+        },
+        "axis_convention": {
+          "type": "object",
+          "required": [
+            "x",
+            "y",
+            "z"
+          ],
+          "properties": {
+            "x": {
+              "type": "string"
+            },
+            "y": {
+              "type": "string"
+            },
+            "z": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "propulsion": {
+      "type": "object",
+      "required": [
+        "architecture",
+        "ducts",
+        "independent_power_stages",
+        "motor_count",
+        "motor_identity",
+        "stages_per_duct"
+      ],
+      "properties": {
+        "ducts": {
+          "type": "integer"
+        },
+        "motor_count": {
+          "type": "integer"
+        },
+        "independent_power_stages": {
+          "type": "integer"
+        },
+        "motor_identity": {
+          "type": "object",
+          "required": [
+            "reason",
+            "status",
+            "value"
+          ],
+          "properties": {
+            "value": {
+              "type": "null"
+            },
+            "status": {
+              "type": "string"
+            },
+            "reason": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "stages_per_duct": {
+          "type": "integer"
+        },
+        "architecture": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "power_and_control": {
+      "type": "object",
+      "required": [
+        "bus_current_limit",
+        "esc_control",
+        "pwm_capacity"
+      ],
+      "properties": {
+        "pwm_capacity": {
+          "type": "object",
+          "required": [
+            "source",
+            "status",
+            "unit",
+            "value"
+          ],
+          "properties": {
+            "value": {
+              "type": "integer"
+            },
+            "source": {
+              "type": "object",
+              "required": [
+                "path",
+                "repo",
+                "revision"
+              ],
+              "properties": {
+                "repo": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "revision": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{40}$"
+                }
+              },
+              "additionalProperties": false
+            },
+            "status": {
+              "type": "string"
+            },
+            "unit": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "esc_control": {
+          "type": "object",
+          "required": [
+            "path",
+            "source",
+            "status"
+          ],
+          "properties": {
+            "source": {
+              "type": "object",
+              "required": [
+                "path",
+                "repo",
+                "revision"
+              ],
+              "properties": {
+                "repo": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "revision": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{40}$"
+                }
+              },
+              "additionalProperties": false
+            },
+            "path": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "bus_current_limit": {
+          "type": "object",
+          "required": [
+            "reason",
+            "status",
+            "unit",
+            "value"
+          ],
+          "properties": {
+            "value": {
+              "type": "null"
+            },
+            "status": {
+              "type": "string"
+            },
+            "unit": {
+              "type": "string"
+            },
+            "reason": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
     },
     "interfaces": {
       "type": "array",
       "items": {
         "type": "object",
         "required": [
+          "consumer",
           "id",
           "producer",
-          "consumer",
+          "protocol",
           "signal",
-          "unit",
-          "coordinate_frame",
-          "source"
+          "source",
+          "status"
         ],
         "properties": {
-          "id": {
-            "type": "string"
+          "source": {
+            "type": "object",
+            "required": [
+              "path",
+              "repo",
+              "revision"
+            ],
+            "properties": {
+              "repo": {
+                "type": "string"
+              },
+              "path": {
+                "type": "string"
+              },
+              "revision": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{40}$"
+              }
+            },
+            "additionalProperties": false
           },
           "producer": {
-            "type": "string"
-          },
-          "consumer": {
             "type": "string"
           },
           "signal": {
             "type": "string"
           },
           "unit": {
-            "type": "string"
-          },
-          "coordinate_frame": {
             "type": [
-              "string",
+              "null",
+              "string"
+            ]
+          },
+          "capacity": {
+            "type": [
+              "integer",
               "null"
             ]
           },
-          "source": {
-            "type": "object",
-            "required": [
-              "repo",
-              "revision",
-              "path"
-            ],
-            "properties": {
-              "repo": {
-                "enum": [
-                  "drone-arm",
-                  "drone-mech"
-                ]
-              },
-              "revision": {
-                "type": "string",
-                "pattern": "^[0-9a-f]{40}$"
-              },
-              "path": {
-                "type": "string"
-              }
-            },
-            "additionalProperties": false
+          "status": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "consumer": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "protocol": {
+            "type": [
+              "null",
+              "string"
+            ]
           }
         },
         "additionalProperties": false
       }
+    },
+    "contract_id": {
+      "const": "drone-arm-issue21-system-interface"
+    },
+    "contract_status": {
+      "enum": [
+        "PARTIAL_BLOCKED"
+      ]
+    },
+    "actuators": {
+      "type": "object",
+      "required": [
+        "available_pwm_output_count",
+        "command_limits",
+        "effector_classes",
+        "fault_behavior",
+        "feedback_interfaces",
+        "firmware_capabilities",
+        "modeled_effector_count",
+        "order"
+      ],
+      "properties": {
+        "command_limits": {
+          "type": "object",
+          "required": [
+            "reason",
+            "source",
+            "status",
+            "unit",
+            "value"
+          ],
+          "properties": {
+            "value": {
+              "type": "null"
+            },
+            "source": {
+              "type": "object",
+              "required": [
+                "path",
+                "repo",
+                "revision"
+              ],
+              "properties": {
+                "repo": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "revision": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{40}$"
+                }
+              },
+              "additionalProperties": false
+            },
+            "unit": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            },
+            "reason": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "modeled_effector_count": {
+          "type": "integer"
+        },
+        "available_pwm_output_count": {
+          "type": "integer"
+        },
+        "firmware_capabilities": {
+          "type": "object",
+          "required": [
+            "reason",
+            "source",
+            "status",
+            "value"
+          ],
+          "properties": {
+            "value": {
+              "type": "null"
+            },
+            "source": {
+              "type": "object",
+              "required": [
+                "path",
+                "repo",
+                "revision"
+              ],
+              "properties": {
+                "repo": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "revision": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{40}$"
+                }
+              },
+              "additionalProperties": false
+            },
+            "status": {
+              "type": "string"
+            },
+            "reason": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "feedback_interfaces": {
+          "type": "object",
+          "required": [
+            "reason",
+            "source",
+            "status",
+            "value"
+          ],
+          "properties": {
+            "value": {
+              "type": "null"
+            },
+            "source": {
+              "type": "object",
+              "required": [
+                "path",
+                "repo",
+                "revision"
+              ],
+              "properties": {
+                "repo": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "revision": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{40}$"
+                }
+              },
+              "additionalProperties": false
+            },
+            "status": {
+              "type": "string"
+            },
+            "reason": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "fault_behavior": {
+          "type": "object",
+          "required": [
+            "reason",
+            "source",
+            "status",
+            "value"
+          ],
+          "properties": {
+            "value": {
+              "type": "null"
+            },
+            "source": {
+              "type": "object",
+              "required": [
+                "path",
+                "repo",
+                "revision"
+              ],
+              "properties": {
+                "repo": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "revision": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{40}$"
+                }
+              },
+              "additionalProperties": false
+            },
+            "status": {
+              "type": "string"
+            },
+            "reason": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "effector_classes": {
+          "type": "object",
+          "required": [
+            "reason",
+            "source",
+            "status",
+            "value"
+          ],
+          "properties": {
+            "value": {
+              "type": "null"
+            },
+            "source": {
+              "type": "object",
+              "required": [
+                "path",
+                "repo",
+                "revision"
+              ],
+              "properties": {
+                "repo": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "revision": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{40}$"
+                }
+              },
+              "additionalProperties": false
+            },
+            "status": {
+              "type": "string"
+            },
+            "reason": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "order": {
+          "type": "object",
+          "required": [
+            "reason",
+            "source",
+            "status",
+            "value"
+          ],
+          "properties": {
+            "value": {
+              "type": "null"
+            },
+            "source": {
+              "type": "object",
+              "required": [
+                "path",
+                "repo",
+                "revision"
+              ],
+              "properties": {
+                "repo": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "revision": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{40}$"
+                }
+              },
+              "additionalProperties": false
+            },
+            "status": {
+              "type": "string"
+            },
+            "reason": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "schema_version": {
+      "const": 1
     }
   },
   "additionalProperties": false

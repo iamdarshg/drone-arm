@@ -89,6 +89,9 @@ def validate(config: Any) -> None:
         bus = current_limits.get("bus_current_A", {})
         if isinstance(per_motor, dict) and isinstance(bus, dict) and isinstance(per_motor.get("value"), (int, float)) and isinstance(bus.get("value"), (int, float)) and per_motor.get("value") > 0 and bus.get("value") == 6 * per_motor.get("value"):
             errors.append("$.limits.bus_current_A: cannot promote six per-motor limits into an unsupported shared PCB trunk limit")
+    payload = config.get("payload")
+    if isinstance(payload, dict) and payload.get("modeled_payload_mass_kg") != 1.0:
+        errors.append("$.payload.modeled_payload_mass_kg: issue-21 baseline requires the 1.0 kg payload case for mass/CG acceptance")
     propulsion = config.get("propulsion")
     if isinstance(propulsion, dict) and (type(propulsion.get("ducts")) is not int or propulsion.get("ducts") != 2):
         errors.append("$.propulsion.ducts: expected integer 2")
