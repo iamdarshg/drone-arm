@@ -13,7 +13,13 @@
     "payload",
     "limits",
     "cost_policy",
-    "overrides"
+    "overrides",
+    "coordinates",
+    "source_artifacts",
+    "cad",
+    "materials",
+    "battery_installation",
+    "simulation"
   ],
   "properties": {
     "schema_version": {
@@ -113,9 +119,16 @@
       "type": "object",
       "required": [
         "active_variant",
+        "selected_main_source",
+        "selected_esc_source",
+        "main_board_git_revision",
+        "esc_board_git_revision",
+        "native_sha256",
         "dimensions_mm",
-        "main_board_source",
-        "esc_board_candidates"
+        "thickness_mm",
+        "connector_heights_mm",
+        "mounting_holes",
+        "cable_keepouts"
       ],
       "properties": {
         "active_variant": {
@@ -124,14 +137,36 @@
         "dimensions_mm": {
           "$ref": "#/$defs/unknownable"
         },
-        "main_board_source": {
-          "type": "string"
+        "native_sha256": {
+          "$ref": "#/$defs/unknownable"
         },
-        "esc_board_candidates": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
+        "thickness_mm": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "connector_heights_mm": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "mounting_holes": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "cable_keepouts": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "selected_main_source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "selected_esc_source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "main_board_git_revision": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "esc_board_git_revision": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
         }
       },
       "additionalProperties": false
@@ -141,7 +176,10 @@
       "required": [
         "modeled_independent_effectors",
         "controller_outputs",
-        "source"
+        "source",
+        "control_surfaces",
+        "servo_mounts",
+        "signal_map"
       ],
       "properties": {
         "modeled_independent_effectors": {
@@ -152,6 +190,15 @@
         },
         "source": {
           "type": "string"
+        },
+        "control_surfaces": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "servo_mounts": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "signal_map": {
+          "$ref": "#/$defs/unknownable"
         }
       },
       "additionalProperties": false
@@ -250,6 +297,182 @@
           }
         },
         "additionalProperties": false
+      }
+    },
+    "coordinates": {
+      "type": "object",
+      "required": [
+        "frame_id",
+        "datum",
+        "axis_convention",
+        "units",
+        "origin",
+        "source"
+      ],
+      "properties": {
+        "frame_id": {
+          "type": "string"
+        },
+        "datum": {
+          "type": "string"
+        },
+        "axis_convention": {
+          "type": "object",
+          "required": [
+            "x",
+            "y",
+            "z"
+          ],
+          "properties": {
+            "x": {
+              "type": "string"
+            },
+            "y": {
+              "type": "string"
+            },
+            "z": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "units": {
+          "enum": [
+            "mm",
+            "m"
+          ]
+        },
+        "origin": {
+          "type": "object",
+          "required": [
+            "x",
+            "y",
+            "z"
+          ],
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            },
+            "z": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": false
+        },
+        "source": {
+          "$ref": "#/$defs/artifact_source"
+        }
+      },
+      "additionalProperties": false
+    },
+    "source_artifacts": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "#/$defs/artifact_source"
+      }
+    },
+    "cad": {
+      "type": "object",
+      "required": [
+        "generator",
+        "source_sha256",
+        "step_root",
+        "solid_manifest",
+        "envelope",
+        "mass_cg"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "generator": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "source_sha256": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "step_root": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "solid_manifest": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "envelope": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "mass_cg": {
+          "$ref": "#/$defs/unknownable"
+        }
+      }
+    },
+    "materials": {
+      "type": "object",
+      "required": [
+        "core",
+        "resin",
+        "fibers",
+        "ply_table",
+        "temperature_properties",
+        "manufacturing_process"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "core": {
+          "$ref": "#/$defs/typed_quantity"
+        },
+        "resin": {
+          "$ref": "#/$defs/typed_quantity"
+        },
+        "fibers": {
+          "$ref": "#/$defs/typed_quantity"
+        },
+        "ply_table": {
+          "$ref": "#/$defs/typed_quantity"
+        },
+        "temperature_properties": {
+          "$ref": "#/$defs/typed_quantity"
+        },
+        "manufacturing_process": {
+          "$ref": "#/$defs/typed_quantity"
+        }
+      }
+    },
+    "battery_installation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "pack_geometry": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "connectors": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "independent_fuse_paths": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "cooling": {
+          "$ref": "#/$defs/unknownable"
+        }
+      }
+    },
+    "simulation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scenarios": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "solver_capabilities": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "tool_versions": {
+          "$ref": "#/$defs/unknownable"
+        },
+        "budget_policy": {
+          "$ref": "#/$defs/unknownable"
+        }
       }
     }
   },
@@ -354,6 +577,69 @@
           }
         }
       ]
+    },
+    "artifact_source": {
+      "type": "object",
+      "required": [
+        "repo",
+        "revision",
+        "path"
+      ],
+      "properties": {
+        "repo": {
+          "enum": [
+            "drone-arm",
+            "drone-mech"
+          ]
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "typed_quantity": {
+      "type": "object",
+      "required": [
+        "value",
+        "unit",
+        "provenance",
+        "evidence_id"
+      ],
+      "properties": {
+        "value": {
+          "type": [
+            "number",
+            "integer",
+            "string",
+            "null"
+          ]
+        },
+        "unit": {
+          "type": "string"
+        },
+        "provenance": {
+          "enum": [
+            "measured",
+            "sourced",
+            "modeled",
+            "assumed",
+            "unknown"
+          ]
+        },
+        "evidence_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
     }
   }
 }

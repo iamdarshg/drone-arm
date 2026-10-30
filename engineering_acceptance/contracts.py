@@ -59,7 +59,7 @@ def validate(config: Any) -> None:
         errors.append("$.propulsion.nominal_stages_per_duct: expected integer 3")
     for path, item in _walk(config):
         if isinstance(item, dict) and "value" in item and item["value"] is None:
-            if item.get("status") != "BLOCKED" or not isinstance(item.get("reason"), str) or not item["reason"].strip():
+            if not ((item.get("status") == "BLOCKED" and isinstance(item.get("reason"), str) and item["reason"].strip()) or (item.get("provenance") == "unknown" and isinstance(item.get("unit"), str) and item.get("evidence_id") is None)):
                 errors.append(f"{path}: null values require status BLOCKED and an explicit reason")
         if isinstance(item, dict) and "unit" in item and item["unit"] is not None:
             if item["unit"] not in KNOWN_UNITS:
@@ -68,7 +68,7 @@ def validate(config: Any) -> None:
         raise ContractError(sorted(set(errors)))
 
 def _allowed_top() -> set[str]:
-    return {"schema_version", "source_of_truth", "propulsion", "battery", "motors", "boards", "actuators", "payload", "limits", "cost_policy", "overrides"}
+    return {"schema_version", "source_of_truth", "propulsion", "battery", "motors", "boards", "actuators", "payload", "limits", "cost_policy", "overrides", "coordinates", "source_artifacts", "cad", "materials", "battery_installation", "simulation"}
 def _path(parts: Any) -> str:
     out="$"
     for p in parts: out += f"[{p}]" if isinstance(p,int) else f".{p}"
@@ -90,7 +90,7 @@ def _walk(obj: Any, path="$"):
 
 def _validate_shape(config: dict[str, Any]) -> list[str]:
     errors=[]
-    required={"schema_version","source_of_truth","propulsion","battery","motors","boards","actuators","payload","limits","cost_policy","overrides"}
+    required={"schema_version","source_of_truth","propulsion","battery","motors","boards","actuators","payload","limits","cost_policy","overrides", "coordinates", "source_artifacts", "cad", "materials", "battery_installation", "simulation"}
     for k in sorted(required-set(config)): errors.append(f"$.{k}: required property missing")
     for group, fields in {"source_of_truth":{"drone_arm","drone_mech"},"propulsion":{"architecture","ducts","nominal_stages_per_duct"},"battery":{"series_cells","nominal_voltage_V","maximum_voltage_V","capacity_Ah","dc_resistance_ohm"},"motors":{"count","independent_power_stages","installed_can_length_mm","temperature_measurements"},"boards":{"active_variant","dimensions_mm","main_board_source","esc_board_candidates"},"actuators":{"modeled_independent_effectors","controller_outputs","source"},"payload":{"modeled_payload_mass_kg","cg_m"},"limits":{"per_motor_battery_current_A","bus_current_A","temperature_C"},"cost_policy":{"remote_compute_budget_usd","allow_remote_compute"}}.items():
         if isinstance(config.get(group),dict):
