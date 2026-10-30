@@ -35,6 +35,11 @@ profiles:
     remote_compute: false
     hardware: false
     note: "Native FSI must not be launched by default; absent authorized runner/artifact yields BLOCKED or NOT_RUN."
+  evidence:
+    description: "Evidence provenance and claims gates for the CI evidence lane."
+    checks: [BASE-001, BASE-002, BASE-003, BASE-019, BASE-020, BASE-021, BASE-023, BASE-024]
+    remote_compute: false
+    hardware: false
   all:
     checks: [BASE-001, BASE-002, BASE-003, BASE-004, BASE-005, BASE-006, BASE-007, BASE-008, BASE-009, BASE-010, BASE-011, BASE-012, BASE-013, BASE-014, BASE-015, BASE-016, BASE-017, BASE-018, BASE-019, BASE-020, BASE-021, BASE-022, BASE-023, BASE-024, BASE-025]
     remote_compute: false
