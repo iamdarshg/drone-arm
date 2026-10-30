@@ -185,3 +185,17 @@ def test_pinned_git_tree_byte_mutation_fails(tmp_path,monkeypatch):
     (arm/'hardware/board.kicad_pcb').write_text('mutated board\n')
     result=core.verify_source_artifacts(config)
     assert result['status']=='FAIL' and any('dirty/altered source' in x for x in result['errors'])
+
+
+@pytest.mark.parametrize('status_text', [
+    'pending pressure recovery; packaging start only',
+    'worker-finished-no-valid-pressure-recovery',
+    'no-converged-pressure-recovery',
+    'solver-batch-blocked-no-valid-pressure-recovery',
+    'execution-complete-no-valid-pressure-recovery',
+])
+def test_negative_aero_status_text_is_not_promoted_to_positive_claim(tmp_path,status_text):
+    (tmp_path/'phase15_status.json').write_text(json.dumps({'inlet':{'status':status_text},'status':status_text}))
+    result=evidence.claims(tmp_path,kind='aero')
+    assert result['status'] in ('BLOCKED','PASS')
+    assert result['measured']['unsupported_positive_claims']==[]
