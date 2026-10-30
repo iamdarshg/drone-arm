@@ -10,7 +10,12 @@ coordinates:
   origin: {x: 0, y: 0, z: 0}
   source: {repo: drone-mech, revision: 5246c90657071772e220b118967fa5f3e7c9ff7c, path: highspeed_edf/design/PHASE15_DESIGN_SPEC.md}
 source_artifacts:
+  architecture: {repo: drone-arm, revision: 744994a096ca73e872b396a9b0636c58e7c1afe8, path: docs/hardware/REV_B_ARCHITECTURE.md}
+  actuator_interface: {repo: drone-mech, revision: 5246c90657071772e220b118967fa5f3e7c9ff7c, path: highspeed_edf/design/PHASE15_CONTROL_SURFACES.md}
   geometry_generator: {repo: drone-mech, revision: 5246c90657071772e220b118967fa5f3e7c9ff7c, path: highspeed_edf/phase15/optimization/phase15_generate_geometry.py}
+  geometry_step: {repo: drone-mech, revision: 5246c90657071772e220b118967fa5f3e7c9ff7c, path: highspeed_edf/deliverables/phase15_geometry/step}
+  stock_nests: {repo: drone-mech, revision: 5246c90657071772e220b118967fa5f3e7c9ff7c, path: highspeed_edf/deliverables/phase15_geometry/stock_nests}
+  mass_properties: {repo: drone-mech, revision: 5246c90657071772e220b118967fa5f3e7c9ff7c, path: highspeed_edf/deliverables/phase15_geometry/reports/mass_cg.csv}
   parameter_register: {repo: drone-mech, revision: 5246c90657071772e220b118967fa5f3e7c9ff7c, path: highspeed_edf/deliverables/phase15_geometry/reports/phase15_parameter_register.json}
   main_board: {repo: drone-arm, revision: 744994a096ca73e872b396a9b0636c58e7c1afe8, path: hardware/main/rev_b/main_rev_b.kicad_pcb}
   esc_board: {repo: drone-arm, revision: 744994a096ca73e872b396a9b0636c58e7c1afe8, path: hardware/esc/rev_b/esc_rev_b.kicad_pcb}

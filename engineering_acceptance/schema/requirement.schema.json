@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://drone-arm.local/engineering-acceptance/requirement.schema.json",
+  "title": "Engineering acceptance requirement/check",
+  "type": "object",
+  "required": ["id", "source", "severity", "input_paths", "runner", "expected", "tolerance", "unit", "applicability", "blocking", "evidence_required", "owner_repo"],
+  "properties": {
+    "id": {"type": "string", "minLength": 1}, "requirement_id": {"type": ["string", "null"]},
+    "kind": {"type": "string"}, "source": {"$ref": "#/$defs/source"},
+    "severity": {"enum": ["P0", "P1", "P2", "critical", "high", "medium", "low"]},
+    "input_paths": {"type": "array", "items": {"type": "string"}}, "runner": {"type": ["string", "object"]},
+    "expected": {}, "tolerance": {}, "unit": {"type": ["string", "null"]},
+    "applicability": {"type": ["string", "object"]}, "blocking": {"type": "boolean"},
+    "evidence_required": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}, "owner_repo": {"type": "string", "minLength": 1},
+    "source_conflict": {"type": "string"}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "source": {
+      "type": "object", "required": ["repo", "issue", "url", "revision"],
+      "properties": {"repo": {"type": "string", "minLength": 1}, "issue": {"type": "integer", "minimum": 1}, "url": {"type": "string", "format": "uri"}, "revision": {"type": "string", "pattern": "^[0-9a-f]{40}$"}},
+      "additionalProperties": false
+    }
+  }
+}
