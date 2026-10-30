@@ -94,7 +94,13 @@ def validate(config: Any) -> None:
         errors.append("$.propulsion.ducts: expected integer 2")
     if isinstance(propulsion, dict) and (type(propulsion.get("nominal_stages_per_duct")) is not int or propulsion.get("nominal_stages_per_duct") != 3):
         errors.append("$.propulsion.nominal_stages_per_duct: expected integer 3")
+    expected_field_units = {"capacity_Ah": "Ah", "energy_Wh": "Wh", "energy_J": "J", "dc_resistance_ohm": "ohm", "nominal_voltage_V": "V", "maximum_voltage_V": "V", "installed_can_length_mm": "mm", "dimensions_mm": "mm", "thickness_mm": "mm", "per_motor_battery_current_A": "A", "bus_current_A": "A", "temperature_C": "C", "temperature_measurements": "C"}
     for path, item in _walk(config):
+        if isinstance(item, dict) and "value" in item and "unit" in item:
+            name = path.rsplit(".", 1)[-1].split("[")[0]
+            expected_unit = expected_field_units.get(name)
+            if expected_unit and item.get("unit") != expected_unit:
+                errors.append(f"{path}.unit: expected {expected_unit} for {name}")
         if isinstance(item, dict) and "value" in item and item["value"] is None:
             if not ((item.get("status") == "BLOCKED" and isinstance(item.get("reason"), str) and item["reason"].strip()) or (item.get("provenance") == "unknown" and isinstance(item.get("unit"), str) and item.get("evidence_id") is None)):
                 errors.append(f"{path}: null values require status BLOCKED and an explicit reason")
@@ -147,11 +153,15 @@ def validate_result(row: Any) -> None:
         raise ContractError(["result: expected object"])
     if row.get("status") not in {"PASS", "FAIL", "BLOCKED", "NOT_RUN", "NOT_APPLICABLE"}:
         errors.append("result.status: invalid evidence state")
-    for field in ("run_id", "drone_arm_sha", "drone_mech_sha", "test_definition_sha256", "config_sha256"):
+    for field in ("run_id", "drone_arm_sha", "drone_mech_sha", "test_definition_sha256"):
         value = row.get(field)
         length = 64 if field in ("run_id", "test_definition_sha256", "config_sha256") else 40
         if not isinstance(value, str) or not re.fullmatch(rf"[0-9a-f]{{{length}}}", value):
             errors.append(f"result.{field}: expected {length}-character lowercase hexadecimal digest")
+    if row.get("config_present") is True and not re.fullmatch(r"[0-9a-f]{64}", str(row.get("config_sha256", ""))):
+        errors.append("result.config_sha256: present config requires a SHA-256")
+    if row.get("config_present") is False and (row.get("status") != "FAIL" or row.get("config_sha256") is not None):
+        errors.append("result: missing config is represented only by config_present=false, null digest, and FAIL")
     source = row.get("source")
     if not isinstance(source, dict) or not SHA_RE.fullmatch(str(source.get("revision", ""))):
         errors.append("result.source.revision: full source revision is required")
@@ -191,3 +201,27 @@ def _validate_json_schema(value: Any, schema_path: Path, label: str) -> None:
         raise ContractError([f"{label}: invalid installed schema: {exc}"]) from exc
     if errors:
         raise ContractError([f"{label}{_path(e.absolute_path)[1:]}: {e.message}" for e in errors])
+
+def validate_component(component: Any) -> None:
+    """Validate a typed component record, including unit and evidence semantics."""
+    path = ROOT / "schema" / "component.schema.json"
+    _validate_json_schema(component, path, "component")
+    errors: list[str] = []
+    if not isinstance(component, dict):
+        raise ContractError(["component: expected object"])
+    for name, quantity in component.get("properties", {}).items():
+        if not isinstance(quantity, dict):
+            continue
+        value = quantity.get("value")
+        if isinstance(value, (int, float)) and not isinstance(value, bool):
+            if not math.isfinite(value):
+                errors.append(f"component.properties.{name}.value: numeric values must be finite")
+            if re.search(r"(?i)(stiffness|modulus|density|mass|length|diameter|voltage|capacity|resistance)", name) and value <= 0:
+                errors.append(f"component.properties.{name}.value: sourced physical property must be positive")
+        provenance = quantity.get("provenance")
+        if provenance in ("measured", "sourced") and not quantity.get("evidence_id"):
+            errors.append(f"component.properties.{name}.evidence_id: measured/sourced values require evidence")
+        if provenance == "unknown" and (value is not None or quantity.get("evidence_id") is not None):
+            errors.append(f"component.properties.{name}: unknown provenance requires null value and no evidence id")
+    if errors:
+        raise ContractError(errors)

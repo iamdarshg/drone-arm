@@ -13,7 +13,9 @@
     "config_sha256",
     "tool_version",
     "python_version",
-    "results"
+    "results",
+    "tool_versions",
+    "config_present"
   ],
   "properties": {
     "run_id": {
@@ -43,7 +45,10 @@
       "type": "string"
     },
     "config_sha256": {
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
       "pattern": "^[0-9a-f]{64}$"
     },
     "tool_version": {
@@ -60,7 +65,8 @@
           "id",
           "status",
           "artifact_sha256",
-          "check_exit_code"
+          "check_exit_code",
+          "evidence_required"
         ],
         "properties": {
           "id": {
@@ -87,11 +93,63 @@
               "integer",
               "null"
             ]
+          },
+          "evidence_required": {
+            "type": "boolean"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "status": {
+                  "const": "PASS"
+                },
+                "evidence_required": {
+                  "const": true
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "artifact_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            }
+          }
+        ]
       }
+    },
+    "tool_versions": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "config_present": {
+      "type": "boolean"
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "config_present": {
+            "const": false
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "config_sha256": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  ]
 }

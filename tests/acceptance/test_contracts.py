@@ -42,7 +42,7 @@ def test_actual_result_row_contract_and_missing_raw_receipt():
       'source_revision':'f'*40,'artifact_paths':[],'artifact_sha256':None,'artifacts':[],
       'evidence_required':False,'profile':'smoke','system':'twin-electric-edf','variant':'all','severity':'P0',
       'applicability':'all','blocking':True,'unit':None,'required':{'condition':'fixture'},'measured':None,'errors':['deliberate negative fixture'],
-      'config_path':'engineering_acceptance/aircraft_system.yaml','config_sha256':'1'*64,'tool_version':'fixture','python_version':'3.12','tool_versions':{}}
+      'config_path':'engineering_acceptance/aircraft_system.yaml','config_sha256':'1'*64,'config_present':True,'tool_version':'fixture','python_version':'3.12','tool_versions':{}}
     validate_result(row)
     bad=deepcopy(row); bad['unit']='furlongs'
     with pytest.raises(ContractError): validate_result(bad)
@@ -53,8 +53,8 @@ def test_actual_run_manifest_contract():
     from engineering_acceptance.contracts import validate_manifest
     manifest={'run_id':'a'*64,'timestamp_utc':'2026-01-01T00:00:00Z','profile':'smoke',
       'drone_arm_sha':'b'*40,'drone_mech_sha':'c'*40,'test_definition_sha256':'d'*64,
-      'config_path':'engineering_acceptance/aircraft_system.yaml','config_sha256':'1'*64,
-      'tool_version':'fixture','python_version':'3.12','results':[{'id':'TEST-FIXTURE','status':'FAIL','artifact_sha256':None,'check_exit_code':1}]}
+      'config_path':'engineering_acceptance/aircraft_system.yaml','config_sha256':'1'*64,'config_present':True,
+      'tool_version':'fixture','python_version':'3.12','tool_versions':{},'results':[{'id':'TEST-FIXTURE','status':'FAIL','artifact_sha256':None,'check_exit_code':1,'evidence_required':False}]}
     validate_manifest(manifest)
 
 def test_current_budget_cannot_be_negative_or_assumed_shared_trunk():
@@ -82,3 +82,27 @@ def test_unknown_revision_in_nested_source_artifact_rejected():
     bad=deepcopy(CONFIG)
     bad['source_artifacts']['geometry_generator']['revision']='a'*40
     with pytest.raises(ContractError): validate(bad)
+
+def test_missing_config_is_a_structured_fail_not_a_schema_exception():
+    from engineering_acceptance.contracts import validate_result
+    row={'id':'TEST-MISSING-CONFIG','status':'FAIL','run_id':'a'*64,'timestamp_utc':'2026-01-01T00:00:00Z',
+      'drone_arm_sha':'b'*40,'drone_mech_sha':'c'*40,'test_definition_sha256':'d'*64,'exact_command':'python -m engineering_acceptance run --profile smoke',
+      'command':'fixture','runner':'fixture','check_exit_code':1,'source':{'repo':'drone-arm','issue':21,'url':'https://example.invalid/issue/21','revision':'e'*40},'source_revision':'f'*40,
+      'artifact_paths':[],'artifact_sha256':None,'artifacts':[],'evidence_required':False,'profile':'smoke','system':'twin-electric-edf','variant':'all','severity':'P0',
+      'applicability':'all','blocking':True,'unit':None,'required':{},'measured':None,'errors':['missing config'],'config_path':'missing.yaml','config_sha256':None,'config_present':False,
+      'tool_version':'fixture','python_version':'3.12','tool_versions':{}}
+    validate_result(row)
+    row['status']='PASS'
+    with pytest.raises(ContractError): validate_result(row)
+
+def test_battery_quantity_rejects_dimensionally_wrong_unit():
+    bad=deepcopy(CONFIG)
+    bad['battery']['capacity_Ah']['unit']='W'
+    with pytest.raises(ContractError): validate(bad)
+
+def test_component_rejects_negative_stiffness_and_requires_evidence_for_measured_values():
+    from engineering_acceptance.contracts import validate_component
+    component={'id':'material','kind':'material','source':{'repo':'drone-arm','revision':'a'*40,'path':'docs/materials'},'properties':{'stiffness':{'value':-1,'unit':'Pa','provenance':'sourced','evidence_id':'coupon-1'}}}
+    with pytest.raises(ContractError): validate_component(component)
+    component['properties']['stiffness']={'value':100,'unit':'Pa','provenance':'measured','evidence_id':None}
+    with pytest.raises(ContractError): validate_component(component)
