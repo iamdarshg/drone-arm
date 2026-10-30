@@ -1,0 +1,22 @@
+The Meson build system
+Version: 1.9.1
+Source dir: /workspace/issue22/drone-arm
+Build dir: /tmp/issue22-meson-cross-local-toolchain-evidence
+Build type: cross build
+Project name: drone-arm
+Project version: 0.1.0
+C compiler for the host machine: arm-none-eabi-gcc (gcc 14.2.1 "arm-none-eabi-gcc (15:14.2.rel1-1) 14.2.1 20241119")
+C linker for the host machine: arm-none-eabi-gcc ld.bfd 2.44-3
+C compiler for the build machine: cc (gcc 14.2.0 "cc (Debian 14.2.0-19) 14.2.0")
+C linker for the build machine: cc ld.bfd 2.44
+Build machine cpu family: x86_64
+Build machine cpu: x86_64
+Host machine cpu family: arm
+Host machine cpu: cortex-m33
+Target machine cpu family: arm
+Target machine cpu: cortex-m33
+
+meson.build:33:15: ERROR: Include dir include does not exist.
+
+A full log can be found at /tmp/issue22-meson-cross-local-toolchain-evidence/meson-logs/meson-log.txt
+EXIT_CODE: 1

@@ -1,0 +1,15 @@
+The Meson build system
+Version: 1.9.1
+Source dir: /workspace/issue22/drone-arm
+Build dir: /tmp/issue22-meson-native-1b602e8
+Build type: native build
+Project name: drone-arm
+Project version: 0.1.0
+C compiler for the host machine: cc (gcc 14.2.0 "cc (Debian 14.2.0-19) 14.2.0")
+C linker for the host machine: cc ld.bfd 2.44
+Host machine cpu family: x86_64
+Host machine cpu: x86_64
+
+meson.build:33:15: ERROR: Include dir include does not exist.
+
+A full log can be found at /tmp/issue22-meson-native-1b602e8/meson-logs/meson-log.txt
