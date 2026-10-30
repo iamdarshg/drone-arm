@@ -29,7 +29,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: iamdarshg/drone-mech
-          ref: 4ca9af0674e40e5f3a097407d08bb3b47a2514db
+          ref: 5812e8369251f79d024c5be52389d61ab02102c2
           path: drone-mech
           fetch-depth: 0
           # A separately scoped read-only token is needed for the private companion.
@@ -42,7 +42,7 @@ jobs:
         run: ./tools/prepare_acceptance.sh
       - name: Test framework and adversarial fixtures
         working-directory: drone-arm
-        run: .venv-acceptance/bin/python -m pytest -q tests/acceptance
+        run: .venv-acceptance/bin/python -m pytest -q tests/acceptance tests/independent
       - name: Execute acceptance (engineering failures stay red)
         working-directory: drone-arm
         run: .venv-acceptance/bin/python -m engineering_acceptance run --profile ${{ matrix.profile }}

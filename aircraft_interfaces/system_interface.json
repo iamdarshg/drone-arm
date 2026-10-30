@@ -213,6 +213,24 @@
       "status": "KNOWN"
     },
     {
+      "id": "stock_nests",
+      "path": "highspeed_edf/deliverables/phase15_geometry/stock_nests",
+      "reason": null,
+      "repo": "drone-mech",
+      "revision": "5246c90657071772e220b118967fa5f3e7c9ff7c",
+      "sha256": "bbf66fcdedc5bb49746b96e70decaa02e8ae336d9b7931c4e0d8659e72ca4c69",
+      "status": "KNOWN"
+    },
+    {
+      "id": "mass_properties",
+      "path": "highspeed_edf/deliverables/phase15_geometry/reports/mass_cg.csv",
+      "reason": null,
+      "repo": "drone-mech",
+      "revision": "5246c90657071772e220b118967fa5f3e7c9ff7c",
+      "sha256": "f5fe8171121c9c5ee5777ec81504b89da62a465d9a4bd0e04be03e40dd547498",
+      "status": "KNOWN"
+    },
+    {
       "id": "parameter_register",
       "path": "highspeed_edf/deliverables/phase15_geometry/reports/phase15_parameter_register.json",
       "reason": null,
