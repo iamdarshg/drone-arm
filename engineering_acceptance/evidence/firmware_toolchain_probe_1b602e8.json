@@ -1,18 +1,35 @@
 {
+  "schema": "firmware-toolchain-probe/v2",
   "baseline_commit": "1b602e8f7984b3ed6103fe615422991f50b3dfd1",
-  "arm_toolchain_available": false,
-  "arm_tools": {
-    "arm-none-eabi-gcc": null,
-    "arm-none-eabi-nm": null,
-    "arm-none-eabi-objcopy": null,
-    "arm-none-eabi-readelf": null
+  "system_install": {
+    "attempted": false,
+    "reason": "No root privilege and sudo is not installed (uid=1000; sudo: command not found)."
   },
-  "cross_build_status": "BLOCKED: ARM GNU compiler and binutils are absent; Meson cross setup stops at compiler discovery. Native setup also fails because required include/ is absent.",
+  "staged_toolchain": {
+    "method": "Fetched exact package versions from the configured signed Debian snapshot and extracted debs under /tmp; no system files changed.",
+    "snapshot": "https://snapshot.debian.org/archive/debian/20260925T181338Z/ trixie main",
+    "gcc": "arm-none-eabi-gcc 14.2.1 (Debian package version 15:14.2.rel1-1)",
+    "binutils": "2.44-3+23+b1",
+    "newlib": "4.5.0.20241231-1",
+    "newlib_dev": "4.5.0.20241231-1",
+    "all_required_tools_present": true,
+    "compiler_link_probe": "Passed when passed explicit staged hard-float Newlib library paths and --specs=nosys.specs."
+  },
+  "meson_cross_setup": {
+    "exit_code": 1,
+    "compiler_and_linker_detected": true,
+    "next_blocker": "meson.build:33:15: ERROR: Include dir include does not exist.",
+    "log": "engineering_acceptance/evidence/meson_cross_setup_with_local_toolchain_1b602e8.log"
+  },
   "host_tools": {
-    "meson": {"path": "/home/agent/.local/bin/meson", "version": "1.9.1"},
-    "ninja": {"path": "/home/agent/.local/bin/ninja", "version": "1.13.0.git.kitware.jobserver-pipe-1"},
-    "python3": {"path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3", "version": "Python 3.12.14"}
+    "meson": {"version": "1.9.1"},
+    "ninja": {"version": "1.13.0.git.kitware.jobserver-pipe-1"},
+    "python3": {"version": "Python 3.12.14"}
   },
-  "install_attempted": false,
-  "reason": "The source manifest is incomplete and the ARM toolchain is unavailable; package installation is outside this source-provenance audit."
+  "package_archive_sha256": {
+    "binutils-arm-none-eabi_2.44-3+23+b1_amd64.deb": "c9c4944e54de852536b4f6a238a682c38a6243cdc2843dd1c4f587e046c0615b",
+    "gcc-arm-none-eabi_15%3a14.2.rel1-1_amd64.deb": "99252fdda02ad134e8c3c344d3c843f7aa5c0d006e92a5b3d53daf4bd935b5d3",
+    "libnewlib-arm-none-eabi_4.5.0.20241231-1_all.deb": "b444760d62896f03db89d6db94936929f300b72445763557fa94da32b7732f51",
+    "libnewlib-dev_4.5.0.20241231-1_all.deb": "feb2ed49a464b0346e42c3506088a41025273bff5f8e6bc5777afeac3704b3c1"
+  }
 }

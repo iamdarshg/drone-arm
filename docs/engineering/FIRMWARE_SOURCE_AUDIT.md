@@ -3,17 +3,23 @@
 ## Result
 
 The current source snapshot does not contain the firmware source files named by
-`meson.build`. The main-board target names 37 absent C/assembly/linker paths and
-12 absent include directories. The ESC output is described in the build file,
+`meson.build`. The main-board target names 36 absent C/assembly/linker paths and
+13 absent include directories. The ESC output is described in the build file,
 but its target is commented out. A main-board or ESC image cannot be built from
 this checkout.
 
 This PR records a reproducible provenance check and the blocked build result.
 It does not restore firmware or establish compatibility with the Rev-B board.
-The cross build is independently blocked by the missing `arm-none-eabi-gcc`
-toolchain. The available historical source candidate is not a valid replacement
-for the present Rev-B architecture; see `/workspace/firmware-history.md` for
-the full source-history analysis and limitations.
+The system has no ARM compiler and does not grant root or provide `sudo`, so no
+system package installation was attempted. I fetched Debian snapshot-pinned
+GCC 14.2.1, binutils 2.44, and Newlib packages and extracted them under `/tmp`;
+with an ephemeral wrapper for the staged hard-float Newlib libraries, Meson
+recognized the compiler and then failed at the absent `include/` directory.
+The exact packages, SHA-256 hashes, and Meson output are recorded in
+`engineering_acceptance/evidence/`. The available historical source candidate
+is not a valid replacement for the present Rev-B architecture; see
+`/workspace/firmware-history.md` for the full source-history analysis and
+limitations.
 
 ## Reproduction
 
@@ -34,12 +40,13 @@ for candidate source manifests. Its literal-path scan is an early provenance
 check; Meson's setup is the build-graph check.
 
 On baseline `1b602e8f7984b3ed6103fe615422991f50b3dfd1`, native Meson setup exits
-`1` at `meson.build:33` because `include/` is absent. Cross Meson setup exits
-`1` at compiler discovery because `arm-none-eabi-gcc` is not installed. The
-captured outputs and machine-readable audit are in
-`engineering_acceptance/evidence/`. The audit's expected revision is pinned to
-that baseline so the receipt fails if it is silently generated from another
-source revision.
+`1` at `meson.build:33` because `include/` is absent. Cross setup with the
+staged compiler also exits `1` at that missing include directory after
+successful compiler and linker detection. The source audit lists all 36 absent
+source paths and all 13 absent include directories. The captured outputs and
+machine-readable audit are in `engineering_acceptance/evidence/`. The audit's
+expected revision is pinned to that baseline so the receipt fails if it is
+silently generated from another source revision.
 
 ## Provenance conclusion
 
