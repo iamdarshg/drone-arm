@@ -53,6 +53,7 @@ def test_actual_run_manifest_contract():
     from engineering_acceptance.contracts import validate_manifest
     manifest={'run_id':'a'*64,'timestamp_utc':'2026-01-01T00:00:00Z','profile':'smoke',
       'drone_arm_sha':'b'*40,'drone_mech_sha':'c'*40,'test_definition_sha256':'d'*64,
+      'repository_heads_at_end':{'drone_arm':'b'*40,'drone_mech':'c'*40},'integrity_ok':True,
       'config_path':'engineering_acceptance/aircraft_system.yaml','config_sha256':'1'*64,'config_present':True,
       'tool_version':'fixture','python_version':'3.12','tool_versions':{},'results':[{'id':'TEST-FIXTURE','status':'FAIL','artifact_sha256':None,'check_exit_code':1,'evidence_required':False}]}
     validate_manifest(manifest)

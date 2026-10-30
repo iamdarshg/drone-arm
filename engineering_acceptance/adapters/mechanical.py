@@ -249,12 +249,6 @@ def run(check: dict, profile: str, config: dict | None = None, run_id: str | Non
             raw_evidence.setdefault("tool_versions", result["tool_versions"])
             raw_path.write_text(json.dumps(raw_evidence, indent=2) + "\n")
         if ident in ("BASE-008", "BASE-009", "BASE-010", "BASE-011", "BASE-012"):
-            if raw_path.is_file():
-                raw_evidence = json.loads(raw_path.read_text())
-                raw_evidence["command"] = command
-                raw_evidence["runner_exit_code"] = proc.returncode
-                raw_evidence.setdefault("tool_versions", result["tool_versions"])
-                raw_path.write_text(json.dumps(raw_evidence, indent=2) + "\n")
             result["measured"] = evidence
             result["artifact_paths"] = [str(raw_path)] if raw_path.is_file() else [str(STEP_DIR)]
             result["artifact_sha256"] = _sha(raw_path) if raw_path.is_file() else hashlib.sha256(json.dumps(evidence, sort_keys=True).encode()).hexdigest()
@@ -264,7 +258,6 @@ def run(check: dict, profile: str, config: dict | None = None, run_id: str | Non
                 result["errors"].append(f"native motor Boolean found {len(evidence['collisions'])} intersecting pairs")
             return result
         result["measured"] = evidence
-        raw_path = MECH_ROOT / "highspeed_edf/verification/evidence/native_step_import.json"
         result["artifact_paths"] = [str(raw_path)]
         result["artifact_sha256"] = _sha(raw_path) if raw_path.is_file() else None
         result["status"] = evidence["status"]

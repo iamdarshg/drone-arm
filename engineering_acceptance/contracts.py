@@ -191,6 +191,14 @@ def validate_manifest(manifest: Any) -> None:
     _validate_json_schema(manifest, MANIFEST_SCHEMA_PATH, "run manifest")
     if not isinstance(manifest, dict):
         raise ContractError(["run manifest: expected object"])
+    errors=[]
+    start={"drone_arm":manifest.get("drone_arm_sha"),"drone_mech":manifest.get("drone_mech_sha")}
+    end=manifest.get("repository_heads_at_end")
+    if manifest.get("integrity_ok") is True and start != end:
+        errors.append("run manifest: integrity_ok cannot be true when repository HEADs changed during execution")
+    if manifest.get("integrity_ok") is False and any(row.get("status") != "FAIL" for row in manifest.get("results",[]) if isinstance(row,dict)):
+        errors.append("run manifest: every result must fail when source integrity changed during execution")
+    if errors: raise ContractError(errors)
 
 def _validate_json_schema(value: Any, schema_path: Path, label: str) -> None:
     try:

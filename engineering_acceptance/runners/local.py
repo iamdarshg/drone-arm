@@ -4,7 +4,7 @@ from pathlib import Path
 from ..core import EA, ROOT, git_head, verify_source_artifacts
 from ..units import convert
 
-def execute(check, profile="smoke", config=None, run_id=None):
+def execute(check, profile="smoke", config=None, run_id=None, source_heads=None):
     ident = check["id"]
     name = check.get("runner")
     if isinstance(name, dict): name = name.get("name", name.get("capability"))
@@ -16,7 +16,7 @@ def execute(check, profile="smoke", config=None, run_id=None):
         except (ImportError, OSError, ValueError) as exc:
             return result | {"status": "BLOCKED", "errors": [f"evidence audit unavailable: {exc}"]}
     if name in ("provenance", "git_provenance") or ident.endswith("001"):
-        actual = {"drone_arm": git_head(ROOT), "drone_mech": git_head(ROOT.parent / "drone-mech")}
+        actual = source_heads or {"drone_arm": git_head(ROOT), "drone_mech": git_head(ROOT.parent / "drone-mech")}
         if config is None:
             import yaml
             config = yaml.safe_load((EA / "aircraft_system.yaml").read_text())

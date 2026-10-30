@@ -8,6 +8,8 @@
     "profile",
     "drone_arm_sha",
     "drone_mech_sha",
+    "repository_heads_at_end",
+    "integrity_ok",
     "test_definition_sha256",
     "config_path",
     "config_sha256",
@@ -37,6 +39,16 @@
       "type": "string",
       "pattern": "^[0-9a-f]{40}$"
     },
+    "repository_heads_at_end": {
+      "type": "object",
+      "required": ["drone_arm", "drone_mech"],
+      "properties": {
+        "drone_arm": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "drone_mech": {"type": "string", "pattern": "^[0-9a-f]{40}$"}
+      },
+      "additionalProperties": false
+    },
+    "integrity_ok": {"type": "boolean"},
     "test_definition_sha256": {
       "type": "string",
       "pattern": "^[0-9a-f]{64}$"

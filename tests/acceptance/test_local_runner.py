@@ -72,3 +72,9 @@ def test_dirty_pinned_engineering_input_fails_source_integrity(tmp_path, monkeyp
     assert result['status']=='FAIL'
     assert any('dirty/altered source' in message for message in result['errors'])
 
+def test_repository_head_drift_invalidates_the_run():
+    start={'heads':{'drone_arm':'a'*40,'drone_mech':'b'*40},'config_sha256':'1'*64,'test_definition_sha256':'2'*64,'source_artifacts_sha256':'3'*64}
+    end={'heads':{'drone_arm':'c'*40,'drone_mech':'b'*40},'config_sha256':'1'*64,'test_definition_sha256':'2'*64,'source_artifacts_sha256':'3'*64}
+    errors=core.run_input_drift(start,end)
+    assert len(errors)==1 and 'drone_arm HEAD changed' in errors[0]
+

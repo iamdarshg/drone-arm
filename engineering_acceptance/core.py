@@ -89,6 +89,17 @@ def verify_source_artifacts(config: dict) -> dict:
     return {"status":"FAIL" if errors else "PASS","aggregate_sha256":digest,"artifacts":measured,"errors":errors}
 
 
+def run_input_drift(start: dict, end: dict) -> list[str]:
+    """Return integrity errors if repository heads or pinned input digests changed mid-run."""
+    errors=[]
+    for repo in ("drone_arm","drone_mech"):
+        if start.get("heads",{}).get(repo) != end.get("heads",{}).get(repo):
+            errors.append(f"{repo} HEAD changed during run: {start.get('heads',{}).get(repo)} -> {end.get('heads',{}).get(repo)}")
+    for key in ("config_sha256","test_definition_sha256","source_artifacts_sha256"):
+        if start.get(key) != end.get(key): errors.append(f"{key} changed during run")
+    return errors
+
+
 def catalog_files() -> list[Path]:
     return sorted(CATALOG.glob("*.yaml")) if CATALOG.exists() else []
 
@@ -207,8 +218,13 @@ def run(profile: str, config_path: Path | None = None) -> dict:
     config_path = config_path or CONFIG_PATH
     try: config = load_yaml(config_path)
     except (OSError, yaml.YAMLError): config = {}
+    source_heads={"drone_arm":git_head(ROOT),"drone_mech":git_head(ROOT.parent/"drone-mech")}
+    start_source=verify_source_artifacts(config)
+    start_lock={"heads":source_heads,"config_sha256":sha256(config_path) if config_path.is_file() else None,
+                "test_definition_sha256":sha256(CATALOG/"mandatory_checks.yaml") if (CATALOG/"mandatory_checks.yaml").is_file() else None,
+                "source_artifacts_sha256":start_source.get("aggregate_sha256")}
     validation = validate_inputs(config_path)
-    run_id = hashlib.sha256(f"{time.time_ns()}:{git_head(ROOT)}:{profile}".encode()).hexdigest()
+    run_id = hashlib.sha256(f"{time.time_ns()}:{source_heads['drone_arm']}:{profile}".encode()).hexdigest()
     results = []
     for ident in selected:
         c = by_id.get(ident)
@@ -221,10 +237,10 @@ def run(profile: str, config_path: Path | None = None) -> dict:
         else:
             from .runners.local import execute
             row = {"id": ident, "requirement_id": c.get("requirement_id"), "unit": c.get("unit"), "required": c.get("expected"), "source": c.get("source"), "runner": c.get("runner")}
-            row.update(execute(c, profile=profile, config=config, run_id=run_id))
+            row.update(execute(c, profile=profile, config=config, run_id=run_id, source_heads=source_heads))
         if c:
             source_repo = c.get("source", {}).get("repo") if isinstance(c.get("source"), dict) else c.get("owner_repo")
-            row["source_revision"] = git_head(ROOT if source_repo == "drone-arm" else ROOT.parent / "drone-mech")
+            row["source_revision"] = source_heads["drone_arm" if source_repo == "drone-arm" else "drone_mech"]
             artifacts = []
             for rel in c.get("input_paths", []):
                 for base in (ROOT, ROOT.parent / "drone-mech"):
@@ -232,7 +248,7 @@ def run(profile: str, config_path: Path | None = None) -> dict:
                     if candidate.is_file(): artifacts.append({"path": str(candidate.relative_to(ROOT.parent)), "sha256": sha256(candidate)})
                     elif candidate.is_dir():
                         repo = ROOT if base == ROOT else ROOT.parent / "drone-mech"
-                        artifacts.append({"path": f"git:{repo.name}", "sha256": git_head(repo), "kind": "git_commit"})
+                        artifacts.append({"path": f"git:{repo.name}", "sha256": source_heads["drone_arm" if repo == ROOT else "drone_mech"], "kind": "git_commit"})
             for path in row.get("artifact_paths", []):
                 candidate = Path(path)
                 if not candidate.is_absolute(): candidate = (ROOT / candidate).resolve()
@@ -244,15 +260,26 @@ def run(profile: str, config_path: Path | None = None) -> dict:
         tool_versions = {p: importlib.metadata.version(p) for p in ("PyYAML", "jsonschema")}
         tool_versions.update(row.get("tool_versions", {}) if isinstance(row.get("tool_versions"), dict) else {})
         row.update({"run_id": run_id, "timestamp_utc": datetime.now(timezone.utc).isoformat(),
-                    "drone_arm_sha": git_head(ROOT), "drone_mech_sha": git_head(ROOT.parent / "drone-mech"),
-                    "catalog_sha256": sha256(CATALOG / "mandatory_checks.yaml") if (CATALOG / "mandatory_checks.yaml").exists() else None,
-                    "test_definition_sha256": sha256(CATALOG / "mandatory_checks.yaml") if (CATALOG / "mandatory_checks.yaml").exists() else None,
-                    "config_path":str(config_path.resolve()),"config_sha256":sha256(config_path) if config_path.is_file() else None,
+                    "drone_arm_sha": source_heads["drone_arm"], "drone_mech_sha": source_heads["drone_mech"],
+                    "catalog_sha256": start_lock["test_definition_sha256"],
+                    "test_definition_sha256": start_lock["test_definition_sha256"],
+                    "config_path":str(config_path.resolve()),"config_sha256":start_lock["config_sha256"],
                     "config_present":config_path.is_file(),
                     "tool_version": __version__, "python_version": platform.python_version(),
                     "tool_versions": tool_versions,
                     "profile": profile})
         results.append(row)
+    end_source=verify_source_artifacts(config)
+    end_heads={"drone_arm":git_head(ROOT),"drone_mech":git_head(ROOT.parent/"drone-mech")}
+    end_lock={"heads":end_heads,"config_sha256":sha256(config_path) if config_path.is_file() else None,
+              "test_definition_sha256":sha256(CATALOG/"mandatory_checks.yaml") if (CATALOG/"mandatory_checks.yaml").is_file() else None,
+              "source_artifacts_sha256":end_source.get("aggregate_sha256")}
+    drift_errors=run_input_drift(start_lock,end_lock)+end_source["errors"]
+    if drift_errors:
+        for row in results:
+            row["status"]="FAIL"
+            row.setdefault("errors",[]).append("run invalidated by input/source drift: "+"; ".join(drift_errors))
+            row["run_integrity"]={"ok":False,"errors":drift_errors,"heads_at_start":source_heads,"heads_at_end":end_heads}
     attempted = sum(r["status"] not in ("NOT_RUN", "NOT_APPLICABLE") for r in results); counts = {s: sum(r["status"] == s for r in results) for s in STATES}
     reqs=data["requirements"].get("requirements",[]) if isinstance(data["requirements"],dict) else data["requirements"]
     critical=[c for c in checks if c.get("id") in set(selected) and c.get("blocking") and c.get("severity") in ("P0","critical")]
@@ -262,6 +289,7 @@ def run(profile: str, config_path: Path | None = None) -> dict:
         check=by_id.get(row["id"],{})
         invocation=shlex.join([sys.executable,"-m","engineering_acceptance","run","--profile",profile,"--config",str(config_path.resolve())])
         row.update({"system":"twin_electric_ducted_fan_aircraft","variant":check.get("applicability"),"severity":check.get("severity"),"applicability":check.get("applicability"),"blocking":check.get("blocking"),
+                    "repository_heads_at_end":end_heads,"run_integrity_ok":not drift_errors,
                     "exact_command":invocation,"check_exit_code":0 if row["status"]=="PASS" else 1 if row["status"]=="FAIL" else None})
         if row.get("command") is None: row["command"]=invocation
         result_path=EA/"reports"/"runs"/run_id/"results"/(row["id"]+".json")
@@ -285,8 +313,9 @@ def run(profile: str, config_path: Path | None = None) -> dict:
     counts = {s: sum(r["status"] == s for r in results) for s in STATES}
     attempted = sum(r["status"] not in ("NOT_RUN", "NOT_APPLICABLE") for r in results)
     critical_pass=sum(any(row.get("id")==c["id"] and row.get("status")=="PASS" for row in results) for c in critical)
-    manifest={"run_id":run_id,"timestamp_utc":timestamp,"profile":profile,"drone_arm_sha":git_head(ROOT),"drone_mech_sha":git_head(ROOT.parent/"drone-mech"),
-              "test_definition_sha256":sha256(CATALOG/"mandatory_checks.yaml"),"config_path":str(config_path.resolve()),"config_sha256":sha256(config_path) if config_path.is_file() else None,"config_present":config_path.is_file(),"tool_version":__version__,"python_version":platform.python_version(),
+    manifest={"run_id":run_id,"timestamp_utc":timestamp,"profile":profile,"drone_arm_sha":source_heads["drone_arm"],"drone_mech_sha":source_heads["drone_mech"],
+              "repository_heads_at_end":end_heads,"integrity_ok":not drift_errors,
+              "test_definition_sha256":start_lock["test_definition_sha256"],"config_path":str(config_path.resolve()),"config_sha256":start_lock["config_sha256"],"config_present":config_path.is_file(),"tool_version":__version__,"python_version":platform.python_version(),
               "tool_versions":tool_versions,"results":[{"id":r["id"],"status":r["status"],"artifact_sha256":r.get("artifact_sha256"),"check_exit_code":r.get("check_exit_code"),"evidence_required":r.get("evidence_required")} for r in results]}
     manifest_path=planned_manifest;manifest_path.parent.mkdir(parents=True,exist_ok=True)
     try:
@@ -299,9 +328,10 @@ def run(profile: str, config_path: Path | None = None) -> dict:
     manifest_sha=hashlib.sha256(payload.encode()).hexdigest()
     for row in results: row["run_manifest_path"]=str(manifest_path.relative_to(ROOT));row["run_manifest_sha256"]=manifest_sha
     for row in results: record_result(row)
-    return {"run_id": run_id, "profile": profile, "timestamp_utc":timestamp,"drone_arm_sha": git_head(ROOT), "drone_mech_sha": git_head(ROOT.parent / "drone-mech"),
+    return {"run_id": run_id, "profile": profile, "timestamp_utc":timestamp,"drone_arm_sha": source_heads["drone_arm"], "drone_mech_sha": source_heads["drone_mech"],
             "requirements_declared": len(reqs), "checks_discovered": len(checks), "checks_attempted": attempted,
-            "counts": counts,"release_critical_pass":critical_pass,"release_critical_total":len(critical), "manifest_path":str(manifest_path.relative_to(ROOT)),"manifest_sha256":manifest_sha,
+            "counts": counts,"release_critical_pass":critical_pass,"release_critical_total":len(critical),"integrity_ok":not drift_errors,"repository_heads_at_end":end_heads,"integrity_errors":drift_errors,
+            "manifest_path":str(manifest_path.relative_to(ROOT)),"manifest_sha256":manifest_sha,
             "results": results, "notice": "Acceptance report is not flight or certification approval."}
 
 
