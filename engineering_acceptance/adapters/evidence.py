@@ -42,27 +42,62 @@ def _source_files(root: Path):
 
 
 def claims(root: Path = MECH, kind: str = "release"):
+    # Release assertions are interpreted in their source context. A string in a
+    # limitation/do-not-claim list is evidence against promotion, not a claim.
     patterns = {
-        "release": re.compile(r"(?i)\b(?:fabrication[- ]ready|manufacturing[- ]release|flight[- ]ready|certified|validated)\b"),
+        "release": re.compile(r"(?i)\b(?:fabrication[- ]ready|manufacturing[- ]release|flight[- ]ready|certified)\b"),
         "aero": re.compile(r"(?i)\b(?:validated\s+(?:aero|aerodynamic)|pressure[- ]recovery|recovery\s*(?:=|:|of)\s*0\.9)\b"),
     }
-    found=[]; sources=[]
+    found=[]; sources=[]; unsupported=[]
+    negative_keys={"limitations","donotclaim","prohibitedclaims","claimsnotmade","unvalidatedclaims","notclaims","knownlimitations"}
+    positive_keys={"status","claim","claims","readiness","release","promotion","releaseclaim","promotionclaim"}
+
+    def walk(value, keys=()):
+        if isinstance(value,dict):
+            for key,child in value.items(): yield from walk(child,keys+(str(key),))
+        elif isinstance(value,list):
+            for index,child in enumerate(value): yield from walk(child,keys+(str(index),))
+        elif isinstance(value,str): yield value,keys
+
     for p in _source_files(root):
         try: text=p.read_text(errors="replace")
         except OSError: continue
         sources.append(p)
+        structured=p.suffix.lower() in {".json",".yaml",".yml"}
+        if structured:
+            try:
+                if p.suffix.lower()==".json": data=json.loads(text)
+                else:
+                    import yaml
+                    data=yaml.safe_load(text)
+            except Exception: data=None
+            for value,keys in walk(data):
+                if not patterns[kind].search(value): continue
+                normalized=[re.sub(r"[^a-z]","",k.lower()) for k in keys]
+                neg=any(k in negative_keys for k in normalized)
+                positive=bool(set(normalized)&positive_keys)
+                record={"source":str(p.relative_to(root)),"location":".".join(keys),"text":value.strip()[:240],"context":"negative" if neg else "assertion" if positive else "unclassified"}
+                found.append(record)
+                if positive and not neg:
+                    unsupported.append(record)
+            continue
+        # In prose, require an affirmative predicate tied to a release label.
         for n,line in enumerate(text.splitlines(),1):
-            if patterns[kind].search(line): found.append({"source":str(p.relative_to(root)),"line":n,"text":line.strip()[:240]})
-    # This audit deliberately reports the claim inventory and gates every positive claim.
-    blockers=[]
-    if kind == "release": blockers=["no complete fabrication, structural, thermal, and physical qualification evidence bundle is indexed"]
-    else: blockers=["no converged applicable native aero result with raw fields, BCs, residual checks, and sensitivity evidence"]
-    # Count explicit affirmative status/claim syntax; prose discussing promotion rules and
-    # strings in quoted negative statements are inventory, not assertions.
-    affirmative = re.compile(r'''(?i)(?:\b(?:is|are|status|result|pipeline status|claim)\s*[:=]?\s*(?:\*\*)?)(?:fabrication[- ]ready|manufacturing[- ]release|flight[- ]ready|certified|validated)|["\'](?:flight[- ]ready|manufacturing[- ]release|fabrication[- ]ready)["\']\s*[,} ]?''')
-    unsupported=[c for c in found if affirmative.search(c["text"]) and not re.search(r"(?i)(?:not|no|unvalidated|remains|without|never|not yet|not .*validated)",c["text"])]
-    status="FAIL" if unsupported else "BLOCKED" if found else "PASS"
-    errors=["positive claim lacks required native and physical evidence"] if unsupported else blockers if found else []
+            if not patterns[kind].search(line): continue
+            record={"source":str(p.relative_to(root)),"line":n,"text":line.strip()[:240],"context":"prose"}
+            found.append(record)
+            if kind=="release":
+                explicit=re.search(r"(?i)\b(?:is|are|was|were|declared|considered|certified as)\b[^().!?\n]{0,40}\b(?:fabrication[- ]ready|manufacturing[- ]release|flight[- ]ready|certified)\b",line)
+                negated=re.search(r"(?i)\b(?:not|never|no|without|unvalidated|remains unvalidated|do not claim)\b",line)
+                if explicit and not negated: unsupported.append(record)
+            else:
+                explicit=re.search(r"(?i)\b(?:validated\s+(?:aero|aerodynamic)|pressure[- ]recovery\s*(?:=|:|of)\s*0\.9)\b",line)
+                negated=re.search(r"(?i)\b(?:not|no|unvalidated|remains|without|never|not yet)\b",line)
+                if explicit and not negated: unsupported.append(record)
+    blockers=["no complete fabrication, structural, thermal, and physical qualification evidence bundle is indexed"] if kind=="release" else ["no converged applicable native aero result with raw fields, BCs, residual checks, and sensitivity evidence"]
+    # Promotion cannot pass from claim text; only an independently verified evidence bundle can.
+    status="FAIL" if unsupported else "BLOCKED"
+    errors=["positive claim lacks required native and physical evidence"] if unsupported else blockers
     return _result(status,{"claims":found,"unsupported_positive_claims":unsupported,"source_files_scanned":len(sources),"gates":blockers},errors,sources)
 
 

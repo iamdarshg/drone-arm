@@ -108,3 +108,21 @@ def test_completed_label_cannot_borrow_logs_from_another_candidate(tmp_path):
     (wrong/'rhoPimpleFoam.log').write_text('End\n'); (wrong/'ccx_preCICE.log').write_text('done')
     (out/'wing_t30mm_receipt.json').write_text(json.dumps({'candidate':'wing_t30mm','status':'completed','coupling':{'fluidLog':'rhoPimpleFoam.log','solidLog':'ccx_preCICE.log'}}))
     assert evidence.fsi(tmp_path)['status']!='PASS'
+
+
+def test_negative_release_label_lists_and_pipeline_status_are_not_claims():
+    root=Path(evidence.MECH)/'highspeed_edf'
+    r=evidence.claims(root)
+    false_sources={'phase14/results/phase14_closure_summary.json',
+                   'phase14/configs/phase14_coupled_design.json',
+                   'phase15/reports/phase15_gcp_rans_status.md'}
+    assert not any(item['source'] in false_sources for item in r['measured']['unsupported_positive_claims'])
+    assert r['status']=='BLOCKED'
+
+
+def test_structured_do_not_claim_and_limitations_are_negative_context(tmp_path):
+    source=tmp_path/'candidate.json'
+    source.write_text(json.dumps({'limitations':['flight-ready'],'evidencePolicy':{'doNotClaim':['flight-ready']},'status':'screening-only'}))
+    r=evidence.claims(tmp_path)
+    assert r['status']=='BLOCKED'
+    assert not r['measured']['unsupported_positive_claims']
