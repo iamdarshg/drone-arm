@@ -14,8 +14,15 @@ import yaml
 ROOT = Path(__file__).resolve().parent
 SCHEMA_PATH = ROOT / "schema" / "aircraft_system.schema.json"
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
-# Immutable source revisions from the issue-21 acceptance baseline. Change only with a reviewed contract revision.
-KNOWN_REVISIONS = {"drone_arm": {"744994a096ca73e872b396a9b0636c58e7c1afe8"}, "drone_mech": {"5246c90657071772e220b118967fa5f3e7c9ff7c"}}
+# Baseline and explicitly selected candidate revisions. The baseline config keeps
+# using the immutable issue-21 revision; candidate configs cite a selected artifact.
+KNOWN_REVISIONS = {
+    "drone_arm": {"744994a096ca73e872b396a9b0636c58e7c1afe8"},
+    "drone_mech": {
+        "5246c90657071772e220b118967fa5f3e7c9ff7c",
+        "ff670b80b2b3ce925b03d14a91329bb7940e73d7",
+    },
+}
 
 class ContractError(ValueError):
     """Input violates the versioned engineering contract."""

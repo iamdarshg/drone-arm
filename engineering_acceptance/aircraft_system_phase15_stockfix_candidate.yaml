@@ -1,0 +1,87 @@
+# Candidate-specific source map; the immutable issue-21 config remains unchanged.
+schema_version: 1
+source_of_truth:
+  drone_arm: {repo: iamdarshg/drone-arm, revision: 744994a096ca73e872b396a9b0636c58e7c1afe8, revision_role: immutable_issue_baseline}
+  drone_mech: {repo: iamdarshg/drone-mech, revision: ff670b80b2b3ce925b03d14a91329bb7940e73d7, revision_role: selected_artifact}
+coordinates:
+  frame_id: phase15_aircraft
+  datum: fan_plane_center
+  axis_convention: {x: lateral_right, y: vertical_up, z: aft}
+  units: mm
+  origin: {x: 0, y: 0, z: 0}
+  source: {repo: drone-mech, revision: ff670b80b2b3ce925b03d14a91329bb7940e73d7, path: highspeed_edf/design/PHASE15_DESIGN_SPEC.md}
+source_artifacts:
+  architecture: {repo: drone-arm, revision: 744994a096ca73e872b396a9b0636c58e7c1afe8, path: docs/hardware/REV_B_ARCHITECTURE.md}
+  actuator_interface: {repo: drone-mech, revision: ff670b80b2b3ce925b03d14a91329bb7940e73d7, path: highspeed_edf/design/PHASE15_CONTROL_SURFACES.md}
+  geometry_generator: {repo: drone-mech, revision: ff670b80b2b3ce925b03d14a91329bb7940e73d7, path: highspeed_edf/phase15/optimization/phase15_generate_geometry.py}
+  geometry_step: {repo: drone-mech, revision: ff670b80b2b3ce925b03d14a91329bb7940e73d7, path: highspeed_edf/deliverables/phase15_geometry/step}
+  stock_nests: {repo: drone-mech, revision: ff670b80b2b3ce925b03d14a91329bb7940e73d7, path: highspeed_edf/deliverables/phase15_geometry/stock_nests}
+  mass_properties: {repo: drone-mech, revision: ff670b80b2b3ce925b03d14a91329bb7940e73d7, path: highspeed_edf/deliverables/phase15_geometry/reports/mass_cg.csv}
+  parameter_register: {repo: drone-mech, revision: ff670b80b2b3ce925b03d14a91329bb7940e73d7, path: highspeed_edf/deliverables/phase15_geometry/reports/phase15_parameter_register.json}
+  main_board: {repo: drone-arm, revision: 744994a096ca73e872b396a9b0636c58e7c1afe8, path: hardware/main/rev_b/main_rev_b.kicad_pcb}
+  esc_board: {repo: drone-arm, revision: 744994a096ca73e872b396a9b0636c58e7c1afe8, path: hardware/esc/rev_b/esc_rev_b.kicad_pcb}
+cad:
+  generator: {value: highspeed_edf/phase15/optimization/phase15_generate_geometry.py, status: KNOWN, reason: null}
+  source_sha256: {value: null, status: BLOCKED, reason: source artifact digest must be computed from pinned checkout at validation}
+  step_root: {value: highspeed_edf/deliverables/phase15_geometry/step, status: KNOWN, reason: null}
+  solid_manifest: {value: null, status: BLOCKED, reason: native STEP solid inventory and stable IDs must be extracted by CAD adapter}
+  envelope: {value: null, status: BLOCKED, reason: imported geometry dimensions must be measured from native STEP}
+  mass_cg: {value: null, status: BLOCKED, reason: recompute from native STEP solids including payload}
+materials:
+  core: {value: null, unit: kg/m3, provenance: unknown, evidence_id: null}
+  resin: {value: null, unit: kg/m3, provenance: unknown, evidence_id: null}
+  fibers: {value: null, unit: kg/m3, provenance: unknown, evidence_id: null}
+  ply_table: {value: null, unit: "1", provenance: unknown, evidence_id: null}
+  temperature_properties: {value: null, unit: K, provenance: unknown, evidence_id: null}
+  manufacturing_process: {value: null, unit: "1", provenance: unknown, evidence_id: null}
+propulsion: {architecture: twin-electric-ducted-fan, ducts: 2, nominal_stages_per_duct: 3}
+battery:
+  series_cells: 12
+  nominal_voltage_V: 44.4
+  maximum_voltage_V: 50.4
+  capacity_Ah: {value: null, unit: Ah, status: BLOCKED, reason: no verified installed-pack source}
+  dc_resistance_ohm: {value: null, unit: ohm, status: BLOCKED, reason: requires pack measurement}
+motors:
+  count: 6
+  independent_power_stages: 6
+  installed_can_length_mm: {value: null, unit: mm, status: BLOCKED, reason: actual motor model/source is unresolved}
+  temperature_measurements: {value: null, unit: C, status: BLOCKED, reason: installed sensors not evidenced}
+boards:
+  active_variant: {value: rev_b, status: KNOWN, reason: issue-23 selected Rev-B native candidates; exact authority remains gated on native export}
+  selected_main_source: hardware/main/rev_b/main_rev_b.kicad_pcb
+  selected_esc_source: hardware/esc/rev_b/esc_rev_b.kicad_pcb
+  main_board_git_revision: 744994a096ca73e872b396a9b0636c58e7c1afe8
+  esc_board_git_revision: 744994a096ca73e872b396a9b0636c58e7c1afe8
+  native_sha256: {value: null, status: BLOCKED, reason: compute from selected source contents; do not derive from report}
+  dimensions_mm: {value: null, status: BLOCKED, reason: import selected native Edge.Cuts geometry and measure; do not transcribe audit dimensions}
+  thickness_mm: {value: null, status: BLOCKED, reason: import selected native board stackup}
+  connector_heights_mm: {value: null, status: BLOCKED, reason: export footprint and connector height data from native board}
+  mounting_holes: {value: null, status: BLOCKED, reason: export native drill and mounting geometry}
+  cable_keepouts: {value: null, status: BLOCKED, reason: harness and service keepouts require verified installation data}
+actuators:
+  modeled_independent_effectors: 7
+  controller_outputs: 6
+  source: drone-mech highspeed_edf phase15 airframe and drone-arm main-board pin map
+  control_surfaces: {value: null, status: BLOCKED, reason: import sourced control surface geometry and stable IDs}
+  servo_mounts: {value: null, status: BLOCKED, reason: derive mounts from native airframe geometry}
+  signal_map: {value: null, status: BLOCKED, reason: firmware and native pin map reconciliation is pending; seven effectors currently exceed six PWM outputs}
+battery_installation:
+  pack_geometry: {value: null, status: BLOCKED, reason: selected pack and native bay clearance evidence unavailable}
+  connectors: {value: null, status: BLOCKED, reason: installed connector source unresolved}
+  independent_fuse_paths: {value: null, status: BLOCKED, reason: preserve six externally fused input architecture; native routing evidence required}
+  cooling: {value: null, status: BLOCKED, reason: measured pack and ESC cooling design unresolved}
+simulation:
+  scenarios: {value: null, status: BLOCKED, reason: applicable validated 6DOF model and safe bounds unavailable}
+  solver_capabilities: {value: null, status: BLOCKED, reason: solver capability matrix must be probed by adapters}
+  tool_versions: {value: null, status: BLOCKED, reason: capture exact tool versions at run time}
+  budget_policy: {value: null, status: BLOCKED, reason: profile runner records per-run budget and explicit remote authorization}
+payload:
+  modeled_payload_mass_kg: 1.0
+  cg_m: {value: null, status: BLOCKED, reason: no sourced aircraft CG coordinate}
+  radar_active: false
+limits:
+  per_motor_battery_current_A: {value: null, unit: A, status: BLOCKED, reason: actual motor/ESC limits and measurements required}
+  bus_current_A: {value: null, unit: A, status: BLOCKED, reason: source architecture requires six independent fused inputs; no shared limit inferred}
+  temperature_C: {value: null, unit: C, status: BLOCKED, reason: motor/ESC thermal limits unresolved}
+cost_policy: {remote_compute_budget_usd: 0, allow_remote_compute: false}
+overrides: []

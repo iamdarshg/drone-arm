@@ -48,6 +48,15 @@ def test_provenance_check_compares_pinned_baseline_to_actual_heads():
     assert result['measured']['current_head']['drone_arm']
     assert result['measured']['baseline_is_ancestor']=={'drone_arm':True,'drone_mech':True}
 
+def test_schema_runner_uses_the_explicit_candidate_config_path(tmp_path, monkeypatch):
+    selected=tmp_path/'aircraft_system_candidate.yaml'
+    selected.write_text('candidate config')
+    seen=[]
+    monkeypatch.setattr(core,'validate_inputs',lambda path=None: seen.append(path) or [])
+    result=execute(_check('BASE-002','schema_validation'),config=deepcopy(CONFIG),config_path=selected)
+    assert result['status']=='PASS'
+    assert seen==[selected]
+
 @pytest.mark.parametrize(('artifact_key','relative_path'), [('geometry','data/input.txt'),('main_board','hardware/main/main_rev_b.kicad_pcb')])
 def test_dirty_pinned_engineering_input_fails_source_integrity(tmp_path, monkeypatch, artifact_key, relative_path):
     arm=tmp_path/'drone-arm'; mech=tmp_path/'drone-mech'

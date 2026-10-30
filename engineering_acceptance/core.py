@@ -237,7 +237,8 @@ def run(profile: str, config_path: Path | None = None) -> dict:
         else:
             from .runners.local import execute
             row = {"id": ident, "requirement_id": c.get("requirement_id"), "unit": c.get("unit"), "required": c.get("expected"), "source": c.get("source"), "runner": c.get("runner")}
-            row.update(execute(c, profile=profile, config=config, run_id=run_id, source_heads=source_heads))
+            row.update(execute(c, profile=profile, config=config, run_id=run_id,
+                               source_heads=source_heads, config_path=config_path))
         if c:
             source_repo = c.get("source", {}).get("repo") if isinstance(c.get("source"), dict) else c.get("owner_repo")
             row["source_revision"] = source_heads["drone_arm" if source_repo == "drone-arm" else "drone_mech"]

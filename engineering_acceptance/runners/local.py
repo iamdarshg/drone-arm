@@ -4,7 +4,7 @@ from pathlib import Path
 from ..core import EA, ROOT, git_head, verify_source_artifacts
 from ..units import convert
 
-def execute(check, profile="smoke", config=None, run_id=None, source_heads=None):
+def execute(check, profile="smoke", config=None, run_id=None, source_heads=None, config_path=None):
     ident = check["id"]
     name = check.get("runner")
     if isinstance(name, dict): name = name.get("name", name.get("capability"))
@@ -31,7 +31,10 @@ def execute(check, profile="smoke", config=None, run_id=None, source_heads=None)
         return result | {"status": "PASS" if ok else "FAIL", "measured": {"current_head": actual,"immutable_baseline":baselines,"baseline_is_ancestor":checks,"source_integrity":artifacts}, "errors": errors}
     if name in ("schema", "schema_validation", "validate_schema") or ident.endswith("002"):
         from ..core import validate_inputs
-        errs = validate_inputs()
+        # Validate the same explicitly selected config as the outer acceptance
+        # run. Falling back to the immutable baseline here makes candidate
+        # runs fail against stale source artifacts despite a valid candidate pin.
+        errs = validate_inputs(config_path)
         return result | {"status": "PASS" if not errs else "FAIL", "measured": {"errors": errs}, "errors": errs}
     if name in ("units", "unit_conversion") or ident.endswith("003"):
         conversions = [("mm", "m", 1000, 1), ("Wh", "J", 1, 3600), ("deg", "rad", 180, math.pi)]
