@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "issue": "iamdarshg/drone-arm#23",
+  "selection_policy": {
+    "selected_reference": "main_baseline",
+    "meaning": "current main is used as a reproducible comparison reference only",
+    "fabrication_release_authority": null,
+    "authority_status": "NONE_DECLARED",
+    "rule": "No PCB variant is silently promoted or selected for fabrication by this manifest."
+  },
+  "external_geometry_source": {
+    "repo": "iamdarshg/drone-mech",
+    "issue": 3,
+    "sha": "5246c90657071772e220b118967fa5f3e7c9ff7c",
+    "actuators": {
+      "independent_effectors": 7,
+      "composition": {"elevons": 2, "edf_exit_vector_vanes": 4, "rudder": 1},
+      "status": "SOURCE_DECLARED; physical position feedback is a separate unresolved gate"
+    }
+  },
+  "variants": [
+    {
+      "id": "main_baseline",
+      "title": "drone-arm current main comparison reference",
+      "role": "CURRENT_MAIN_REFERENCE_ONLY",
+      "head_sha": "744994a096ca73e872b396a9b0636c58e7c1afe8",
+      "main_board": "hardware/main/rev_b/main_rev_b.kicad_pcb",
+      "esc_board": "hardware/esc/rev_b/esc_rev_b.kicad_pcb",
+      "pinmap": "hardware/main/rev_b/mcu_pinmap.json",
+      "pull_request": null
+    },
+    {
+      "id": "pr10",
+      "title": "Consolidate Rev-B routing, validation, and repository cleanup",
+      "role": "OPEN_UNRELEASED_VARIANT",
+      "head_sha": "ceaec7a13e923be62d57398bd69c294f3565774f",
+      "main_board": "hardware/main/rev_b/main_rev_b.kicad_pcb",
+      "esc_board": "hardware/esc/rev_b/esc_rev_b.kicad_pcb",
+      "pinmap": "hardware/main/rev_b/mcu_pinmap.json",
+      "pull_request": 10
+    },
+    {
+      "id": "pr11",
+      "title": "Complete Rev-B routing and fabrication release",
+      "role": "OPEN_UNRELEASED_VARIANT",
+      "head_sha": "1d342cb6b450e3346712bbc2598c41e88b3c0a81",
+      "main_board": "hardware/main/rev_b/main_rev_b.kicad_pcb",
+      "esc_board": "hardware/esc/rev_b/esc_rev_b.kicad_pcb",
+      "pinmap": "hardware/main/rev_b/mcu_pinmap.json",
+      "pull_request": 11
+    },
+    {
+      "id": "pr17",
+      "title": "Document Rev-B routing audit and first-article test plan",
+      "role": "OPEN_DOCUMENTATION_VARIANT; PCB_BLOBS_EXPECTED_UNCHANGED_FROM_MAIN",
+      "head_sha": "569eda582b3a8c4221b308f09e0856dcdec2da21",
+      "main_board": "hardware/main/rev_b/main_rev_b.kicad_pcb",
+      "esc_board": "hardware/esc/rev_b/esc_rev_b.kicad_pcb",
+      "pinmap": "hardware/main/rev_b/mcu_pinmap.json",
+      "pull_request": 17
+    }
+  ]
+}
