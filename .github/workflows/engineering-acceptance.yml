@@ -29,7 +29,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: iamdarshg/drone-mech
-          ref: 5246c90657071772e220b118967fa5f3e7c9ff7c
+          ref: f851b20ae7d035c7fe417b2fc9f36c786163f5c2
           path: drone-mech
           fetch-depth: 0
           # A separately scoped read-only token is needed for the private companion.
