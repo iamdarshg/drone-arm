@@ -29,7 +29,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: iamdarshg/drone-mech
-          ref: 5812e8369251f79d024c5be52389d61ab02102c2
+          ref: b7ec4de872da1fad919da3ad9888b16e188fb8bf
           path: drone-mech
           fetch-depth: 0
           # A separately scoped read-only token is needed for the private companion.
@@ -43,6 +43,10 @@ jobs:
       - name: Test framework and adversarial fixtures
         working-directory: drone-arm
         run: .venv-acceptance/bin/python -m pytest -q tests/acceptance tests/independent
+      - name: Exercise native negative fixtures
+        if: matrix.profile == 'cad'
+        working-directory: drone-mech
+        run: ../drone-arm/.venv-acceptance/bin/python -m highspeed_edf.verification.negative_fixtures
       - name: Execute acceptance (engineering failures stay red)
         working-directory: drone-arm
         run: .venv-acceptance/bin/python -m engineering_acceptance run --profile ${{ matrix.profile }}
@@ -54,5 +58,7 @@ jobs:
         if: always()
         with:
           name: acceptance-${{ matrix.profile }}
-          path: drone-arm/engineering_acceptance/reports/
+          path: |
+            drone-arm/engineering_acceptance/reports/
+            drone-mech/highspeed_edf/verification/evidence/
           retention-days: 14
