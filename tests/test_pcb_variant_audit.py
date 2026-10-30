@@ -37,3 +37,19 @@ def test_manifest_has_comparison_only_variants():
     assert {variant["id"] for variant in variants} == {"main_baseline", "pr10", "pr11", "pr17"}
     assert manifest["selection_policy"]["fabrication_release_authority"] is None
     assert all(variant["head_sha"] for variant in variants)
+
+
+def test_erc_summary_flattens_sheet_violations_and_severities():
+    report = {
+        "kicad_version": "9.0.2",
+        "sheets": [
+            {"violations": [{"type": "symbol_issue", "severity": "warning"}]},
+            {"violations": [{"type": "pin_not_driven", "severity": "error"}]},
+            {"path": "/empty", "violations": []},
+        ],
+    }
+    result = audit._summarize_native_report(report, "erc")
+    assert result["status"] == "FAIL"
+    assert result["violation_count"] == 2
+    assert result["violation_count_by_severity"] == {"error": 1, "warning": 1}
+    assert result["findings"] == 2

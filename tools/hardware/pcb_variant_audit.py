@@ -242,6 +242,30 @@ def _count_by(items: list[dict[str, Any]], key: str) -> dict[str, int]:
     return dict(sorted(result.items()))
 
 
+def _summarize_native_report(data: dict[str, Any], kind: str) -> dict[str, Any]:
+    # KiCad PCB DRC reports use top-level violations/unconnected_items. ERC
+    # reports place violations under each sheet, so flatten them explicitly.
+    if kind == "erc":
+        violations = [violation for sheet in data.get("sheets", [])
+                      for violation in sheet.get("violations", [])]
+        unconnected: list[dict[str, Any]] = []
+    else:
+        violations = data.get("violations", [])
+        unconnected = data.get("unconnected_items", [])
+    categories = _count_by(violations, "type")
+    severities = _count_by(violations, "severity")
+    unconnected_nets = len({str(item.get("net", item.get("net_name", "unknown"))) for item in unconnected})
+    findings = len(violations) + len(unconnected)
+    return {"status": "FAIL" if findings else "PASS",
+            "kicad_report_version": data.get("kicad_version"),
+            "violation_count": len(violations), "violation_count_by_type": categories,
+            "violation_count_by_severity": severities,
+            "unconnected_item_count": len(unconnected),
+            "unconnected_net_count_observed": unconnected_nets,
+            "findings": findings,
+            "unconnected_item_samples": unconnected[:20]}
+
+
 def _native_check(cli: str, kind: str, source: Path, output: Path) -> dict[str, Any]:
     command = [cli, "pcb", "drc"] if kind == "drc" else [cli, "sch", "erc"]
     command += ["--severity-all", "--exit-code-violations", "--format", "json", "--output", str(output), str(source)]
@@ -255,18 +279,8 @@ def _native_check(cli: str, kind: str, source: Path, output: Path) -> dict[str, 
         data = json.loads(output.read_text())
     except json.JSONDecodeError as exc:
         return {**base, "status": "FAIL", "reason": f"invalid native JSON output: {exc}"}
-    violations = data.get("violations", [])
-    unconnected = data.get("unconnected_items", [])
-    categories = _count_by(violations, "type")
-    severities = _count_by(violations, "severity")
-    unconnected_nets = len({str(item.get("net", item.get("net_name", "unknown"))) for item in unconnected})
-    findings = len(violations) + len(unconnected)
-    return {**base, "status": "FAIL" if findings else "PASS", "kicad_report_version": data.get("kicad_version"),
-            "violation_count": len(violations), "violation_count_by_type": categories,
-            "violation_count_by_severity": severities, "unconnected_item_count": len(unconnected),
-            "unconnected_net_count_observed": unconnected_nets,
-            "findings": findings, "native_report_sha256": sha256_file(output),
-            "unconnected_item_samples": unconnected[:20]}
+    summary = _summarize_native_report(data, kind)
+    return {**base, **summary, "native_report_sha256": sha256_file(output)}
 
 
 def _run_native_checks(root: Path, report_dir: Path) -> dict[str, Any]:
