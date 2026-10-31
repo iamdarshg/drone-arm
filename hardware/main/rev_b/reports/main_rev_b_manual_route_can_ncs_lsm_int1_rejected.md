@@ -28,3 +28,7 @@ Neither USB_DP candidate met the no-new-DRC gate. The paired USB_DM connection r
 ## Follow-up probe from `980f77c`: sensor SPI
 
 The source board still has SHA-256 `db8fa1ca44907ad5b70b7010bdb67fe06d80dcd6715aea2a02662682ddb47291` and baseline DRC 7 violations / 55 unconnected items. A temporary `/SENS_MOSI` route from U10.78 via (56,42) to the existing sensor-bus via at (58.8456,81.5875), using B.Cu, produced board SHA-256 `24732c7d1d467c379ba11a6065813ae8afacdc30c9afff8337fcb31369410d90` and DRC JSON SHA-256 `0f70069dfea3b0a948a961e7cc8e64cc0d7fdd7603bcb4c3cac2bff181bc6a85`. Matching-project KiCad DRC reported 12 violations and 54 unconnected items. Rejected: the route crosses `/CAN_INT` and `/SYS_5V` on B.Cu and violates clearance at nearby `/3V3` and GND vias.
+
+## Follow-up probe from `7381d8c`: LSM_INT2 sensor interrupt
+
+With the matching project and zone refill, the source-board baseline reports 7 violations / 55 unconnected items (DRC JSON SHA-256 `1e54259d5cf1c3cb004e0ee558754d8331bd830cfccee412a77cc245d825be2d`). The temporary `/LSM_INT2` candidate from U10.6 via an outer escape and a B.Cu detour to U21.9 has board SHA-256 `6472a2a398b634b19e1a7573afe709a4142839025fa0620cc16450372c867150`; its DRC JSON SHA-256 is `049d913136f09c57907296b4d392ce3b2e3e02132343b4eedd60d48ae5f4763f`. It reports 20 violations / 55 unconnected items, so it does not reduce the unrouted count. Rejected: it shorts C11 GND, `/SYS_5V`, and `/SENS_MOSI`; it also crosses `/1V1` and violates clearances to `/3V3_ADC` and GND vias.
