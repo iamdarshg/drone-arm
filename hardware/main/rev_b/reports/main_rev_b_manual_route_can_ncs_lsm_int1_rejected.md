@@ -24,3 +24,7 @@ The source main PCB is still byte-for-byte the same board (SHA-256 above), with 
 | B.Cu route using vias at (56.53,38.2) and (60.4,43.5) | `27f4df0c75755f67a149ff934fe3cc04fa2453468229a1b154560d0d73f75a97` | 16 violations, 55 unconnected; `2b1f945b4985373fd00867b97537ec20f6508c50f111f8bf094f82f28bdf3e7d` | Rejected: U10-side via and escape short C32's GND pad/via and violate drill clearance. |
 
 Neither USB_DP candidate met the no-new-DRC gate. The paired USB_DM connection remains unrouted, so no USB differential-pair completion is claimed. The accepted source PCB remains unchanged.
+
+## Follow-up probe from `980f77c`: sensor SPI
+
+The source board still has SHA-256 `db8fa1ca44907ad5b70b7010bdb67fe06d80dcd6715aea2a02662682ddb47291` and baseline DRC 7 violations / 55 unconnected items. A temporary `/SENS_MOSI` route from U10.78 via (56,42) to the existing sensor-bus via at (58.8456,81.5875), using B.Cu, produced board SHA-256 `24732c7d1d467c379ba11a6065813ae8afacdc30c9afff8337fcb31369410d90` and DRC JSON SHA-256 `0f70069dfea3b0a948a961e7cc8e64cc0d7fdd7603bcb4c3cac2bff181bc6a85`. Matching-project KiCad DRC reported 12 violations and 54 unconnected items. Rejected: the route crosses `/CAN_INT` and `/SYS_5V` on B.Cu and violates clearance at nearby `/3V3` and GND vias.
