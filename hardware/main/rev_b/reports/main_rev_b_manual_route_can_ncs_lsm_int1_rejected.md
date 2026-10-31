@@ -36,3 +36,7 @@ With the matching project and zone refill, the source-board baseline reports 7 v
 ## Follow-up probe from `bdd4d7f`: GNSS_RX
 
 Using the same zone-refilled source baseline (7 violations / 55 unconnected), a temporary `/GNSS_RX` B.Cu route from U10.12 via (53,50.6), through an upper-board detour, to a via at (126.55,14.2) tied to the existing R32.2 stub produced candidate board SHA-256 `b499607ae8103e326e0363a1ed07a32a4d18f9f67f89d955357d1835faa2f00b` and DRC JSON SHA-256 `e4e690bdc66927ac267878cb67fa22bd78a5bc907866aec486018bd9632f67b3`. Matching-project KiCad DRC reported 14 violations / 54 unconnected items. Rejected: the route crosses accepted `/CAN_INT` copper and shorts/clears GND, `/SENS_SCLK`, and GNSS backup-power vias.
+
+## Follow-up probe from `3bc0dff`: ICM_INT2
+
+With the same zone-refilled source baseline (7 violations / 55 unconnected; board SHA-256 `db8fa1ca44907ad5b70b7010bdb67fe06d80dcd6715aea2a02662682ddb47291`), a temporary `/ICM_INT2` route from U10.3 around the west board edge to U20.9 produced candidate board SHA-256 `a57d14305bc55eaa4a6e7929dd384242432f3f06821cb808809780aef59fc705` and DRC JSON SHA-256 `9376d41d83619e15bd3c4348b655a578ac0fbb846eb71123f4eee715ded79400`. Matching-project KiCad DRC reported 13 violations / 54 unconnected items. Rejected: it crosses `/1V1`, shorts the `/SENS_MOSI` via and GND, and violates clearance to SENS_SCLK and BUCK_SW vias.
