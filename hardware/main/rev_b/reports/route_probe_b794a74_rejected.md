@@ -13,3 +13,5 @@ Report-only rejected candidates. KiCad pcbnew/CLI 9.0.2. Each candidate uses the
 | `/VREG_AVDD` straight F.Cu U10.61→existing track at (51.51,41.50) | `d77cc178848da958280555728dfc39cbb3a9939e9c7ba63b23197da01f7b3c50` | `c903dfe924268d75fe05c43928877b98522ca30dd9eb519acfd0323b9df03b6b` | 20 violations, 44 unconnected. Added crossings, power clearances, GND short, zone clearance and mask bridges. |
 
 Only source-pinned JSON evidence is retained. No candidate PCB was promoted.
+
+**Zone-refill status:** This report’s original DRC JSONs were generated without an explicit zone-refill step and are preliminary. See [controlled zone-refill recheck](route_probe_zfill_303eb8e_recheck.md) for the same candidate boards rechecked against a zone-filled baseline with matching project settings.

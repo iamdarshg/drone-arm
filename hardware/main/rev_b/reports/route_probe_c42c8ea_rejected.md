@@ -13,3 +13,5 @@ Report-only routing experiments using KiCad pcbnew and CLI 9.0.2. The source boa
 | `/RP2354B MCU/XOUT`, straight F.Cu U10.31 to existing F.Cu track | `b8e9f012b0731866cacbc4504434af6d7a02a97c2385dc40ea3cd4774566f602` | `78bed2e1251046e8509d05c5256da36f854840d47d1c6a5117ffa798d6e78bbe` | 23 violations, 44 unconnected. Rejected due new shorts to `/1V1`, `/GNSS_PWR_EN`, `/3V3`, crossings, clearance/zone and mask-bridge issues. |
 
 The complete before and candidate DRC JSON files accompany this record. No candidate PCB was promoted.
+
+**Zone-refill status:** This report’s original DRC JSONs were generated without an explicit zone-refill step and are preliminary. See [controlled zone-refill recheck](route_probe_zfill_303eb8e_recheck.md) for the same candidate boards rechecked against a zone-filled baseline with matching project settings.

@@ -17,3 +17,5 @@ These are rejected, report-only routing experiments. The board source remains un
 | `/RP2354B MCU/USB_DP_MCU`, straight F.Cu U10.67→R10.2 | `5ec43a11227014031e51eb15fb8c57a53279d3a35aee8bc6ac4cdf13f0b5b2b1` | `route_probe_68f5060_usb_dp_straight.json` (`4e4699f1efd8592136482dad305fb58a339006ae6fbfe4f4003842b6ab0d278e`) | 15 violations, 44 unconnected. Rejected: new shorts to `/3V3`, crossing, zone clearance, and solder-mask-bridge violations. |
 
 Only DRC JSON reports and this source-pinned record are retained. No rejected candidate PCB was promoted.
+
+**Zone-refill status:** This report’s original DRC JSONs were generated without an explicit zone-refill step and are preliminary. See [controlled zone-refill recheck](route_probe_zfill_303eb8e_recheck.md) for the same candidate boards rechecked against a zone-filled baseline with matching project settings.
