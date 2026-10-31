@@ -1,0 +1,311 @@
+{
+  "source_commit": "1fd8535dd91a6477e4c40cce3eb24751060a6188",
+  "source_board_sha256": "79ad895d0c525f15e949773f79808c77164fd09495c8d576f6b80390bee4baee",
+  "matching_project_sha256": "f5bfbb6150d2799b8cc0ddb899c0e18c86ef452cbf68e05c60f883a969068a9e",
+  "baseline_report_sha256": "4ca040e7f5b5ecdaf1a8ae8538063e4bb309b05445918080133920b978034376",
+  "candidate_report_sha256": "eb86ffa29fbcc75a48d81bf4b13a596ab17b65ee0e3e1b0ed70f942669240f65",
+  "baseline_signature_count": 7,
+  "candidate_signature_count": 20,
+  "new_signatures": [
+    {
+      "description": "Items shorting two nets (nets /1V1 and /BARO_DRDY)",
+      "items": [
+        {
+          "description": "Track [/1V1] on F.Cu, length 0.8500 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 49.8
+          },
+          "uuid": "102072ae-3368-4d1d-a4fc-d05bf31b8157"
+        },
+        {
+          "description": "Track [/BARO_DRDY] on F.Cu, length 37.3361 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 49.4
+          },
+          "uuid": "46d715a0-3280-4616-8045-4577005de6e5"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Items shorting two nets (nets /BARO_DRDY and /GND)",
+      "items": [
+        {
+          "description": "Track [/BARO_DRDY] on F.Cu, length 37.3361 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 49.4
+          },
+          "uuid": "46d715a0-3280-4616-8045-4577005de6e5"
+        },
+        {
+          "description": "Via [/GND] on F.Cu - B.Cu",
+          "pos": {
+            "x": 57.48,
+            "y": 56.5
+          },
+          "uuid": "a5a2da57-807d-4a06-a8cc-9b380970eef6"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Items shorting two nets (nets /GND and /BARO_DRDY)",
+      "items": [
+        {
+          "description": "Pad 2 [/GND] of C40 on F.Cu",
+          "pos": {
+            "x": 57.48,
+            "y": 56.5
+          },
+          "uuid": "1fb0a5ec-f07f-4a71-93fa-2b3e03a8a03d"
+        },
+        {
+          "description": "Track [/BARO_DRDY] on F.Cu, length 37.3361 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 49.4
+          },
+          "uuid": "46d715a0-3280-4616-8045-4577005de6e5"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Items shorting two nets (nets /GND and /BARO_DRDY)",
+      "items": [
+        {
+          "description": "Via [/GND] on F.Cu - B.Cu",
+          "pos": {
+            "x": 70.0,
+            "y": 80.6702
+          },
+          "uuid": "14026ede-cbdb-494a-820f-5a96ac263375"
+        },
+        {
+          "description": "Track [/BARO_DRDY] on F.Cu, length 37.3361 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 49.4
+          },
+          "uuid": "46d715a0-3280-4616-8045-4577005de6e5"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Front solder mask aperture bridges items with different nets",
+      "items": [
+        {
+          "description": "Track [/BARO_DRDY] on F.Cu, length 37.3361 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 49.4
+          },
+          "uuid": "46d715a0-3280-4616-8045-4577005de6e5"
+        },
+        {
+          "description": "Pad 10 [/1V1] of U10 on F.Cu",
+          "pos": {
+            "x": 54.05,
+            "y": 49.8
+          },
+          "uuid": "9bb8a3ff-8b9a-4b8b-babc-f447bf0c83d4"
+        }
+      ],
+      "severity": "error",
+      "type": "solder_mask_bridge"
+    },
+    {
+      "description": "Front solder mask aperture bridges items with different nets",
+      "items": [
+        {
+          "description": "Track [/BARO_DRDY] on F.Cu, length 37.3361 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 49.4
+          },
+          "uuid": "46d715a0-3280-4616-8045-4577005de6e5"
+        },
+        {
+          "description": "Pad 11 [/GNSS_TX] of U10 on F.Cu",
+          "pos": {
+            "x": 54.05,
+            "y": 50.2
+          },
+          "uuid": "a4694b01-0773-449b-a564-62a9f3c4595c"
+        }
+      ],
+      "severity": "error",
+      "type": "solder_mask_bridge"
+    },
+    {
+      "description": "Front solder mask aperture bridges items with different nets",
+      "items": [
+        {
+          "description": "Track [/BARO_DRDY] on F.Cu, length 37.3361 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 49.4
+          },
+          "uuid": "46d715a0-3280-4616-8045-4577005de6e5"
+        },
+        {
+          "description": "Pad 2 [/GND] of C40 on F.Cu",
+          "pos": {
+            "x": 57.48,
+            "y": 56.5
+          },
+          "uuid": "1fb0a5ec-f07f-4a71-93fa-2b3e03a8a03d"
+        }
+      ],
+      "severity": "error",
+      "type": "solder_mask_bridge"
+    },
+    {
+      "description": "Front solder mask aperture bridges items with different nets",
+      "items": [
+        {
+          "description": "Track [/BARO_DRDY] on F.Cu, length 37.3361 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 49.4
+          },
+          "uuid": "46d715a0-3280-4616-8045-4577005de6e5"
+        },
+        {
+          "description": "Pad 25 [/PA_EN] of U10 on F.Cu",
+          "pos": {
+            "x": 56.8,
+            "y": 54.95
+          },
+          "uuid": "7ce60174-c65e-4ccf-81ee-c64301f800f4"
+        }
+      ],
+      "severity": "error",
+      "type": "solder_mask_bridge"
+    },
+    {
+      "description": "Front solder mask aperture bridges items with different nets",
+      "items": [
+        {
+          "description": "Track [/BARO_DRDY] on F.Cu, length 37.3361 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 49.4
+          },
+          "uuid": "46d715a0-3280-4616-8045-4577005de6e5"
+        },
+        {
+          "description": "Pad 26 [/LNA_EN] of U10 on F.Cu",
+          "pos": {
+            "x": 57.2,
+            "y": 54.95
+          },
+          "uuid": "056123b6-c6a5-4245-a039-ed09b69f1c68"
+        }
+      ],
+      "severity": "error",
+      "type": "solder_mask_bridge"
+    },
+    {
+      "description": "Front solder mask aperture bridges items with different nets",
+      "items": [
+        {
+          "description": "Track [/BARO_DRDY] on F.Cu, length 37.3361 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 49.4
+          },
+          "uuid": "46d715a0-3280-4616-8045-4577005de6e5"
+        },
+        {
+          "description": "Pad 8 [/GND] of U22 on F.Cu",
+          "pos": {
+            "x": 70.5,
+            "y": 82.2375
+          },
+          "uuid": "84dad3cd-498e-44fe-8af3-f6a3604b5f0b"
+        }
+      ],
+      "severity": "error",
+      "type": "solder_mask_bridge"
+    },
+    {
+      "description": "Tracks crossing",
+      "items": [
+        {
+          "description": "Track [/BARO_DRDY] on F.Cu, length 37.3361 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 49.4
+          },
+          "uuid": "46d715a0-3280-4616-8045-4577005de6e5"
+        },
+        {
+          "description": "Track [/3V3] on F.Cu, length 2.0000 mm",
+          "pos": {
+            "x": 58.4,
+            "y": 55.7
+          },
+          "uuid": "f5804db2-1f19-4a30-be30-fd180be10c35"
+        }
+      ],
+      "severity": "error",
+      "type": "tracks_crossing"
+    },
+    {
+      "description": "Tracks crossing",
+      "items": [
+        {
+          "description": "Track [/BARO_DRDY] on F.Cu, length 37.3361 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 49.4
+          },
+          "uuid": "46d715a0-3280-4616-8045-4577005de6e5"
+        },
+        {
+          "description": "Track [/RF_RESET_N] on F.Cu, length 4.9500 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 53.8
+          },
+          "uuid": "d83f1925-49f8-4f04-b88e-4dc3d771bb77"
+        }
+      ],
+      "severity": "error",
+      "type": "tracks_crossing"
+    },
+    {
+      "description": "Tracks crossing",
+      "items": [
+        {
+          "description": "Track [/BARO_DRDY] on F.Cu, length 37.3361 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 49.4
+          },
+          "uuid": "46d715a0-3280-4616-8045-4577005de6e5"
+        },
+        {
+          "description": "Track [/RP2354B MCU/STATUS_LED] on F.Cu, length 10.7000 mm",
+          "pos": {
+            "x": 64.5,
+            "y": 58.0
+          },
+          "uuid": "96c8d596-75aa-4229-904c-5aa0371f4720"
+        }
+      ],
+      "severity": "error",
+      "type": "tracks_crossing"
+    }
+  ],
+  "removed_signatures": []
+}
