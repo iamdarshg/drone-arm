@@ -13,3 +13,14 @@ The baseline used KiCad CLI 9.0.2 with a matching-stem `main_rev_b.kicad_pro` an
 | `/RP2354B MCU/RUN`: R12.2 breakout via at (49.86,61.0), B.Cu path to U10.35 via at (61.8,58.5), with an F.Cu south/east MCU escape | `72e9135fdbb37210ec03fa68ee631a49dffbabb53e24f48d4c2f5c5e433654f8` | 11 violations, 54 unconnected; `9712b8cde41b31cfd8bec48d23385b27343eb563eed8e9284910e3658b48ff95` | Rejected: U10 escape crosses and shorts the accepted `/CAN_INT` route; new via also violates clearance to `/RP2354B MCU/STATUS_LED`. |
 
 All three routes reduced the unconnected count by one but introduced DRC violations. The source PCB remains unchanged at 55 unconnected items and 7 existing violations; it is not fabrication-ready.
+
+## Follow-up probes from `bee8715`
+
+The source main PCB is still byte-for-byte the same board (SHA-256 above), with matching-project baseline DRC at 7 violations and 55 unconnected items. Two further `/RP2354B MCU/USB_DP_MCU` alternatives were tested as temporary candidates:
+
+| Candidate | Temporary board SHA-256 | DRC result and report SHA-256 | Decision |
+|---|---|---|---|
+| Direct F.Cu segment R10.2 (56.53,37.1) to U10.67 (60.4,45.05) | `16a6684dad908107682f8b85ac91f71ca4d246f56682bc7da52d62cf778a3298` | 10 violations, 54 unconnected; `87eb22ddbe8d06be8d66a3407ef7831f68a2a1fdf2df98cfd701ae71aafae89f` | Rejected: trace shorts the existing `/3V3` track and C32 power pad. |
+| B.Cu route using vias at (56.53,38.2) and (60.4,43.5) | `27f4df0c75755f67a149ff934fe3cc04fa2453468229a1b154560d0d73f75a97` | 16 violations, 55 unconnected; `2b1f945b4985373fd00867b97537ec20f6508c50f111f8bf094f82f28bdf3e7d` | Rejected: U10-side via and escape short C32's GND pad/via and violate drill clearance. |
+
+Neither USB_DP candidate met the no-new-DRC gate. The paired USB_DM connection remains unrouted, so no USB differential-pair completion is claimed. The accepted source PCB remains unchanged.
