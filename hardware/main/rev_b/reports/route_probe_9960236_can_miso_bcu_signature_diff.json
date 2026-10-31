@@ -1,0 +1,334 @@
+{
+  "source_commit": "9960236fe75eabdf3ae81f02017b9c22dfc5ea91",
+  "source_board_sha256": "a21b010eba158e7b3ecfeb0bfdb8c98de9c8d62212f9f7958ffbba0e6b945824",
+  "matching_project_sha256": "f5bfbb6150d2799b8cc0ddb899c0e18c86ef452cbf68e05c60f883a969068a9e",
+  "baseline_report_sha256": "ff0f52414a4113eed39b8facc14b79fe9e2270677266f2fd228d14a4bcfb6f58",
+  "candidate_report_sha256": "6c04972680aed40a392953d94d01a3a768e3327b0f6d0d62e28399961d79ff85",
+  "baseline_signature_count": 7,
+  "candidate_signature_count": 21,
+  "new_signatures": [
+    {
+      "description": "Clearance violation (netclass 'Default' clearance 0.125 mm; actual 0.125 mm)",
+      "items": [
+        {
+          "description": "Pad 15 [/GND] of U51 on F.Cu",
+          "pos": {
+            "x": 32.0,
+            "y": 20.0
+          },
+          "uuid": "51729502-cf6a-4b1f-967c-36aa127b6e47"
+        },
+        {
+          "description": "Via [/CAN_MISO] on F.Cu - B.Cu",
+          "pos": {
+            "x": 32.4,
+            "y": 19.35
+          },
+          "uuid": "ee5616a9-83fa-4c39-936e-af0c25acb567"
+        }
+      ],
+      "severity": "error",
+      "type": "clearance"
+    },
+    {
+      "description": "Clearance violation (netclass 'Default' clearance 0.1250 mm; actual 0.0677 mm)",
+      "items": [
+        {
+          "description": "Track [/CAN_MISO] on B.Cu, length 47.0166 mm",
+          "pos": {
+            "x": 32.4,
+            "y": 19.35
+          },
+          "uuid": "72b692a0-8252-46d6-967f-4b8cdba73cb8"
+        },
+        {
+          "description": "Via [/GND] on F.Cu - B.Cu",
+          "pos": {
+            "x": 46.3578,
+            "y": 37.7177
+          },
+          "uuid": "f937896f-b4c0-48a9-ba4e-a0549a711c8f"
+        }
+      ],
+      "severity": "error",
+      "type": "clearance"
+    },
+    {
+      "description": "Clearance violation (netclass 'Default' clearance 0.1250 mm; actual 0.0773 mm)",
+      "items": [
+        {
+          "description": "Track [/CAN_INT] on F.Cu, length 2.1633 mm",
+          "pos": {
+            "x": 62.4,
+            "y": 55.5
+          },
+          "uuid": "1333f6b4-88aa-4679-86ea-97683fd40048"
+        },
+        {
+          "description": "Track [/CAN_MISO] on F.Cu, length 1.2500 mm",
+          "pos": {
+            "x": 61.6,
+            "y": 56.2
+          },
+          "uuid": "b99c1203-0423-4e49-9bc8-8e70703db59f"
+        }
+      ],
+      "severity": "error",
+      "type": "clearance"
+    },
+    {
+      "description": "Hole clearance violation (board setup constraints hole clearance 0.2000 mm; actual 0.0000 mm)",
+      "items": [
+        {
+          "description": "Pad 15 [/GND] of U51 on F.Cu",
+          "pos": {
+            "x": 32.0,
+            "y": 20.0
+          },
+          "uuid": "51729502-cf6a-4b1f-967c-36aa127b6e47"
+        },
+        {
+          "description": "Via [/CAN_MISO] on F.Cu - B.Cu",
+          "pos": {
+            "x": 32.4,
+            "y": 19.35
+          },
+          "uuid": "ee5616a9-83fa-4c39-936e-af0c25acb567"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Items shorting two nets (nets /CAN_INT and /CAN_MISO)",
+      "items": [
+        {
+          "description": "Track [/CAN_INT] on B.Cu, length 2.8284 mm",
+          "pos": {
+            "x": 47.0,
+            "y": 37.0
+          },
+          "uuid": "09389709-d61e-4ae0-a035-8615b910f89a"
+        },
+        {
+          "description": "Track [/CAN_MISO] on B.Cu, length 47.0166 mm",
+          "pos": {
+            "x": 32.4,
+            "y": 19.35
+          },
+          "uuid": "72b692a0-8252-46d6-967f-4b8cdba73cb8"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Items shorting two nets (nets /CAN_INT and /CAN_MISO)",
+      "items": [
+        {
+          "description": "Track [/CAN_INT] on F.Cu, length 2.1633 mm",
+          "pos": {
+            "x": 62.4,
+            "y": 55.5
+          },
+          "uuid": "1333f6b4-88aa-4679-86ea-97683fd40048"
+        },
+        {
+          "description": "Via [/CAN_MISO] on F.Cu - B.Cu",
+          "pos": {
+            "x": 61.6,
+            "y": 56.2
+          },
+          "uuid": "1ff199ba-9506-4e88-b8c3-1dce26a08aff"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Items shorting two nets (nets /CAN_MISO and /3V3)",
+      "items": [
+        {
+          "description": "Track [/CAN_MISO] on B.Cu, length 47.0166 mm",
+          "pos": {
+            "x": 32.4,
+            "y": 19.35
+          },
+          "uuid": "72b692a0-8252-46d6-967f-4b8cdba73cb8"
+        },
+        {
+          "description": "Via [/3V3] on F.Cu - B.Cu",
+          "pos": {
+            "x": 51.52,
+            "y": 44.0
+          },
+          "uuid": "c97a7cda-8abd-4486-95a9-86bfbd1023ba"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Items shorting two nets (nets /CAN_MISO and /CAN_INT)",
+      "items": [
+        {
+          "description": "Track [/CAN_MISO] on B.Cu, length 47.0166 mm",
+          "pos": {
+            "x": 32.4,
+            "y": 19.35
+          },
+          "uuid": "72b692a0-8252-46d6-967f-4b8cdba73cb8"
+        },
+        {
+          "description": "Track [/CAN_INT] on B.Cu, length 3.3541 mm",
+          "pos": {
+            "x": 40.0,
+            "y": 29.0
+          },
+          "uuid": "e2d9054e-c56a-4258-b049-28936b191142"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Items shorting two nets (nets /CAN_MISO and /GND)",
+      "items": [
+        {
+          "description": "Track [/CAN_MISO] on F.Cu, length 1.1000 mm",
+          "pos": {
+            "x": 33.5,
+            "y": 19.35
+          },
+          "uuid": "4468a30d-9940-4329-be03-c05ddcb09753"
+        },
+        {
+          "description": "Pad 15 [/GND] of U51 on F.Cu",
+          "pos": {
+            "x": 32.0,
+            "y": 20.0
+          },
+          "uuid": "51729502-cf6a-4b1f-967c-36aa127b6e47"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Front solder mask aperture bridges items with different nets",
+      "items": [
+        {
+          "description": "Track [/CAN_MISO] on F.Cu, length 1.1000 mm",
+          "pos": {
+            "x": 33.5,
+            "y": 19.35
+          },
+          "uuid": "4468a30d-9940-4329-be03-c05ddcb09753"
+        },
+        {
+          "description": "Pad 15 [/GND] of U51 on F.Cu",
+          "pos": {
+            "x": 32.0,
+            "y": 20.0
+          },
+          "uuid": "51729502-cf6a-4b1f-967c-36aa127b6e47"
+        }
+      ],
+      "severity": "error",
+      "type": "solder_mask_bridge"
+    },
+    {
+      "description": "Front solder mask aperture bridges items with different nets",
+      "items": [
+        {
+          "description": "Via [/CAN_MISO] on F.Cu - B.Cu",
+          "pos": {
+            "x": 32.4,
+            "y": 19.35
+          },
+          "uuid": "ee5616a9-83fa-4c39-936e-af0c25acb567"
+        },
+        {
+          "description": "Pad 15 [/GND] of U51 on F.Cu",
+          "pos": {
+            "x": 32.0,
+            "y": 20.0
+          },
+          "uuid": "51729502-cf6a-4b1f-967c-36aa127b6e47"
+        }
+      ],
+      "severity": "error",
+      "type": "solder_mask_bridge"
+    },
+    {
+      "description": "Tracks crossing",
+      "items": [
+        {
+          "description": "Track [/CAN_INT] on B.Cu, length 5.0000 mm",
+          "pos": {
+            "x": 55.8,
+            "y": 51.0
+          },
+          "uuid": "417db66b-4b6e-4f9c-80cb-80aea211d39b"
+        },
+        {
+          "description": "Track [/CAN_MISO] on B.Cu, length 47.0166 mm",
+          "pos": {
+            "x": 32.4,
+            "y": 19.35
+          },
+          "uuid": "72b692a0-8252-46d6-967f-4b8cdba73cb8"
+        }
+      ],
+      "severity": "error",
+      "type": "tracks_crossing"
+    },
+    {
+      "description": "Tracks crossing",
+      "items": [
+        {
+          "description": "Track [/CAN_MISO] on B.Cu, length 47.0166 mm",
+          "pos": {
+            "x": 32.4,
+            "y": 19.35
+          },
+          "uuid": "72b692a0-8252-46d6-967f-4b8cdba73cb8"
+        },
+        {
+          "description": "Track [/CAN_INT] on B.Cu, length 7.8102 mm",
+          "pos": {
+            "x": 45.0,
+            "y": 35.0
+          },
+          "uuid": "d4396496-aadb-474b-9de1-1142e8ab1c4c"
+        }
+      ],
+      "severity": "error",
+      "type": "tracks_crossing"
+    },
+    {
+      "description": "Tracks crossing",
+      "items": [
+        {
+          "description": "Track [/CAN_MISO] on B.Cu, length 47.0166 mm",
+          "pos": {
+            "x": 32.4,
+            "y": 19.35
+          },
+          "uuid": "72b692a0-8252-46d6-967f-4b8cdba73cb8"
+        },
+        {
+          "description": "Track [/RF_RESET_N] on B.Cu, length 5.5000 mm",
+          "pos": {
+            "x": 59.0,
+            "y": 53.8
+          },
+          "uuid": "981bac3b-30e9-45a6-a9fb-1db968e48fcb"
+        }
+      ],
+      "severity": "error",
+      "type": "tracks_crossing"
+    }
+  ],
+  "removed_signatures": []
+}

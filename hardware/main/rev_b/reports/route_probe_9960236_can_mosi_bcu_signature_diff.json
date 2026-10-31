@@ -1,0 +1,311 @@
+{
+  "source_commit": "9960236fe75eabdf3ae81f02017b9c22dfc5ea91",
+  "source_board_sha256": "a21b010eba158e7b3ecfeb0bfdb8c98de9c8d62212f9f7958ffbba0e6b945824",
+  "matching_project_sha256": "f5bfbb6150d2799b8cc0ddb899c0e18c86ef452cbf68e05c60f883a969068a9e",
+  "baseline_report_sha256": "ff0f52414a4113eed39b8facc14b79fe9e2270677266f2fd228d14a4bcfb6f58",
+  "candidate_report_sha256": "48037db99cef5df25f27562afd7f8592799e22f9aad2a82822a537daf756d404",
+  "baseline_signature_count": 7,
+  "candidate_signature_count": 20,
+  "new_signatures": [
+    {
+      "description": "Clearance violation (netclass 'Default' clearance 0.125 mm; actual 0.125 mm)",
+      "items": [
+        {
+          "description": "Via [/CAN_MOSI] on F.Cu - B.Cu",
+          "pos": {
+            "x": 32.4,
+            "y": 20.0
+          },
+          "uuid": "15e373f4-4f80-4e9f-beee-8f767531a7ad"
+        },
+        {
+          "description": "Pad 15 [/GND] of U51 on F.Cu",
+          "pos": {
+            "x": 32.0,
+            "y": 20.0
+          },
+          "uuid": "51729502-cf6a-4b1f-967c-36aa127b6e47"
+        }
+      ],
+      "severity": "error",
+      "type": "clearance"
+    },
+    {
+      "description": "Hole clearance violation (board setup constraints hole clearance 0.2000 mm; actual 0.0000 mm)",
+      "items": [
+        {
+          "description": "Pad 15 [/GND] of U51 on F.Cu",
+          "pos": {
+            "x": 32.0,
+            "y": 20.0
+          },
+          "uuid": "51729502-cf6a-4b1f-967c-36aa127b6e47"
+        },
+        {
+          "description": "Via [/CAN_MOSI] on F.Cu - B.Cu",
+          "pos": {
+            "x": 32.4,
+            "y": 20.0
+          },
+          "uuid": "15e373f4-4f80-4e9f-beee-8f767531a7ad"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Items shorting two nets (nets /3V3 and /CAN_MOSI)",
+      "items": [
+        {
+          "description": "Via [/3V3] on F.Cu - B.Cu",
+          "pos": {
+            "x": 51.52,
+            "y": 44.0
+          },
+          "uuid": "c97a7cda-8abd-4486-95a9-86bfbd1023ba"
+        },
+        {
+          "description": "Track [/CAN_MOSI] on B.Cu, length 46.2588 mm",
+          "pos": {
+            "x": 32.4,
+            "y": 20.0
+          },
+          "uuid": "eaee9a91-7507-402b-970d-154bb1c657c6"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Items shorting two nets (nets /CAN_MOSI and /GND)",
+      "items": [
+        {
+          "description": "Track [/CAN_MOSI] on B.Cu, length 46.2588 mm",
+          "pos": {
+            "x": 32.4,
+            "y": 20.0
+          },
+          "uuid": "eaee9a91-7507-402b-970d-154bb1c657c6"
+        },
+        {
+          "description": "Via [/GND] on F.Cu - B.Cu",
+          "pos": {
+            "x": 46.3578,
+            "y": 37.7177
+          },
+          "uuid": "f937896f-b4c0-48a9-ba4e-a0549a711c8f"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Items shorting two nets (nets /GND and /CAN_MOSI)",
+      "items": [
+        {
+          "description": "Pad 15 [/GND] of U51 on F.Cu",
+          "pos": {
+            "x": 32.0,
+            "y": 20.0
+          },
+          "uuid": "51729502-cf6a-4b1f-967c-36aa127b6e47"
+        },
+        {
+          "description": "Track [/CAN_MOSI] on F.Cu, length 1.1000 mm",
+          "pos": {
+            "x": 33.5,
+            "y": 20.0
+          },
+          "uuid": "a67602a7-dec7-4c0c-b498-b50871bbec14"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Items shorting two nets (nets /GND and /CAN_MOSI)",
+      "items": [
+        {
+          "description": "Via [/GND] on F.Cu - B.Cu",
+          "pos": {
+            "x": 38.2687,
+            "y": 28.0011
+          },
+          "uuid": "bd328604-09d2-400d-a795-59098f999aba"
+        },
+        {
+          "description": "Track [/CAN_MOSI] on B.Cu, length 46.2588 mm",
+          "pos": {
+            "x": 32.4,
+            "y": 20.0
+          },
+          "uuid": "eaee9a91-7507-402b-970d-154bb1c657c6"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Items shorting two nets (nets /GND and /CAN_MOSI)",
+      "items": [
+        {
+          "description": "Via [/GND] on F.Cu - B.Cu",
+          "pos": {
+            "x": 45.74,
+            "y": 37.1
+          },
+          "uuid": "e8b4b9e5-7f0b-4ae1-be68-ce80a82522b9"
+        },
+        {
+          "description": "Track [/CAN_MOSI] on B.Cu, length 46.2588 mm",
+          "pos": {
+            "x": 32.4,
+            "y": 20.0
+          },
+          "uuid": "eaee9a91-7507-402b-970d-154bb1c657c6"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Items shorting two nets (nets /RF_RESET_N and /CAN_MOSI)",
+      "items": [
+        {
+          "description": "Via [/RF_RESET_N] on F.Cu - B.Cu",
+          "pos": {
+            "x": 59.0,
+            "y": 53.8
+          },
+          "uuid": "3bdf89e2-7450-460c-adcf-7464413849cd"
+        },
+        {
+          "description": "Track [/CAN_MOSI] on B.Cu, length 46.2588 mm",
+          "pos": {
+            "x": 32.4,
+            "y": 20.0
+          },
+          "uuid": "eaee9a91-7507-402b-970d-154bb1c657c6"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Front solder mask aperture bridges items with different nets",
+      "items": [
+        {
+          "description": "Track [/CAN_MOSI] on F.Cu, length 1.1000 mm",
+          "pos": {
+            "x": 33.5,
+            "y": 20.0
+          },
+          "uuid": "a67602a7-dec7-4c0c-b498-b50871bbec14"
+        },
+        {
+          "description": "Pad 15 [/GND] of U51 on F.Cu",
+          "pos": {
+            "x": 32.0,
+            "y": 20.0
+          },
+          "uuid": "51729502-cf6a-4b1f-967c-36aa127b6e47"
+        }
+      ],
+      "severity": "error",
+      "type": "solder_mask_bridge"
+    },
+    {
+      "description": "Front solder mask aperture bridges items with different nets",
+      "items": [
+        {
+          "description": "Via [/CAN_MOSI] on F.Cu - B.Cu",
+          "pos": {
+            "x": 32.4,
+            "y": 20.0
+          },
+          "uuid": "15e373f4-4f80-4e9f-beee-8f767531a7ad"
+        },
+        {
+          "description": "Pad 15 [/GND] of U51 on F.Cu",
+          "pos": {
+            "x": 32.0,
+            "y": 20.0
+          },
+          "uuid": "51729502-cf6a-4b1f-967c-36aa127b6e47"
+        }
+      ],
+      "severity": "error",
+      "type": "solder_mask_bridge"
+    },
+    {
+      "description": "Tracks crossing",
+      "items": [
+        {
+          "description": "Track [/CAN_INT] on B.Cu, length 3.3541 mm",
+          "pos": {
+            "x": 40.0,
+            "y": 29.0
+          },
+          "uuid": "e2d9054e-c56a-4258-b049-28936b191142"
+        },
+        {
+          "description": "Track [/CAN_MOSI] on B.Cu, length 46.2588 mm",
+          "pos": {
+            "x": 32.4,
+            "y": 20.0
+          },
+          "uuid": "eaee9a91-7507-402b-970d-154bb1c657c6"
+        }
+      ],
+      "severity": "error",
+      "type": "tracks_crossing"
+    },
+    {
+      "description": "Tracks crossing",
+      "items": [
+        {
+          "description": "Track [/CAN_INT] on B.Cu, length 5.0000 mm",
+          "pos": {
+            "x": 55.8,
+            "y": 51.0
+          },
+          "uuid": "417db66b-4b6e-4f9c-80cb-80aea211d39b"
+        },
+        {
+          "description": "Track [/CAN_MOSI] on B.Cu, length 46.2588 mm",
+          "pos": {
+            "x": 32.4,
+            "y": 20.0
+          },
+          "uuid": "eaee9a91-7507-402b-970d-154bb1c657c6"
+        }
+      ],
+      "severity": "error",
+      "type": "tracks_crossing"
+    },
+    {
+      "description": "Tracks crossing",
+      "items": [
+        {
+          "description": "Track [/RF_RESET_N] on B.Cu, length 5.5000 mm",
+          "pos": {
+            "x": 59.0,
+            "y": 53.8
+          },
+          "uuid": "981bac3b-30e9-45a6-a9fb-1db968e48fcb"
+        },
+        {
+          "description": "Track [/CAN_MOSI] on B.Cu, length 46.2588 mm",
+          "pos": {
+            "x": 32.4,
+            "y": 20.0
+          },
+          "uuid": "eaee9a91-7507-402b-970d-154bb1c657c6"
+        }
+      ],
+      "severity": "error",
+      "type": "tracks_crossing"
+    }
+  ],
+  "removed_signatures": []
+}

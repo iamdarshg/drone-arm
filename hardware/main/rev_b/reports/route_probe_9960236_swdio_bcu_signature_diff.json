@@ -1,0 +1,219 @@
+{
+  "source_commit": "9960236fe75eabdf3ae81f02017b9c22dfc5ea91",
+  "source_board_sha256": "a21b010eba158e7b3ecfeb0bfdb8c98de9c8d62212f9f7958ffbba0e6b945824",
+  "matching_project_sha256": "f5bfbb6150d2799b8cc0ddb899c0e18c86ef452cbf68e05c60f883a969068a9e",
+  "baseline_report_sha256": "ff0f52414a4113eed39b8facc14b79fe9e2270677266f2fd228d14a4bcfb6f58",
+  "candidate_report_sha256": "9699f8c165c21f17d2814f1f052208672d8906af788374a74b61100ad65c613c",
+  "baseline_signature_count": 7,
+  "candidate_signature_count": 16,
+  "new_signatures": [
+    {
+      "description": "Hole clearance violation (board setup constraints hole clearance 0.2000 mm; actual 0.0000 mm)",
+      "items": [
+        {
+          "description": "Pad 2 [/GND] of C39 on F.Cu",
+          "pos": {
+            "x": 60.48,
+            "y": 56.5
+          },
+          "uuid": "2602f941-5804-4867-82dd-cb0d474ce54f"
+        },
+        {
+          "description": "Via [/RP2354B MCU/SWDIO] on F.Cu - B.Cu",
+          "pos": {
+            "x": 60.4,
+            "y": 56.2
+          },
+          "uuid": "cd34e06e-64c3-4c4e-9648-9d81af826f91"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Items shorting two nets (nets /CAN_INT and /RP2354B MCU/SWDIO)",
+      "items": [
+        {
+          "description": "Track [/CAN_INT] on B.Cu, length 8.2976 mm",
+          "pos": {
+            "x": 61.2,
+            "y": 57.3
+          },
+          "uuid": "ef69cf74-d417-4805-9f4c-7b270b9445d4"
+        },
+        {
+          "description": "Track [/RP2354B MCU/SWDIO] on B.Cu, length 25.0392 mm",
+          "pos": {
+            "x": 59.0,
+            "y": 31.2
+          },
+          "uuid": "f74552ce-2258-4371-9d45-f40adea7975a"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Items shorting two nets (nets /GND and /RP2354B MCU/SWDIO)",
+      "items": [
+        {
+          "description": "Pad 2 [/GND] of C39 on F.Cu",
+          "pos": {
+            "x": 60.48,
+            "y": 56.5
+          },
+          "uuid": "2602f941-5804-4867-82dd-cb0d474ce54f"
+        },
+        {
+          "description": "Via [/RP2354B MCU/SWDIO] on F.Cu - B.Cu",
+          "pos": {
+            "x": 60.4,
+            "y": 56.2
+          },
+          "uuid": "cd34e06e-64c3-4c4e-9648-9d81af826f91"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Items shorting two nets (nets /RP2354B MCU/SWDIO and /CAN_INT)",
+      "items": [
+        {
+          "description": "Via [/RP2354B MCU/SWDIO] on F.Cu - B.Cu",
+          "pos": {
+            "x": 60.4,
+            "y": 56.2
+          },
+          "uuid": "cd34e06e-64c3-4c4e-9648-9d81af826f91"
+        },
+        {
+          "description": "Track [/CAN_INT] on B.Cu, length 8.2976 mm",
+          "pos": {
+            "x": 61.2,
+            "y": 57.3
+          },
+          "uuid": "ef69cf74-d417-4805-9f4c-7b270b9445d4"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Items shorting two nets (nets /RP2354B MCU/SWDIO and /GND)",
+      "items": [
+        {
+          "description": "Track [/RP2354B MCU/SWDIO] on F.Cu, length 1.2500 mm",
+          "pos": {
+            "x": 60.4,
+            "y": 56.2
+          },
+          "uuid": "0c2f6a57-434b-4979-b970-6c6f02fe71a7"
+        },
+        {
+          "description": "Pad 2 [/GND] of C39 on F.Cu",
+          "pos": {
+            "x": 60.48,
+            "y": 56.5
+          },
+          "uuid": "2602f941-5804-4867-82dd-cb0d474ce54f"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Items shorting two nets (nets /SENS_SCLK and /RP2354B MCU/SWDIO)",
+      "items": [
+        {
+          "description": "Track [/SENS_SCLK] on In1.Cu, length 31.4133 mm",
+          "pos": {
+            "x": 60.3984,
+            "y": 80.5522
+          },
+          "uuid": "8f05337b-0dc6-46fa-bb00-227a1f5ba7b4"
+        },
+        {
+          "description": "Via [/RP2354B MCU/SWDIO] on F.Cu - B.Cu",
+          "pos": {
+            "x": 60.4,
+            "y": 56.2
+          },
+          "uuid": "cd34e06e-64c3-4c4e-9648-9d81af826f91"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Front solder mask aperture bridges items with different nets",
+      "items": [
+        {
+          "description": "Track [/RP2354B MCU/SWDIO] on F.Cu, length 1.2500 mm",
+          "pos": {
+            "x": 60.4,
+            "y": 56.2
+          },
+          "uuid": "0c2f6a57-434b-4979-b970-6c6f02fe71a7"
+        },
+        {
+          "description": "Pad 2 [/GND] of C39 on F.Cu",
+          "pos": {
+            "x": 60.48,
+            "y": 56.5
+          },
+          "uuid": "2602f941-5804-4867-82dd-cb0d474ce54f"
+        }
+      ],
+      "severity": "error",
+      "type": "solder_mask_bridge"
+    },
+    {
+      "description": "Front solder mask aperture bridges items with different nets",
+      "items": [
+        {
+          "description": "Via [/RP2354B MCU/SWDIO] on F.Cu - B.Cu",
+          "pos": {
+            "x": 60.4,
+            "y": 56.2
+          },
+          "uuid": "cd34e06e-64c3-4c4e-9648-9d81af826f91"
+        },
+        {
+          "description": "Pad 2 [/GND] of C39 on F.Cu",
+          "pos": {
+            "x": 60.48,
+            "y": 56.5
+          },
+          "uuid": "2602f941-5804-4867-82dd-cb0d474ce54f"
+        }
+      ],
+      "severity": "error",
+      "type": "solder_mask_bridge"
+    },
+    {
+      "description": "Tracks crossing",
+      "items": [
+        {
+          "description": "Track [/RF_RESET_N] on B.Cu, length 5.5000 mm",
+          "pos": {
+            "x": 59.0,
+            "y": 53.8
+          },
+          "uuid": "981bac3b-30e9-45a6-a9fb-1db968e48fcb"
+        },
+        {
+          "description": "Track [/RP2354B MCU/SWDIO] on B.Cu, length 25.0392 mm",
+          "pos": {
+            "x": 59.0,
+            "y": 31.2
+          },
+          "uuid": "f74552ce-2258-4371-9d45-f40adea7975a"
+        }
+      ],
+      "severity": "error",
+      "type": "tracks_crossing"
+    }
+  ],
+  "removed_signatures": []
+}
