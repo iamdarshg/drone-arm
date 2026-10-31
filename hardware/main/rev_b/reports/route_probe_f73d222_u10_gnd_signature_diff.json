@@ -1,0 +1,127 @@
+{
+  "source_commit": "f73d22259b932dbd28af640d17c08b85c9716d4c",
+  "source_board_sha256": "a21b010eba158e7b3ecfeb0bfdb8c98de9c8d62212f9f7958ffbba0e6b945824",
+  "matching_project_sha256": "f5bfbb6150d2799b8cc0ddb899c0e18c86ef452cbf68e05c60f883a969068a9e",
+  "baseline_report_sha256": "ff0f52414a4113eed39b8facc14b79fe9e2270677266f2fd228d14a4bcfb6f58",
+  "candidate_report_sha256": "ee02417f0657812652a85a95dad9dda03f6b32aff2d6b38ff3128323b60cb3b6",
+  "baseline_signature_count": 7,
+  "candidate_signature_count": 12,
+  "new_signatures": [
+    {
+      "description": "Items shorting two nets (nets /3V3 and /GND)",
+      "items": [
+        {
+          "description": "Track [/3V3] on F.Cu, length 0.9200 mm",
+          "pos": {
+            "x": 61.6,
+            "y": 44.3
+          },
+          "uuid": "3ceb720a-70df-4c21-928a-9b317da442d1"
+        },
+        {
+          "description": "Track [/GND] on F.Cu, length 2.4676 mm",
+          "pos": {
+            "x": 62.4,
+            "y": 45.05
+          },
+          "uuid": "c3745016-853f-4f90-a112-9ea76495d16d"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Items shorting two nets (nets /GND and /3V3)",
+      "items": [
+        {
+          "description": "Track [/GND] on F.Cu, length 2.4676 mm",
+          "pos": {
+            "x": 62.4,
+            "y": 45.05
+          },
+          "uuid": "c3745016-853f-4f90-a112-9ea76495d16d"
+        },
+        {
+          "description": "Track [/3V3] on F.Cu, length 1.5200 mm",
+          "pos": {
+            "x": 61.6,
+            "y": 42.78
+          },
+          "uuid": "e84cd97e-2f67-4a35-b742-bd66d3fcb921"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Items shorting two nets (nets /VREG_LX and /GND)",
+      "items": [
+        {
+          "description": "Pad 63 [/VREG_LX] of U10 on F.Cu",
+          "pos": {
+            "x": 62.0,
+            "y": 45.05
+          },
+          "uuid": "be8a2a19-aec6-4b93-877b-70c5bb415a40"
+        },
+        {
+          "description": "Track [/GND] on F.Cu, length 2.4676 mm",
+          "pos": {
+            "x": 62.4,
+            "y": 45.05
+          },
+          "uuid": "c3745016-853f-4f90-a112-9ea76495d16d"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Front solder mask aperture bridges items with different nets",
+      "items": [
+        {
+          "description": "Track [/GND] on F.Cu, length 2.4676 mm",
+          "pos": {
+            "x": 62.4,
+            "y": 45.05
+          },
+          "uuid": "c3745016-853f-4f90-a112-9ea76495d16d"
+        },
+        {
+          "description": "Pad 63 [/VREG_LX] of U10 on F.Cu",
+          "pos": {
+            "x": 62.0,
+            "y": 45.05
+          },
+          "uuid": "be8a2a19-aec6-4b93-877b-70c5bb415a40"
+        }
+      ],
+      "severity": "error",
+      "type": "solder_mask_bridge"
+    },
+    {
+      "description": "Tracks crossing",
+      "items": [
+        {
+          "description": "Track [/3V3] on F.Cu, length 0.7500 mm",
+          "pos": {
+            "x": 61.6,
+            "y": 45.05
+          },
+          "uuid": "a8821a49-66a7-4b2b-9c64-64250f6ed053"
+        },
+        {
+          "description": "Track [/GND] on F.Cu, length 2.4676 mm",
+          "pos": {
+            "x": 62.4,
+            "y": 45.05
+          },
+          "uuid": "c3745016-853f-4f90-a112-9ea76495d16d"
+        }
+      ],
+      "severity": "error",
+      "type": "tracks_crossing"
+    }
+  ],
+  "removed_signatures": []
+}
