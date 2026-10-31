@@ -32,3 +32,7 @@ The source board still has SHA-256 `db8fa1ca44907ad5b70b7010bdb67fe06d80dcd6715a
 ## Follow-up probe from `7381d8c`: LSM_INT2 sensor interrupt
 
 With the matching project and zone refill, the source-board baseline reports 7 violations / 55 unconnected items (DRC JSON SHA-256 `1e54259d5cf1c3cb004e0ee558754d8331bd830cfccee412a77cc245d825be2d`). The temporary `/LSM_INT2` candidate from U10.6 via an outer escape and a B.Cu detour to U21.9 has board SHA-256 `6472a2a398b634b19e1a7573afe709a4142839025fa0620cc16450372c867150`; its DRC JSON SHA-256 is `049d913136f09c57907296b4d392ce3b2e3e02132343b4eedd60d48ae5f4763f`. It reports 20 violations / 55 unconnected items, so it does not reduce the unrouted count. Rejected: it shorts C11 GND, `/SYS_5V`, and `/SENS_MOSI`; it also crosses `/1V1` and violates clearances to `/3V3_ADC` and GND vias.
+
+## Follow-up probe from `bdd4d7f`: GNSS_RX
+
+Using the same zone-refilled source baseline (7 violations / 55 unconnected), a temporary `/GNSS_RX` B.Cu route from U10.12 via (53,50.6), through an upper-board detour, to a via at (126.55,14.2) tied to the existing R32.2 stub produced candidate board SHA-256 `b499607ae8103e326e0363a1ed07a32a4d18f9f67f89d955357d1835faa2f00b` and DRC JSON SHA-256 `e4e690bdc66927ac267878cb67fa22bd78a5bc907866aec486018bd9632f67b3`. Matching-project KiCad DRC reported 14 violations / 54 unconnected items. Rejected: the route crosses accepted `/CAN_INT` copper and shorts/clears GND, `/SENS_SCLK`, and GNSS backup-power vias.
