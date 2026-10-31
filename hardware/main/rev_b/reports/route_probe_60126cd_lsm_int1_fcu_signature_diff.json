@@ -1,0 +1,608 @@
+{
+  "source_commit": "60126cd023d9476ebe59372ba0dc196097e0e5e6",
+  "baseline_report_sha256": "ff0f52414a4113eed39b8facc14b79fe9e2270677266f2fd228d14a4bcfb6f58",
+  "candidate_report_sha256": "88252f864bd9649e83f430c03bfbcbd9581c295d61e06531385a479bea7f64b1",
+  "baseline_signature_count": 7,
+  "candidate_signature_count": 33,
+  "new_signatures": [
+    {
+      "description": "Clearance violation (netclass 'Default' clearance 0.1250 mm; actual 0.0904 mm)",
+      "items": [
+        {
+          "description": "Track [/SENS_MOSI] on F.Cu, length 0.6544 mm",
+          "pos": {
+            "x": 59.5,
+            "y": 81.5875
+          },
+          "uuid": "59532efb-2c0a-494e-a1c3-3f97c2c35db4"
+        },
+        {
+          "description": "Track [/LSM_INT1] on F.Cu, length 36.6639 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 47.4
+          },
+          "uuid": "821ba4a8-2b5c-4a8e-900f-7851584b3288"
+        }
+      ],
+      "severity": "error",
+      "type": "clearance"
+    },
+    {
+      "description": "Clearance violation (netclass 'POWER' clearance 0.1250 mm; actual 0.1134 mm)",
+      "items": [
+        {
+          "description": "Track [/1V1] on F.Cu, length 0.8500 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 49.8
+          },
+          "uuid": "102072ae-3368-4d1d-a4fc-d05bf31b8157"
+        },
+        {
+          "description": "Track [/LSM_INT1] on F.Cu, length 36.6639 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 47.4
+          },
+          "uuid": "821ba4a8-2b5c-4a8e-900f-7851584b3288"
+        }
+      ],
+      "severity": "error",
+      "type": "clearance"
+    },
+    {
+      "description": "Items shorting two nets (nets /3V3 and /LSM_INT1)",
+      "items": [
+        {
+          "description": "Track [/3V3] on F.Cu, length 0.7500 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 47.8
+          },
+          "uuid": "05c44e50-fa1f-4473-9282-f4af3cf96fc7"
+        },
+        {
+          "description": "Track [/LSM_INT1] on F.Cu, length 36.6639 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 47.4
+          },
+          "uuid": "821ba4a8-2b5c-4a8e-900f-7851584b3288"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Items shorting two nets (nets /BARO_SCL and /LSM_INT1)",
+      "items": [
+        {
+          "description": "Track [/BARO_SCL] on F.Cu, length 1.0500 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 48.6
+          },
+          "uuid": "19b53945-d6bc-407c-ba45-e18c4953e3d3"
+        },
+        {
+          "description": "Track [/LSM_INT1] on F.Cu, length 36.6639 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 47.4
+          },
+          "uuid": "821ba4a8-2b5c-4a8e-900f-7851584b3288"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Items shorting two nets (nets /Redundant sensors/3V3_SENS and /LSM_INT1)",
+      "items": [
+        {
+          "description": "Track [/Redundant sensors/3V3_SENS] on F.Cu, length 0.2038 mm",
+          "pos": {
+            "x": 58.8375,
+            "y": 82.9538
+          },
+          "uuid": "4e37f047-8201-488b-aa5d-30693432913c"
+        },
+        {
+          "description": "Track [/LSM_INT1] on F.Cu, length 36.6639 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 47.4
+          },
+          "uuid": "821ba4a8-2b5c-4a8e-900f-7851584b3288"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Items shorting two nets (nets /Redundant sensors/3V3_SENS and /LSM_INT1)",
+      "items": [
+        {
+          "description": "Track [/Redundant sensors/3V3_SENS] on F.Cu, length 0.2733 mm",
+          "pos": {
+            "x": 58.8375,
+            "y": 83.25
+          },
+          "uuid": "100b0963-1f2e-45c2-af3a-4f86f6c04e16"
+        },
+        {
+          "description": "Track [/LSM_INT1] on F.Cu, length 36.6639 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 47.4
+          },
+          "uuid": "821ba4a8-2b5c-4a8e-900f-7851584b3288"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Items shorting two nets (nets /Redundant sensors/3V3_SENS and /LSM_INT1)",
+      "items": [
+        {
+          "description": "Track [/Redundant sensors/3V3_SENS] on F.Cu, length 0.2962 mm",
+          "pos": {
+            "x": 58.8375,
+            "y": 83.25
+          },
+          "uuid": "6356e880-b68a-4ab1-a3b0-d3e9eefddf03"
+        },
+        {
+          "description": "Track [/LSM_INT1] on F.Cu, length 36.6639 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 47.4
+          },
+          "uuid": "821ba4a8-2b5c-4a8e-900f-7851584b3288"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Items shorting two nets (nets /SENS_MOSI and /LSM_INT1)",
+      "items": [
+        {
+          "description": "Via [/SENS_MOSI] on F.Cu - B.Cu",
+          "pos": {
+            "x": 58.8456,
+            "y": 81.5875
+          },
+          "uuid": "393f054f-2187-4eb4-be46-e3cafa1e1b9f"
+        },
+        {
+          "description": "Track [/LSM_INT1] on F.Cu, length 36.6639 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 47.4
+          },
+          "uuid": "821ba4a8-2b5c-4a8e-900f-7851584b3288"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Front solder mask aperture bridges items with different nets",
+      "items": [
+        {
+          "description": "Track [/LSM_INT1] on F.Cu, length 36.6639 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 47.4
+          },
+          "uuid": "821ba4a8-2b5c-4a8e-900f-7851584b3288"
+        },
+        {
+          "description": "Pad 1 [/SENS_MISO] of U21 on F.Cu",
+          "pos": {
+            "x": 58.8375,
+            "y": 82.25
+          },
+          "uuid": "fb011839-8ae5-487d-94ca-2ce44f7ea3e9"
+        }
+      ],
+      "severity": "error",
+      "type": "solder_mask_bridge"
+    },
+    {
+      "description": "Front solder mask aperture bridges items with different nets",
+      "items": [
+        {
+          "description": "Track [/LSM_INT1] on F.Cu, length 36.6639 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 47.4
+          },
+          "uuid": "821ba4a8-2b5c-4a8e-900f-7851584b3288"
+        },
+        {
+          "description": "Pad 10 [/1V1] of U10 on F.Cu",
+          "pos": {
+            "x": 54.05,
+            "y": 49.8
+          },
+          "uuid": "9bb8a3ff-8b9a-4b8b-babc-f447bf0c83d4"
+        }
+      ],
+      "severity": "error",
+      "type": "solder_mask_bridge"
+    },
+    {
+      "description": "Front solder mask aperture bridges items with different nets",
+      "items": [
+        {
+          "description": "Track [/LSM_INT1] on F.Cu, length 36.6639 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 47.4
+          },
+          "uuid": "821ba4a8-2b5c-4a8e-900f-7851584b3288"
+        },
+        {
+          "description": "Pad 11 [/GNSS_TX] of U10 on F.Cu",
+          "pos": {
+            "x": 54.05,
+            "y": 50.2
+          },
+          "uuid": "a4694b01-0773-449b-a564-62a9f3c4595c"
+        }
+      ],
+      "severity": "error",
+      "type": "solder_mask_bridge"
+    },
+    {
+      "description": "Front solder mask aperture bridges items with different nets",
+      "items": [
+        {
+          "description": "Track [/LSM_INT1] on F.Cu, length 36.6639 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 47.4
+          },
+          "uuid": "821ba4a8-2b5c-4a8e-900f-7851584b3288"
+        },
+        {
+          "description": "Pad 12 [/GNSS_RX] of U10 on F.Cu",
+          "pos": {
+            "x": 54.05,
+            "y": 50.6
+          },
+          "uuid": "1fd7bb58-e842-4f2b-bac2-7fe5cfe65fb8"
+        }
+      ],
+      "severity": "error",
+      "type": "solder_mask_bridge"
+    },
+    {
+      "description": "Front solder mask aperture bridges items with different nets",
+      "items": [
+        {
+          "description": "Track [/LSM_INT1] on F.Cu, length 36.6639 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 47.4
+          },
+          "uuid": "821ba4a8-2b5c-4a8e-900f-7851584b3288"
+        },
+        {
+          "description": "Pad 13 [/GNSS_PPS] of U10 on F.Cu",
+          "pos": {
+            "x": 54.05,
+            "y": 51.0
+          },
+          "uuid": "99980161-17f5-4dbf-9805-20659b967235"
+        }
+      ],
+      "severity": "error",
+      "type": "solder_mask_bridge"
+    },
+    {
+      "description": "Front solder mask aperture bridges items with different nets",
+      "items": [
+        {
+          "description": "Track [/LSM_INT1] on F.Cu, length 36.6639 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 47.4
+          },
+          "uuid": "821ba4a8-2b5c-4a8e-900f-7851584b3288"
+        },
+        {
+          "description": "Pad 2 [/Redundant sensors/3V3_SENS] of U21 on F.Cu",
+          "pos": {
+            "x": 58.8375,
+            "y": 82.75
+          },
+          "uuid": "e0046f2b-133f-4b98-a518-ea52a9c0b4fe"
+        }
+      ],
+      "severity": "error",
+      "type": "solder_mask_bridge"
+    },
+    {
+      "description": "Front solder mask aperture bridges items with different nets",
+      "items": [
+        {
+          "description": "Track [/LSM_INT1] on F.Cu, length 36.6639 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 47.4
+          },
+          "uuid": "821ba4a8-2b5c-4a8e-900f-7851584b3288"
+        },
+        {
+          "description": "Pad 21 [/RF_GPIO0] of U10 on F.Cu",
+          "pos": {
+            "x": 55.2,
+            "y": 54.95
+          },
+          "uuid": "312b7d7d-c052-4559-8d74-001bb33eab2f"
+        }
+      ],
+      "severity": "error",
+      "type": "solder_mask_bridge"
+    },
+    {
+      "description": "Front solder mask aperture bridges items with different nets",
+      "items": [
+        {
+          "description": "Track [/LSM_INT1] on F.Cu, length 36.6639 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 47.4
+          },
+          "uuid": "821ba4a8-2b5c-4a8e-900f-7851584b3288"
+        },
+        {
+          "description": "Pad 3 [/Redundant sensors/3V3_SENS] of U21 on F.Cu",
+          "pos": {
+            "x": 58.8375,
+            "y": 83.25
+          },
+          "uuid": "949bb588-1531-4aa6-8280-a4d4f9ff459c"
+        }
+      ],
+      "severity": "error",
+      "type": "solder_mask_bridge"
+    },
+    {
+      "description": "Front solder mask aperture bridges items with different nets",
+      "items": [
+        {
+          "description": "Track [/LSM_INT1] on F.Cu, length 36.6639 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 47.4
+          },
+          "uuid": "821ba4a8-2b5c-4a8e-900f-7851584b3288"
+        },
+        {
+          "description": "Pad 5 [/3V3] of U10 on F.Cu",
+          "pos": {
+            "x": 54.05,
+            "y": 47.8
+          },
+          "uuid": "71678b3b-5cd1-4b1c-9c18-7ac5be11a2cf"
+        }
+      ],
+      "severity": "error",
+      "type": "solder_mask_bridge"
+    },
+    {
+      "description": "Front solder mask aperture bridges items with different nets",
+      "items": [
+        {
+          "description": "Track [/LSM_INT1] on F.Cu, length 36.6639 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 47.4
+          },
+          "uuid": "821ba4a8-2b5c-4a8e-900f-7851584b3288"
+        },
+        {
+          "description": "Pad 6 [/LSM_INT2] of U10 on F.Cu",
+          "pos": {
+            "x": 54.05,
+            "y": 48.2
+          },
+          "uuid": "44af6e81-2f18-40ad-8031-bea2d7876bb8"
+        }
+      ],
+      "severity": "error",
+      "type": "solder_mask_bridge"
+    },
+    {
+      "description": "Front solder mask aperture bridges items with different nets",
+      "items": [
+        {
+          "description": "Track [/LSM_INT1] on F.Cu, length 36.6639 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 47.4
+          },
+          "uuid": "821ba4a8-2b5c-4a8e-900f-7851584b3288"
+        },
+        {
+          "description": "Pad 7 [/BARO_SCL] of U10 on F.Cu",
+          "pos": {
+            "x": 54.05,
+            "y": 48.6
+          },
+          "uuid": "ed1660de-8ec5-4429-ba70-63db6d4e7b9e"
+        }
+      ],
+      "severity": "error",
+      "type": "solder_mask_bridge"
+    },
+    {
+      "description": "Front solder mask aperture bridges items with different nets",
+      "items": [
+        {
+          "description": "Track [/LSM_INT1] on F.Cu, length 36.6639 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 47.4
+          },
+          "uuid": "821ba4a8-2b5c-4a8e-900f-7851584b3288"
+        },
+        {
+          "description": "Pad 8 [/BARO_SDA] of U10 on F.Cu",
+          "pos": {
+            "x": 54.05,
+            "y": 49.0
+          },
+          "uuid": "fca5dc73-dfc8-433a-ae1a-ce2986de45e7"
+        }
+      ],
+      "severity": "error",
+      "type": "solder_mask_bridge"
+    },
+    {
+      "description": "Front solder mask aperture bridges items with different nets",
+      "items": [
+        {
+          "description": "Track [/LSM_INT1] on F.Cu, length 36.6639 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 47.4
+          },
+          "uuid": "821ba4a8-2b5c-4a8e-900f-7851584b3288"
+        },
+        {
+          "description": "Pad 9 [/BARO_DRDY] of U10 on F.Cu",
+          "pos": {
+            "x": 54.05,
+            "y": 49.4
+          },
+          "uuid": "74757ae5-6c60-4a47-9391-f20bef810df1"
+        }
+      ],
+      "severity": "error",
+      "type": "solder_mask_bridge"
+    },
+    {
+      "description": "Tracks crossing",
+      "items": [
+        {
+          "description": "Track [/3V3] on F.Cu, length 3.1000 mm",
+          "pos": {
+            "x": 56.4,
+            "y": 55.7
+          },
+          "uuid": "5446c015-7f48-4904-aeb5-98c8dd530c92"
+        },
+        {
+          "description": "Track [/LSM_INT1] on F.Cu, length 36.6639 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 47.4
+          },
+          "uuid": "821ba4a8-2b5c-4a8e-900f-7851584b3288"
+        }
+      ],
+      "severity": "error",
+      "type": "tracks_crossing"
+    },
+    {
+      "description": "Tracks crossing",
+      "items": [
+        {
+          "description": "Track [/LSM_INT1] on F.Cu, length 36.6639 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 47.4
+          },
+          "uuid": "821ba4a8-2b5c-4a8e-900f-7851584b3288"
+        },
+        {
+          "description": "Track [/RF_RESET_N] on F.Cu, length 4.9500 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 53.8
+          },
+          "uuid": "d83f1925-49f8-4f04-b88e-4dc3d771bb77"
+        }
+      ],
+      "severity": "error",
+      "type": "tracks_crossing"
+    },
+    {
+      "description": "Tracks crossing",
+      "items": [
+        {
+          "description": "Track [/LSM_INT1] on F.Cu, length 36.6639 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 47.4
+          },
+          "uuid": "821ba4a8-2b5c-4a8e-900f-7851584b3288"
+        },
+        {
+          "description": "Track [/RP2354B MCU/STATUS_LED] on F.Cu, length 10.7000 mm",
+          "pos": {
+            "x": 64.5,
+            "y": 58.0
+          },
+          "uuid": "96c8d596-75aa-4229-904c-5aa0371f4720"
+        }
+      ],
+      "severity": "error",
+      "type": "tracks_crossing"
+    },
+    {
+      "description": "Tracks crossing",
+      "items": [
+        {
+          "description": "Track [/LSM_INT1] on F.Cu, length 36.6639 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 47.4
+          },
+          "uuid": "821ba4a8-2b5c-4a8e-900f-7851584b3288"
+        },
+        {
+          "description": "Track [/Redundant sensors/3V3_SENS] on F.Cu, length 1.0462 mm",
+          "pos": {
+            "x": 57.7913,
+            "y": 82.9538
+          },
+          "uuid": "d4f655e3-8686-4a57-a7e3-bcdefde4896c"
+        }
+      ],
+      "severity": "error",
+      "type": "tracks_crossing"
+    },
+    {
+      "description": "Tracks crossing",
+      "items": [
+        {
+          "description": "Track [/LSM_INT1] on F.Cu, length 36.6639 mm",
+          "pos": {
+            "x": 54.05,
+            "y": 47.4
+          },
+          "uuid": "821ba4a8-2b5c-4a8e-900f-7851584b3288"
+        },
+        {
+          "description": "Track [/SENS_MISO] on F.Cu, length 0.6955 mm",
+          "pos": {
+            "x": 58.8375,
+            "y": 82.25
+          },
+          "uuid": "e6d2fc99-7515-4c10-af5e-0f7df82eb803"
+        }
+      ],
+      "severity": "error",
+      "type": "tracks_crossing"
+    }
+  ],
+  "removed_signatures": []
+}
