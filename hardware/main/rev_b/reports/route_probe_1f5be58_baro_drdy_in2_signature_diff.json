@@ -1,0 +1,219 @@
+{
+  "source_commit": "1f5be58ad0639f80b877378f2c2600df779b837b",
+  "source_board_sha256": "79ad895d0c525f15e949773f79808c77164fd09495c8d576f6b80390bee4baee",
+  "matching_project_sha256": "f5bfbb6150d2799b8cc0ddb899c0e18c86ef452cbf68e05c60f883a969068a9e",
+  "baseline_report_sha256": "155e137e7f9c40bd3e03f3db4b631e42aefbd20034985e2f5eb473dcd0d26b1f",
+  "candidate_report_sha256": "e6ce917ea2782dd4ff67f537409233e8731459c0bfa3fc2282b5bd042f33ad95",
+  "baseline_signature_count": 7,
+  "candidate_signature_count": 16,
+  "new_signatures": [
+    {
+      "description": "Clearance violation (netclass 'Default' clearance 0.1250 mm; actual 0.1115 mm)",
+      "items": [
+        {
+          "description": "Via [/GND] on F.Cu - B.Cu",
+          "pos": {
+            "x": 70.0,
+            "y": 80.6702
+          },
+          "uuid": "14026ede-cbdb-494a-820f-5a96ac263375"
+        },
+        {
+          "description": "Track [/BARO_DRDY] on In2.Cu, length 38.4260 mm",
+          "pos": {
+            "x": 52.8,
+            "y": 49.4
+          },
+          "uuid": "2c330a55-6733-4e41-93cb-dccf5a32332d"
+        }
+      ],
+      "severity": "error",
+      "type": "clearance"
+    },
+    {
+      "description": "Clearance violation (netclass 'POWER' clearance 0.1250 mm; actual 0.0061 mm)",
+      "items": [
+        {
+          "description": "Via [/BARO_DRDY] on F.Cu - B.Cu",
+          "pos": {
+            "x": 71.8,
+            "y": 82.8
+          },
+          "uuid": "2d5d41a3-846c-40f6-a6b4-5749fc2b92e7"
+        },
+        {
+          "description": "Track [/Redundant sensors/3V3_SENS] on F.Cu, length 2.4262 mm",
+          "pos": {
+            "x": 71.7844,
+            "y": 83.3899
+          },
+          "uuid": "a4fd8ac0-3066-43be-9ce6-6d65892cca96"
+        }
+      ],
+      "severity": "error",
+      "type": "clearance"
+    },
+    {
+      "description": "Clearance violation (netclass 'POWER' clearance 0.1250 mm; actual 0.0933 mm)",
+      "items": [
+        {
+          "description": "Via [/BARO_DRDY] on F.Cu - B.Cu",
+          "pos": {
+            "x": 52.8,
+            "y": 49.4
+          },
+          "uuid": "1f9e24e8-a55d-4698-91f8-f0f20aa249b7"
+        },
+        {
+          "description": "Track [/VREG_AVDD] on In1.Cu, length 9.7978 mm",
+          "pos": {
+            "x": 52.3067,
+            "y": 41.5
+          },
+          "uuid": "a64da288-74e1-43e8-8024-6b28035f53c2"
+        }
+      ],
+      "severity": "error",
+      "type": "clearance"
+    },
+    {
+      "description": "Items shorting two nets (nets /BARO_DRDY and /1V1)",
+      "items": [
+        {
+          "description": "Track [/BARO_DRDY] on In2.Cu, length 38.4260 mm",
+          "pos": {
+            "x": 52.8,
+            "y": 49.4
+          },
+          "uuid": "2c330a55-6733-4e41-93cb-dccf5a32332d"
+        },
+        {
+          "description": "Via [/1V1] on F.Cu - B.Cu",
+          "pos": {
+            "x": 53.2,
+            "y": 50.4
+          },
+          "uuid": "d8534fb5-8b97-4a70-aa0e-340b8859a1b4"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Items shorting two nets (nets /BARO_DRDY and /1V1)",
+      "items": [
+        {
+          "description": "Track [/BARO_DRDY] on In2.Cu, length 38.4260 mm",
+          "pos": {
+            "x": 52.8,
+            "y": 49.4
+          },
+          "uuid": "2c330a55-6733-4e41-93cb-dccf5a32332d"
+        },
+        {
+          "description": "Via [/1V1] on F.Cu - B.Cu",
+          "pos": {
+            "x": 56.52,
+            "y": 56.5
+          },
+          "uuid": "49e46bbb-82fb-4ec0-87d0-cc571169fdfe"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Items shorting two nets (nets /BARO_DRDY and /1V1)",
+      "items": [
+        {
+          "description": "Via [/BARO_DRDY] on F.Cu - B.Cu",
+          "pos": {
+            "x": 52.8,
+            "y": 49.4
+          },
+          "uuid": "1f9e24e8-a55d-4698-91f8-f0f20aa249b7"
+        },
+        {
+          "description": "Track [/1V1] on B.Cu, length 3.7924 mm",
+          "pos": {
+            "x": 53.2,
+            "y": 50.4
+          },
+          "uuid": "68ec5e76-853e-4255-8cbc-7090cea431ee"
+        }
+      ],
+      "severity": "error",
+      "type": "shorting_items"
+    },
+    {
+      "description": "Tracks crossing",
+      "items": [
+        {
+          "description": "Track [/BARO_DRDY] on In2.Cu, length 38.4260 mm",
+          "pos": {
+            "x": 52.8,
+            "y": 49.4
+          },
+          "uuid": "2c330a55-6733-4e41-93cb-dccf5a32332d"
+        },
+        {
+          "description": "Track [/BARO_SCL] on In2.Cu, length 10.0000 mm",
+          "pos": {
+            "x": 64.599999,
+            "y": 67.0
+          },
+          "uuid": "929213d2-f44e-45af-a54d-5ebd854212bc"
+        }
+      ],
+      "severity": "error",
+      "type": "tracks_crossing"
+    },
+    {
+      "description": "Tracks crossing",
+      "items": [
+        {
+          "description": "Track [/BARO_DRDY] on In2.Cu, length 38.4260 mm",
+          "pos": {
+            "x": 52.8,
+            "y": 49.4
+          },
+          "uuid": "2c330a55-6733-4e41-93cb-dccf5a32332d"
+        },
+        {
+          "description": "Track [/BARO_SCL] on In2.Cu, length 13.8593 mm",
+          "pos": {
+            "x": 54.8,
+            "y": 57.2
+          },
+          "uuid": "6c51fc75-af6f-48fa-904e-17c1d7bfd40d"
+        }
+      ],
+      "severity": "error",
+      "type": "tracks_crossing"
+    },
+    {
+      "description": "Tracks crossing",
+      "items": [
+        {
+          "description": "Track [/BARO_DRDY] on In2.Cu, length 38.4260 mm",
+          "pos": {
+            "x": 52.8,
+            "y": 49.4
+          },
+          "uuid": "2c330a55-6733-4e41-93cb-dccf5a32332d"
+        },
+        {
+          "description": "Track [/BARO_SCL] on In2.Cu, length 6.8000 mm",
+          "pos": {
+            "x": 54.8,
+            "y": 50.4
+          },
+          "uuid": "bda7f81a-3ce5-4093-98ea-ee506648d4b3"
+        }
+      ],
+      "severity": "error",
+      "type": "tracks_crossing"
+    }
+  ],
+  "removed_signatures": []
+}
