@@ -1,0 +1,7 @@
+# Rejected redundant GND via in a clear F.Cu island
+
+Source was main commit `3f2de7e480254ed2ca14ac56f09ee7f498c9006f`, PCB SHA-256 `095aa3fd44285b885c2a4ca68c05633b169dd053fbc8407d2160e8585e73336b`; matching project SHA-256 `f5bfbb6150d2799b8cc0ddb899c0e18c86ef452cbf68e05c60f883a969068a9e`. Both source and temporary candidate were explicitly zone-refilled with `pcbnew.ZONE_FILLER.Fill(board.Zones())`, then checked using KiCad CLI 9.0.2 `pcb drc --severity-all --format json` with the matching project.
+
+The probe added one tented 0.60/0.30 mm through-via on `/GND` at `(107.0,72.4)` in an open F.Cu GND fill island. It has over 1 mm from its copper edge to the island boundary and more than 1 mm to nearby component courtyards/pads. It is only 1.6 mm from an existing GND through-via at `(107,74)`. Candidate PCB SHA-256: `864314b9b2fbcb75e8a45cf4d53ecb9d84fba87f7497253849149790c8d21b6c`.
+
+The paired run produced 7 violations / 42 unconnected on both source and candidate with all seven signatures identical. Baseline JSON [`route_probe_3f2de7e_gnd_c110_before.json`](route_probe_3f2de7e_gnd_c110_before.json), SHA-256 `d8c6abc8d773caac961af679763f1a152764b6c026d156541de10e5aad2ab19e`; candidate JSON [`route_probe_3f2de7e_gnd_c110_candidate.json`](route_probe_3f2de7e_gnd_c110_candidate.json), SHA-256 `c7f02ce3ca158c3f937ead1ac508594ec76ca851150c3b2f066b9b16047e660d`. The existing F.Cu GND-zone↔B.Cu GND-zone airwire remains unchanged, so this redundant tie adds no design connectivity. It is not promoted.
