@@ -1,4 +1,7 @@
-# Rev-B route status on `origin/main`
+# Historical Rev-B route status snapshot (superseded)
+
+> This is a historical snapshot of commit `9d6daaaf` and the 44-open board at PCB SHA-256 `79ad895d`. It is superseded by current `origin/main` board SHA-256 `095aa3fd44285b885c2a4ca68c05633b169dd053fbc8407d2160e8585e73336b`, which has 7 baseline DRC violations / 42 unconnected items after explicit KiCad 9.0.2 zone refill. See [the current high-value open-net audit](route_audit_f653d8c_high_value_open_nets.md) and [paired baseline evidence](route_probe_3f2de7e_gnd_c110_before.json).
+
 
 Checked the board at `origin/main` commit `9d6daaafcb3c8a5440a4017d7c5c07fe0477c873` (2026-11-01). The latest board geometry remains the accepted `/SYS_5V` B.Cu route from commit `1f5be58ad0639f80b877378f2c2600df779b837b`; its board SHA-256 is `79ad895d0c525f15e949773f79808c77164fd09495c8d576f6b80390bee4baee` (Git blob `d06e0207b242fc9ca6cbd50d976d80901359c93b`). The matching project SHA-256 is `f5bfbb6150d2799b8cc0ddb899c0e18c86ef452cbf68e05c60f883a969068a9e`.
 

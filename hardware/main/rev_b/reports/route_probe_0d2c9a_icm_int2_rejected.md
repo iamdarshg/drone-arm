@@ -1,0 +1,10 @@
+# Rejected `/ICM_INT2` topology alternatives
+
+Both disposable candidates use source commit `0d2c9a283d01b42ecf61b55dd3c758fe0c0f6823`, source PCB SHA-256 `095aa3fd44285b885c2a4ca68c05633b169dd053fbc8407d2160e8585e73336b`, and matching project SHA-256 `f5bfbb6150d2799b8cc0ddb899c0e18c86ef452cbf68e05c60f883a969068a9e`. Each source/candidate pair was explicitly zone-refilled with `pcbnew.ZONE_FILLER.Fill(board.Zones())` and checked using KiCad CLI 9.0.2 `pcb drc --severity-all --format json` with the same-stem project. Source baseline is 7 violations / 42 unconnected.
+
+| Probe | Hand-authored route | Candidate PCB SHA-256 | DRC output | Result |
+| --- | --- | --- | --- | --- |
+| A | U10.3 `(54.05,47.0)` F.Cu to via `(52.8,47.0)`; U20.9 `(51.1625,83.25)` F.Cu to via `(51.1625,84.5)`; straight 0.20 mm B.Cu span | `fef357b815b753062e3d17ee9d4fbd63e9d733246fc455da949466e2b0fa922d` | Before [`route_probe_0d2c9a_icm_int2_a_before.json`](route_probe_0d2c9a_icm_int2_a_before.json), SHA `4f02050635f1ef54a52e1c1972c58b2f2f08480a966ea53b33951b81368f0653`; candidate [`route_probe_0d2c9a_icm_int2_a_candidate.json`](route_probe_0d2c9a_icm_int2_a_candidate.json), SHA `1c15c881215ea2accd5c02fbe67163a6e22370ba28b81e6e6b1c5b4b6c8a3d34` | 25 violations / 41 unconnected; 18 new signatures. Rejected. |
+| B | U10.3 `(54.05,47.0)` F.Cu to via `(52.8,46.0)`; U20.9 `(51.1625,83.25)` F.Cu to via `(52.8,82.5)`; straight 0.20 mm In2.Cu span | `1354437aebf6ec8b016788705b3d7a4b543948f1b6647d61b94a282899d25a40` | Before [`route_probe_0d2c9a_icm_int2_b_before.json`](route_probe_0d2c9a_icm_int2_b_before.json), SHA `f11eca3f9657392ed23a8acfb41577d1e010192f084ec2303b5aa677609e4aa9`; candidate [`route_probe_0d2c9a_icm_int2_b_candidate.json`](route_probe_0d2c9a_icm_int2_b_candidate.json), SHA `0e5ff879464866964134893ba5c62b13a1e50e98b98162c7dd5d4c7e140dcf1f` | 22 violations / 41 unconnected; 15 new signatures. Rejected. |
+
+Both topologies electrically join the open net in KiCad's connectivity count, but add shorts/crossings/clearance issues in the U10/sensor corridor. Neither qualifies under the no-new-signatures gate. No PCB or design expectation was changed.
