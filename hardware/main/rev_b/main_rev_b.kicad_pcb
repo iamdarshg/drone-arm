@@ -29438,26 +29438,6 @@
 		)
 	)
 	(gr_line
-		(start 77 36)
-		(end 140 36)
-		(stroke
-			(width 0.4)
-			(type default)
-		)
-		(layer "F.SilkS")
-		(uuid "260a7ee2-a5ca-4268-9791-412096dfa2eb")
-	)
-	(gr_line
-		(start 77 36)
-		(end 77 100)
-		(stroke
-			(width 0.4)
-			(type default)
-		)
-		(layer "F.SilkS")
-		(uuid "90aa410b-4a23-4144-9f14-d3c23508f41d")
-	)
-	(gr_line
 		(start 140 100)
 		(end 0 100)
 		(stroke
@@ -29497,6 +29477,26 @@
 		(layer "Edge.Cuts")
 		(uuid "bd1f7175-651a-477c-8908-e2c22989b9d3")
 	)
+	(gr_line
+		(start 77 36)
+		(end 140 36)
+		(stroke
+			(width 0.4)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "260a7ee2-a5ca-4268-9791-412096dfa2eb")
+	)
+	(gr_line
+		(start 77 36)
+		(end 77 100)
+		(stroke
+			(width 0.4)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "90aa410b-4a23-4144-9f14-d3c23508f41d")
+	)
 	(gr_text "CAN FD"
 		(at 22 36 0)
 		(layer "F.SilkS")
@@ -29504,17 +29504,6 @@
 		(effects
 			(font
 				(size 1.2 1.2)
-				(thickness 0.18)
-			)
-		)
-	)
-	(gr_text "GNSS 50R / 3mm COURTYARD"
-		(at 103 36 0)
-		(layer "F.SilkS")
-		(uuid "3cb9bfdc-5c0c-48d7-9059-a399ee2129a6")
-		(effects
-			(font
-				(size 1 1)
 				(thickness 0.18)
 			)
 		)
@@ -29548,6 +29537,17 @@
 		(effects
 			(font
 				(size 1.1 1.1)
+				(thickness 0.18)
+			)
+		)
+	)
+	(gr_text "GNSS 50R / 3mm COURTYARD"
+		(at 103 34.5 0)
+		(layer "F.Fab")
+		(uuid "3cb9bfdc-5c0c-48d7-9059-a399ee2129a6")
+		(effects
+			(font
+				(size 1 1)
 				(thickness 0.18)
 			)
 		)
