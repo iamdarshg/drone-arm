@@ -1,0 +1,10 @@
+# Rejected `/RF_GPIO0` via-escape probes
+
+These disposable candidates use source commit `8ebca717e169ad22c49e1cf6483ad09d899bf19d`, whose PCB hash remains `095aa3fd44285b885c2a4ca68c05633b169dd053fbc8407d2160e8585e73336b`. The matching project SHA-256 is `f5bfbb6150d2799b8cc0ddb899c0e18c86ef452cbf68e05c60f883a969068a9e`. The baseline and each candidate were explicitly zone-refilled using `pcbnew.ZONE_FILLER.Fill(board.Zones())`, then checked with KiCad CLI 9.0.2 `pcb drc --severity-all --format json` using that project. The paired baseline result was 7 violations / 42 unconnected; baseline JSON SHA-256 `b6bc10a31467c53e76f87ea102f66d42456fc6cdda8f6ffc8dac4cb4238e58d9`.
+
+| Candidate | Topology | Candidate board SHA-256 | DRC JSON SHA-256 | Result |
+| --- | --- | --- | --- | --- |
+| straight B.Cu span | U10.21 `(55.2,54.95)` escapes F.Cu to via `(55.2,56.2)`; U40.10 `(92.75,63.4375)` escapes to via `(92.75,64.7)`; 0.20 mm B.Cu span | `11925a600561dd2ff59a17f7ffd625eced649b557af0285306556a23596009a7` | [`route_probe_a80fb42_rf_gpio0_bcu.json`](route_probe_a80fb42_rf_gpio0_bcu.json), `a4280a2c331bcffd0f32bfd845b02ea7f92599570d699d7b2c87ea383532e9ac` | 20 violations / 42 unconnected; seven new signatures. Rejected. |
+| shifted escapes and B.Cu dogleg | MCU via `(53.8,56.0)`; RF via `(93.6,65.2)`; F.Cu pad escapes route around nearby traces; B.Cu path uses waypoints `(57.5,57.0)`, `(59.2,58.2)`, `(64.0,58.4)`, `(77.0,62.0)` | `06d21a6e2c10b0e91c577f989e580546102750b1bc6304911358c879dae2ccb3` | [`route_probe_a80fb42_rf_gpio0_bcu_dogleg.json`](route_probe_a80fb42_rf_gpio0_bcu_dogleg.json), `34c16f5bc802e382fe5da36e0c0e029cda1782b11901a37c938fe1e9cd7da7a5` | 24 violations / 42 unconnected. Rejected. |
+
+The straight span creates shorts/crossings to `/1V1`, `/CAN_INT`, `/ICM_nCS`, `/GND`, `/RF_nCS`, and RF supply nets, along with clearances. The dogleg retains shorts/crossings and adds more clearance and hole-clearance violations. Neither candidate reduces unrouted connectivity or passes the no-new-signatures gate. No board or design expectation was changed.
