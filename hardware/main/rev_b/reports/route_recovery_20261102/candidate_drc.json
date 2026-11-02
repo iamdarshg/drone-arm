@@ -1,34 +1,11 @@
 {
     "$schema": "https://schemas.kicad.org/drc.v1.json",
     "coordinate_units": "mm",
-    "date": "2026-11-02T21:19:33+0000",
+    "date": "2026-11-02T21:34:16+0000",
     "kicad_version": "9.0.2",
     "schematic_parity": [],
-    "source": "final_candidate.kicad_pcb",
+    "source": "main_rev_b.kicad_pcb",
     "unconnected_items": [
-        {
-            "description": "Missing connection between items",
-            "items": [
-                {
-                    "description": "Pad 19 [/915 MHz RF/CC_LNA_P] of U40 on F.Cu",
-                    "pos": {
-                        "x": 96.4375,
-                        "y": 61.75
-                    },
-                    "uuid": "02cd6f38-adfa-4c5b-89ed-b598b6d60645"
-                },
-                {
-                    "description": "Pad 7 [/915 MHz RF/CC_LNA_P] of FL40 on F.Cu",
-                    "pos": {
-                        "x": 101.375,
-                        "y": 61.75
-                    },
-                    "uuid": "5269501f-d770-4fdf-9824-816d6924e3bf"
-                }
-            ],
-            "severity": "error",
-            "type": "unconnected_items"
-        },
         {
             "description": "Missing connection between items",
             "items": [
@@ -102,12 +79,12 @@
             "description": "Missing connection between items",
             "items": [
                 {
-                    "description": "Track [/LNA_EN] on F.Cu, length 0.4596 mm",
+                    "description": "Track [/LNA_EN] on F.Cu, length 1.5230 mm",
                     "pos": {
-                        "x": 111.5,
-                        "y": 57.51
+                        "x": 111.175,
+                        "y": 57.835
                     },
-                    "uuid": "d3de6eef-8f10-4720-b971-cf072cc4f25b"
+                    "uuid": "8ff00326-e1b3-452b-9f23-29e4778519ff"
                 },
                 {
                     "description": "Pad 26 [/LNA_EN] of U10 on F.Cu",
@@ -148,12 +125,12 @@
             "description": "Missing connection between items",
             "items": [
                 {
-                    "description": "Pad 1 [/PA_EN] of R45 on F.Cu",
+                    "description": "Track [/PA_EN] on F.Cu, length 0.6035 mm",
                     "pos": {
                         "x": 109.5,
-                        "y": 57.51
+                        "y": 58.1135
                     },
-                    "uuid": "d8610727-d101-4f61-9b94-830431e49928"
+                    "uuid": "54394233-c07b-48b7-afbb-436ee36da841"
                 },
                 {
                     "description": "Pad 25 [/PA_EN] of U10 on F.Cu",
