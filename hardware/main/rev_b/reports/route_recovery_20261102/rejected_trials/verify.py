@@ -49,6 +49,7 @@ EXPECTED = {
     "sensor_interrupt_pair_in2_bcu.json": (14, 37, "cb951bd6cf245bc05fb64f87eed851e65b4d5ac6f1d092fad05439578eabcad0"),
     "gnss_rx_in2_keep_pps.json": (15, 41, "eec38ae7dfcd866e3898abc3bd2d96157ea78edc94c5e3b6e20dcce0cb75704a"),
     "gnss_rx_in1_keep_pps.json": (15, 48, "4583043194a5724547e49dbffaeb99d62456d5a32084b0574b563a5aa9feb8d8"),
+    "rf_reset_bcu_local_escape.json": (15, 13, "a30cd7cc899b6b2ad3b488f89d1989a6bbca6571edc8f498e04614f38a42fa06"),
 }
 
 for name, (opens, violations, digest) in EXPECTED.items():

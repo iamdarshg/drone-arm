@@ -85,3 +85,5 @@ The long `/GNSS_RX` airwire was also routed from U10 pad12 via a standard-via pa
 |---|---|---:|---:|---|---|
 | `/GNSS_RX` | In2.Cu via pair; preserve GNSS_PPS | 15 | 41 | `c35b44154ee949b54a5cc8942e6828f8348837102ed6ef5700568b75c0965982` | `gnss_rx_in2_keep_pps.json` |
 | `/GNSS_RX` | In1.Cu via pair; preserve GNSS_PPS | 15 | 48 | `951b234ed4b3f3c16cfb4859229e8f03d355050393fc9e10f63ea3078d91fe1f` | `gnss_rx_in1_keep_pps.json` |
+
+The `/RF_RESET_N` connection from U10 pad20 to the existing MCU-region track was tested with a 0.20 mm F.Cu breakout, a standard via at `(53.15,54.65)`, and a 0.20 mm B.Cu segment to `(84.0,64.29)`. It reduced opens to 15 but produced 13 violations. Nearby `/RF_nCS`, `/ICM_INT2`, `/ICM_nCS`, GND, `/RF_GPIO3`, XIN, and STATUS_LED routing blocks a clean source escape or B.Cu chord. The route is rejected; `/usr/bin/python3 reproduce_rf_reset_bcu.py` replays the DRC result.
