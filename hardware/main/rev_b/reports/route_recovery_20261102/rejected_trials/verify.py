@@ -30,6 +30,7 @@ EXPECTED = {
     "usb_dp_direct.json": (15, 11, "45af00464ddb0a7af1cf4555cda809364fa0ebb8c3cb925dbc6f6ac540e1d48c"),
     "three_net_3v3_pad29.json": (15, 11, "1ceae46b998f68389477c983544ce48693291cc6d703b3efb0ed963099e439d6"),
     "gnss_rx_via_and_pps_relocate.json": (18, 29, "3a0a1c9bf3ddfa12ab433b1be71be860575fcebc4c9c6211d8b443ce3bb2ab24"),
+    "cc_rbias_direct_probe.json": (15, 8, "1b12d6376cc73ca6578420b11e7f050f061a7a9609295c6c6b0d07ecddcfe044"),
 }
 
 for name, (opens, violations, digest) in EXPECTED.items():

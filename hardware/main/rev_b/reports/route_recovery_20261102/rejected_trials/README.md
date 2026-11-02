@@ -39,6 +39,7 @@ These additional trials start from the promoted 16-open board SHA-256 `60da183ad
 | `/RP2354B MCU/USB_DP_MCU` | direct F.Cu | 15 | 11 | `4de87dd11de9d75f71c720b0b09ee89eee492b4b93c260235a10769daab849cd` | `usb_dp_direct.json` |
 | `/3V3` pad 29 with `/1V1` reroute | alternate south via | 15 | 11 | `ca3308be084ea5c7dd9c10c8dd4780ff64862194e004cb3ddaf652ce946da786` | `three_net_3v3_pad29.json` |
 | `/GNSS_RX` with GNSS_PPS via relocation | standard-via B.Cu | 18 | 29 | `39e2c69e44d4e93ea380349cd174224e9f0249382b7e60e9015831636b1a176a` | `gnss_rx_via_and_pps_relocate.json` |
+| `/915 MHz RF/CC_RBIAS` | direct 0.25 mm F.Cu trace | 15 | 8 | `ef73f2615c46bae057b6d48d18780ea9b741efa949c8f76acff05f0403caef7f` | `cc_rbias_direct_probe.json` |
 
 The `/1V1` direct track crosses and shorts `/BARO_SDA`; its via alternatives conflict with VREG_AVDD, SENS_MISO, and `/3V3_ADC`. The bundle closes its three intended airwires but splits other connections and creates many shorts, crossings, and clearance errors. None was promoted.
 
@@ -47,3 +48,5 @@ The USB_DP direct route shorts/crosses `/3V3` and GND around C31/C32. The standa
 The alternate pad-29 `/3V3` trial moved the `/1V1` destination via to `(54.2, 58.7)`; the via itself fit, but its F.Cu tie crosses MCU RUN and GND. The source escape also conflicts with GND near y=57.08. It closed one airwire but added seven violations.
 
 The `/GNSS_RX` trial relocated the adjacent GNSS_PPS escape via and used standard through-vias for a long B.Cu route. It added two open airwires overall and 25 new DRC violations, including shorts to `/1V1`, GND, GNSS backup/reset, VREG_AVDD, BARO_SCL, and LSM_INT2; the relocated GNSS_PPS via also conflicts with `/3V3` and USB_DM.
+
+The direct `/CC_RBIAS` trace closed U40 pad14 to R40 pad1 but added a VDD_CC112 crossing/short, a GND short at the R40 pad2 branch, and a solder-mask bridge. U40's escape is blocked by VDD_CC112 and neighboring RF_nCS/CC_PA copper; R40's 0.38 mm pad1-to-GND-pad2 gap is narrower than the 0.50 mm needed for this board's 0.25 mm trace and clearances.
