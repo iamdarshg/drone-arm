@@ -1,10 +1,10 @@
 # FreeRouting 2.5.0 trial — rejected
 
-The autorouter was run against the current promoted board (SHA-256 `60da183ad175be4e1db9daa57a705714a84dd0d7b1f0b2a942f6beeee3a9a191`) and matching project (SHA-256 `f5bfbb6150d2799b8cc0ddb899c0e18c86ef452cbf68e05c60f883a969068a9e`). The input DSN and output SES are preserved here.
+The autorouter was run against the historical 16-open board (SHA-256 `60da183ad175be4e1db9daa57a705714a84dd0d7b1f0b2a942f6beeee3a9a191`) pinned at Git revision `7f9a9eff504ad5ebc7f33bd1af25ee743d9381c1` and the matching project (SHA-256 `f5bfbb6150d2799b8cc0ddb899c0e18c86ef452cbf68e05c60f883a969068a9e`). The candidate has since been improved to 15 opens; the input DSN and output SES remain an archived diagnostic trial.
 
 FreeRouting 2.5.0 JVM build ran with Temurin JRE 25.0.5, `-Xms128m -Xmx700m -Xss512k -XX:+UseSerialGC -XX:ActiveProcessorCount=2 -XX:ReservedCodeCacheSize=64m`, and `-mp 10 -mt 1 -us Global -is prioritized`. It completed ten global passes after 44m 32.91s. Fanout escaped 494 of 591 SMD pins (83.6%). The router reported 34 unrouted items after fanout; pass 1 briefly reached 32, and passes 2–10 stayed at 34 with the same score and six fixed-item conflicts. It did not run its optimization stage because unrouted connections remained.
 
-After SES import and zone refill, KiCad 9.0.2 DRC reported 16 unconnected items and 12 violations: the same 4 J1 hole-clearance findings plus 5 dangling tracks and 3 dangling vias. Since the candidate baseline is 16 unconnected / 4 violations, the autorouter session is rejected and not applied to `main`.
+After SES import and zone refill, KiCad 9.0.2 DRC reported 16 unconnected items and 12 violations: the same 4 J1 hole-clearance findings plus 5 dangling tracks and 3 dangling vias. Against its pinned 16-unconnected / 4-violation input, the autorouter session is rejected and was not applied to `main`.
 
 A second run used `-mp 5 -mt 1 -us Greedy -is random`. It also completed five passes with the same 34 unrouted items and six fixed conflicts. It produced the identical SES SHA-256 (`f9ba660a4c6f1e9a91017830b3c529d4e0b98fc4ed004dcf6a2403dc01b3bde6`) and the same imported DRC result (16 unconnected / 12 violations). Its log is `freerouting-greedy.log`.
 

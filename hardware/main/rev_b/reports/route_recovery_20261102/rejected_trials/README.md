@@ -26,7 +26,7 @@ The three-net `/3V3` escape moved the local XIN escape and rerouted `/1V1` with 
 
 ## Fresh trials from the 16-open candidate
 
-These additional trials start from the promoted 16-open board SHA-256 `60da183ad175be4e1db9daa57a705714a84dd0d7b1f0b2a942f6beeee3a9a191`.
+These additional trials start from the historical 16-open board SHA-256 `60da183ad175be4e1db9daa57a705714a84dd0d7b1f0b2a942f6beeee3a9a191`, pinned at Git revision `7f9a9eff504ad5ebc7f33bd1af25ee743d9381c1`. Replayers materialize that immutable board from Git so they remain valid after the current board advanced to 15 opens.
 
 | Target | Trial | Unconnected | DRC violations | Trial board SHA-256 | DRC report |
 |---|---|---:|---:|---|---|

@@ -41,7 +41,12 @@ def main():
     project = ROOT / PROJECT_REL
     session = HERE / "output.ses"
     saved_report = HERE / "imported_drc.json"
-    assert sha(source) == BOARD_SHA
+    source_bytes = subprocess.run(
+        ["git", "-C", str(ROOT), "show",
+         f"7f9a9eff504ad5ebc7f33bd1af25ee743d9381c1:{BOARD_REL.as_posix()}"],
+        check=True, stdout=subprocess.PIPE,
+    ).stdout
+    assert hashlib.sha256(source_bytes).hexdigest() == BOARD_SHA
     assert sha(project) == PROJECT_SHA
     assert sha(session) == SES_SHA
     assert sha(saved_report) == DRC_SHA
@@ -49,7 +54,7 @@ def main():
     with tempfile.TemporaryDirectory(prefix="freerouting-ses-verify-") as td:
         tmp = pathlib.Path(td)
         input_board = tmp / "input.kicad_pcb"
-        input_board.write_bytes(source.read_bytes())
+        input_board.write_bytes(source_bytes)
         output_board = tmp / "output.kicad_pcb"
         (tmp / "input.kicad_pro").write_bytes(project.read_bytes())
         (tmp / "output.kicad_pro").write_bytes(project.read_bytes())

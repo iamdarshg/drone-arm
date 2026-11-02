@@ -10,10 +10,11 @@ import subprocess
 import sys
 
 import pcbnew
+from pinned_source import candidate16_board
 
 HERE = pathlib.Path(__file__).resolve().parent
 ROOT = HERE.parents[5]
-BOARD = ROOT / "hardware/main/rev_b/main_rev_b.kicad_pcb"
+BOARD = candidate16_board()
 PROJECT = ROOT / "hardware/main/rev_b/main_rev_b.kicad_pro"
 SOURCE_SHA256 = "60da183ad175be4e1db9daa57a705714a84dd0d7b1f0b2a942f6beeee3a9a191"
 

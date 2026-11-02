@@ -1,34 +1,11 @@
 {
     "$schema": "https://schemas.kicad.org/drc.v1.json",
     "coordinate_units": "mm",
-    "date": "2026-11-02T17:25:59+0000",
+    "date": "2026-11-02T19:51:51+0000",
     "kicad_version": "9.0.2",
     "schematic_parity": [],
     "source": "main_rev_b.kicad_pcb",
     "unconnected_items": [
-        {
-            "description": "Missing connection between items",
-            "items": [
-                {
-                    "description": "Track [/1V1] on In2.Cu, length 3.2364 mm",
-                    "pos": {
-                        "x": 55.201,
-                        "y": 47.3133
-                    },
-                    "uuid": "a87b5fbf-610c-4b9c-a701-1c49a1059f5c"
-                },
-                {
-                    "description": "Track [/1V1] on F.Cu, length 1.4566 mm",
-                    "pos": {
-                        "x": 50.49,
-                        "y": 45.97
-                    },
-                    "uuid": "4454dd71-2438-42ed-b437-fa5d64095359"
-                }
-            ],
-            "severity": "error",
-            "type": "unconnected_items"
-        },
         {
             "description": "Missing connection between items",
             "items": [
@@ -156,12 +133,12 @@
                     "uuid": "862dedae-7aa7-43c7-aae2-80457782d71b"
                 },
                 {
-                    "description": "Track [/HGM] on F.Cu, length 1.2025 mm",
+                    "description": "Track [/HGM] on F.Cu, length 0.7282 mm",
                     "pos": {
                         "x": 111.825,
-                        "y": 60.3875
+                        "y": 59.185
                     },
-                    "uuid": "335e8542-aa42-43b1-9b12-41a2a0bcd3cc"
+                    "uuid": "29d809fb-3692-4946-8b4a-5100bbf69a8f"
                 }
             ],
             "severity": "error",
@@ -240,12 +217,12 @@
             "description": "Missing connection between items",
             "items": [
                 {
-                    "description": "Track [/PA_EN] on F.Cu, length 0.6035 mm",
+                    "description": "Pad 1 [/PA_EN] of R45 on F.Cu",
                     "pos": {
                         "x": 109.5,
-                        "y": 58.1135
+                        "y": 57.51
                     },
-                    "uuid": "54394233-c07b-48b7-afbb-436ee36da841"
+                    "uuid": "d8610727-d101-4f61-9b94-830431e49928"
                 },
                 {
                     "description": "Pad 25 [/PA_EN] of U10 on F.Cu",
