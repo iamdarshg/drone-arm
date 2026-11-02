@@ -8,15 +8,15 @@ import pcbnew
 
 
 def pad_map(board):
-    return {
-        (fp.GetReference(), pad.GetNumber()): (
-            pad.GetNetname(), pad.GetSize().x, pad.GetSize().y,
-            pad.GetShape(), pad.GetAttribute(),
-            pad.GetPosition().x, pad.GetPosition().y,
-        )
-        for fp in board.GetFootprints()
-        for pad in fp.Pads()
-    }
+    result = {}
+    for fp in board.GetFootprints():
+        for index, pad in enumerate(fp.Pads()):
+            result[(fp.GetReference(), index)] = (
+                pad.GetNumber(), pad.GetNetname(), pad.GetSize().x,
+                pad.GetSize().y, pad.GetShape(), pad.GetAttribute(),
+                pad.GetPosition().x, pad.GetPosition().y,
+            )
+    return result
 
 
 def copper_map(board):
@@ -41,10 +41,10 @@ def copper_map(board):
 target_path, replay_path = sys.argv[1:3]
 target = pcbnew.LoadBoard(target_path)
 replay = pcbnew.LoadBoard(replay_path)
-if len(pad_map(target)) != 603 or pad_map(target) != pad_map(replay):
+if len(pad_map(target)) != 657 or pad_map(target) != pad_map(replay):
     raise SystemExit("replayed board pad map differs from route snapshot")
 if copper_map(target) != copper_map(replay):
     raise SystemExit("replayed copper geometry differs from route snapshot")
-print("PASS: all 603 pad maps and complete copper geometry match the route snapshot")
+print("PASS: all 657 physical pad instances and complete copper geometry match the route snapshot")
 sys.stdout.flush()
 os._exit(0)

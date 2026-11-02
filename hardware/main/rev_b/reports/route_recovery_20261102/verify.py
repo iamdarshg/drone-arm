@@ -135,6 +135,11 @@ def main():
             "66fddff96ab557f686b391e49647ca5e8d33e11f",
             work / "candidate10_historical" / BOARD_REL.name, BOARD10_CLEAN_SHA256,
         )
+        board8_historical = materialize(
+            "cb58843b73e473eefb7716f31310c84c9affa228",
+            work / "candidate8_historical" / BOARD_REL.name,
+            "4e66a77b67e86817e5674b617e021ea9e4a40c889612c00d212bbcd9cd660d4e",
+        )
 
         source_drc = drc(source, work / "source-drc.json")
         board16_drc = drc(board16, work / "candidate16-drc.json")
@@ -224,6 +229,11 @@ def main():
         saved_final = json.loads(candidate10_json.read_text())
         if len(saved_final["unconnected_items"]) != 10 or len(saved_final["violations"]) != 0:
             raise AssertionError("archived current DRC report is not 10-open / zero-violation")
+        subprocess.run(
+            ["bash", str(EVIDENCE / "hgm_rf_reset_8open" / "run.sh")],
+            cwd=ROOT, check=True,
+            env={**os.environ, "TARGET_BOARD": str(board8_historical)},
+        )
 
     print("PASS: source 42/4; historical accepted stages 16/4, 15/4, 14/4, 12/4, 11/4, and 10/0")
     print("PASS: 17-open /3V3 replay reproduces historical 16-open board")
@@ -231,13 +241,14 @@ def main():
     print("PASS: C39-C41 shift and U10 /3V3 replay reproduces the pinned 14-open board")
     print("PASS: CC_RBIAS and CC1121_RF replay reproduces the pinned 12-open board")
     print("PASS: CC_LNA_P replay reproduces the pinned 11-open /4 board")
-    subprocess.run(
-        ["bash", str(EVIDENCE / "hgm_rf_reset_8open" / "run.sh")],
-        cwd=ROOT, check=True,
-    )
     print("PASS: ICM_INT1 route plus J1 clearance replay reproduces the historical 10-open /0 board")
     print("PASS: all 165 footprints and pad-to-net assignments are preserved; four land lengths change within the drawing tolerance")
-    print("PASS: archived hashes and baseline DRC signatures match; current DRC has zero findings")
+    subprocess.run(
+        ["bash", str(EVIDENCE / "usb_lna_gnss_5open" / "run.sh")],
+        cwd=ROOT, check=True,
+    )
+    print("PASS: USB DP, LNA_EN, and GNSS_RX replay yields the current 5-open /0 board")
+    print("PASS: archived hashes and baseline DRC signatures match; current DRC has zero violations")
 
 
 if __name__ == "__main__":

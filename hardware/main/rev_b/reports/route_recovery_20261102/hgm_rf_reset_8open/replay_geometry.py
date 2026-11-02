@@ -19,15 +19,15 @@ def sha256(path):
 
 
 def pad_map(board):
-    return {
-        (fp.GetReference(), pad.GetNumber()): (
-            pad.GetNetname(), pad.GetSize().x, pad.GetSize().y,
-            pad.GetShape(), pad.GetAttribute(),
-            pad.GetPosition().x, pad.GetPosition().y,
-        )
-        for fp in board.GetFootprints()
-        for pad in fp.Pads()
-    }
+    result = {}
+    for fp in board.GetFootprints():
+        for index, pad in enumerate(fp.Pads()):
+            result[(fp.GetReference(), index)] = (
+                pad.GetNumber(), pad.GetNetname(), pad.GetSize().x,
+                pad.GetSize().y, pad.GetShape(), pad.GetAttribute(),
+                pad.GetPosition().x, pad.GetPosition().y,
+            )
+    return result
 
 
 def copper_map(board):
@@ -59,7 +59,7 @@ def main():
     snapshot = pcbnew.LoadBoard(str(snapshot_path))
     source_pads = pad_map(source)
     snapshot_pads = pad_map(snapshot)
-    if len(source_pads) != 603 or source_pads != snapshot_pads:
+    if len(source_pads) != 657 or source_pads != snapshot_pads:
         raise SystemExit("route snapshot changes footprint pads, assignments, or positions")
 
     additions = []
