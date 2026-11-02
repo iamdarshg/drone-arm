@@ -31,6 +31,10 @@ EXPECTED = {
     "three_net_3v3_pad29.json": (15, 11, "1ceae46b998f68389477c983544ce48693291cc6d703b3efb0ed963099e439d6"),
     "gnss_rx_via_and_pps_relocate.json": (18, 29, "3a0a1c9bf3ddfa12ab433b1be71be860575fcebc4c9c6211d8b443ce3bb2ab24"),
     "cc_rbias_direct_probe.json": (15, 8, "1b12d6376cc73ca6578420b11e7f050f061a7a9609295c6c6b0d07ecddcfe044"),
+    "cc_rbias_pad15_via_y64_0.json": (16, 8, "96085a6a4a3b8e1f56e62ae522eafc9e7fed78366d48c684f653d9857744d398"),
+    "cc_rbias_pad15_via_y64_1.json": (16, 7, "a041cffb3f87dd8471d58fc4fd075e136e1d9fb3e6a96d8bcb165a9796dec356"),
+    "cc_rbias_pad15_via_y64_3.json": (16, 9, "d807a8255d2ff975df44b21b6c743b8af50cb93653901813af5e75df4a58e435"),
+    "cc_rbias_pad15_east_via.json": (16, 11, "8f24678d149763c9df453bbc302c673b19ed017ee429ed82b13f7b7df4dcd865"),
 }
 
 for name, (opens, violations, digest) in EXPECTED.items():
