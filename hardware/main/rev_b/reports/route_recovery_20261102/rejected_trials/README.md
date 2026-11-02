@@ -38,9 +38,12 @@ These additional trials start from the promoted 16-open board SHA-256 `60da183ad
 | `/RP2354B MCU/USB_DP_MCU` | standard via pair | 15 | 12 | `06668e6561a5695989a5cc445f99fcc66befb79c30768453f2dff5e9feca9304` | `usb_dp_via.json` |
 | `/RP2354B MCU/USB_DP_MCU` | direct F.Cu | 15 | 11 | `4de87dd11de9d75f71c720b0b09ee89eee492b4b93c260235a10769daab849cd` | `usb_dp_direct.json` |
 | `/3V3` pad 29 with `/1V1` reroute | alternate south via | 15 | 11 | `ca3308be084ea5c7dd9c10c8dd4780ff64862194e004cb3ddaf652ce946da786` | `three_net_3v3_pad29.json` |
+| `/GNSS_RX` with GNSS_PPS via relocation | standard-via B.Cu | 18 | 29 | `39e2c69e44d4e93ea380349cd174224e9f0249382b7e60e9015831636b1a176a` | `gnss_rx_via_and_pps_relocate.json` |
 
 The `/1V1` direct track crosses and shorts `/BARO_SDA`; its via alternatives conflict with VREG_AVDD, SENS_MISO, and `/3V3_ADC`. The bundle closes its three intended airwires but splits other connections and creates many shorts, crossings, and clearance errors. None was promoted.
 
 The USB_DP direct route shorts/crosses `/3V3` and GND around C31/C32. The standard-via route conflicts with USB_DM, `/3V3_ADC`, SWDIO/SWCLK, and GNSS_RESET_N; its archived KiCad DRC JSON records 12 violations. The pad-67 escape is constrained by adjacent USB_DM and `/3V3` pads/tracks and an exposed GND pad. A coordinated MCU USB breakout reroute would be required; no USB impedance or fabrication readiness is claimed.
 
 The alternate pad-29 `/3V3` trial moved the `/1V1` destination via to `(54.2, 58.7)`; the via itself fit, but its F.Cu tie crosses MCU RUN and GND. The source escape also conflicts with GND near y=57.08. It closed one airwire but added seven violations.
+
+The `/GNSS_RX` trial relocated the adjacent GNSS_PPS escape via and used standard through-vias for a long B.Cu route. It added two open airwires overall and 25 new DRC violations, including shorts to `/1V1`, GND, GNSS backup/reset, VREG_AVDD, BARO_SCL, and LSM_INT2; the relocated GNSS_PPS via also conflicts with `/3V3` and USB_DM.
