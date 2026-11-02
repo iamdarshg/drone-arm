@@ -1,7 +1,7 @@
 {
     "$schema": "https://schemas.kicad.org/drc.v1.json",
     "coordinate_units": "mm",
-    "date": "2026-11-02T21:34:16+0000",
+    "date": "2026-11-02T21:51:08+0000",
     "kicad_version": "9.0.2",
     "schematic_parity": [],
     "source": "main_rev_b.kicad_pcb",
@@ -47,29 +47,6 @@
                         "y": 59.185
                     },
                     "uuid": "29d809fb-3692-4946-8b4a-5100bbf69a8f"
-                }
-            ],
-            "severity": "error",
-            "type": "unconnected_items"
-        },
-        {
-            "description": "Missing connection between items",
-            "items": [
-                {
-                    "description": "Pad 4 [/ICM_INT1] of U20 on F.Cu",
-                    "pos": {
-                        "x": 48.8375,
-                        "y": 83.75
-                    },
-                    "uuid": "1cc71570-caa1-4678-bd58-a865d4aa3d9b"
-                },
-                {
-                    "description": "Pad 2 [/ICM_INT1] of U10 on F.Cu",
-                    "pos": {
-                        "x": 54.05,
-                        "y": 46.6
-                    },
-                    "uuid": "772d640c-7c7a-4938-bbff-061c9cccb011"
                 }
             ],
             "severity": "error",
@@ -125,12 +102,12 @@
             "description": "Missing connection between items",
             "items": [
                 {
-                    "description": "Track [/PA_EN] on F.Cu, length 0.6035 mm",
+                    "description": "Pad 1 [/PA_EN] of R45 on F.Cu",
                     "pos": {
                         "x": 109.5,
-                        "y": 58.1135
+                        "y": 57.51
                     },
-                    "uuid": "54394233-c07b-48b7-afbb-436ee36da841"
+                    "uuid": "d8610727-d101-4f61-9b94-830431e49928"
                 },
                 {
                     "description": "Pad 25 [/PA_EN] of U10 on F.Cu",
@@ -260,98 +237,5 @@
             "type": "unconnected_items"
         }
     ],
-    "violations": [
-        {
-            "description": "Hole clearance violation (board setup constraints hole clearance 0.2000 mm; actual 0.1944 mm)",
-            "items": [
-                {
-                    "description": "NPTH pad of J1",
-                    "pos": {
-                        "x": 3.395,
-                        "y": 78.89
-                    },
-                    "uuid": "955a21ba-dd2b-4091-b3b8-0c9ec8c6b416"
-                },
-                {
-                    "description": "Pad A1 [/GND] of J1 on F.Cu",
-                    "pos": {
-                        "x": 2.32,
-                        "y": 79.2
-                    },
-                    "uuid": "df2565cf-9c5e-4895-ad9c-e20c45e902bc"
-                }
-            ],
-            "severity": "error",
-            "type": "hole_clearance"
-        },
-        {
-            "description": "Hole clearance violation (board setup constraints hole clearance 0.2000 mm; actual 0.1944 mm)",
-            "items": [
-                {
-                    "description": "NPTH pad of J1",
-                    "pos": {
-                        "x": 3.395,
-                        "y": 78.89
-                    },
-                    "uuid": "955a21ba-dd2b-4091-b3b8-0c9ec8c6b416"
-                },
-                {
-                    "description": "Pad B12 [/GND] of J1 on F.Cu",
-                    "pos": {
-                        "x": 2.32,
-                        "y": 79.2
-                    },
-                    "uuid": "1bde5fc5-f5dc-4a0b-a811-06e2c2503dbb"
-                }
-            ],
-            "severity": "error",
-            "type": "hole_clearance"
-        },
-        {
-            "description": "Hole clearance violation (board setup constraints hole clearance 0.2000 mm; actual 0.1944 mm)",
-            "items": [
-                {
-                    "description": "NPTH pad of J1",
-                    "pos": {
-                        "x": 3.395,
-                        "y": 73.11
-                    },
-                    "uuid": "11df6575-e447-489d-9a9f-2a1e2f2b46ed"
-                },
-                {
-                    "description": "Pad A12 [/GND] of J1 on F.Cu",
-                    "pos": {
-                        "x": 2.32,
-                        "y": 72.8
-                    },
-                    "uuid": "7720155e-4e1d-4341-ae1f-1bb1fc21bfdc"
-                }
-            ],
-            "severity": "error",
-            "type": "hole_clearance"
-        },
-        {
-            "description": "Hole clearance violation (board setup constraints hole clearance 0.2000 mm; actual 0.1944 mm)",
-            "items": [
-                {
-                    "description": "NPTH pad of J1",
-                    "pos": {
-                        "x": 3.395,
-                        "y": 73.11
-                    },
-                    "uuid": "11df6575-e447-489d-9a9f-2a1e2f2b46ed"
-                },
-                {
-                    "description": "Pad B1 [/GND] of J1 on F.Cu",
-                    "pos": {
-                        "x": 2.32,
-                        "y": 72.8
-                    },
-                    "uuid": "fb59136b-21b5-4bb8-a840-ab4c01c16ed3"
-                }
-            ],
-            "severity": "error",
-            "type": "hole_clearance"
-        }
-    ]
+    "violations": []
 }

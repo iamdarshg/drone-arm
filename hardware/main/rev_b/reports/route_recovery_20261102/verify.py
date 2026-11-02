@@ -22,6 +22,7 @@ BOARD15_SHA256 = "f7deda79edbd6ac1a3a3eceba10fed34b283b704f1a61a1fa6a347e5fe153d
 BOARD14_SHA256 = "63b00e91cc1ea46e7e539b383c0deb6c7ac4bdfa833dd14cdd59936aef90e0ef"
 BOARD12_SHA256 = "a568c7faef6fee3a9a45423d4b7e9653e37e862d0f4db0cada9e3a72651a7a5d"
 BOARD11_SHA256 = "2d4288f022dc560135a40339b6b48d25b85f97292ff4f60da1157408bcabf051"
+BOARD10_CLEAN_SHA256 = "1961847383accbc57f6cbbccd21e6038e966d274d18683395b065b83488742e1"
 EVIDENCE = pathlib.Path(__file__).resolve().parent
 
 
@@ -84,15 +85,16 @@ def main():
     project = ROOT / PROJECT_REL
     if sha(project) != PROJECT_SHA256:
         raise SystemExit("pinned project hash differs")
-    if sha(candidate) != BOARD11_SHA256:
-        raise SystemExit("current 11-open board hash differs")
+    if sha(candidate) != BOARD10_CLEAN_SHA256:
+        raise SystemExit("current 10-open / zero-violation board hash differs")
 
     source_json = EVIDENCE / "source_drc.json"
     candidate16_json = EVIDENCE / "candidate_drc_16_open.json"
     candidate15_json = EVIDENCE / "candidate_drc_15_open.json"
     candidate14_json = EVIDENCE / "candidate_drc_14_open.json"
     candidate12_json = EVIDENCE / "candidate_drc_12_open.json"
-    candidate11_json = EVIDENCE / "candidate_drc.json"
+    candidate11_json = EVIDENCE / "candidate_drc_11_open_4_violations.json"
+    candidate10_json = EVIDENCE / "candidate_drc.json"
     intermediate17_json = EVIDENCE / "candidate_drc_17_open.json"
     expected_reports = {
         source_json: "cb141f87371a4ad58328edfff4f26418464e14ec52256191a2b1d6779ac0d18a",
@@ -100,6 +102,7 @@ def main():
         candidate15_json: "0e1f4a95f1fe5b15a557cd6a46b3b070b85af6e92939d500f100877796d22fe6",
         candidate14_json: "10e5deac975ca4da513e5dd2c3e17377d4a84885832f86b2267890a8298591f8",
         candidate12_json: "a75b4e25fa394055c1264441ad8ef45b87b9b9b398945ca5d3aed0fc932af6a6",
+        candidate11_json: "4bbd41af3ffea172d9dc6e848f57ff6782011776d70d5b7e6de6056e5779ede9",
         intermediate17_json: "09ab425900f233dbaadf6c4cd4d53b693759f559f8079841bdd8a24f46d6f603",
     }
     for path, expected in expected_reports.items():
@@ -128,13 +131,17 @@ def main():
         board12 = materialize(
             "5630b1c", work / "candidate12" / BOARD_REL.name, BOARD12_SHA256,
         )
+        board11_open = materialize(
+            "c453474", work / "candidate11_open" / BOARD_REL.name, BOARD11_SHA256,
+        )
 
         source_drc = drc(source, work / "source-drc.json")
         board16_drc = drc(board16, work / "candidate16-drc.json")
         board15_drc = drc(board15, work / "candidate15-drc.json")
         board14_drc = drc(board14, work / "candidate14-drc.json")
         board12_drc = drc(board12, work / "candidate12-drc.json")
-        board11_drc = drc(candidate, work / "candidate11-drc.json")
+        board11_drc = drc(board11_open, work / "candidate11-open-drc.json")
+        board10_drc = drc(candidate, work / "candidate10-drc.json")
         replay16_dir = work / "replay16"
         replay16_dir.mkdir()
         replay17to16 = replay16_dir / BOARD_REL.name
@@ -168,6 +175,12 @@ def main():
         )
         subprocess.run(
             ["bash", str(EVIDENCE / "replay_12to11" / "run.sh")],
+            cwd=ROOT, check=True, env={**os.environ,
+                "PROMOTED_BOARD": str(board11_open),
+                "PROMOTED_PRO": str(board11_open.with_suffix(".kicad_pro"))},
+        )
+        subprocess.run(
+            ["bash", str(EVIDENCE / "replay_11to10" / "run.sh")],
             cwd=ROOT, check=True,
         )
 
@@ -178,11 +191,12 @@ def main():
             len(board14_drc["unconnected_items"]),
             len(board12_drc["unconnected_items"]),
             len(board11_drc["unconnected_items"]),
+            len(board10_drc["unconnected_items"]),
             len(replay16_drc["unconnected_items"]),
             len(replay15_drc["unconnected_items"]),
             len(replay14_drc["unconnected_items"]),
         )
-        if counts != (42, 16, 15, 14, 12, 11, 16, 15, 14):
+        if counts != (42, 16, 15, 14, 12, 11, 10, 16, 15, 14):
             raise AssertionError(f"unexpected connectivity results: {counts}")
         if any(len(report["violations"]) != 4 for report in (
             source_drc, board16_drc, board15_drc, board14_drc, board12_drc, board11_drc,
@@ -194,6 +208,8 @@ def main():
                        replay16_drc, replay15_drc, replay14_drc):
             if sorted(map(signature, report["violations"])) != baseline_sigs:
                 raise AssertionError("normalized DRC violations differ from baseline")
+        if len(board10_drc["violations"]) != 0:
+            raise AssertionError("current 10-open board still has DRC violations")
         if sorted(map(signature, json.loads(candidate15_json.read_text())["violations"])) != baseline_sigs:
             raise AssertionError("archived 15-open DRC report differs from baseline")
         if sorted(map(signature, json.loads(candidate14_json.read_text())["violations"])) != baseline_sigs:
@@ -201,16 +217,20 @@ def main():
         if sorted(map(signature, json.loads(candidate12_json.read_text())["violations"])) != baseline_sigs:
             raise AssertionError("archived 12-open DRC report differs from baseline")
         if sorted(map(signature, json.loads(candidate11_json.read_text())["violations"])) != baseline_sigs:
-            raise AssertionError("current 11-open DRC report differs from baseline")
+            raise AssertionError("archived pre-clearance 11-open DRC report differs from baseline")
+        saved_final = json.loads(candidate10_json.read_text())
+        if len(saved_final["unconnected_items"]) != 10 or len(saved_final["violations"]) != 0:
+            raise AssertionError("archived current DRC report is not 10-open / zero-violation")
 
-    print("PASS: source 42/4; accepted stages 16/4, 15/4, 14/4, 12/4, and 11/4")
+    print("PASS: source 42/4; accepted stages 16/4, 15/4, 14/4, 12/4, 11/4, and 10/0")
     print("PASS: 17-open /3V3 replay reproduces historical 16-open board")
     print("PASS: C11 /1V1 replay reproduces pinned 15-open board geometry")
     print("PASS: C39-C41 shift and U10 /3V3 replay reproduces the pinned 14-open board")
     print("PASS: CC_RBIAS and CC1121_RF replay reproduces the pinned 12-open board")
-    print("PASS: CC_LNA_P replay reproduces the current 11-open board")
-    print("PASS: all 165 footprints and pad-to-net assignments are preserved")
-    print("PASS: report hashes and all four normalized baseline DRC signatures match")
+    print("PASS: CC_LNA_P replay reproduces the pinned 11-open /4 board")
+    print("PASS: ICM_INT1 route plus J1 clearance replay reproduces the current 10-open /0 board")
+    print("PASS: all 165 footprints and pad-to-net assignments are preserved; four land lengths change within the drawing tolerance")
+    print("PASS: archived hashes and baseline DRC signatures match; current DRC has zero findings")
 
 
 if __name__ == "__main__":
