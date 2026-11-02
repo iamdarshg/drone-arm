@@ -78,3 +78,10 @@ Sensor interrupt routes were tested individually and as a pair using legal 0.20 
 |---|---|---:|---:|---|---|
 | `/ICM_INT1` | B.Cu detour | 15 | 12 | `d6659c1b5da22d6c4a512c4b56a8cca04d20da4dcbfbccd0857cfe2ecc9a5487` | `icm_int1_detour.json` |
 | `/ICM_INT1`, `/LSM_INT1` | In2.Cu + B.Cu paired route | 14 | 37 | `5ee302183f7a91f55e919e512377ff90425fb0dd723d059b748199f371d6778c` | `sensor_interrupt_pair_in2_bcu.json` |
+
+The long `/GNSS_RX` airwire was also routed from U10 pad12 via a standard-via pair and In2.Cu, keeping the adjacent `/GNSS_PPS` geometry fixed. It reduced opens to 15 but produced 41 violations; the In1.Cu alternative produced 48. The route crosses existing `/1V1`, GNSS UART, `/3V3_ADC`, `/SYS_5V`, and GND, and the U10 escape is constrained by `/GNSS_PPS`. These are rejected. The In2 replay is `/usr/bin/python3 reproduce_gnss_rx_in2.py`.
+
+| Target | Trial | Unconnected | DRC violations | Trial board SHA-256 | DRC report |
+|---|---|---:|---:|---|---|
+| `/GNSS_RX` | In2.Cu via pair; preserve GNSS_PPS | 15 | 41 | `c35b44154ee949b54a5cc8942e6828f8348837102ed6ef5700568b75c0965982` | `gnss_rx_in2_keep_pps.json` |
+| `/GNSS_RX` | In1.Cu via pair; preserve GNSS_PPS | 15 | 48 | `951b234ed4b3f3c16cfb4859229e8f03d355050393fc9e10f63ea3078d91fe1f` | `gnss_rx_in1_keep_pps.json` |

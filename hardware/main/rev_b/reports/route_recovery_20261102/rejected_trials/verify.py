@@ -47,6 +47,8 @@ EXPECTED = {
     "pa_en_via_bcu.json": (15, 18, "62ba7d71149e84245ce8b86b9aaa0a6303034ad81f4edcd08cc19579a126c3c0"),
     "icm_int1_detour.json": (15, 12, "e98ee782f2d71280fb759ba3fd802a62436d8a857a81e4a3a71228732a6fbfb3"),
     "sensor_interrupt_pair_in2_bcu.json": (14, 37, "cb951bd6cf245bc05fb64f87eed851e65b4d5ac6f1d092fad05439578eabcad0"),
+    "gnss_rx_in2_keep_pps.json": (15, 41, "eec38ae7dfcd866e3898abc3bd2d96157ea78edc94c5e3b6e20dcce0cb75704a"),
+    "gnss_rx_in1_keep_pps.json": (15, 48, "4583043194a5724547e49dbffaeb99d62456d5a32084b0574b563a5aa9feb8d8"),
 }
 
 for name, (opens, violations, digest) in EXPECTED.items():
