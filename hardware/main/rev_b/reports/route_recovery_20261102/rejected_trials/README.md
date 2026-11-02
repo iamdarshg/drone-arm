@@ -89,3 +89,9 @@ The long `/GNSS_RX` airwire was also routed from U10 pad12 via a standard-via pa
 | `/GNSS_RX` | In1.Cu via pair; preserve GNSS_PPS | 15 | 48 | `951b234ed4b3f3c16cfb4859229e8f03d355050393fc9e10f63ea3078d91fe1f` | `gnss_rx_in1_keep_pps.json` |
 
 The `/RF_RESET_N` connection from U10 pad20 to the existing MCU-region track was tested with a 0.20 mm F.Cu breakout, a standard via at `(53.15,54.65)`, and a 0.20 mm B.Cu segment to `(84.0,64.29)`. It reduced opens to 15 but produced 13 violations. Nearby `/RF_nCS`, `/ICM_INT2`, `/ICM_nCS`, GND, `/RF_GPIO3`, XIN, and STATUS_LED routing blocks a clean source escape or B.Cu chord. The route is rejected; `/usr/bin/python3 reproduce_rf_reset_bcu.py` replays the DRC result.
+
+The best legal-width `/CC1121_RF` probe used two 0.60/0.30 mm through-vias and a 0.35 mm F.Cu/B.Cu route from FL40 pad2 `(101.375,61.75)` to FL41 pad5 `(103.8,62.25)`. It closed one airwire but resulted in 8 total violations (the 4 baseline USB hole-clearance findings plus 4 new RF/GND conflicts): the F.Cu escape crosses `/CC_TXPA`, the source via shorts `/CC_LNA_N` on In2.Cu, and the destination via/track shorts GND. The direct 0.35 mm trial is rejected; `/usr/bin/python3 reproduce_cc1121_rf_35_bcu.py` replays it. This only checks nominal trace width against the `RF_50R` class; no stackup/solver evidence verifies 50 Ω impedance.
+
+| Target | Trial | Unconnected | DRC violations | Trial board SHA-256 | DRC report |
+|---|---|---:|---:|---|---|
+| `/CC1121_RF` | 0.35 mm via pair + B.Cu trunk | 15 | 8 | `d8e67873b49e7dd87d8830711d7f7379616798571c1e4b624ab106e85dbe2237` | `cc1121_rf_35_bcu.json` |

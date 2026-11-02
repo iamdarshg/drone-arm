@@ -51,6 +51,7 @@ EXPECTED = {
     "gnss_rx_in1_keep_pps.json": (15, 48, "4583043194a5724547e49dbffaeb99d62456d5a32084b0574b563a5aa9feb8d8"),
     "rf_reset_bcu_local_escape.json": (15, 13, "a30cd7cc899b6b2ad3b488f89d1989a6bbca6571edc8f498e04614f38a42fa06"),
     "usb_dp_microvia_pair.json": (15, 15, "1ae83869bcc9981139e58405364e5d70e6ec8d8f4c27c5864b2ea747df98c7d6"),
+    "cc1121_rf_35_bcu.json": (15, 8, "b6c7fd929e07b60f966391ea6ce724e88245ddae507f4155d569c358f9c07428"),
 }
 
 for name, (opens, violations, digest) in EXPECTED.items():
