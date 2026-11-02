@@ -52,3 +52,20 @@ The `/GNSS_RX` trial relocated the adjacent GNSS_PPS escape via and used standar
 The direct `/CC_RBIAS` trace closed U40 pad14 to R40 pad1 but added a VDD_CC112 crossing/short, a GND short at the R40 pad2 branch, and a solder-mask bridge. U40's escape is blocked by VDD_CC112 and neighboring RF_nCS/CC_PA copper; R40's 0.38 mm pad1-to-GND-pad2 gap is narrower than the 0.50 mm needed for this board's 0.25 mm trace and clearances.
 
 The separate attempt to escape U40 pad15 (`/VDD_CC112`) toward the open pad14 `/CC_RBIAS` lane also failed. Four standard-via placements at `(95.25,64.0)`, `(95.25,64.1)`, `(95.25,64.3)`, and `(96.0,64.3)` all retained 16 opens and raised DRC to 8, 7, 9, and 11 violations, respectively. Nearby `/CC_PA` copper and NC pad16 leave no legal via corridor; the y=64.0 placement has only 0.1135 mm clearance to pad16 and 0.0789 mm to `/CC_PA`, below the 0.125 mm board requirement. The y=64.3 and east placements create additional `/CC_PA` conflicts. This coordinated local escape is rejected; none of these boards was promoted. `verify.py` checks the byte hashes and counts of all four reports.
+
+Additional isolated RF probes against the same 16-open board confirmed the RF region needs coordinated rerouting. The `/CC_LNA_P` direct and detoured F.Cu paths all closed one airwire but introduced shorts, narrow clearances, crossings, or solder-mask bridges. A standard via pair to B.Cu produced RF_LNA_P-to-RF_LNA_N/GND shorts. A direct `/CC1121_RF` bridge between FL40 and FL41 crossed `/CC_LNA_P`, breached clearances, and bridged NC-pad masks.
+
+| Target | Trial | Unconnected | DRC violations | Trial board SHA-256 | DRC report |
+|---|---|---:|---:|---|---|
+| `/CC_LNA_P` | direct F.Cu, 0.20 mm | 15 | 9 | `4886bf1a57f26f26ba39991bffc1171dabfda6d80311ee88cfd8e0a2d6d2398f` | `cc_lna_p_direct.json` |
+| `/CC_LNA_P` | F.Cu detour via y=63.0 mm | 15 | 28 | `eeaa6dc8618c89c9836c3d796d2d7a2bca957ca744646586a595d64a8c73cc56` | `cc_lna_p_detour_y0.json` |
+| `/CC_LNA_P` | F.Cu detour via y=63.4 mm | 15 | 19 | `84655552387ca4f9388919a0679d476fb4d879ae04526da5fb1f248fdd5b7406` | `cc_lna_p_detour_y1.json` |
+| `/CC_LNA_P` | F.Cu detour via y=60.8 mm | 15 | 29 | `b51a1087d70d96921f70657c1a886104de2218d9bd1f7ab7d437bf0317ce5391` | `cc_lna_p_detour_y2.json` |
+| `/CC_LNA_P` | F.Cu detour via y=60.4 mm | 15 | 33 | `a9ad74373cb231ba1f5d63feb8911421459b49afce92f7affd665671b3ba490` | `cc_lna_p_detour_y3.json` |
+| `/CC_LNA_P` | partial F.Cu detour via y=63.0 mm | 15 | 26 | `233fab69a01faf76bcee7fccf6e4ae18bb825b7ee2d7c61d5bed220cc92b5129` | `cc_lna_p_detour_y4.json` |
+| `/CC_LNA_P` | standard via pair + B.Cu | 15 | 26 | `40767c128768945136832b66858fc5c509e1757aa62956002e4e6054519c6889` | `cc_lna_p_via_pair.json` |
+| `/CC1121_RF` | direct F.Cu, 0.20 mm | 15 | 10 | `41d34016611a14ce756e50a52c001f1c8f2b37d11cd776d7cf69c1d1ab825ac0` | `cc1121_rf_direct.json` |
+
+These DRC snapshots were generated from isolated copies of the pinned board and matching project. `verify.py` checks the report content hashes and observed counts; listed board hashes identify the exact trial boards, which were retained in the temporary investigation workspaces rather than promoted.
+
+A coordinated U10 breakout trial routed `/PA_EN`, `/LNA_EN`, and `/HGM` through paired F.Cu/B.Cu escapes. It closed those three airwires (16 to 13 opens) but raised DRC violations from 4 to 48. The U10 south-edge fanout conflicts with `/1V1`, GND, XIN, and adjacent RF copper; the proposed 0.15 mm traces also violate the 0.20 mm minimum. The remote `/PA_EN` escape hits the nearby track cluster. This trial is rejected. Its report is `mcu_three_net_breakout.json`; run `/usr/bin/python3 reproduce_mcu_three_net_breakout.py` (the system KiCad Python binding) to reconstruct the candidate and confirm 13 opens / 48 violations. Candidate board SHA-256 from the original run: `d6fcdf35e8792dbeb664cf601cd1d78d94893130ce219743a53f4950b2af20ae`.

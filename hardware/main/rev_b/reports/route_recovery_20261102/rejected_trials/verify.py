@@ -35,6 +35,15 @@ EXPECTED = {
     "cc_rbias_pad15_via_y64_1.json": (16, 7, "a041cffb3f87dd8471d58fc4fd075e136e1d9fb3e6a96d8bcb165a9796dec356"),
     "cc_rbias_pad15_via_y64_3.json": (16, 9, "d807a8255d2ff975df44b21b6c743b8af50cb93653901813af5e75df4a58e435"),
     "cc_rbias_pad15_east_via.json": (16, 11, "8f24678d149763c9df453bbc302c673b19ed017ee429ed82b13f7b7df4dcd865"),
+    "cc_lna_p_direct.json": (15, 9, "349859749061ccc2199dc695cce300f0caaad1fb89e941582d34cb551b871720"),
+    "cc_lna_p_detour_y0.json": (15, 28, "017e308738ec2d5fb2880b389d4b00a241e21c1381c840b0cfc59919ac11431f"),
+    "cc_lna_p_detour_y1.json": (15, 19, "42889db7c6cae41c9a1ec1575ce4d83b1c43ce53fc46d3aab70550abb1f65b15"),
+    "cc_lna_p_detour_y2.json": (15, 29, "ead92049fc1d53f11338ccd4923b457e8d1cef2d4c25964b62d1ade7f9b46e9b"),
+    "cc_lna_p_detour_y3.json": (15, 33, "d5661d3ed14a0a9e64bbc014efa5c4711459b49afce92f7affd665671b3ba490"),
+    "cc_lna_p_detour_y4.json": (15, 26, "b7659539f189db81a3f5312928c653560c45944e9cec1d69730baf53f972eaf6"),
+    "cc_lna_p_via_pair.json": (15, 26, "bd4565047dae323cea69df40769d11efd5f86deafacda5919c09b75f09d988d2"),
+    "cc1121_rf_direct.json": (15, 10, "06f66f789a159af3786c32f72b440f8c1ef2b7b4b1397fc7720b368ae72c10df"),
+    "mcu_three_net_breakout.json": (13, 48, "cff09bf74e1711ba1b503040da64fcb3db639a19b9a423d2016276efbf048580"),
 }
 
 for name, (opens, violations, digest) in EXPECTED.items():
