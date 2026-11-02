@@ -26,6 +26,9 @@ EXPECTED = {
     "one_v_one_bcu_detour.json": (15, 11, "7a3866f85bc803c89739173604f56cef0978a5b0d2c6784ab7ad62c4a30d6955"),
     "one_v_one_in1.json": (15, 7, "ca759882314b3a0907e94272e2200152f904f8fb390a05fdb242de04d3782503"),
     "rf_spi_bundle.json": (13, 79, "058c3f65349d9306daa7173ab4d1b21440b3f86e95a17c45c9d71ff6b5ad571f"),
+    "usb_dp_via.json": (15, 12, "a04cb3bcd615d0c067543fbe411355531f1b7b2ea5312fe4b86bbaa2f161645d"),
+    "usb_dp_direct.json": (15, 11, "45af00464ddb0a7af1cf4555cda809364fa0ebb8c3cb925dbc6f6ac540e1d48c"),
+    "three_net_3v3_pad29.json": (15, 11, "1ceae46b998f68389477c983544ce48693291cc6d703b3efb0ed963099e439d6"),
 }
 
 for name, (opens, violations, digest) in EXPECTED.items():
