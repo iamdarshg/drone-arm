@@ -50,6 +50,7 @@ EXPECTED = {
     "gnss_rx_in2_keep_pps.json": (15, 41, "eec38ae7dfcd866e3898abc3bd2d96157ea78edc94c5e3b6e20dcce0cb75704a"),
     "gnss_rx_in1_keep_pps.json": (15, 48, "4583043194a5724547e49dbffaeb99d62456d5a32084b0574b563a5aa9feb8d8"),
     "rf_reset_bcu_local_escape.json": (15, 13, "a30cd7cc899b6b2ad3b488f89d1989a6bbca6571edc8f498e04614f38a42fa06"),
+    "usb_dp_microvia_pair.json": (15, 15, "1ae83869bcc9981139e58405364e5d70e6ec8d8f4c27c5864b2ea747df98c7d6"),
 }
 
 for name, (opens, violations, digest) in EXPECTED.items():
