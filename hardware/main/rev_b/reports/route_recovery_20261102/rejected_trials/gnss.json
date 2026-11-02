@@ -1,0 +1,1254 @@
+{
+    "$schema": "https://schemas.kicad.org/drc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-11-02T17:13:07+0000",
+    "kicad_version": "9.0.2",
+    "schematic_parity": [],
+    "source": "main_rev_b.kicad_pcb",
+    "unconnected_items": [
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Track [/1V1] on In2.Cu, length 3.2364 mm",
+                    "pos": {
+                        "x": 55.201,
+                        "y": 47.3133
+                    },
+                    "uuid": "a87b5fbf-610c-4b9c-a701-1c49a1059f5c"
+                },
+                {
+                    "description": "Pad 1 [/1V1] of C11 on F.Cu",
+                    "pos": {
+                        "x": 51.52,
+                        "y": 47.0
+                    },
+                    "uuid": "f2689f34-f6c0-4bc2-beb9-6f219bddc341"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 29 [/3V3] of U10 on F.Cu",
+                    "pos": {
+                        "x": 58.4,
+                        "y": 54.95
+                    },
+                    "uuid": "f73eaa8c-561d-4f32-968c-0c80628ed4de"
+                },
+                {
+                    "description": "Track [/3V3] on F.Cu, length 1.1043 mm",
+                    "pos": {
+                        "x": 56.4,
+                        "y": 53.8457
+                    },
+                    "uuid": "74786f7b-3725-4b80-8834-3b4df391ac1c"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Track [/3V3] on F.Cu, length 1.0288 mm",
+                    "pos": {
+                        "x": 28.0,
+                        "y": 25.325
+                    },
+                    "uuid": "f2465608-8735-435d-8bc7-4bf5dc815efe"
+                },
+                {
+                    "description": "Track [/3V3] on F.Cu, length 0.8140 mm",
+                    "pos": {
+                        "x": 52.0956,
+                        "y": 43.4244
+                    },
+                    "uuid": "57fac56d-6d35-4a9a-b7c1-85c835019acc"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [/915 MHz RF/CC1121_RF] of FL40 on F.Cu",
+                    "pos": {
+                        "x": 101.375,
+                        "y": 61.75
+                    },
+                    "uuid": "bd31af93-e0dc-4bd1-9c76-797fba53e2a2"
+                },
+                {
+                    "description": "Pad 5 [/915 MHz RF/CC1121_RF] of FL41 on F.Cu",
+                    "pos": {
+                        "x": 103.8,
+                        "y": 62.25
+                    },
+                    "uuid": "cc6d9a5e-3563-4614-b470-64eef333f44a"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 19 [/915 MHz RF/CC_LNA_P] of U40 on F.Cu",
+                    "pos": {
+                        "x": 96.4375,
+                        "y": 61.75
+                    },
+                    "uuid": "02cd6f38-adfa-4c5b-89ed-b598b6d60645"
+                },
+                {
+                    "description": "Pad 7 [/915 MHz RF/CC_LNA_P] of FL40 on F.Cu",
+                    "pos": {
+                        "x": 102.625,
+                        "y": 62.25
+                    },
+                    "uuid": "5269501f-d770-4fdf-9824-816d6924e3bf"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 14 [/915 MHz RF/CC_RBIAS] of U40 on F.Cu",
+                    "pos": {
+                        "x": 94.75,
+                        "y": 63.4375
+                    },
+                    "uuid": "7e56b35f-a763-4866-84a7-8fd13f4b0f30"
+                },
+                {
+                    "description": "Pad 1 [/915 MHz RF/CC_RBIAS] of R40 on F.Cu",
+                    "pos": {
+                        "x": 95.0,
+                        "y": 67.01
+                    },
+                    "uuid": "f7ba9c09-cb2a-4995-9a04-53f31180293c"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 27 [/HGM] of U10 on F.Cu",
+                    "pos": {
+                        "x": 57.6,
+                        "y": 54.95
+                    },
+                    "uuid": "862dedae-7aa7-43c7-aae2-80457782d71b"
+                },
+                {
+                    "description": "Track [/HGM] on F.Cu, length 0.7282 mm",
+                    "pos": {
+                        "x": 111.825,
+                        "y": 59.185
+                    },
+                    "uuid": "29d809fb-3692-4946-8b4a-5100bbf69a8f"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 4 [/ICM_INT1] of U20 on F.Cu",
+                    "pos": {
+                        "x": 48.8375,
+                        "y": 83.75
+                    },
+                    "uuid": "1cc71570-caa1-4678-bd58-a865d4aa3d9b"
+                },
+                {
+                    "description": "Pad 2 [/ICM_INT1] of U10 on F.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 46.6
+                    },
+                    "uuid": "772d640c-7c7a-4938-bbff-061c9cccb011"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Track [/LNA_EN] on F.Cu, length 1.5230 mm",
+                    "pos": {
+                        "x": 111.175,
+                        "y": 57.835
+                    },
+                    "uuid": "8ff00326-e1b3-452b-9f23-29e4778519ff"
+                },
+                {
+                    "description": "Pad 26 [/LNA_EN] of U10 on F.Cu",
+                    "pos": {
+                        "x": 57.2,
+                        "y": 54.95
+                    },
+                    "uuid": "056123b6-c6a5-4245-a039-ed09b69f1c68"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 4 [/LSM_INT1] of U10 on F.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 47.4
+                    },
+                    "uuid": "ff3798d2-50d2-4bc0-855a-23ae33612fd0"
+                },
+                {
+                    "description": "Pad 4 [/LSM_INT1] of U21 on F.Cu",
+                    "pos": {
+                        "x": 58.8375,
+                        "y": 83.75
+                    },
+                    "uuid": "7be9d8aa-ce2a-48e8-a762-f6bb7e34e1f8"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Track [/PA_EN] on F.Cu, length 0.6035 mm",
+                    "pos": {
+                        "x": 109.5,
+                        "y": 58.1135
+                    },
+                    "uuid": "54394233-c07b-48b7-afbb-436ee36da841"
+                },
+                {
+                    "description": "Pad 25 [/PA_EN] of U10 on F.Cu",
+                    "pos": {
+                        "x": 56.8,
+                        "y": 54.95
+                    },
+                    "uuid": "7ce60174-c65e-4ccf-81ee-c64301f800f4"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 22 [/RF_GPIO2] of U10 on F.Cu",
+                    "pos": {
+                        "x": 55.6,
+                        "y": 54.95
+                    },
+                    "uuid": "468c9543-1d3d-4add-a9d8-74b64ddac068"
+                },
+                {
+                    "description": "Pad 4 [/RF_GPIO2] of U40 on F.Cu",
+                    "pos": {
+                        "x": 91.5625,
+                        "y": 60.75
+                    },
+                    "uuid": "489ceafd-64ed-4d3d-a635-ef873683ac63"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 18 [/RF_MISO] of U10 on F.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 53.0
+                    },
+                    "uuid": "6ecaf350-6844-42b7-91cd-4fdc9fcf1042"
+                },
+                {
+                    "description": "Pad 9 [/RF_MISO] of U40 on F.Cu",
+                    "pos": {
+                        "x": 92.25,
+                        "y": 63.4375
+                    },
+                    "uuid": "502f2239-28c1-4b99-9657-ddc6f4cda2c4"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 17 [/RF_MOSI] of U10 on F.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "9936cbe9-25e9-4ecc-b542-b3c2a7c3d4db"
+                },
+                {
+                    "description": "Pad 7 [/RF_MOSI] of U40 on F.Cu",
+                    "pos": {
+                        "x": 91.5625,
+                        "y": 62.25
+                    },
+                    "uuid": "bb2f6563-698b-4abe-9cf7-253c39ae90b9"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 20 [/RF_RESET_N] of U10 on F.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 53.8
+                    },
+                    "uuid": "a607a4f5-6d99-4627-9a8d-5d792a2c5543"
+                },
+                {
+                    "description": "Track [/RF_RESET_N] on F.Cu, length 0.7000 mm",
+                    "pos": {
+                        "x": 84.0,
+                        "y": 64.989999
+                    },
+                    "uuid": "33673612-b243-4b7f-b58f-bb98097ad402"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [/RP2354B MCU/USB_DP_MCU] of R10 on F.Cu",
+                    "pos": {
+                        "x": 56.53,
+                        "y": 37.1
+                    },
+                    "uuid": "2a457ab5-4162-4e51-bbc3-a9ab5036067f"
+                },
+                {
+                    "description": "Pad 67 [/RP2354B MCU/USB_DP_MCU] of U10 on F.Cu",
+                    "pos": {
+                        "x": 60.4,
+                        "y": 45.05
+                    },
+                    "uuid": "d261af13-ad88-4aba-8169-c19a2a988708"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        }
+    ],
+    "violations": [
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                },
+                {
+                    "description": "Track [/GNSS/GNSS_VBCKP] on F.Cu, length 0.7032 mm",
+                    "pos": {
+                        "x": 118.7562,
+                        "y": 17.0606
+                    },
+                    "uuid": "8a6c46f9-35be-4d63-abb1-22a8bc3f0214"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Clearance violation (netclass 'Default' clearance 0.1250 mm; actual 0.0093 mm)",
+            "items": [
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                },
+                {
+                    "description": "Track [/GNSS/GNSS_VBCKP] on F.Cu, length 3.0000 mm",
+                    "pos": {
+                        "x": 119.52,
+                        "y": 17.0
+                    },
+                    "uuid": "d8604328-7107-4a01-99b3-34fe49e3b473"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Clearance violation (netclass 'Default' clearance 0.1250 mm; actual 0.0093 mm)",
+            "items": [
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                },
+                {
+                    "description": "Track [/GNSS/GNSS_VBCKP] on F.Cu, length 0.0857 mm",
+                    "pos": {
+                        "x": 119.4594,
+                        "y": 17.0606
+                    },
+                    "uuid": "efc7abd2-4858-4357-9606-74aa14ec9f38"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Items shorting two nets (nets /GNSS_RX and /GNSS/GNSS_VBCKP)",
+            "items": [
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                },
+                {
+                    "description": "Via [/GNSS/GNSS_VBCKP] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 118.7562,
+                        "y": 17.0606
+                    },
+                    "uuid": "797da239-656e-416b-a916-f4ffc7bd62e9"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                },
+                {
+                    "description": "Track [/1V1] on F.Cu, length 0.5014 mm",
+                    "pos": {
+                        "x": 68.2341,
+                        "y": 43.3284
+                    },
+                    "uuid": "486420fd-def1-4b43-ae59-5ce3a4179111"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                },
+                {
+                    "description": "Track [/1V1] on F.Cu, length 1.1715 mm",
+                    "pos": {
+                        "x": 69.0625,
+                        "y": 42.5
+                    },
+                    "uuid": "6ae90b0c-8c87-4cad-a69e-a84563f145f2"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Items shorting two nets (nets /GNSS_RX and /1V1)",
+            "items": [
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                },
+                {
+                    "description": "Track [/1V1] on F.Cu, length 0.9245 mm",
+                    "pos": {
+                        "x": 61.1938,
+                        "y": 46.9759
+                    },
+                    "uuid": "86244060-7d75-45f2-b8a3-f9e17fb80959"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                },
+                {
+                    "description": "Track [/1V1] on F.Cu, length 1.9197 mm",
+                    "pos": {
+                        "x": 61.1938,
+                        "y": 45.0562
+                    },
+                    "uuid": "aac9a682-d1e0-4cda-b499-5630f07b6798"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                },
+                {
+                    "description": "Track [/GND] on F.Cu, length 2.8567 mm",
+                    "pos": {
+                        "x": 65.5,
+                        "y": 45.52
+                    },
+                    "uuid": "5e6a8d7e-d476-40bb-b0e7-1e92ab9151fe"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Items shorting two nets (nets /GNSS_RX and /1V1)",
+            "items": [
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                },
+                {
+                    "description": "Via [/1V1] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 67.7327,
+                        "y": 43.3284
+                    },
+                    "uuid": "ded622d4-91aa-4958-b2a9-5bf786534112"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Clearance violation (netclass 'Default' clearance 0.1250 mm; actual 0.1180 mm)",
+            "items": [
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                },
+                {
+                    "description": "Track [/GND] on F.Cu, length 0.7450 mm",
+                    "pos": {
+                        "x": 122.0,
+                        "y": 16.225
+                    },
+                    "uuid": "6bab7fd3-ffef-4c1b-a67a-b7a5d65f34e1"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Clearance violation (netclass 'Default' clearance 0.1250 mm; actual 0.1180 mm)",
+            "items": [
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                },
+                {
+                    "description": "Track [/GND] on F.Cu, length 1.0960 mm",
+                    "pos": {
+                        "x": 121.255,
+                        "y": 16.225
+                    },
+                    "uuid": "6da9eae0-21c2-44ca-bfcb-afdeeac0ef9f"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                },
+                {
+                    "description": "Track [/2V8_GNSS] on F.Cu, length 10.5674 mm",
+                    "pos": {
+                        "x": 115.5601,
+                        "y": 15.04
+                    },
+                    "uuid": "57ed110b-eb66-48ce-85dc-ee7e1cd00c89"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Clearance violation (netclass 'Default' clearance 0.1250 mm; actual 0.0926 mm)",
+            "items": [
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                },
+                {
+                    "description": "Track [/BARO_DRDY] on F.Cu, length 2.2731 mm",
+                    "pos": {
+                        "x": 55.6786,
+                        "y": 49.4
+                    },
+                    "uuid": "8b415915-c963-48a7-9e3c-7688f293c644"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/3V3] on F.Cu, length 1.7381 mm",
+                    "pos": {
+                        "x": 63.9006,
+                        "y": 46.1438
+                    },
+                    "uuid": "0461425e-f07c-4d50-be67-f1d55d570bc2"
+                },
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Clearance violation (netclass 'POWER' clearance 0.1250 mm; actual 0.0060 mm)",
+            "items": [
+                {
+                    "description": "Track [/3V3] on F.Cu, length 0.7955 mm",
+                    "pos": {
+                        "x": 62.1625,
+                        "y": 46.1438
+                    },
+                    "uuid": "0a489b98-37da-4a38-afdd-cc21a2878f05"
+                },
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/3V3] on F.Cu, length 1.0868 mm",
+                    "pos": {
+                        "x": 69.8027,
+                        "y": 41.9578
+                    },
+                    "uuid": "3211da62-0dfe-4dea-a51b-4ed1f39b36bc"
+                },
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Items shorting two nets (nets /GNSS_RX and /GND)",
+            "items": [
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                },
+                {
+                    "description": "Track [/GND] on F.Cu, length 3.8300 mm",
+                    "pos": {
+                        "x": 119.895,
+                        "y": 16.415
+                    },
+                    "uuid": "c109a4ba-bbae-4830-bd97-d4fd8d23c7fc"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                },
+                {
+                    "description": "Track [/GND] on F.Cu, length 2.6149 mm",
+                    "pos": {
+                        "x": 65.2859,
+                        "y": 45.7341
+                    },
+                    "uuid": "e42fb433-ade3-4eea-a63a-56bc995ee9d3"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                },
+                {
+                    "description": "Track [/GND] on F.Cu, length 0.8273 mm",
+                    "pos": {
+                        "x": 120.48,
+                        "y": 17.0
+                    },
+                    "uuid": "ea1043c6-3780-48ef-b340-00f10760e441"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Clearance violation (netclass 'Default' clearance 0.1250 mm; actual 0.0986 mm)",
+            "items": [
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                },
+                {
+                    "description": "Track [/GNSS_TX] on F.Cu, length 0.1348 mm",
+                    "pos": {
+                        "x": 54.1972,
+                        "y": 50.1876
+                    },
+                    "uuid": "5f391f59-d4d9-40c5-b7a3-2937e93c775b"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                },
+                {
+                    "description": "Track [/GNSS_TX] on F.Cu, length 1.2895 mm",
+                    "pos": {
+                        "x": 54.1972,
+                        "y": 50.1876
+                    },
+                    "uuid": "6906a665-aae8-48f7-b908-5972f85c3699"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Items shorting two nets (nets /GNSS_TX and /GNSS_RX)",
+            "items": [
+                {
+                    "description": "Via [/GNSS_TX] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 55.4867,
+                        "y": 50.1876
+                    },
+                    "uuid": "3c24952f-a9f5-4893-acf4-e6b18b4246fe"
+                },
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Items shorting two nets (nets /GNSS_RX and /GND)",
+            "items": [
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                },
+                {
+                    "description": "Via [/GND] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 83.0,
+                        "y": 36.0
+                    },
+                    "uuid": "4516d637-ec3e-487c-87eb-00c20958567e"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                },
+                {
+                    "description": "Track [/3V3] on F.Cu, length 2.7906 mm",
+                    "pos": {
+                        "x": 68.8926,
+                        "y": 43.9547
+                    },
+                    "uuid": "f08c06bd-29f5-4500-be2c-6aeb3877543d"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Items shorting two nets (nets /3V3_ADC and /GNSS_RX)",
+            "items": [
+                {
+                    "description": "Track [/3V3_ADC] on F.Cu, length 1.5304 mm",
+                    "pos": {
+                        "x": 63.3259,
+                        "y": 46.6496
+                    },
+                    "uuid": "0ff9fc42-e329-4acc-a5e2-ea7dbc244329"
+                },
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Items shorting two nets (nets /GNSS_RX and /3V3_ADC)",
+            "items": [
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                },
+                {
+                    "description": "Via [/3V3_ADC] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 61.7955,
+                        "y": 46.6496
+                    },
+                    "uuid": "5081b434-1bf3-4fb6-96f8-35fe114aa4a8"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                },
+                {
+                    "description": "Track [/3V3_GNSS] on F.Cu, length 3.0000 mm",
+                    "pos": {
+                        "x": 114.52,
+                        "y": 20.0
+                    },
+                    "uuid": "b94772fd-6f02-4c90-b08d-c70961040354"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                },
+                {
+                    "description": "Track [/3V3_GNSS] on F.Cu, length 7.6155 mm",
+                    "pos": {
+                        "x": 104.2,
+                        "y": 21.6
+                    },
+                    "uuid": "e387e9a0-dfc3-446d-b6c4-27afbe79d0fa"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                },
+                {
+                    "description": "Track [/RP2354B MCU/USB_DM_MCU] on F.Cu, length 2.9812 mm",
+                    "pos": {
+                        "x": 60.8,
+                        "y": 45.05
+                    },
+                    "uuid": "b78707da-178e-4571-abfa-0bb9f2b60be4"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Clearance violation (netclass 'Default' clearance 0.1250 mm; actual 0.0926 mm)",
+            "items": [
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                },
+                {
+                    "description": "Track [/BARO_DRDY] on F.Cu, length 1.6286 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 49.4
+                    },
+                    "uuid": "7725996a-c1cb-419c-961d-50f16f10fa09"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Hole clearance violation (board setup constraints hole clearance 0.2000 mm; actual 0.1944 mm)",
+            "items": [
+                {
+                    "description": "NPTH pad of J1",
+                    "pos": {
+                        "x": 3.395,
+                        "y": 78.89
+                    },
+                    "uuid": "955a21ba-dd2b-4091-b3b8-0c9ec8c6b416"
+                },
+                {
+                    "description": "Pad A1 [/GND] of J1 on F.Cu",
+                    "pos": {
+                        "x": 2.32,
+                        "y": 79.2
+                    },
+                    "uuid": "df2565cf-9c5e-4895-ad9c-e20c45e902bc"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "Hole clearance violation (board setup constraints hole clearance 0.2000 mm; actual 0.1944 mm)",
+            "items": [
+                {
+                    "description": "NPTH pad of J1",
+                    "pos": {
+                        "x": 3.395,
+                        "y": 78.89
+                    },
+                    "uuid": "955a21ba-dd2b-4091-b3b8-0c9ec8c6b416"
+                },
+                {
+                    "description": "Pad B12 [/GND] of J1 on F.Cu",
+                    "pos": {
+                        "x": 2.32,
+                        "y": 79.2
+                    },
+                    "uuid": "1bde5fc5-f5dc-4a0b-a811-06e2c2503dbb"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "Hole clearance violation (board setup constraints hole clearance 0.2000 mm; actual 0.1944 mm)",
+            "items": [
+                {
+                    "description": "NPTH pad of J1",
+                    "pos": {
+                        "x": 3.395,
+                        "y": 73.11
+                    },
+                    "uuid": "11df6575-e447-489d-9a9f-2a1e2f2b46ed"
+                },
+                {
+                    "description": "Pad A12 [/GND] of J1 on F.Cu",
+                    "pos": {
+                        "x": 2.32,
+                        "y": 72.8
+                    },
+                    "uuid": "7720155e-4e1d-4341-ae1f-1bb1fc21bfdc"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "Hole clearance violation (board setup constraints hole clearance 0.2000 mm; actual 0.1944 mm)",
+            "items": [
+                {
+                    "description": "NPTH pad of J1",
+                    "pos": {
+                        "x": 3.395,
+                        "y": 73.11
+                    },
+                    "uuid": "11df6575-e447-489d-9a9f-2a1e2f2b46ed"
+                },
+                {
+                    "description": "Pad B1 [/GND] of J1 on F.Cu",
+                    "pos": {
+                        "x": 2.32,
+                        "y": 72.8
+                    },
+                    "uuid": "fb59136b-21b5-4bb8-a840-ab4c01c16ed3"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "Front solder mask aperture bridges items with different nets",
+            "items": [
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                },
+                {
+                    "description": "Pad 2 [/1V1] of L1 on F.Cu",
+                    "pos": {
+                        "x": 69.0625,
+                        "y": 42.5
+                    },
+                    "uuid": "718048d3-acac-4757-8a5f-13f5f240330d"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "Front solder mask aperture bridges items with different nets",
+            "items": [
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                },
+                {
+                    "description": "Pad 1 [/GNSS/GNSS_VBCKP] of C76 on F.Cu",
+                    "pos": {
+                        "x": 119.52,
+                        "y": 17.0
+                    },
+                    "uuid": "4b3478b1-0cca-4c57-b96f-ee272caba636"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "Front solder mask aperture bridges items with different nets",
+            "items": [
+                {
+                    "description": "Track [/GNSS_RX] on F.Cu, length 81.6241 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "434c4366-b98b-4197-80db-b9b2a283b849"
+                },
+                {
+                    "description": "Pad 81 [/GND] of U10 on F.Cu",
+                    "pos": {
+                        "x": 59.0,
+                        "y": 50.0
+                    },
+                    "uuid": "4f044f31-81be-4c0b-87fb-63f32deb22a7"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        }
+    ]
+}
