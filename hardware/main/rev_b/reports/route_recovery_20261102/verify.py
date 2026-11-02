@@ -19,6 +19,7 @@ PROJECT_SHA256 = "f5bfbb6150d2799b8cc0ddb899c0e18c86ef452cbf68e05c60f883a969068a
 BOARD16_SHA256 = "60da183ad175be4e1db9daa57a705714a84dd0d7b1f0b2a942f6beeee3a9a191"
 BOARD15_SHA256 = "f7deda79edbd6ac1a3a3eceba10fed34b283b704f1a61a1fa6a347e5fe153d15"
 BOARD14_SHA256 = "63b00e91cc1ea46e7e539b383c0deb6c7ac4bdfa833dd14cdd59936aef90e0ef"
+BOARD12_SHA256 = "a568c7faef6fee3a9a45423d4b7e9653e37e862d0f4db0cada9e3a72651a7a5d"
 EVIDENCE = pathlib.Path(__file__).resolve().parent
 
 
@@ -80,19 +81,21 @@ def main():
     project = ROOT / PROJECT_REL
     if sha(project) != PROJECT_SHA256:
         raise SystemExit("pinned project hash differs")
-    if sha(candidate) != BOARD14_SHA256:
-        raise SystemExit("current 14-open board hash differs")
+    if sha(candidate) != BOARD12_SHA256:
+        raise SystemExit("current 12-open board hash differs")
 
     source_json = EVIDENCE / "source_drc.json"
     candidate16_json = EVIDENCE / "candidate_drc_16_open.json"
     candidate15_json = EVIDENCE / "candidate_drc_15_open.json"
-    candidate14_json = EVIDENCE / "candidate_drc.json"
+    candidate14_json = EVIDENCE / "candidate_drc_14_open.json"
+    candidate12_json = EVIDENCE / "candidate_drc.json"
     intermediate17_json = EVIDENCE / "candidate_drc_17_open.json"
     expected_reports = {
         source_json: "cb141f87371a4ad58328edfff4f26418464e14ec52256191a2b1d6779ac0d18a",
         candidate16_json: "599987f963bb5e4ef78207ea8404ea081d902bc48fcc35f3795597bfdb196abd",
         candidate15_json: "0e1f4a95f1fe5b15a557cd6a46b3b070b85af6e92939d500f100877796d22fe6",
         candidate14_json: "10e5deac975ca4da513e5dd2c3e17377d4a84885832f86b2267890a8298591f8",
+        candidate12_json: "a75b4e25fa394055c1264441ad8ef45b87b9b9b398945ca5d3aed0fc932af6a6",
         intermediate17_json: "09ab425900f233dbaadf6c4cd4d53b693759f559f8079841bdd8a24f46d6f603",
     }
     for path, expected in expected_reports.items():
@@ -114,11 +117,16 @@ def main():
             INTERMEDIATE17_REV, work / "intermediate17" / BOARD_REL.name,
             "49b03f98c942f625f46f670fc420dda754b739f362e6fb5d65ce8c36f3a3f88f",
         )
+        board14 = materialize(
+            "762d0ad72744380748cac158e1de42ea7305ae42",
+            work / "candidate14" / BOARD_REL.name, BOARD14_SHA256,
+        )
 
         source_drc = drc(source, work / "source-drc.json")
         board16_drc = drc(board16, work / "candidate16-drc.json")
         board15_drc = drc(board15, work / "candidate15-drc.json")
-        board14_drc = drc(candidate, work / "candidate14-drc.json")
+        board14_drc = drc(board14, work / "candidate14-drc.json")
+        board12_drc = drc(candidate, work / "candidate12-drc.json")
         replay16_dir = work / "replay16"
         replay16_dir.mkdir()
         replay17to16 = replay16_dir / BOARD_REL.name
@@ -143,7 +151,11 @@ def main():
         replay14_drc = drc(replay15to14, work / "replay14-drc.json")
         subprocess.run(
             ["/usr/bin/python3", str(EVIDENCE / "compare_board_geometry.py"),
-             str(candidate), str(replay15to14)], check=True,
+             str(board14), str(replay15to14)], check=True,
+        )
+        subprocess.run(
+            ["bash", str(EVIDENCE / "replay_14to12" / "run.sh")],
+            cwd=ROOT, check=True,
         )
 
         counts = (
@@ -151,19 +163,20 @@ def main():
             len(board16_drc["unconnected_items"]),
             len(board15_drc["unconnected_items"]),
             len(board14_drc["unconnected_items"]),
+            len(board12_drc["unconnected_items"]),
             len(replay16_drc["unconnected_items"]),
             len(replay15_drc["unconnected_items"]),
             len(replay14_drc["unconnected_items"]),
         )
-        if counts != (42, 16, 15, 14, 16, 15, 14):
+        if counts != (42, 16, 15, 14, 12, 16, 15, 14):
             raise AssertionError(f"unexpected connectivity results: {counts}")
         if any(len(report["violations"]) != 4 for report in (
-            source_drc, board16_drc, board15_drc, board14_drc,
+            source_drc, board16_drc, board15_drc, board14_drc, board12_drc,
             replay16_drc, replay15_drc, replay14_drc,
         )):
             raise AssertionError("an accepted stage changed the four baseline DRC findings")
         baseline_sigs = sorted(map(signature, source_drc["violations"]))
-        for report in (board16_drc, board15_drc, board14_drc,
+        for report in (board16_drc, board15_drc, board14_drc, board12_drc,
                        replay16_drc, replay15_drc, replay14_drc):
             if sorted(map(signature, report["violations"])) != baseline_sigs:
                 raise AssertionError("normalized DRC violations differ from baseline")
@@ -171,11 +184,14 @@ def main():
             raise AssertionError("archived 15-open DRC report differs from baseline")
         if sorted(map(signature, json.loads(candidate14_json.read_text())["violations"])) != baseline_sigs:
             raise AssertionError("archived 14-open DRC report differs from baseline")
+        if sorted(map(signature, json.loads(candidate12_json.read_text())["violations"])) != baseline_sigs:
+            raise AssertionError("archived 12-open DRC report differs from baseline")
 
-    print("PASS: source 42/4; accepted stages 16/4, 15/4, and 14/4")
+    print("PASS: source 42/4; accepted stages 16/4, 15/4, 14/4, and 12/4")
     print("PASS: 17-open /3V3 replay reproduces historical 16-open board")
     print("PASS: C11 /1V1 replay reproduces pinned 15-open board geometry")
-    print("PASS: C39-C41 shift and U10 /3V3 replay reproduces current board geometry")
+    print("PASS: C39-C41 shift and U10 /3V3 replay reproduces the pinned 14-open board")
+    print("PASS: CC_RBIAS and CC1121_RF replay reproduces the current 12-open board")
     print("PASS: all 165 footprints and pad-to-net assignments are preserved")
     print("PASS: report hashes and all four normalized baseline DRC signatures match")
 
