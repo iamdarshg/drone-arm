@@ -40,6 +40,7 @@ done
 /usr/bin/python3 - "$tmp/source/drc.json" "$tmp/target/drc.json" "$tmp/replay/drc.json" <<'PY'
 import json
 import pathlib
+import re
 import sys
 import os
 
@@ -51,16 +52,33 @@ for path, counts in zip(map(pathlib.Path, sys.argv[1:]), expected):
     if actual != counts:
         raise SystemExit(f"unexpected DRC result in {path}: {actual} != {counts}")
 
-def normalized(path):
+def normalized_violations(path):
     report = json.loads(pathlib.Path(path).read_text())
-    return tuple(sorted(json.dumps(row, sort_keys=True) for row in report[key])
-                 for key in ("unconnected_items", "violations"))
+    return tuple(sorted(json.dumps(row, sort_keys=True) for row in report["violations"]))
+
+def open_nets(path):
+    report = json.loads(pathlib.Path(path).read_text())
+    nets = []
+    for row in report["unconnected_items"]:
+        labels = {
+            match.group(1)
+            for item in row["items"]
+            if (match := re.search(r"\[([^\]]+)\]", item.get("description", "")))
+        }
+        if len(labels) != 1:
+            raise SystemExit(f"cannot identify one net for an open in {path}: {row}")
+        nets.append(labels.pop())
+    return tuple(sorted(nets))
 
 archive = pathlib.Path(os.environ["ROUTE_REPORT_DIR"]) / "candidate_drc.json"
-if normalized(archive) != normalized(sys.argv[2]):
-    raise SystemExit("fresh DRC findings differ from archived candidate_drc.json")
-if normalized(sys.argv[2]) != normalized(sys.argv[3]):
-    raise SystemExit("replayed DRC findings differ from candidate DRC")
+if open_nets(archive) != open_nets(sys.argv[2]):
+    raise SystemExit("fresh DRC open-net set differs from archived candidate_drc.json")
+if normalized_violations(archive) != normalized_violations(sys.argv[2]):
+    raise SystemExit("fresh DRC violations differ from archived candidate_drc.json")
+if open_nets(sys.argv[2]) != open_nets(sys.argv[3]):
+    raise SystemExit("replayed DRC open-net set differs from candidate DRC")
+if normalized_violations(sys.argv[2]) != normalized_violations(sys.argv[3]):
+    raise SystemExit("replayed DRC violations differ from candidate DRC")
 PY
 
 echo "PASS: pinned 5-open source -> replayed 4-open candidate; pad map and copper geometry match."
