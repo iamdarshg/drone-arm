@@ -52,6 +52,7 @@ EXPECTED = {
     "rf_reset_bcu_local_escape.json": (15, 13, "a30cd7cc899b6b2ad3b488f89d1989a6bbca6571edc8f498e04614f38a42fa06"),
     "usb_dp_microvia_pair.json": (15, 15, "1ae83869bcc9981139e58405364e5d70e6ec8d8f4c27c5864b2ea747df98c7d6"),
     "cc1121_rf_35_bcu.json": (15, 8, "b6c7fd929e07b60f966391ea6ce724e88245ddae507f4155d569c358f9c07428"),
+    "cc_rbias_35_west.json": (15, 8, "244f3c68ae7f1f8fb1faac4fb668153e24cff31ddcf27e5636dea14f6bd36182"),
 }
 
 for name, (opens, violations, digest) in EXPECTED.items():

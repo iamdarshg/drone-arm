@@ -95,3 +95,9 @@ The best legal-width `/CC1121_RF` probe used two 0.60/0.30 mm through-vias and a
 | Target | Trial | Unconnected | DRC violations | Trial board SHA-256 | DRC report |
 |---|---|---:|---:|---|---|
 | `/CC1121_RF` | 0.35 mm via pair + B.Cu trunk | 15 | 8 | `d8e67873b49e7dd87d8830711d7f7379616798571c1e4b624ab106e85dbe2237` | `cc1121_rf_35_bcu.json` |
+
+The `/CC_RBIAS` route was tested at 0.35 mm although its project assignment remains Default (0.25 mm), to use a conservative width for the RF cluster. The best west-side F.Cu dogleg from U40 pad14 through `(94.35,64.1)` and `(94.35,66.6)` to R40 pad1 closed the airwire but produced 8 total violations. It shorts and crosses `/VDD_CC112`, has only 0.0374 mm clearance to the `/VDD_CC112` via, and bridges the mask to U40 pad13. R40's pad-to-pad gap is too narrow for the selected trace and clearance. It is rejected; `/usr/bin/python3 reproduce_cc_rbias_35_west.py` replays it.
+
+| Target | Trial | Unconnected | DRC violations | Trial board SHA-256 | DRC report |
+|---|---|---:|---:|---|---|
+| `/CC_RBIAS` | 0.35 mm west F.Cu dogleg | 15 | 8 | `10605eaa837639c0bfc361509a1021e0494d31d7512752ccf5cb92ac0ba3ab2f` | `cc_rbias_35_west.json` |
