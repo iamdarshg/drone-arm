@@ -13,7 +13,7 @@ PROJECT_REL = pathlib.Path("hardware/main/rev_b/main_rev_b.kicad_pro")
 SOURCE_REV = "fc80ded19dd070b476866e84de6c872ee3480d89"
 SOURCE_SHA256 = "28ebb3c19ab3e8f7d3c7ee9acd5ab427a1868142399c27cabd758c7b14c2613f"
 PROJECT_SHA256 = "f5bfbb6150d2799b8cc0ddb899c0e18c86ef452cbf68e05c60f883a969068a9e"
-CANDIDATE_SHA256 = "49b03f98c942f625f46f670fc420dda754b739f362e6fb5d65ce8c36f3a3f88f"
+CANDIDATE_SHA256 = "60da183ad175be4e1db9daa57a705714a84dd0d7b1f0b2a942f6beeee3a9a191"
 EVIDENCE = pathlib.Path(__file__).resolve().parent
 
 
@@ -58,16 +58,19 @@ def main():
         source_json = EVIDENCE / "source_drc.json"
         candidate_json = EVIDENCE / "candidate_drc.json"
         assert sha(source_json) == "cb141f87371a4ad58328edfff4f26418464e14ec52256191a2b1d6779ac0d18a"
-        assert sha(candidate_json) == "09ab425900f233dbaadf6c4cd4d53b693759f559f8079841bdd8a24f46d6f603"
+        assert sha(candidate_json) == "599987f963bb5e4ef78207ea8404ea081d902bc48fcc35f3795597bfdb196abd"
+        intermediate = EVIDENCE / "candidate_drc_17_open.json"
+        assert sha(intermediate) == "09ab425900f233dbaadf6c4cd4d53b693759f559f8079841bdd8a24f46d6f603"
+        assert len(json.loads(intermediate.read_text())["unconnected_items"]) == 17
         before = drc(baseline, baseline_dir / "source.json")
         after = drc(candidate, baseline_dir / "candidate.json")
         assert len(before["unconnected_items"]) == 42
-        assert len(after["unconnected_items"]) == 17
+        assert len(after["unconnected_items"]) == 16
         assert len(before["violations"]) == len(after["violations"]) == 4
         assert sorted(map(violation_signature, before["violations"])) == sorted(
             map(violation_signature, after["violations"])
         ), "candidate changed the source violation signatures"
-        print("PASS: source 42 unconnected / 4 violations; candidate 17 / 4")
+        print("PASS: source 42 unconnected / 4 violations; candidate 16 / 4")
         print("PASS: pinned board, project, and archived DRC evidence hashes match")
         print("PASS: all four normalized violation signatures are unchanged")
 
