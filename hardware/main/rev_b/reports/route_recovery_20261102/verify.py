@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reproduce and verify the pinned PCB routing recovery with KiCad CLI."""
+"""Reconstruct and verify every accepted PCB routing recovery stage."""
 import hashlib
 import json
 import pathlib
@@ -11,21 +11,39 @@ ROOT = pathlib.Path(__file__).resolve().parents[5]
 BOARD_REL = pathlib.Path("hardware/main/rev_b/main_rev_b.kicad_pcb")
 PROJECT_REL = pathlib.Path("hardware/main/rev_b/main_rev_b.kicad_pro")
 SOURCE_REV = "fc80ded19dd070b476866e84de6c872ee3480d89"
-INTERMEDIATE_REV = "bccafdc25473696788f707b56de49654367c4451"
-INTERMEDIATE16_REV = "7f9a9eff504ad5ebc7f33bd1af25ee743d9381c1"
+INTERMEDIATE17_REV = "bccafdc25473696788f707b56de49654367c4451"
+CANDIDATE16_REV = "7f9a9eff504ad5ebc7f33bd1af25ee743d9381c1"
+CANDIDATE15_REV = "b6761f85473a1e9a8e3a1b335f4974d40afb5deb"
 SOURCE_SHA256 = "28ebb3c19ab3e8f7d3c7ee9acd5ab427a1868142399c27cabd758c7b14c2613f"
 PROJECT_SHA256 = "f5bfbb6150d2799b8cc0ddb899c0e18c86ef452cbf68e05c60f883a969068a9e"
-CANDIDATE16_SHA256 = "60da183ad175be4e1db9daa57a705714a84dd0d7b1f0b2a942f6beeee3a9a191"
-CANDIDATE_SHA256 = "f7deda79edbd6ac1a3a3eceba10fed34b283b704f1a61a1fa6a347e5fe153d15"
+BOARD16_SHA256 = "60da183ad175be4e1db9daa57a705714a84dd0d7b1f0b2a942f6beeee3a9a191"
+BOARD15_SHA256 = "f7deda79edbd6ac1a3a3eceba10fed34b283b704f1a61a1fa6a347e5fe153d15"
+BOARD14_SHA256 = "63b00e91cc1ea46e7e539b383c0deb6c7ac4bdfa833dd14cdd59936aef90e0ef"
 EVIDENCE = pathlib.Path(__file__).resolve().parent
 
 
 def sha(path):
     h = hashlib.sha256()
-    with open(path, "rb") as f:
-        for block in iter(lambda: f.read(1024 * 1024), b""):
+    with open(path, "rb") as stream:
+        for block in iter(lambda: stream.read(1024 * 1024), b""):
             h.update(block)
     return h.hexdigest()
+
+
+def materialize(revision, output, expected_sha):
+    output.parent.mkdir(parents=True, exist_ok=True)
+    data = subprocess.run(
+        ["git", "-C", str(ROOT), "show", f"{revision}:{BOARD_REL.as_posix()}"],
+        check=True, stdout=subprocess.PIPE,
+    ).stdout
+    output.write_bytes(data)
+    if sha(output) != expected_sha:
+        raise AssertionError(f"{revision} board hash mismatch")
+    project = output.with_suffix(".kicad_pro")
+    shutil.copyfile(ROOT / PROJECT_REL, project)
+    if sha(project) != PROJECT_SHA256:
+        raise AssertionError("matching KiCad project hash mismatch")
+    return output
 
 
 def drc(board, output):
@@ -38,104 +56,128 @@ def drc(board, output):
     return json.loads(output.read_text())
 
 
-def violation_signature(v):
-    items = tuple(sorted((i.get("description"), i.get("pos")) for i in v.get("items", [])))
-    return json.dumps((v.get("type"), v.get("severity"), v.get("description"), items), sort_keys=True)
+def signature(violation):
+    items = tuple(sorted(
+        (item.get("description"), item.get("pos"))
+        for item in violation.get("items", [])
+    ))
+    return json.dumps(
+        (violation.get("type"), violation.get("severity"),
+         violation.get("description"), items),
+        sort_keys=True,
+    )
+
+
+def replay(script, source, output):
+    subprocess.run(
+        ["/usr/bin/python3", str(EVIDENCE / script), str(source), str(output)],
+        check=True,
+    )
 
 
 def main():
     candidate = ROOT / BOARD_REL
     project = ROOT / PROJECT_REL
-    assert sha(project) == PROJECT_SHA256, "pinned project hash differs"
-    assert sha(candidate) == CANDIDATE_SHA256, "candidate board hash differs"
+    if sha(project) != PROJECT_SHA256:
+        raise SystemExit("pinned project hash differs")
+    if sha(candidate) != BOARD14_SHA256:
+        raise SystemExit("current 14-open board hash differs")
+
+    source_json = EVIDENCE / "source_drc.json"
+    candidate16_json = EVIDENCE / "candidate_drc_16_open.json"
+    candidate15_json = EVIDENCE / "candidate_drc_15_open.json"
+    candidate14_json = EVIDENCE / "candidate_drc.json"
+    intermediate17_json = EVIDENCE / "candidate_drc_17_open.json"
+    expected_reports = {
+        source_json: "cb141f87371a4ad58328edfff4f26418464e14ec52256191a2b1d6779ac0d18a",
+        candidate16_json: "599987f963bb5e4ef78207ea8404ea081d902bc48fcc35f3795597bfdb196abd",
+        candidate15_json: "0e1f4a95f1fe5b15a557cd6a46b3b070b85af6e92939d500f100877796d22fe6",
+        candidate14_json: "10e5deac975ca4da513e5dd2c3e17377d4a84885832f86b2267890a8298591f8",
+        intermediate17_json: "09ab425900f233dbaadf6c4cd4d53b693759f559f8079841bdd8a24f46d6f603",
+    }
+    for path, expected in expected_reports.items():
+        if sha(path) != expected:
+            raise SystemExit(f"archived report hash mismatch: {path.name}")
+
     with tempfile.TemporaryDirectory(prefix="drone-arm-route-verify-") as td:
-        baseline_dir = pathlib.Path(td)
-        baseline = baseline_dir / BOARD_REL.name
-        data = subprocess.run(
-            ["git", "-C", str(ROOT), "show", f"{SOURCE_REV}:{BOARD_REL.as_posix()}"],
-            check=True, stdout=subprocess.PIPE,
-        ).stdout
-        baseline.write_bytes(data)
-        (baseline_dir / PROJECT_REL.name).write_bytes(project.read_bytes())
-        assert sha(baseline) == SOURCE_SHA256, "reconstructed source hash differs"
-        source_json = EVIDENCE / "source_drc.json"
-        candidate16_json = EVIDENCE / "candidate_drc_16_open.json"
-        candidate_json = EVIDENCE / "candidate_drc.json"
-        assert sha(source_json) == "cb141f87371a4ad58328edfff4f26418464e14ec52256191a2b1d6779ac0d18a"
-        assert sha(candidate16_json) == "599987f963bb5e4ef78207ea8404ea081d902bc48fcc35f3795597bfdb196abd"
-        assert sha(candidate_json) == "0e1f4a95f1fe5b15a557cd6a46b3b070b85af6e92939d500f100877796d22fe6"
-        intermediate = EVIDENCE / "candidate_drc_17_open.json"
-        assert sha(intermediate) == "09ab425900f233dbaadf6c4cd4d53b693759f559f8079841bdd8a24f46d6f603"
-        assert len(json.loads(intermediate.read_text())["unconnected_items"]) == 17
-        before = drc(baseline, baseline_dir / "source.json")
-        after = drc(candidate, baseline_dir / "candidate.json")
-        candidate16 = baseline_dir / BOARD_REL.name
-        candidate16_data = subprocess.run(
-            ["git", "-C", str(ROOT), "show",
-             f"{INTERMEDIATE16_REV}:{BOARD_REL.as_posix()}"],
-            check=True, stdout=subprocess.PIPE,
-        ).stdout
-        candidate16.write_bytes(candidate16_data)
-        assert sha(candidate16) == CANDIDATE16_SHA256, "reconstructed 16-open board hash differs"
-        (baseline_dir / PROJECT_REL.name).write_bytes(project.read_bytes())
-        candidate16_drc = drc(candidate16, baseline_dir / "candidate16.json")
-        archived16 = json.loads(candidate16_json.read_text())
-        assert len(candidate16_drc["unconnected_items"]) == 16
-        assert sorted(map(violation_signature, candidate16_drc["violations"])) == sorted(
-            map(violation_signature, archived16["violations"])
-        ), "archived 16-open report does not match the pinned board"
-        intermediate_board = baseline_dir / "intermediate.kicad_pcb"
-        intermediate_data = subprocess.run(
-            ["git", "-C", str(ROOT), "show",
-             f"{INTERMEDIATE_REV}:{BOARD_REL.as_posix()}"],
-            check=True, stdout=subprocess.PIPE,
-        ).stdout
-        intermediate_board.write_bytes(intermediate_data)
-        intermediate_project = baseline_dir / "intermediate.kicad_pro"
-        intermediate_project.write_bytes(project.read_bytes())
-        replay_board = baseline_dir / "replay.kicad_pcb"
-        subprocess.run(
-            ["/usr/bin/python3", str(EVIDENCE / "reproduce_long_3v3.py"),
-             str(intermediate_board), str(replay_board)],
-            check=True,
+        work = pathlib.Path(td)
+        source = materialize(
+            SOURCE_REV, work / "source" / BOARD_REL.name, SOURCE_SHA256,
         )
-        (baseline_dir / "replay.kicad_pro").write_bytes(intermediate_project.read_bytes())
-        replay = drc(replay_board, baseline_dir / "replay.json")
-        replay15_board = baseline_dir / "replay15.kicad_pcb"
-        subprocess.run(
-            ["/usr/bin/python3", str(EVIDENCE / "reproduce_c11_shift_1v1.py"),
-             str(candidate16), str(replay15_board)],
-            check=True,
+        board16 = materialize(
+            CANDIDATE16_REV, work / "candidate16" / BOARD_REL.name, BOARD16_SHA256,
         )
-        (baseline_dir / "replay15.kicad_pro").write_bytes(project.read_bytes())
-        replay15 = drc(replay15_board, baseline_dir / "replay15.json")
+        board15 = materialize(
+            CANDIDATE15_REV, work / "candidate15" / BOARD_REL.name, BOARD15_SHA256,
+        )
+        board17 = materialize(
+            INTERMEDIATE17_REV, work / "intermediate17" / BOARD_REL.name,
+            "49b03f98c942f625f46f670fc420dda754b739f362e6fb5d65ce8c36f3a3f88f",
+        )
+
+        source_drc = drc(source, work / "source-drc.json")
+        board16_drc = drc(board16, work / "candidate16-drc.json")
+        board15_drc = drc(board15, work / "candidate15-drc.json")
+        board14_drc = drc(candidate, work / "candidate14-drc.json")
+        replay16_dir = work / "replay16"
+        replay16_dir.mkdir()
+        replay17to16 = replay16_dir / BOARD_REL.name
+        replay("reproduce_long_3v3.py", board17, replay17to16)
+        shutil.copyfile(project, replay17to16.with_suffix(".kicad_pro"))
+        replay16_drc = drc(replay17to16, work / "replay16-drc.json")
+        replay15_dir = work / "replay15"
+        replay15_dir.mkdir()
+        replay16to15 = replay15_dir / BOARD_REL.name
+        replay("reproduce_c11_shift_1v1.py", board16, replay16to15)
+        shutil.copyfile(project, replay16to15.with_suffix(".kicad_pro"))
+        replay15_drc = drc(replay16to15, work / "replay15-drc.json")
         subprocess.run(
             ["/usr/bin/python3", str(EVIDENCE / "compare_board_geometry.py"),
-             str(candidate), str(replay15_board)], check=True,
+             str(board15), str(replay16to15)], check=True,
         )
-        assert len(before["unconnected_items"]) == 42
-        assert len(candidate16_drc["unconnected_items"]) == 16
-        assert len(after["unconnected_items"]) == 15
-        assert len(replay["unconnected_items"]) == 16
-        assert len(replay15["unconnected_items"]) == 15
-        assert len(before["violations"]) == len(candidate16_drc["violations"]) == len(after["violations"]) == len(replay15["violations"]) == 4
-        assert sorted(map(violation_signature, before["violations"])) == sorted(
-            map(violation_signature, candidate16_drc["violations"])
-        ), "16-open candidate changed the source violation signatures"
-        assert sorted(map(violation_signature, candidate16_drc["violations"])) == sorted(
-            map(violation_signature, after["violations"])
-        ), "15-open candidate changed the four baseline violation signatures"
-        assert sorted(map(violation_signature, replay15["violations"])) == sorted(
-            map(violation_signature, after["violations"])
-        ), "reproduced /1V1 route DRC does not match promoted candidate"
-        assert sorted(map(violation_signature, replay["violations"])) == sorted(
-            map(violation_signature, after["violations"])
-        ), "reproduced route does not match promoted candidate DRC"
-        print("PASS: source 42 / 4; historical candidate 16 / 4; promoted candidate 15 / 4")
-        print("PASS: 17-open /3V3 route replay produces the historical 16-open board")
-        print("PASS: /1V1 In2 replay matches promoted board geometry, 165 footprints and all pad mappings")
-        print("PASS: pinned board, project, and archived DRC evidence hashes match")
-        print("PASS: all four normalized violation signatures are unchanged")
+        replay14_dir = work / "replay14"
+        replay14_dir.mkdir()
+        replay15to14 = replay14_dir / BOARD_REL.name
+        replay("reproduce_c39_south_3v3.py", board15, replay15to14)
+        shutil.copyfile(project, replay15to14.with_suffix(".kicad_pro"))
+        replay14_drc = drc(replay15to14, work / "replay14-drc.json")
+        subprocess.run(
+            ["/usr/bin/python3", str(EVIDENCE / "compare_board_geometry.py"),
+             str(candidate), str(replay15to14)], check=True,
+        )
+
+        counts = (
+            len(source_drc["unconnected_items"]),
+            len(board16_drc["unconnected_items"]),
+            len(board15_drc["unconnected_items"]),
+            len(board14_drc["unconnected_items"]),
+            len(replay16_drc["unconnected_items"]),
+            len(replay15_drc["unconnected_items"]),
+            len(replay14_drc["unconnected_items"]),
+        )
+        if counts != (42, 16, 15, 14, 16, 15, 14):
+            raise AssertionError(f"unexpected connectivity results: {counts}")
+        if any(len(report["violations"]) != 4 for report in (
+            source_drc, board16_drc, board15_drc, board14_drc,
+            replay16_drc, replay15_drc, replay14_drc,
+        )):
+            raise AssertionError("an accepted stage changed the four baseline DRC findings")
+        baseline_sigs = sorted(map(signature, source_drc["violations"]))
+        for report in (board16_drc, board15_drc, board14_drc,
+                       replay16_drc, replay15_drc, replay14_drc):
+            if sorted(map(signature, report["violations"])) != baseline_sigs:
+                raise AssertionError("normalized DRC violations differ from baseline")
+        if sorted(map(signature, json.loads(candidate15_json.read_text())["violations"])) != baseline_sigs:
+            raise AssertionError("archived 15-open DRC report differs from baseline")
+        if sorted(map(signature, json.loads(candidate14_json.read_text())["violations"])) != baseline_sigs:
+            raise AssertionError("archived 14-open DRC report differs from baseline")
+
+    print("PASS: source 42/4; accepted stages 16/4, 15/4, and 14/4")
+    print("PASS: 17-open /3V3 replay reproduces historical 16-open board")
+    print("PASS: C11 /1V1 replay reproduces pinned 15-open board geometry")
+    print("PASS: C39-C41 shift and U10 /3V3 replay reproduces current board geometry")
+    print("PASS: all 165 footprints and pad-to-net assignments are preserved")
+    print("PASS: report hashes and all four normalized baseline DRC signatures match")
 
 
 if __name__ == "__main__":
