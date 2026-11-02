@@ -44,6 +44,9 @@ EXPECTED = {
     "cc_lna_p_via_pair.json": (15, 26, "bd4565047dae323cea69df40769d11efd5f86deafacda5919c09b75f09d988d2"),
     "cc1121_rf_direct.json": (15, 10, "06f66f789a159af3786c32f72b440f8c1ef2b7b4b1397fc7720b368ae72c10df"),
     "mcu_three_net_breakout.json": (13, 48, "cff09bf74e1711ba1b503040da64fcb3db639a19b9a423d2016276efbf048580"),
+    "pa_en_via_bcu.json": (15, 18, "62ba7d71149e84245ce8b86b9aaa0a6303034ad81f4edcd08cc19579a126c3c0"),
+    "icm_int1_detour.json": (15, 12, "e98ee782f2d71280fb759ba3fd802a62436d8a857a81e4a3a71228732a6fbfb3"),
+    "sensor_interrupt_pair_in2_bcu.json": (14, 37, "cb951bd6cf245bc05fb64f87eed851e65b4d5ac6f1d092fad05439578eabcad0"),
 }
 
 for name, (opens, violations, digest) in EXPECTED.items():
