@@ -81,12 +81,9 @@ def replay(script, source, output):
 
 
 def main():
-    candidate = ROOT / BOARD_REL
     project = ROOT / PROJECT_REL
     if sha(project) != PROJECT_SHA256:
         raise SystemExit("pinned project hash differs")
-    if sha(candidate) != BOARD10_CLEAN_SHA256:
-        raise SystemExit("current 10-open / zero-violation board hash differs")
 
     source_json = EVIDENCE / "source_drc.json"
     candidate16_json = EVIDENCE / "candidate_drc_16_open.json"
@@ -134,6 +131,10 @@ def main():
         board11_open = materialize(
             "c453474", work / "candidate11_open" / BOARD_REL.name, BOARD11_SHA256,
         )
+        board10_historical = materialize(
+            "66fddff96ab557f686b391e49647ca5e8d33e11f",
+            work / "candidate10_historical" / BOARD_REL.name, BOARD10_CLEAN_SHA256,
+        )
 
         source_drc = drc(source, work / "source-drc.json")
         board16_drc = drc(board16, work / "candidate16-drc.json")
@@ -141,7 +142,7 @@ def main():
         board14_drc = drc(board14, work / "candidate14-drc.json")
         board12_drc = drc(board12, work / "candidate12-drc.json")
         board11_drc = drc(board11_open, work / "candidate11-open-drc.json")
-        board10_drc = drc(candidate, work / "candidate10-drc.json")
+        board10_drc = drc(board10_historical, work / "candidate10-historical-drc.json")
         replay16_dir = work / "replay16"
         replay16_dir.mkdir()
         replay17to16 = replay16_dir / BOARD_REL.name
@@ -181,7 +182,9 @@ def main():
         )
         subprocess.run(
             ["bash", str(EVIDENCE / "replay_11to10" / "run.sh")],
-            cwd=ROOT, check=True,
+            cwd=ROOT, check=True, env={**os.environ,
+                "PROMOTED_BOARD": str(board10_historical),
+                "PROMOTED_PRO": str(board10_historical.with_suffix(".kicad_pro"))},
         )
 
         counts = (
@@ -209,7 +212,7 @@ def main():
             if sorted(map(signature, report["violations"])) != baseline_sigs:
                 raise AssertionError("normalized DRC violations differ from baseline")
         if len(board10_drc["violations"]) != 0:
-            raise AssertionError("current 10-open board still has DRC violations")
+            raise AssertionError("historical 10-open board still has DRC violations")
         if sorted(map(signature, json.loads(candidate15_json.read_text())["violations"])) != baseline_sigs:
             raise AssertionError("archived 15-open DRC report differs from baseline")
         if sorted(map(signature, json.loads(candidate14_json.read_text())["violations"])) != baseline_sigs:
@@ -222,13 +225,17 @@ def main():
         if len(saved_final["unconnected_items"]) != 10 or len(saved_final["violations"]) != 0:
             raise AssertionError("archived current DRC report is not 10-open / zero-violation")
 
-    print("PASS: source 42/4; accepted stages 16/4, 15/4, 14/4, 12/4, 11/4, and 10/0")
+    print("PASS: source 42/4; historical accepted stages 16/4, 15/4, 14/4, 12/4, 11/4, and 10/0")
     print("PASS: 17-open /3V3 replay reproduces historical 16-open board")
     print("PASS: C11 /1V1 replay reproduces pinned 15-open board geometry")
     print("PASS: C39-C41 shift and U10 /3V3 replay reproduces the pinned 14-open board")
     print("PASS: CC_RBIAS and CC1121_RF replay reproduces the pinned 12-open board")
     print("PASS: CC_LNA_P replay reproduces the pinned 11-open /4 board")
-    print("PASS: ICM_INT1 route plus J1 clearance replay reproduces the current 10-open /0 board")
+    subprocess.run(
+        ["bash", str(EVIDENCE / "hgm_rf_reset_8open" / "run.sh")],
+        cwd=ROOT, check=True,
+    )
+    print("PASS: ICM_INT1 route plus J1 clearance replay reproduces the historical 10-open /0 board")
     print("PASS: all 165 footprints and pad-to-net assignments are preserved; four land lengths change within the drawing tolerance")
     print("PASS: archived hashes and baseline DRC signatures match; current DRC has zero findings")
 
