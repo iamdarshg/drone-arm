@@ -24,6 +24,7 @@ BOARD12_SHA256 = "a568c7faef6fee3a9a45423d4b7e9653e37e862d0f4db0cada9e3a72651a7a
 BOARD11_SHA256 = "2d4288f022dc560135a40339b6b48d25b85f97292ff4f60da1157408bcabf051"
 BOARD10_CLEAN_SHA256 = "1961847383accbc57f6cbbccd21e6038e966d274d18683395b065b83488742e1"
 BOARD4_HISTORICAL_SHA256 = "b107359cf9adf6bb08e9ecd75ea2e0e8e4bddc3036be4e1fd8c3261f36924656"
+BOARD3_HISTORICAL_SHA256 = "fb2fdc622895e726b569e55fe97b2abd1d14d2c7e81d8e46601e996b89cbd3c3"
 EVIDENCE = pathlib.Path(__file__).resolve().parent
 
 
@@ -151,6 +152,11 @@ def main():
             work / "candidate4_historical" / BOARD_REL.name,
             BOARD4_HISTORICAL_SHA256,
         )
+        board3_historical = materialize(
+            "01e83dab330b11c4914380c022e3ec2d92ed492b",
+            work / "candidate3_historical" / BOARD_REL.name,
+            BOARD3_HISTORICAL_SHA256,
+        )
 
         source_drc = drc(source, work / "source-drc.json")
         board16_drc = drc(board16, work / "candidate16-drc.json")
@@ -255,6 +261,11 @@ def main():
             cwd=ROOT, check=True,
             env={**os.environ, "TARGET_BOARD": str(board4_historical)},
         )
+        subprocess.run(
+            ["bash", str(EVIDENCE / "pa_en_3open" / "run.sh")],
+            cwd=ROOT, check=True,
+            env={**os.environ, "TARGET_BOARD": str(board3_historical)},
+        )
 
     print("PASS: source 42/4; historical accepted stages 16/4, 15/4, 14/4, 12/4, 11/4, and 10/0")
     print("PASS: 17-open /3V3 replay reproduces historical 16-open board")
@@ -266,11 +277,12 @@ def main():
     print("PASS: all 165 footprints and pad-to-net assignments are preserved; four land lengths change within the drawing tolerance")
     print("PASS: USB DP, LNA_EN, and GNSS_RX replay yields the historical 5-open /0 board")
     print("PASS: LSM_INT1 replay yields the pinned historical 4-open /0 board")
+    print("PASS: PA_EN replay yields the pinned historical 3-open /0 board")
     subprocess.run(
-        ["bash", str(EVIDENCE / "pa_en_3open" / "run.sh")],
+        ["bash", str(EVIDENCE / "rf_miso_2open" / "run.sh")],
         cwd=ROOT, check=True,
     )
-    print("PASS: PA_EN replay yields the current 3-open /0 board")
+    print("PASS: RF_MISO replay yields the current 2-open /0 board")
     print("PASS: archived hashes and baseline DRC signatures match; current board has zero DRC violations")
 
 
