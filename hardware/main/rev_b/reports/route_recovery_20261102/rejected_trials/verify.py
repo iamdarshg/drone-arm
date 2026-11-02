@@ -20,6 +20,7 @@ EXPECTED = {
     "try3v3out.json": (16, 14, "757e93db508f3fb2bd3c16043568539fdd85e8e43f1be9594560c66c13b9f7f1"),
     "try3v3short.json": (16, 7, "e8b72494e54c656fb9ea9a2c0347347ed4a88b0f7b10a15790b928a468b4a24e"),
     "try_1v1.json": (16, 15, "b4df02e003c94ab58c1199aba6961a61b575f0dc71cef4979839aab9e344da1b"),
+    "three_net_3v3_escape.json": (17, 15, "87450fc15782da836c3d7d3ac4b86905abe25c8f9e59e0bb9a55a1c6f415b6fb"),
 }
 
 for name, (opens, violations, digest) in EXPECTED.items():

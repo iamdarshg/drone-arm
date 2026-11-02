@@ -6,6 +6,7 @@ The sensor, power, and copper-restore trials below started from the same candida
 |---|---|---:|---:|---|---|
 | `/3V3` | direct short | 16 | 7 | `23ad6a3532a2609b3abb3d076dce3bfe9d1c4df3069fa9faa98780dddd503222` | `try3v3short.json` |
 | `/3V3` | dogleg | 16 | 14 | `d0272e7f841c9fd1e46a549754ff0ff15b452556574161111695979ea27e2e31` | `try3v3out.json` |
+| `/3V3` with local XIN and `/1V1` reroute | three-net escape | 17 | 15 | `2a31aae1d4f8a2033cd2c5235e229973c44c235aba576c65f00fd6c32b96a3d1` | `three_net_3v3_escape.json` |
 | `/1V1` | endpoint vias | 16 | 19 | `ab81c7b5743e5cfe0513aa290c737cae7f6eb21c88ec3dbcc74e0f24e6497dd8` | `try1v1v.json` |
 | `/1V1` | B.Cu/via route | 16 | 15 | `0b5180145dac8eb6d11abc61acecb596905c04970a6951327a1bb1fd1980bdcc` | `try_1v1.json` |
 | `/GNSS_RX` | direct F.Cu | 16 | 38 | `38018a608dd5ce3c8aee0f0637ccc5e5975d92be9f82afb81722ae703f0ea43a` | `gnss.json` |
@@ -20,3 +21,5 @@ The sensor, power, and copper-restore trials below started from the same candida
 | `/RF_RESET_N` | restore baseline copper | 20 | 32 | `6ff4ed34368afec03171bbee53f327573013815b7d1cb00dc6c189966ef6c6fe` | `rf_reset_restore.json` |
 
 The sensor and power trials were freshly replayed against the 17-open board with a matching `.kicad_pro`. The `/CC1121_RF` candidate was also tested at 17 opens; although that DRC report shows 9 violations, it is a different trial than the earlier 19-open/12-violation attempt (board hash `d0c8cf741c9866557626f31fa389054c2d76097bde7b4c94e7eb047aed66cf1e`). These DRC snapshots are diagnostic evidence; the candidate board and the pinned source-to-candidate verification remain in the parent directory. Trial board blobs are not included in Git; their hashes are listed so any separately retained copy can be identified.
+
+The three-net `/3V3` escape moved the local XIN escape and rerouted `/1V1` with standard through-vias before joining the `/3V3` endpoints. It reduced no total airwires and added 11 DRC violations; the new `/1V1` via conflicts with C41/GND/MCU copper, and the `/3V3` segment violates C40 clearance. This points to a broader teardown of the local MCU/capacitor routing cluster if that pad-29 connection is to be pursued.
