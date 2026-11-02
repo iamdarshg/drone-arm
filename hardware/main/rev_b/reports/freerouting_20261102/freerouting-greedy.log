@@ -1,0 +1,47 @@
+2026-11-02 18:23:33.038 INFO   Freerouting v2.5.0 (build-date: 2026-10-05)
+2026-11-02 18:23:33.378 INFO   Hardware: 2 CPU cores, 248 CPU score, 676 MB RAM
+2026-11-02 18:23:33.379 WARN   Deprecated settings path '-mp / --router.max_passes'; use '--router.autorouter.max_passes' instead. The old path will be removed in a future release.
+2026-11-02 18:23:33.380 WARN   Couldn't get screen resolution. If you are running in a headless environment, disable the GUI by setting gui.enabled to false.
+2026-11-02 18:23:33.383 INFO   Configured network proxy: proxy:8080
+2026-11-02 18:23:34.436 WARN   Deprecated settings path 'router.max_passes'; use 'router.autorouter.max_passes' instead. The old path will be removed in a future release.
+2026-11-02 18:23:34.974 INFO   [A92AD0\D3DE21] Loading board file 'main.dsn'...
+2026-11-02 18:23:35.779 INFO   Layer 'F.Cu' contains a power plane / large copper pour covering >=30% of the board; associated net(s) configured for plane routing.
+2026-11-02 18:23:35.779 INFO   Layer 'In1.Cu' contains a power plane / large copper pour covering >=30% of the board; associated net(s) configured for plane routing.
+2026-11-02 18:23:35.779 INFO   Layer 'B.Cu' contains a power plane / large copper pour covering >=30% of the board; associated net(s) configured for plane routing.
+2026-11-02 18:23:35.919 INFO   [A92AD0\D3DE21] Job 'A92AD0\D3DE21' started at 2026-11-02T18:23:35.919123045Z.
+2026-11-02 18:23:41.985 WARN   Design Warning: Board has 6 pre-existing clearance violation(s) in the loaded design (before routing):
+  - 6 unfixable violation(s) (cannot be resolved by Freerouting):
+      * 6 fixed trace/via clearance violations (first 5 shown):
+          - FixedVia#3583 [net /RF_GPIO3] <-> FixedTrace#3074 [net /RF_RESET_N]
+          - FixedVia#3583 [net /RF_GPIO3] <-> FixedTrace#3072 [net /RF_RESET_N]
+          - FixedVia#3347 [net /915 MHz RF/CC1190_BIAS] <-> R50.2 [net /GND]
+          - J1.A7 [net /Power and USB/USB_DN_CONN] <-> FixedVia#3575 [net /Power and USB/USB_DN_CONN]
+          - R50.1 [net /915 MHz RF/CC1190_BIAS] <-> FixedVia#3348 [net /915 MHz RF/CC1190_BIAS]
+          ... and 1 more
+  - 0 potentially fixable violations
+Notice: Freerouting does not modify component placement, board outlines, or fixed items.
+Resolving these 6 unfixable violation(s) is the responsibility of the board author in their EDA tool (e.g. KiCad).
+2026-11-02 18:23:42.110 INFO   [A92AD0\D3DE21] Pipeline thread limits: autorouter pass is single-threaded, optimizer.max_threads=1.
+2026-11-02 18:23:50.878 INFO   [A92AD0\D3DE21] Fanout stage started on board '323437759af20a7458441da18272c178' with 152 of 599 SMD pins needing fanout (439 already connected, 8 netless).
+2026-11-02 18:24:31.629 WARN   BasicBoard.normalizeTraces: reached 2000 iterations for net '/915 MHz RF/VDD_CC119' — stopping to prevent hang. The board geometry for this net may be oscillating (split/combine cycle); traces are kept as-is and further normalization for this net is suppressed on this board candidate.
+2026-11-02 18:25:01.543 WARN   BasicBoard.normalizeTraces: reached 2000 iterations for net '/3V3_GNSS' — stopping to prevent hang. The board geometry for this net may be oscillating (split/combine cycle); traces are kept as-is and further normalization for this net is suppressed on this board candidate.
+2026-11-02 18:25:08.623 INFO   [A92AD0\D3DE21] Fanout pass #1 on board '218da059fc7961c96ee8ae34ef31e41a' completed in 73.33 seconds with 62 SMD pins fanouted, 20 not routed, 0 insert errors, +16 extra vias (0 SMD pins still to check in pass, ripup costs=100).
+2026-11-02 18:25:31.572 INFO   [A92AD0\D3DE21] Fanout pass #2 on board '4485dd1665ae2955894220add078c76e' completed in 22.86 seconds with 39 SMD pins fanouted, 2 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=200).
+2026-11-02 18:25:52.144 INFO   [A92AD0\D3DE21] Fanout pass #3 on board '31f6c94b7070df80353d3a75455a1444' completed in 20.47 seconds with 39 SMD pins fanouted, 1 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=300).
+2026-11-02 18:26:17.994 INFO   [A92AD0\D3DE21] Fanout pass #4 on board 'a2da202ee0a18aca24fcbb7537019e51' completed in 25.70 seconds with 39 SMD pins fanouted, 1 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=400).
+2026-11-02 18:26:38.184 INFO   [A92AD0\D3DE21] Fanout pass #5 on board 'd2ed9cc338faea52fbcb04f0c2a86cbd' completed in 20.09 seconds with 39 SMD pins fanouted, 1 not routed, 0 insert errors, +0 extra vias (0 SMD pins still to check in pass, ripup costs=500).
+2026-11-02 18:26:38.185 INFO   Fanout stopped after 5 passes: no progress for 3 consecutive passes.
+2026-11-02 18:26:42.414 INFO   [A92AD0\D3DE21] Fanout stage completed: started with 591 total SMD pins, completed in 167.21 seconds, escaped pins: 494/591 (83.6%), using 171.89 total CPU seconds, 59.59 GB total allocated, and 151.2 MB peak heap usage.
+2026-11-02 18:26:55.477 INFO   [A92AD0\D3DE21] Auto-routing stage started on board 'd2ed9cc338faea52fbcb04f0c2a86cbd' with baseline score 897.57 for 34 unrouted items.
+2026-11-02 18:27:34.500 WARN   BasicBoard.normalizeTraces: reached 2000 iterations for net '/915 MHz RF/RF_PA_OUT' — stopping to prevent hang. The board geometry for this net may be oscillating (split/combine cycle); traces are kept as-is and further normalization for this net is suppressed on this board candidate.
+2026-11-02 18:29:52.256 INFO   [A92AD0\D3DE21] Auto-routing pass #1 on board 'd2ed9cc338faea52fbcb04f0c2a86cbd' was completed in 172.42 seconds with score 903.59 (32 unrouted and 6 violations), using 348.52 CPU seconds and the job allocated 138.41 GB of memory so far.
+2026-11-02 18:31:35.248 WARN   BasicBoard.normalizeTraces: reached 2000 iterations for net '/1V1' — stopping to prevent hang. The board geometry for this net may be oscillating (split/combine cycle); traces are kept as-is and further normalization for this net is suppressed on this board candidate.
+2026-11-02 18:34:32.637 INFO   [A92AD0\D3DE21] Auto-routing pass #2 on board 'a8f4d8c53b20ce53ae8b010007650896' was completed in 275.80 seconds with score 897.57 (34 unrouted and 6 violations), using 612.33 CPU seconds and the job allocated 218.21 GB of memory so far.
+2026-11-02 18:37:53.743 INFO   [A92AD0\D3DE21] Auto-routing pass #3 on board 'f276f1cef9048419a267fd4582ad03d0' was completed in 193.15 seconds with score 897.57 (34 unrouted and 6 violations), using 791.16 CPU seconds and the job allocated 274.55 GB of memory so far.
+2026-11-02 18:41:29.288 INFO   [A92AD0\D3DE21] Auto-routing pass #4 on board '9c12ea84c1a1fb67750e479685efbbd1' was completed in 210.78 seconds with score 897.57 (34 unrouted and 6 violations), using 982.86 CPU seconds and the job allocated 330.75 GB of memory so far.
+2026-11-02 18:44:33.291 INFO   [A92AD0\D3DE21] Auto-routing pass #5 on board 'f642889fffd633c7d2b345dc7ea92413' was completed in 178.91 seconds with score 897.57 (34 unrouted and 6 violations), using 1147.72 CPU seconds and the job allocated 386.91 GB of memory so far.
+2026-11-02 18:45:02.635 INFO   [A92AD0\D3DE21] Auto-routing stage completed: started with 41 unrouted nets, completed in 1274.52 seconds, final score: 903.59 (32 unrouted and 6 violations), using 1177.11 total CPU seconds, 391.70 GB total allocated, and 598.7 MB peak heap usage.
+2026-11-02 18:45:09.346 INFO   [A92AD0\D3DE21] Skipping optimization stage: the board has 32 unrouted connection(s) (optimizer only runs on completely routed boards).
+2026-11-02 18:45:09.565 INFO   [A92AD0\D3DE21] Job 'A92AD0\D3DE21' finished with state: COMPLETED (elapsed: 21 minutes 33.64 seconds, finished at UTC: 2026-11-02T18:45:09.563648521Z).
+2026-11-02 18:45:09.614 INFO   Saving output file '/tmp/router-current/greedy.ses' (SES)...
+2026-11-02 18:45:09.632 INFO   Successfully saved output file '/tmp/router-current/greedy.ses' (275037 bytes).

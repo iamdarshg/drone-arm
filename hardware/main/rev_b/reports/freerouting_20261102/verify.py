@@ -15,6 +15,7 @@ BOARD_SHA = "60da183ad175be4e1db9daa57a705714a84dd0d7b1f0b2a942f6beeee3a9a191"
 PROJECT_SHA = "f5bfbb6150d2799b8cc0ddb899c0e18c86ef452cbf68e05c60f883a969068a9e"
 SES_SHA = "f9ba660a4c6f1e9a91017830b3c529d4e0b98fc4ed004dcf6a2403dc01b3bde6"
 DRC_SHA = "fee3e6427ca1b84e4a7ee1053539a5a144e2a41d190c00fce8938668ee7307ad"
+GREEDY_LOG_SHA = "576257ac6329f55887cce2d5e46c1142c8d23bf0851f79ffd0e291c3b915b420"
 
 
 def sha(path):
@@ -44,6 +45,7 @@ def main():
     assert sha(project) == PROJECT_SHA
     assert sha(session) == SES_SHA
     assert sha(saved_report) == DRC_SHA
+    assert sha(HERE / "freerouting-greedy.log") == GREEDY_LOG_SHA
     with tempfile.TemporaryDirectory(prefix="freerouting-ses-verify-") as td:
         tmp = pathlib.Path(td)
         input_board = tmp / "input.kicad_pcb"

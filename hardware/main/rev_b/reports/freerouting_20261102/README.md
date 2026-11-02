@@ -6,6 +6,8 @@ FreeRouting 2.5.0 JVM build ran with Temurin JRE 25.0.5, `-Xms128m -Xmx700m -Xss
 
 After SES import and zone refill, KiCad 9.0.2 DRC reported 16 unconnected items and 12 violations: the same 4 J1 hole-clearance findings plus 5 dangling tracks and 3 dangling vias. Since the candidate baseline is 16 unconnected / 4 violations, the autorouter session is rejected and not applied to `main`.
 
+A second run used `-mp 5 -mt 1 -us Greedy -is random`. It also completed five passes with the same 34 unrouted items and six fixed conflicts. It produced the identical SES SHA-256 (`f9ba660a4c6f1e9a91017830b3c529d4e0b98fc4ed004dcf6a2403dc01b3bde6`) and the same imported DRC result (16 unconnected / 12 violations). Its log is `freerouting-greedy.log`.
+
 The first attempt with the native CLI binary crashed with a GraalVM serialization `UnsupportedFeatureError` while snapshotting the board. The JVM build ran to completion; the full logs for both attempts are retained as `native-cli-crash.log` and `freerouting-jvm.log`. FreeRouting 2.5.0 Linux x64 CLI archive SHA-256: `64a957a9ef2a2fbde6ab2001bb32800f5ba34f9fd15575e363512934b870d63a`. JAR SHA-256: `f6f51bb02245e8e717f9359bd260cc9c5c0b1bc0acc8b7cb2cd5b8ffeb5de3c7`.
 
 To independently reproduce SES import and the DRC finding from the repository root, run:
