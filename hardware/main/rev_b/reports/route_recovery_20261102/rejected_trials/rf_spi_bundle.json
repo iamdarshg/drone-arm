@@ -1,0 +1,2128 @@
+{
+    "$schema": "https://schemas.kicad.org/drc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-11-02T17:28:32+0000",
+    "kicad_version": "9.0.2",
+    "schematic_parity": [],
+    "source": "main_rev_b.kicad_pcb",
+    "unconnected_items": [
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Track [/1V1] on In2.Cu, length 3.2364 mm",
+                    "pos": {
+                        "x": 55.201,
+                        "y": 47.3133
+                    },
+                    "uuid": "a87b5fbf-610c-4b9c-a701-1c49a1059f5c"
+                },
+                {
+                    "description": "Track [/1V1] on F.Cu, length 1.4566 mm",
+                    "pos": {
+                        "x": 50.49,
+                        "y": 45.97
+                    },
+                    "uuid": "4454dd71-2438-42ed-b437-fa5d64095359"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 29 [/3V3] of U10 on F.Cu",
+                    "pos": {
+                        "x": 58.4,
+                        "y": 54.95
+                    },
+                    "uuid": "f73eaa8c-561d-4f32-968c-0c80628ed4de"
+                },
+                {
+                    "description": "Track [/3V3] on F.Cu, length 1.1043 mm",
+                    "pos": {
+                        "x": 56.4,
+                        "y": 53.8457
+                    },
+                    "uuid": "74786f7b-3725-4b80-8834-3b4df391ac1c"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [/915 MHz RF/CC1121_RF] of FL40 on F.Cu",
+                    "pos": {
+                        "x": 101.375,
+                        "y": 61.75
+                    },
+                    "uuid": "bd31af93-e0dc-4bd1-9c76-797fba53e2a2"
+                },
+                {
+                    "description": "Pad 5 [/915 MHz RF/CC1121_RF] of FL41 on F.Cu",
+                    "pos": {
+                        "x": 103.8,
+                        "y": 62.25
+                    },
+                    "uuid": "cc6d9a5e-3563-4614-b470-64eef333f44a"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 19 [/915 MHz RF/CC_LNA_P] of U40 on F.Cu",
+                    "pos": {
+                        "x": 96.4375,
+                        "y": 61.75
+                    },
+                    "uuid": "02cd6f38-adfa-4c5b-89ed-b598b6d60645"
+                },
+                {
+                    "description": "Pad 7 [/915 MHz RF/CC_LNA_P] of FL40 on F.Cu",
+                    "pos": {
+                        "x": 102.625,
+                        "y": 62.25
+                    },
+                    "uuid": "5269501f-d770-4fdf-9824-816d6924e3bf"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 14 [/915 MHz RF/CC_RBIAS] of U40 on F.Cu",
+                    "pos": {
+                        "x": 94.75,
+                        "y": 63.4375
+                    },
+                    "uuid": "7e56b35f-a763-4866-84a7-8fd13f4b0f30"
+                },
+                {
+                    "description": "Pad 1 [/915 MHz RF/CC_RBIAS] of R40 on F.Cu",
+                    "pos": {
+                        "x": 95.0,
+                        "y": 67.01
+                    },
+                    "uuid": "f7ba9c09-cb2a-4995-9a04-53f31180293c"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 12 [/GNSS_RX] of U10 on F.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 50.6
+                    },
+                    "uuid": "1fd7bb58-e842-4f2b-bac2-7fe5cfe65fb8"
+                },
+                {
+                    "description": "Pad 2 [/GNSS_RX] of R32 on F.Cu",
+                    "pos": {
+                        "x": 126.55,
+                        "y": 13.1
+                    },
+                    "uuid": "fde8f0f8-5e9a-4583-ac91-aaa82413c18d"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 27 [/HGM] of U10 on F.Cu",
+                    "pos": {
+                        "x": 57.6,
+                        "y": 54.95
+                    },
+                    "uuid": "862dedae-7aa7-43c7-aae2-80457782d71b"
+                },
+                {
+                    "description": "Track [/HGM] on F.Cu, length 0.7282 mm",
+                    "pos": {
+                        "x": 111.825,
+                        "y": 59.185
+                    },
+                    "uuid": "29d809fb-3692-4946-8b4a-5100bbf69a8f"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 4 [/ICM_INT1] of U20 on F.Cu",
+                    "pos": {
+                        "x": 48.8375,
+                        "y": 83.75
+                    },
+                    "uuid": "1cc71570-caa1-4678-bd58-a865d4aa3d9b"
+                },
+                {
+                    "description": "Pad 2 [/ICM_INT1] of U10 on F.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 46.6
+                    },
+                    "uuid": "772d640c-7c7a-4938-bbff-061c9cccb011"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Track [/LNA_EN] on F.Cu, length 1.5230 mm",
+                    "pos": {
+                        "x": 111.175,
+                        "y": 57.835
+                    },
+                    "uuid": "8ff00326-e1b3-452b-9f23-29e4778519ff"
+                },
+                {
+                    "description": "Pad 26 [/LNA_EN] of U10 on F.Cu",
+                    "pos": {
+                        "x": 57.2,
+                        "y": 54.95
+                    },
+                    "uuid": "056123b6-c6a5-4245-a039-ed09b69f1c68"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 4 [/LSM_INT1] of U10 on F.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 47.4
+                    },
+                    "uuid": "ff3798d2-50d2-4bc0-855a-23ae33612fd0"
+                },
+                {
+                    "description": "Pad 4 [/LSM_INT1] of U21 on F.Cu",
+                    "pos": {
+                        "x": 58.8375,
+                        "y": 83.75
+                    },
+                    "uuid": "7be9d8aa-ce2a-48e8-a762-f6bb7e34e1f8"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [/PA_EN] of R45 on F.Cu",
+                    "pos": {
+                        "x": 109.5,
+                        "y": 57.51
+                    },
+                    "uuid": "d8610727-d101-4f61-9b94-830431e49928"
+                },
+                {
+                    "description": "Pad 25 [/PA_EN] of U10 on F.Cu",
+                    "pos": {
+                        "x": 56.8,
+                        "y": 54.95
+                    },
+                    "uuid": "7ce60174-c65e-4ccf-81ee-c64301f800f4"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 20 [/RF_RESET_N] of U10 on F.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 53.8
+                    },
+                    "uuid": "a607a4f5-6d99-4627-9a8d-5d792a2c5543"
+                },
+                {
+                    "description": "Track [/RF_RESET_N] on In1.Cu, length 1.5000 mm",
+                    "pos": {
+                        "x": 84.0,
+                        "y": 64.29
+                    },
+                    "uuid": "9ec21bec-4c7a-499c-9e40-f30fed6d9195"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [/RP2354B MCU/USB_DP_MCU] of R10 on F.Cu",
+                    "pos": {
+                        "x": 56.53,
+                        "y": 37.1
+                    },
+                    "uuid": "2a457ab5-4162-4e51-bbc3-a9ab5036067f"
+                },
+                {
+                    "description": "Pad 67 [/RP2354B MCU/USB_DP_MCU] of U10 on F.Cu",
+                    "pos": {
+                        "x": 60.4,
+                        "y": 45.05
+                    },
+                    "uuid": "d261af13-ad88-4aba-8169-c19a2a988708"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        }
+    ],
+    "violations": [
+        {
+            "description": "Items shorting two nets (nets /3V3 and /RF_MOSI)",
+            "items": [
+                {
+                    "description": "Via [/3V3] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 82.5138,
+                        "y": 60.1812
+                    },
+                    "uuid": "45ae0954-d1c0-4560-b613-e3a9338ba883"
+                },
+                {
+                    "description": "Track [/RF_MOSI] on In1.Cu, length 38.7338 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "ead8dfde-b63a-4686-b76c-c87615f9b05b"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Items shorting two nets (nets /RF_MISO and /ICM_INT2)",
+            "items": [
+                {
+                    "description": "Via [/RF_MISO] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 53.0
+                    },
+                    "uuid": "15dab604-fb3c-4d21-b3ce-f99acd8515f0"
+                },
+                {
+                    "description": "Track [/ICM_INT2] on In1.Cu, length 6.1591 mm",
+                    "pos": {
+                        "x": 53.7722,
+                        "y": 48.2412
+                    },
+                    "uuid": "1ffbe5f8-36f8-49c1-9bf3-1779a278b4c0"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Items shorting two nets (nets /RF_GPIO2 and /GND)",
+            "items": [
+                {
+                    "description": "Track [/RF_GPIO2] on B.Cu, length 36.4272 mm",
+                    "pos": {
+                        "x": 55.6,
+                        "y": 54.95
+                    },
+                    "uuid": "2e025266-88ef-40c8-960d-2fe4ee9366ba"
+                },
+                {
+                    "description": "Via [/GND] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 77.0,
+                        "y": 58.0
+                    },
+                    "uuid": "6f4fa0ae-e874-4ccd-ad74-29d7223b7c09"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Clearance violation (netclass 'Default' clearance 0.1250 mm; actual 0.0379 mm)",
+            "items": [
+                {
+                    "description": "Via [/GND] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 77.0,
+                        "y": 58.0
+                    },
+                    "uuid": "6f4fa0ae-e874-4ccd-ad74-29d7223b7c09"
+                },
+                {
+                    "description": "Track [/RF_MOSI] on In1.Cu, length 38.7338 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "ead8dfde-b63a-4686-b76c-c87615f9b05b"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/RF_MISO] on In2.Cu, length 39.6003 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 53.0
+                    },
+                    "uuid": "641788ac-21e6-4fef-af88-5f8c38c9e146"
+                },
+                {
+                    "description": "Track [/3V3] on In2.Cu, length 3.5995 mm",
+                    "pos": {
+                        "x": 85.059,
+                        "y": 62.7264
+                    },
+                    "uuid": "8c38cab0-35c5-4f63-b7b9-34c51237bc38"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Clearance violation (netclass 'POWER' clearance 0.1250 mm; actual 0.0514 mm)",
+            "items": [
+                {
+                    "description": "Via [/RF_MOSI] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 91.5625,
+                        "y": 62.25
+                    },
+                    "uuid": "8bfa56fa-f34e-4466-9d28-044100980fec"
+                },
+                {
+                    "description": "Track [/3V3] on In2.Cu, length 11.4925 mm",
+                    "pos": {
+                        "x": 96.5515,
+                        "y": 62.7264
+                    },
+                    "uuid": "b4730aba-9eae-412e-bc96-56e9f314f681"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Items shorting two nets (nets /RF_MISO and /ICM_nCS)",
+            "items": [
+                {
+                    "description": "Via [/RF_MISO] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 53.0
+                    },
+                    "uuid": "15dab604-fb3c-4d21-b3ce-f99acd8515f0"
+                },
+                {
+                    "description": "Track [/ICM_nCS] on B.Cu, length 6.9992 mm",
+                    "pos": {
+                        "x": 54.3386,
+                        "y": 54.4098
+                    },
+                    "uuid": "69390a8f-77bc-40a4-a9c9-2ea4f8656dbd"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Items shorting two nets (nets /GND and /RF_MOSI)",
+            "items": [
+                {
+                    "description": "Via [/GND] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 89.7733,
+                        "y": 61.5
+                    },
+                    "uuid": "a534d85f-b09d-49e1-a9fc-2c016c9869b5"
+                },
+                {
+                    "description": "Track [/RF_MOSI] on In1.Cu, length 38.7338 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "ead8dfde-b63a-4686-b76c-c87615f9b05b"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Items shorting two nets (nets /LSM_INT2 and /RF_GPIO2)",
+            "items": [
+                {
+                    "description": "Track [/LSM_INT2] on In1.Cu, length 27.4304 mm",
+                    "pos": {
+                        "x": 56.0231,
+                        "y": 78.1305
+                    },
+                    "uuid": "4345e90c-3667-4794-a8cd-86cb9aa7e617"
+                },
+                {
+                    "description": "Via [/RF_GPIO2] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 55.6,
+                        "y": 54.95
+                    },
+                    "uuid": "c1b03ef6-7ba1-4cfe-a9cd-fb9be7526190"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Clearance violation (netclass 'Default' clearance 0.1250 mm; actual 0.0750 mm)",
+            "items": [
+                {
+                    "description": "Via [/RF_MOSI] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 91.5625,
+                        "y": 62.25
+                    },
+                    "uuid": "8bfa56fa-f34e-4466-9d28-044100980fec"
+                },
+                {
+                    "description": "Track [/915 MHz RF/CC_DCPL] on F.Cu, length 1.0144 mm",
+                    "pos": {
+                        "x": 91.5625,
+                        "y": 61.75
+                    },
+                    "uuid": "f133daad-4a80-479c-9cee-1d4146270e6d"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/LSM_nCS] on In1.Cu, length 25.7655 mm",
+                    "pos": {
+                        "x": 56.7765,
+                        "y": 76.7778
+                    },
+                    "uuid": "5b7eae9a-60a7-42d3-88de-a3bd6ebf8e9f"
+                },
+                {
+                    "description": "Track [/RF_MOSI] on In1.Cu, length 38.7338 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "ead8dfde-b63a-4686-b76c-c87615f9b05b"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Items shorting two nets (nets /RF_GPIO2 and /GND)",
+            "items": [
+                {
+                    "description": "Track [/RF_GPIO2] on B.Cu, length 36.4272 mm",
+                    "pos": {
+                        "x": 55.6,
+                        "y": 54.95
+                    },
+                    "uuid": "2e025266-88ef-40c8-960d-2fe4ee9366ba"
+                },
+                {
+                    "description": "Via [/GND] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 64.2374,
+                        "y": 56.3804
+                    },
+                    "uuid": "f840706c-6fdd-42d7-a861-c28c03809b42"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/GND] on In1.Cu, length 5.0000 mm",
+                    "pos": {
+                        "x": 77.0,
+                        "y": 58.0
+                    },
+                    "uuid": "92369b6c-4f39-4fa9-a875-5c8bea542fbc"
+                },
+                {
+                    "description": "Track [/RF_MOSI] on In1.Cu, length 38.7338 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "ead8dfde-b63a-4686-b76c-c87615f9b05b"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/GND] on In1.Cu, length 1.6801 mm",
+                    "pos": {
+                        "x": 62.6841,
+                        "y": 55.898
+                    },
+                    "uuid": "d53bb84b-fa88-4374-9072-b948203bcef2"
+                },
+                {
+                    "description": "Track [/RF_MOSI] on In1.Cu, length 38.7338 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "ead8dfde-b63a-4686-b76c-c87615f9b05b"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/GND] on In2.Cu, length 12.0529 mm",
+                    "pos": {
+                        "x": 76.2903,
+                        "y": 57.2903
+                    },
+                    "uuid": "344a16e8-54a2-4c88-8bfe-b31b5d1a281f"
+                },
+                {
+                    "description": "Track [/RF_MISO] on In2.Cu, length 39.6003 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 53.0
+                    },
+                    "uuid": "641788ac-21e6-4fef-af88-5f8c38c9e146"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Clearance violation (netclass 'Default' clearance 0.1250 mm; actual 0.0750 mm)",
+            "items": [
+                {
+                    "description": "Track [/RF_GPIO0] on F.Cu, length 0.4040 mm",
+                    "pos": {
+                        "x": 92.75,
+                        "y": 63.4375
+                    },
+                    "uuid": "2f15b7b2-84ab-4676-9e17-fa9cc3102edf"
+                },
+                {
+                    "description": "Via [/RF_MISO] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 92.25,
+                        "y": 63.4375
+                    },
+                    "uuid": "e938b079-9cc8-47a4-8c35-ff5f4832fc61"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Items shorting two nets (nets /RF_GPIO0 and /RF_GPIO2)",
+            "items": [
+                {
+                    "description": "Track [/RF_GPIO0] on F.Cu, length 0.3176 mm",
+                    "pos": {
+                        "x": 55.2,
+                        "y": 54.95
+                    },
+                    "uuid": "5dc1eeff-9df3-4d37-8286-4624d14832a8"
+                },
+                {
+                    "description": "Via [/RF_GPIO2] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 55.6,
+                        "y": 54.95
+                    },
+                    "uuid": "c1b03ef6-7ba1-4cfe-a9cd-fb9be7526190"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Items shorting two nets (nets /RF_MISO and /RF_GPIO0)",
+            "items": [
+                {
+                    "description": "Track [/RF_MISO] on In2.Cu, length 39.6003 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 53.0
+                    },
+                    "uuid": "641788ac-21e6-4fef-af88-5f8c38c9e146"
+                },
+                {
+                    "description": "Via [/RF_GPIO0] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 54.9754,
+                        "y": 53.6934
+                    },
+                    "uuid": "a6c45c3e-17da-4649-a802-053c6aac42d4"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Items shorting two nets (nets /RF_MISO and /RF_GPIO0)",
+            "items": [
+                {
+                    "description": "Track [/RF_MISO] on In2.Cu, length 39.6003 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 53.0
+                    },
+                    "uuid": "641788ac-21e6-4fef-af88-5f8c38c9e146"
+                },
+                {
+                    "description": "Via [/RF_GPIO0] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 86.0148,
+                        "y": 62.1092
+                    },
+                    "uuid": "ab88b1ed-8842-4c67-b28b-ea96bee8f8e0"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/RF_GPIO0] on In2.Cu, length 22.6236 mm",
+                    "pos": {
+                        "x": 60.8415,
+                        "y": 59.5595
+                    },
+                    "uuid": "4309e1d7-270c-40f0-a08a-386fe40bed73"
+                },
+                {
+                    "description": "Track [/RF_MISO] on In2.Cu, length 39.6003 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 53.0
+                    },
+                    "uuid": "641788ac-21e6-4fef-af88-5f8c38c9e146"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Clearance violation (netclass 'Default' clearance 0.1250 mm; actual 0.0219 mm)",
+            "items": [
+                {
+                    "description": "Track [/RF_GPIO0] on In2.Cu, length 8.2959 mm",
+                    "pos": {
+                        "x": 54.9754,
+                        "y": 53.6934
+                    },
+                    "uuid": "5a88cd82-7cf4-4115-8b49-b6a369f02ece"
+                },
+                {
+                    "description": "Via [/RF_GPIO2] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 55.6,
+                        "y": 54.95
+                    },
+                    "uuid": "c1b03ef6-7ba1-4cfe-a9cd-fb9be7526190"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Clearance violation (netclass 'POWER' clearance 0.1250 mm; actual 0.0750 mm)",
+            "items": [
+                {
+                    "description": "Via [/RF_GPIO2] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 91.5625,
+                        "y": 60.75
+                    },
+                    "uuid": "10b5cd0a-a275-4a67-b13e-74364f5a6d3b"
+                },
+                {
+                    "description": "Track [/915 MHz RF/VDD_CC112] on F.Cu, length 1.1856 mm",
+                    "pos": {
+                        "x": 90.3769,
+                        "y": 61.25
+                    },
+                    "uuid": "9aaf50d8-f390-4e41-ae2d-862c45b6245d"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/RF_MISO] on In2.Cu, length 39.6003 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 53.0
+                    },
+                    "uuid": "641788ac-21e6-4fef-af88-5f8c38c9e146"
+                },
+                {
+                    "description": "Track [/RF_GPIO0] on In2.Cu, length 3.6058 mm",
+                    "pos": {
+                        "x": 83.4651,
+                        "y": 59.5595
+                    },
+                    "uuid": "f9a24e25-7255-4fe7-b740-39173a64fffc"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Clearance violation (netclass 'POWER' clearance 0.1250 mm; actual 0.0750 mm)",
+            "items": [
+                {
+                    "description": "Via [/RF_GPIO2] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 91.5625,
+                        "y": 60.75
+                    },
+                    "uuid": "10b5cd0a-a275-4a67-b13e-74364f5a6d3b"
+                },
+                {
+                    "description": "Pad 5 [/915 MHz RF/VDD_CC112] of U40 on F.Cu",
+                    "pos": {
+                        "x": 91.5625,
+                        "y": 61.25
+                    },
+                    "uuid": "dcd6398f-cc45-4c62-b59e-bc8d46cff422"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Items shorting two nets (nets /RF_GPIO2 and /RF_GPIO3)",
+            "items": [
+                {
+                    "description": "Via [/RF_GPIO2] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 55.6,
+                        "y": 54.95
+                    },
+                    "uuid": "c1b03ef6-7ba1-4cfe-a9cd-fb9be7526190"
+                },
+                {
+                    "description": "Track [/RF_GPIO3] on F.Cu, length 0.4269 mm",
+                    "pos": {
+                        "x": 56.0,
+                        "y": 55.3769
+                    },
+                    "uuid": "d8d541ac-6e04-4fe8-9073-b9484772bb4c"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Items shorting two nets (nets /SENS_SCLK and /RF_GPIO2)",
+            "items": [
+                {
+                    "description": "Track [/SENS_SCLK] on In1.Cu, length 24.7732 mm",
+                    "pos": {
+                        "x": 55.5854,
+                        "y": 78.2257
+                    },
+                    "uuid": "7c3bb408-f438-47e7-af7f-be95a1da145c"
+                },
+                {
+                    "description": "Via [/RF_GPIO2] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 55.6,
+                        "y": 54.95
+                    },
+                    "uuid": "c1b03ef6-7ba1-4cfe-a9cd-fb9be7526190"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Items shorting two nets (nets /RF_GPIO2 and /CAN_MOSI)",
+            "items": [
+                {
+                    "description": "Track [/RF_GPIO2] on B.Cu, length 36.4272 mm",
+                    "pos": {
+                        "x": 55.6,
+                        "y": 54.95
+                    },
+                    "uuid": "2e025266-88ef-40c8-960d-2fe4ee9366ba"
+                },
+                {
+                    "description": "Via [/CAN_MOSI] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 61.6,
+                        "y": 55.8465
+                    },
+                    "uuid": "cfa5506b-8819-4c0b-9df9-e19c865aa3e5"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/BARO_DRDY] on In1.Cu, length 17.2518 mm",
+                    "pos": {
+                        "x": 57.1532,
+                        "y": 51.1684
+                    },
+                    "uuid": "dcf2b2ee-671b-44e5-8bee-f814707942f7"
+                },
+                {
+                    "description": "Track [/RF_MOSI] on In1.Cu, length 38.7338 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "ead8dfde-b63a-4686-b76c-c87615f9b05b"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/BARO_SCL] on In1.Cu, length 27.9252 mm",
+                    "pos": {
+                        "x": 67.3743,
+                        "y": 49.8352
+                    },
+                    "uuid": "ba70d9c0-0609-4dda-b5f2-cac63c3d3488"
+                },
+                {
+                    "description": "Track [/RF_MOSI] on In1.Cu, length 38.7338 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "ead8dfde-b63a-4686-b76c-c87615f9b05b"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Clearance violation (netclass 'Default' clearance 0.1250 mm; actual 0.0750 mm)",
+            "items": [
+                {
+                    "description": "Via [/RF_GPIO2] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 91.5625,
+                        "y": 60.75
+                    },
+                    "uuid": "10b5cd0a-a275-4a67-b13e-74364f5a6d3b"
+                },
+                {
+                    "description": "Track [/RF_GPIO3] on F.Cu, length 0.9426 mm",
+                    "pos": {
+                        "x": 91.5625,
+                        "y": 60.25
+                    },
+                    "uuid": "c549563e-f6c8-4e76-8af9-96a3ad49ab75"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Items shorting two nets (nets /RF_GPIO2 and /RF_GPIO3)",
+            "items": [
+                {
+                    "description": "Track [/RF_GPIO2] on B.Cu, length 36.4272 mm",
+                    "pos": {
+                        "x": 55.6,
+                        "y": 54.95
+                    },
+                    "uuid": "2e025266-88ef-40c8-960d-2fe4ee9366ba"
+                },
+                {
+                    "description": "Via [/RF_GPIO3] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 90.6199,
+                        "y": 60.25
+                    },
+                    "uuid": "63a54695-96e0-45a5-bf91-7afc1924ce00"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Clearance violation (netclass 'Default' clearance 0.1250 mm; actual 0.0862 mm)",
+            "items": [
+                {
+                    "description": "Track [/RF_GPIO3] on In1.Cu, length 0.9085 mm",
+                    "pos": {
+                        "x": 89.9774,
+                        "y": 62.9712
+                    },
+                    "uuid": "04aa6a69-57d8-4692-950e-db3243c67035"
+                },
+                {
+                    "description": "Track [/RF_MOSI] on In1.Cu, length 38.7338 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "ead8dfde-b63a-4686-b76c-c87615f9b05b"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/RF_GPIO3] on In1.Cu, length 2.0788 mm",
+                    "pos": {
+                        "x": 90.6198,
+                        "y": 62.3288
+                    },
+                    "uuid": "7d1e6ffc-6aa7-4288-abb8-cb9f6d39b735"
+                },
+                {
+                    "description": "Track [/RF_MOSI] on In1.Cu, length 38.7338 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "ead8dfde-b63a-4686-b76c-c87615f9b05b"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Items shorting two nets (nets /RF_MISO and /RF_nCS)",
+            "items": [
+                {
+                    "description": "Via [/RF_MISO] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 53.0
+                    },
+                    "uuid": "15dab604-fb3c-4d21-b3ce-f99acd8515f0"
+                },
+                {
+                    "description": "Track [/RF_nCS] on F.Cu, length 0.4939 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 53.4
+                    },
+                    "uuid": "8e924ae6-5e9f-42fc-b584-fc2bb0b8c817"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Items shorting two nets (nets /RF_MISO and /RF_MOSI)",
+            "items": [
+                {
+                    "description": "Via [/RF_MISO] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 53.0
+                    },
+                    "uuid": "15dab604-fb3c-4d21-b3ce-f99acd8515f0"
+                },
+                {
+                    "description": "Via [/RF_MOSI] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "5a859ff2-20cb-4785-9142-a28b2bfc3f49"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Items shorting two nets (nets /RF_MISO and /RP2354B MCU/MAIN_LED_A)",
+            "items": [
+                {
+                    "description": "Via [/RF_MISO] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 53.0
+                    },
+                    "uuid": "15dab604-fb3c-4d21-b3ce-f99acd8515f0"
+                },
+                {
+                    "description": "Track [/RP2354B MCU/MAIN_LED_A] on In1.Cu, length 6.4694 mm",
+                    "pos": {
+                        "x": 54.3265,
+                        "y": 54.3977
+                    },
+                    "uuid": "2ba36981-1392-4f6a-a5a2-34dc4677041d"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Clearance violation (netclass 'Default' clearance 0.1250 mm; actual 0.0126 mm)",
+            "items": [
+                {
+                    "description": "Via [/RF_MISO] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 53.0
+                    },
+                    "uuid": "15dab604-fb3c-4d21-b3ce-f99acd8515f0"
+                },
+                {
+                    "description": "Track [/RF_SCLK] on In2.Cu, length 2.2328 mm",
+                    "pos": {
+                        "x": 54.6523,
+                        "y": 54.2212
+                    },
+                    "uuid": "a643ed41-1740-402b-a57d-1b6da6221770"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Clearance violation (netclass 'Default' clearance 0.1250 mm; actual 0.0750 mm)",
+            "items": [
+                {
+                    "description": "Via [/RF_MISO] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 92.25,
+                        "y": 63.4375
+                    },
+                    "uuid": "e938b079-9cc8-47a4-8c35-ff5f4832fc61"
+                },
+                {
+                    "description": "Pad 10 [/RF_GPIO0] of U40 on F.Cu",
+                    "pos": {
+                        "x": 92.75,
+                        "y": 63.4375
+                    },
+                    "uuid": "eba0f6de-c908-43bd-92c8-eb76b510fd62"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Items shorting two nets (nets /RF_SCLK and /RF_MISO)",
+            "items": [
+                {
+                    "description": "Via [/RF_SCLK] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 90.9148,
+                        "y": 63.3281
+                    },
+                    "uuid": "420245c3-392c-4582-8290-3f5ab729823b"
+                },
+                {
+                    "description": "Track [/RF_MISO] on In2.Cu, length 39.6003 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 53.0
+                    },
+                    "uuid": "641788ac-21e6-4fef-af88-5f8c38c9e146"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Items shorting two nets (nets /RF_MOSI and /RF_SCLK)",
+            "items": [
+                {
+                    "description": "Via [/RF_MOSI] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "5a859ff2-20cb-4785-9142-a28b2bfc3f49"
+                },
+                {
+                    "description": "Track [/RF_SCLK] on F.Cu, length 0.8384 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.2
+                    },
+                    "uuid": "c1e219e8-b447-447f-93c2-73108ab7bf92"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Items shorting two nets (nets /RF_MOSI and /ICM_nCS)",
+            "items": [
+                {
+                    "description": "Via [/RF_MOSI] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "5a859ff2-20cb-4785-9142-a28b2bfc3f49"
+                },
+                {
+                    "description": "Track [/ICM_nCS] on B.Cu, length 6.9992 mm",
+                    "pos": {
+                        "x": 54.3386,
+                        "y": 54.4098
+                    },
+                    "uuid": "69390a8f-77bc-40a4-a9c9-2ea4f8656dbd"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Items shorting two nets (nets /ICM_INT2 and /RF_MOSI)",
+            "items": [
+                {
+                    "description": "Track [/ICM_INT2] on In1.Cu, length 6.1591 mm",
+                    "pos": {
+                        "x": 53.7722,
+                        "y": 48.2412
+                    },
+                    "uuid": "1ffbe5f8-36f8-49c1-9bf3-1779a278b4c0"
+                },
+                {
+                    "description": "Via [/RF_MOSI] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "5a859ff2-20cb-4785-9142-a28b2bfc3f49"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Items shorting two nets (nets /RF_MOSI and /RF_MISO)",
+            "items": [
+                {
+                    "description": "Via [/RF_MOSI] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "5a859ff2-20cb-4785-9142-a28b2bfc3f49"
+                },
+                {
+                    "description": "Track [/RF_MISO] on In2.Cu, length 39.6003 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 53.0
+                    },
+                    "uuid": "641788ac-21e6-4fef-af88-5f8c38c9e146"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Clearance violation (netclass 'Default' clearance 0.1250 mm; actual 0.0750 mm)",
+            "items": [
+                {
+                    "description": "Pad 6 [/915 MHz RF/CC_DCPL] of U40 on F.Cu",
+                    "pos": {
+                        "x": 91.5625,
+                        "y": 61.75
+                    },
+                    "uuid": "76f3591b-841f-4e17-b65a-f6059ecc71b2"
+                },
+                {
+                    "description": "Via [/RF_MOSI] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 91.5625,
+                        "y": 62.25
+                    },
+                    "uuid": "8bfa56fa-f34e-4466-9d28-044100980fec"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Items shorting two nets (nets /SENS_SCLK and /RF_MOSI)",
+            "items": [
+                {
+                    "description": "Track [/SENS_SCLK] on In1.Cu, length 4.9409 mm",
+                    "pos": {
+                        "x": 54.7032,
+                        "y": 52.5703
+                    },
+                    "uuid": "51562f9c-1a2f-4e68-bb0f-632b7be2688d"
+                },
+                {
+                    "description": "Track [/RF_MOSI] on In1.Cu, length 38.7338 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "ead8dfde-b63a-4686-b76c-c87615f9b05b"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/CAN_MOSI] on In1.Cu, length 2.9855 mm",
+                    "pos": {
+                        "x": 61.4533,
+                        "y": 55.6998
+                    },
+                    "uuid": "20a95573-6644-4c86-a8d2-7fdc4c771b07"
+                },
+                {
+                    "description": "Track [/RF_MOSI] on In1.Cu, length 38.7338 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "ead8dfde-b63a-4686-b76c-c87615f9b05b"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Items shorting two nets (nets /CAN_SCK and /RF_MOSI)",
+            "items": [
+                {
+                    "description": "Via [/CAN_SCK] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 58.1371,
+                        "y": 54.0514
+                    },
+                    "uuid": "08388fae-e634-4a99-8019-5d6b5c0ad551"
+                },
+                {
+                    "description": "Track [/RF_MOSI] on In1.Cu, length 38.7338 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "ead8dfde-b63a-4686-b76c-c87615f9b05b"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Items shorting two nets (nets /CAN_SCK and /RF_MISO)",
+            "items": [
+                {
+                    "description": "Via [/CAN_SCK] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 58.1371,
+                        "y": 54.0514
+                    },
+                    "uuid": "08388fae-e634-4a99-8019-5d6b5c0ad551"
+                },
+                {
+                    "description": "Track [/RF_MISO] on In2.Cu, length 39.6003 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 53.0
+                    },
+                    "uuid": "641788ac-21e6-4fef-af88-5f8c38c9e146"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/CAN_SCK] on In1.Cu, length 2.0553 mm",
+                    "pos": {
+                        "x": 59.5904,
+                        "y": 52.5981
+                    },
+                    "uuid": "17d4e039-e32b-4669-86d4-2b8210234933"
+                },
+                {
+                    "description": "Track [/RF_MOSI] on In1.Cu, length 38.7338 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "ead8dfde-b63a-4686-b76c-c87615f9b05b"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/RF_RESET_N] on In1.Cu, length 6.0000 mm",
+                    "pos": {
+                        "x": 89.0,
+                        "y": 65.4
+                    },
+                    "uuid": "eac0ce1d-1160-49df-bd19-831b557b7ea6"
+                },
+                {
+                    "description": "Track [/RF_MOSI] on In1.Cu, length 38.7338 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "ead8dfde-b63a-4686-b76c-c87615f9b05b"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Clearance violation (netclass 'Default' clearance 0.1250 mm; actual 0.1237 mm)",
+            "items": [
+                {
+                    "description": "Track [/RF_GPIO2] on B.Cu, length 36.4272 mm",
+                    "pos": {
+                        "x": 55.6,
+                        "y": 54.95
+                    },
+                    "uuid": "2e025266-88ef-40c8-960d-2fe4ee9366ba"
+                },
+                {
+                    "description": "Via [/CAN_nCS] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 63.3304,
+                        "y": 55.6156
+                    },
+                    "uuid": "a45e1d20-dd3e-4bcf-bdc5-26e8e0008726"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Items shorting two nets (nets /RF_MISO and /CAN_nCS)",
+            "items": [
+                {
+                    "description": "Track [/RF_MISO] on In2.Cu, length 39.6003 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 53.0
+                    },
+                    "uuid": "641788ac-21e6-4fef-af88-5f8c38c9e146"
+                },
+                {
+                    "description": "Via [/CAN_nCS] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 63.3304,
+                        "y": 55.6156
+                    },
+                    "uuid": "a45e1d20-dd3e-4bcf-bdc5-26e8e0008726"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/CAN_nCS] on In1.Cu, length 7.2906 mm",
+                    "pos": {
+                        "x": 63.3304,
+                        "y": 48.325
+                    },
+                    "uuid": "9279745b-9809-4429-884f-02082b9f5e72"
+                },
+                {
+                    "description": "Track [/RF_MOSI] on In1.Cu, length 38.7338 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "ead8dfde-b63a-4686-b76c-c87615f9b05b"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Clearance violation (netclass 'Default' clearance 0.1250 mm; actual 0.0750 mm)",
+            "items": [
+                {
+                    "description": "Via [/RF_MOSI] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 91.5625,
+                        "y": 62.25
+                    },
+                    "uuid": "8bfa56fa-f34e-4466-9d28-044100980fec"
+                },
+                {
+                    "description": "Track [/RF_SCLK] on F.Cu, length 0.8176 mm",
+                    "pos": {
+                        "x": 90.9844,
+                        "y": 63.3281
+                    },
+                    "uuid": "f2cdb444-4b57-4611-bd0c-b73b9b52b3fc"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Items shorting two nets (nets /RF_SCLK and /RF_MISO)",
+            "items": [
+                {
+                    "description": "Track [/RF_SCLK] on In2.Cu, length 0.2797 mm",
+                    "pos": {
+                        "x": 90.9148,
+                        "y": 63.3281
+                    },
+                    "uuid": "33bda522-5e57-466e-8573-b4611a8370b9"
+                },
+                {
+                    "description": "Track [/RF_MISO] on In2.Cu, length 39.6003 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 53.0
+                    },
+                    "uuid": "641788ac-21e6-4fef-af88-5f8c38c9e146"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Items shorting two nets (nets /RF_MISO and /RF_SCLK)",
+            "items": [
+                {
+                    "description": "Track [/RF_MISO] on In2.Cu, length 39.6003 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 53.0
+                    },
+                    "uuid": "641788ac-21e6-4fef-af88-5f8c38c9e146"
+                },
+                {
+                    "description": "Track [/RF_SCLK] on In2.Cu, length 5.8604 mm",
+                    "pos": {
+                        "x": 90.717,
+                        "y": 63.1303
+                    },
+                    "uuid": "809706c7-9ceb-4ba2-b69d-a8f24ac1b8c9"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Items shorting two nets (nets /RP2354B MCU/MAIN_LED_A and /RF_MOSI)",
+            "items": [
+                {
+                    "description": "Track [/RP2354B MCU/MAIN_LED_A] on In1.Cu, length 6.4694 mm",
+                    "pos": {
+                        "x": 54.3265,
+                        "y": 54.3977
+                    },
+                    "uuid": "2ba36981-1392-4f6a-a5a2-34dc4677041d"
+                },
+                {
+                    "description": "Via [/RF_MOSI] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "5a859ff2-20cb-4785-9142-a28b2bfc3f49"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Items shorting two nets (nets /RP2354B MCU/STATUS_LED and /RF_MOSI)",
+            "items": [
+                {
+                    "description": "Via [/RP2354B MCU/STATUS_LED] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 63.9886,
+                        "y": 54.95
+                    },
+                    "uuid": "e4d35f99-3a95-418d-a995-cdcf8d05fbfb"
+                },
+                {
+                    "description": "Track [/RF_MOSI] on In1.Cu, length 38.7338 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "ead8dfde-b63a-4686-b76c-c87615f9b05b"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/RP2354B MCU/STATUS_LED] on B.Cu, length 5.0306 mm",
+                    "pos": {
+                        "x": 59.0256,
+                        "y": 59.3725
+                    },
+                    "uuid": "27ea5947-635d-48db-b113-0bbe0bd5ec11"
+                },
+                {
+                    "description": "Track [/RF_GPIO2] on B.Cu, length 36.4272 mm",
+                    "pos": {
+                        "x": 55.6,
+                        "y": 54.95
+                    },
+                    "uuid": "2e025266-88ef-40c8-960d-2fe4ee9366ba"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Clearance violation (netclass 'Default' clearance 0.1250 mm; actual 0.0326 mm)",
+            "items": [
+                {
+                    "description": "Track [/RF_GPIO2] on B.Cu, length 36.4272 mm",
+                    "pos": {
+                        "x": 55.6,
+                        "y": 54.95
+                    },
+                    "uuid": "2e025266-88ef-40c8-960d-2fe4ee9366ba"
+                },
+                {
+                    "description": "Track [/RP2354B MCU/STATUS_LED] on B.Cu, length 0.3681 mm",
+                    "pos": {
+                        "x": 62.5828,
+                        "y": 55.8153
+                    },
+                    "uuid": "592cbd69-a133-49d5-82d7-59023a367151"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Items shorting two nets (nets /RF_MOSI and /RP2354B MCU/SWDIO)",
+            "items": [
+                {
+                    "description": "Track [/RF_MOSI] on In1.Cu, length 38.7338 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "ead8dfde-b63a-4686-b76c-c87615f9b05b"
+                },
+                {
+                    "description": "Via [/RP2354B MCU/SWDIO] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 60.6296,
+                        "y": 53.9787
+                    },
+                    "uuid": "f70a86bf-3443-4ae5-9127-bb005cab7b31"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Clearance violation (netclass 'Default' clearance 0.1250 mm; actual 0.0790 mm)",
+            "items": [
+                {
+                    "description": "Track [/RP2354B MCU/SWDIO] on In1.Cu, length 0.1161 mm",
+                    "pos": {
+                        "x": 60.6296,
+                        "y": 53.9787
+                    },
+                    "uuid": "94439d4e-76ed-4cfb-acc7-e01f0a0a7184"
+                },
+                {
+                    "description": "Track [/RF_MOSI] on In1.Cu, length 38.7338 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "ead8dfde-b63a-4686-b76c-c87615f9b05b"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Items shorting two nets (nets /RF_GPIO2 and /RP2354B MCU/XIN)",
+            "items": [
+                {
+                    "description": "Track [/RF_GPIO2] on B.Cu, length 36.4272 mm",
+                    "pos": {
+                        "x": 55.6,
+                        "y": 54.95
+                    },
+                    "uuid": "2e025266-88ef-40c8-960d-2fe4ee9366ba"
+                },
+                {
+                    "description": "Via [/RP2354B MCU/XIN] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 58.9294,
+                        "y": 55.841
+                    },
+                    "uuid": "d2c5c32c-e25e-4eab-9689-abf3609c0521"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/RP2354B MCU/XIN] on In1.Cu, length 1.5552 mm",
+                    "pos": {
+                        "x": 57.5324,
+                        "y": 54.444
+                    },
+                    "uuid": "d5a65b75-b238-48c7-825f-74da8ce61aab"
+                },
+                {
+                    "description": "Track [/RF_MOSI] on In1.Cu, length 38.7338 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "ead8dfde-b63a-4686-b76c-c87615f9b05b"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Items shorting two nets (nets /RF_MISO and /RP2354B MCU/XIN)",
+            "items": [
+                {
+                    "description": "Track [/RF_MISO] on In2.Cu, length 39.6003 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 53.0
+                    },
+                    "uuid": "641788ac-21e6-4fef-af88-5f8c38c9e146"
+                },
+                {
+                    "description": "Track [/RP2354B MCU/XIN] on In2.Cu, length 2.3805 mm",
+                    "pos": {
+                        "x": 64.434,
+                        "y": 53.5143
+                    },
+                    "uuid": "b346458a-0ab0-4574-98c8-6130a75b1d47"
+                }
+            ],
+            "severity": "error",
+            "type": "shorting_items"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/RF_MISO] on In2.Cu, length 39.6003 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 53.0
+                    },
+                    "uuid": "641788ac-21e6-4fef-af88-5f8c38c9e146"
+                },
+                {
+                    "description": "Track [/RP2354B MCU/XIN] on In2.Cu, length 3.1779 mm",
+                    "pos": {
+                        "x": 62.7507,
+                        "y": 55.1976
+                    },
+                    "uuid": "e978aefe-0f8d-44b1-81ac-906e3b213bd4"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/SENS_MOSI] on In1.Cu, length 26.7999 mm",
+                    "pos": {
+                        "x": 56.3998,
+                        "y": 77.6561
+                    },
+                    "uuid": "ccf6e2e2-b696-4d93-bebb-3da6ec844bbd"
+                },
+                {
+                    "description": "Track [/RF_MOSI] on In1.Cu, length 38.7338 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "ead8dfde-b63a-4686-b76c-c87615f9b05b"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Tracks crossing",
+            "items": [
+                {
+                    "description": "Track [/SENS_SCLK] on In1.Cu, length 1.2476 mm",
+                    "pos": {
+                        "x": 55.5854,
+                        "y": 53.4525
+                    },
+                    "uuid": "061f4fd4-7b17-4626-974d-047509e3d4e9"
+                },
+                {
+                    "description": "Track [/RF_MOSI] on In1.Cu, length 38.7338 mm",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "ead8dfde-b63a-4686-b76c-c87615f9b05b"
+                }
+            ],
+            "severity": "error",
+            "type": "tracks_crossing"
+        },
+        {
+            "description": "Hole clearance violation (board setup constraints hole clearance 0.2000 mm; actual 0.1500 mm)",
+            "items": [
+                {
+                    "description": "Pad 16 [/RF_SCLK] of U10 on F.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.2
+                    },
+                    "uuid": "7c6b39db-12a6-48ec-ba91-9bcfe961edfd"
+                },
+                {
+                    "description": "Via [/RF_MOSI] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "5a859ff2-20cb-4785-9142-a28b2bfc3f49"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "Hole clearance violation (board setup constraints hole clearance 0.2000 mm; actual 0.1500 mm)",
+            "items": [
+                {
+                    "description": "Pad 17 [/RF_MOSI] of U10 on F.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "9936cbe9-25e9-4ecc-b542-b3c2a7c3d4db"
+                },
+                {
+                    "description": "Via [/RF_MISO] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 53.0
+                    },
+                    "uuid": "15dab604-fb3c-4d21-b3ce-f99acd8515f0"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "Hole clearance violation (board setup constraints hole clearance 0.2000 mm; actual 0.1500 mm)",
+            "items": [
+                {
+                    "description": "Pad 18 [/RF_MISO] of U10 on F.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 53.0
+                    },
+                    "uuid": "6ecaf350-6844-42b7-91cd-4fdc9fcf1042"
+                },
+                {
+                    "description": "Via [/RF_MOSI] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "5a859ff2-20cb-4785-9142-a28b2bfc3f49"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "Hole clearance violation (board setup constraints hole clearance 0.2000 mm; actual 0.1500 mm)",
+            "items": [
+                {
+                    "description": "Pad 19 [/RF_nCS] of U10 on F.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 53.4
+                    },
+                    "uuid": "a003a896-5f8c-4ab7-b2cb-bb46fb9a353b"
+                },
+                {
+                    "description": "Via [/RF_MISO] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 53.0
+                    },
+                    "uuid": "15dab604-fb3c-4d21-b3ce-f99acd8515f0"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "Hole clearance violation (board setup constraints hole clearance 0.2000 mm; actual 0.1500 mm)",
+            "items": [
+                {
+                    "description": "Pad 21 [/RF_GPIO0] of U10 on F.Cu",
+                    "pos": {
+                        "x": 55.2,
+                        "y": 54.95
+                    },
+                    "uuid": "312b7d7d-c052-4559-8d74-001bb33eab2f"
+                },
+                {
+                    "description": "Via [/RF_GPIO2] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 55.6,
+                        "y": 54.95
+                    },
+                    "uuid": "c1b03ef6-7ba1-4cfe-a9cd-fb9be7526190"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "Hole clearance violation (board setup constraints hole clearance 0.2000 mm; actual 0.1500 mm)",
+            "items": [
+                {
+                    "description": "Pad 23 [/RF_GPIO3] of U10 on F.Cu",
+                    "pos": {
+                        "x": 56.0,
+                        "y": 54.95
+                    },
+                    "uuid": "5bbb01b9-75fb-48f6-b1ec-ab30348aa5b2"
+                },
+                {
+                    "description": "Via [/RF_GPIO2] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 55.6,
+                        "y": 54.95
+                    },
+                    "uuid": "c1b03ef6-7ba1-4cfe-a9cd-fb9be7526190"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "Hole clearance violation (board setup constraints hole clearance 0.2000 mm; actual 0.1944 mm)",
+            "items": [
+                {
+                    "description": "NPTH pad of J1",
+                    "pos": {
+                        "x": 3.395,
+                        "y": 78.89
+                    },
+                    "uuid": "955a21ba-dd2b-4091-b3b8-0c9ec8c6b416"
+                },
+                {
+                    "description": "Pad A1 [/GND] of J1 on F.Cu",
+                    "pos": {
+                        "x": 2.32,
+                        "y": 79.2
+                    },
+                    "uuid": "df2565cf-9c5e-4895-ad9c-e20c45e902bc"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "Hole clearance violation (board setup constraints hole clearance 0.2000 mm; actual 0.1944 mm)",
+            "items": [
+                {
+                    "description": "NPTH pad of J1",
+                    "pos": {
+                        "x": 3.395,
+                        "y": 78.89
+                    },
+                    "uuid": "955a21ba-dd2b-4091-b3b8-0c9ec8c6b416"
+                },
+                {
+                    "description": "Pad B12 [/GND] of J1 on F.Cu",
+                    "pos": {
+                        "x": 2.32,
+                        "y": 79.2
+                    },
+                    "uuid": "1bde5fc5-f5dc-4a0b-a811-06e2c2503dbb"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "Hole clearance violation (board setup constraints hole clearance 0.2000 mm; actual 0.1944 mm)",
+            "items": [
+                {
+                    "description": "NPTH pad of J1",
+                    "pos": {
+                        "x": 3.395,
+                        "y": 73.11
+                    },
+                    "uuid": "11df6575-e447-489d-9a9f-2a1e2f2b46ed"
+                },
+                {
+                    "description": "Pad A12 [/GND] of J1 on F.Cu",
+                    "pos": {
+                        "x": 2.32,
+                        "y": 72.8
+                    },
+                    "uuid": "7720155e-4e1d-4341-ae1f-1bb1fc21bfdc"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "Hole clearance violation (board setup constraints hole clearance 0.2000 mm; actual 0.1944 mm)",
+            "items": [
+                {
+                    "description": "NPTH pad of J1",
+                    "pos": {
+                        "x": 3.395,
+                        "y": 73.11
+                    },
+                    "uuid": "11df6575-e447-489d-9a9f-2a1e2f2b46ed"
+                },
+                {
+                    "description": "Pad B1 [/GND] of J1 on F.Cu",
+                    "pos": {
+                        "x": 2.32,
+                        "y": 72.8
+                    },
+                    "uuid": "fb59136b-21b5-4bb8-a840-ab4c01c16ed3"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "Drilled hole too close to other hole (board setup constraints min 0.1995 mm; actual 0.1000 mm)",
+            "items": [
+                {
+                    "description": "Via [/RF_MISO] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 53.0
+                    },
+                    "uuid": "15dab604-fb3c-4d21-b3ce-f99acd8515f0"
+                },
+                {
+                    "description": "Via [/RF_MOSI] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 54.05,
+                        "y": 52.6
+                    },
+                    "uuid": "5a859ff2-20cb-4785-9142-a28b2bfc3f49"
+                }
+            ],
+            "severity": "warning",
+            "type": "hole_to_hole"
+        }
+    ]
+}

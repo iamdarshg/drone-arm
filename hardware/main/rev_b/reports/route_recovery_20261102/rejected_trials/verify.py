@@ -21,6 +21,11 @@ EXPECTED = {
     "try3v3short.json": (16, 7, "e8b72494e54c656fb9ea9a2c0347347ed4a88b0f7b10a15790b928a468b4a24e"),
     "try_1v1.json": (16, 15, "b4df02e003c94ab58c1199aba6961a61b575f0dc71cef4979839aab9e344da1b"),
     "three_net_3v3_escape.json": (17, 15, "87450fc15782da836c3d7d3ac4b86905abe25c8f9e59e0bb9a55a1c6f415b6fb"),
+    "one_v_one_direct.json": (15, 6, "5a509eda84f8b80ded61bb0fd090aac4d50d9e01b646a8eba5770ae8e354e674"),
+    "one_v_one_bcu.json": (15, 8, "10cd993aea4772282bd3127d516cc10857608f34e7c074a44947962e965a5915"),
+    "one_v_one_bcu_detour.json": (15, 11, "7a3866f85bc803c89739173604f56cef0978a5b0d2c6784ab7ad62c4a30d6955"),
+    "one_v_one_in1.json": (15, 7, "ca759882314b3a0907e94272e2200152f904f8fb390a05fdb242de04d3782503"),
+    "rf_spi_bundle.json": (13, 79, "058c3f65349d9306daa7173ab4d1b21440b3f86e95a17c45c9d71ff6b5ad571f"),
 }
 
 for name, (opens, violations, digest) in EXPECTED.items():

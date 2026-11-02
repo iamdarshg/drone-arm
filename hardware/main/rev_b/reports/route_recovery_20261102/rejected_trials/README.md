@@ -23,3 +23,17 @@ The sensor, power, and copper-restore trials below started from the same candida
 The sensor and power trials were freshly replayed against the 17-open board with a matching `.kicad_pro`. The `/CC1121_RF` candidate was also tested at 17 opens; although that DRC report shows 9 violations, it is a different trial than the earlier 19-open/12-violation attempt (board hash `d0c8cf741c9866557626f31fa389054c2d76097bde7b4c94e7eb047aed66cf1e`). These DRC snapshots are diagnostic evidence; the candidate board and the pinned source-to-candidate verification remain in the parent directory. Trial board blobs are not included in Git; their hashes are listed so any separately retained copy can be identified.
 
 The three-net `/3V3` escape moved the local XIN escape and rerouted `/1V1` with standard through-vias before joining the `/3V3` endpoints. It reduced no total airwires and added 11 DRC violations; the new `/1V1` via conflicts with C41/GND/MCU copper, and the `/3V3` segment violates C40 clearance. This points to a broader teardown of the local MCU/capacitor routing cluster if that pad-29 connection is to be pursued.
+
+## Fresh trials from the 16-open candidate
+
+These additional trials start from the promoted 16-open board SHA-256 `60da183ad175be4e1db9daa57a705714a84dd0d7b1f0b2a942f6beeee3a9a191`.
+
+| Target | Trial | Unconnected | DRC violations | Trial board SHA-256 | DRC report |
+|---|---|---:|---:|---|---|
+| `/1V1` | direct F.Cu | 15 | 6 | `4cb29f616a494c381f992775f395aedb78dfcc8de5cb6bac1022589785af4249` | `one_v_one_direct.json` |
+| `/1V1` | via + B.Cu | 15 | 8 | `8eb9cc7e0eced67e980277e40d67cdefdcf935fe04b4e3ba8c4f6da4a91e2faf` | `one_v_one_bcu.json` |
+| `/1V1` | south B.Cu detour | 15 | 11 | `42bf5106f9ffd73f2cfd41d9a557fc280ed6578b9ae4e6d99552ac9f6d0e00d2` | `one_v_one_bcu_detour.json` |
+| `/1V1` | via + In1.Cu | 15 | 7 | `b333a9a9a97a132a73593aa3eccac2a22def2e11b90e9f8b95e558b650bfe25e` | `one_v_one_in1.json` |
+| `/RF_MISO`, `/RF_MOSI`, `/RF_GPIO2` | coordinated three-net via bundle | 13 | 79 | `53f29bd35313c696df1db117e4ce7f43ad7b1356cdce00b82921f17e316a7e39` | `rf_spi_bundle.json` |
+
+The `/1V1` direct track crosses and shorts `/BARO_SDA`; its via alternatives conflict with VREG_AVDD, SENS_MISO, and `/3V3_ADC`. The bundle closes its three intended airwires but splits other connections and creates many shorts, crossings, and clearance errors. None was promoted.

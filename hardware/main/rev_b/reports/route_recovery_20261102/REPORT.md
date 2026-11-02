@@ -8,7 +8,7 @@ The source board and matching project are pinned by Git revision `fc80ded19dd070
 
 KiCad CLI DRC was run with the matching `.kicad_pro` beside each board and `--severity-all --format json`. Baseline: 42 unconnected items and 4 violations. Current candidate: 16 unconnected items and the same 4 violations. The four are J1 USB-C NPTH-to-GND hole-clearance findings (0.1944 mm measured against 0.2000 mm required); their normalized descriptions, item references, and coordinates are unchanged. The current candidate DRC JSON SHA-256 is `599987f963bb5e4ef78207ea8404ea081d902bc48fcc35f3795597bfdb196abd`.
 
-The immutable JSON reports are `source_drc.json` and `candidate_drc.json`. Run `python3 verify.py` from this repository root to reconstruct the baseline board from the pinned Git object, run DRC on both boards with the matching project, verify these hashes and compare normalized DRC outcomes.
+The immutable JSON reports are `source_drc.json` and `candidate_drc.json`. Run `python3 verify.py` from this repository root to reconstruct the baseline board and 17-open intermediate from pinned Git objects, replay the 3V3 route with KiCad `pcbnew`, run paired DRC on the source, replay, and promoted board, verify the hashes, and compare normalized DRC outcomes. The replay also checks that footprint and pad mappings are unchanged.
 
 ## Routing changes and provenance
 

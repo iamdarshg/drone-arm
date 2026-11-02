@@ -11,6 +11,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[5]
 BOARD_REL = pathlib.Path("hardware/main/rev_b/main_rev_b.kicad_pcb")
 PROJECT_REL = pathlib.Path("hardware/main/rev_b/main_rev_b.kicad_pro")
 SOURCE_REV = "fc80ded19dd070b476866e84de6c872ee3480d89"
+INTERMEDIATE_REV = "bccafdc25473696788f707b56de49654367c4451"
 SOURCE_SHA256 = "28ebb3c19ab3e8f7d3c7ee9acd5ab427a1868142399c27cabd758c7b14c2613f"
 PROJECT_SHA256 = "f5bfbb6150d2799b8cc0ddb899c0e18c86ef452cbf68e05c60f883a969068a9e"
 CANDIDATE_SHA256 = "60da183ad175be4e1db9daa57a705714a84dd0d7b1f0b2a942f6beeee3a9a191"
@@ -64,13 +65,35 @@ def main():
         assert len(json.loads(intermediate.read_text())["unconnected_items"]) == 17
         before = drc(baseline, baseline_dir / "source.json")
         after = drc(candidate, baseline_dir / "candidate.json")
+        intermediate_board = baseline_dir / "intermediate.kicad_pcb"
+        intermediate_data = subprocess.run(
+            ["git", "-C", str(ROOT), "show",
+             f"{INTERMEDIATE_REV}:{BOARD_REL.as_posix()}"],
+            check=True, stdout=subprocess.PIPE,
+        ).stdout
+        intermediate_board.write_bytes(intermediate_data)
+        intermediate_project = baseline_dir / "intermediate.kicad_pro"
+        intermediate_project.write_bytes(project.read_bytes())
+        replay_board = baseline_dir / "replay.kicad_pcb"
+        subprocess.run(
+            ["/usr/bin/python3", str(EVIDENCE / "reproduce_long_3v3.py"),
+             str(intermediate_board), str(replay_board)],
+            check=True,
+        )
+        (baseline_dir / "replay.kicad_pro").write_bytes(intermediate_project.read_bytes())
+        replay = drc(replay_board, baseline_dir / "replay.json")
         assert len(before["unconnected_items"]) == 42
         assert len(after["unconnected_items"]) == 16
+        assert len(replay["unconnected_items"]) == 16
         assert len(before["violations"]) == len(after["violations"]) == 4
         assert sorted(map(violation_signature, before["violations"])) == sorted(
             map(violation_signature, after["violations"])
         ), "candidate changed the source violation signatures"
+        assert sorted(map(violation_signature, replay["violations"])) == sorted(
+            map(violation_signature, after["violations"])
+        ), "reproduced route does not match promoted candidate DRC"
         print("PASS: source 42 unconnected / 4 violations; candidate 16 / 4")
+        print("PASS: rerouted the 17-open intermediate; replay also produces 16 / 4")
         print("PASS: pinned board, project, and archived DRC evidence hashes match")
         print("PASS: all four normalized violation signatures are unchanged")
 
