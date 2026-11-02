@@ -63,4 +63,4 @@ if normalized(sys.argv[2]) != normalized(sys.argv[3]):
     raise SystemExit("replayed DRC findings differ from candidate DRC")
 PY
 
-echo "PASS: pinned 10-open source -> replayed 8-open candidate; pad map and copper geometry match."
+echo "PASS: pinned 8-open source -> replayed 5-open candidate; pad map and copper geometry match."

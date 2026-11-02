@@ -140,6 +140,11 @@ def main():
             work / "candidate8_historical" / BOARD_REL.name,
             "4e66a77b67e86817e5674b617e021ea9e4a40c889612c00d212bbcd9cd660d4e",
         )
+        board5_historical = materialize(
+            "899adceeb5b6afe9004e0ebb5df4771a073d8e5c",
+            work / "candidate5_historical" / BOARD_REL.name,
+            "2356919db26ce9e01417d78d849c0de13541a3827e69a674549cf2245a0b72a3",
+        )
 
         source_drc = drc(source, work / "source-drc.json")
         board16_drc = drc(board16, work / "candidate16-drc.json")
@@ -234,6 +239,11 @@ def main():
             cwd=ROOT, check=True,
             env={**os.environ, "TARGET_BOARD": str(board8_historical)},
         )
+        subprocess.run(
+            ["bash", str(EVIDENCE / "usb_lna_gnss_5open" / "run.sh")],
+            cwd=ROOT, check=True,
+            env={**os.environ, "TARGET_BOARD": str(board5_historical)},
+        )
 
     print("PASS: source 42/4; historical accepted stages 16/4, 15/4, 14/4, 12/4, 11/4, and 10/0")
     print("PASS: 17-open /3V3 replay reproduces historical 16-open board")
@@ -243,11 +253,12 @@ def main():
     print("PASS: CC_LNA_P replay reproduces the pinned 11-open /4 board")
     print("PASS: ICM_INT1 route plus J1 clearance replay reproduces the historical 10-open /0 board")
     print("PASS: all 165 footprints and pad-to-net assignments are preserved; four land lengths change within the drawing tolerance")
+    print("PASS: USB DP, LNA_EN, and GNSS_RX replay yields the historical 5-open /0 board")
     subprocess.run(
-        ["bash", str(EVIDENCE / "usb_lna_gnss_5open" / "run.sh")],
+        ["bash", str(EVIDENCE / "lsm_int1_4open" / "run.sh")],
         cwd=ROOT, check=True,
     )
-    print("PASS: USB DP, LNA_EN, and GNSS_RX replay yields the current 5-open /0 board")
+    print("PASS: LSM_INT1 replay yields the current 4-open /0 board")
     print("PASS: archived hashes and baseline DRC signatures match; current DRC has zero violations")
 
 
