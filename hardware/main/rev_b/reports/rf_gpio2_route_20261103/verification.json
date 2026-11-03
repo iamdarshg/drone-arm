@@ -1,0 +1,25 @@
+{
+  "kicad_version": "9.0.2",
+  "source_commit": "a007a13d1b3828fd9fcb128ade1af097c901b3d0",
+  "source_board_sha256": "fde09ade461c58ad4b3cc1952dca15e961e417dea0e5875055b503114e83be3a",
+  "source_prep_sha256": "19f3405fee98c1da4a156c6db314f16d2fac410a064ccc927a9e7ce96b43890d",
+  "route_script_sha256": "b6ee5393decea360110c47caa721c83eca8bd05f995e1a02f76d3ba866b07943",
+  "route_replay_geometry_equal": true,
+  "candidate_sha256": "7923ad03efefebfba5251be189821cd3ed78e588c92cb7c62774082a207ed41d",
+  "baseline_unconnected": 2,
+  "candidate_unconnected": 1,
+  "candidate_open_nets": [
+    "/RF_MOSI"
+  ],
+  "candidate_violations": 0,
+  "footprint_pad_map_equal": true,
+  "changed_nets": [
+    "/HGM",
+    "/RF_GPIO0",
+    "/RF_GPIO2",
+    "/RF_MISO",
+    "/SENS_SCLK"
+  ],
+  "added_copper_items": 144,
+  "removed_copper_items": 34
+}

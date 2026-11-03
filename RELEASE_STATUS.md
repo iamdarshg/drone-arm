@@ -1,5 +1,11 @@
 # PCB Final Release — Status
 
+## Current Rev-B Routing Progress (2026-11-03)
+
+The current main Rev-B board has **one open net, `/RF_MOSI`, and zero DRC violations** under KiCad 9.0.2. The baseline at `a007a13` had `/RF_GPIO2` and `/RF_MOSI` open; the GPIO2 route and independently replayable evidence are recorded in [`rf_gpio2_route_20261103/REPORT.md`](hardware/main/rev_b/reports/rf_gpio2_route_20261103/REPORT.md). The board remains incomplete and is **not fabrication-ready**. No solver, board-house process, physical test, or flight-readiness evidence is claimed here.
+
+The historical release snapshot below is retained for context and does not describe the current Rev-B DRC state.
+
 Branch: `codex/pcb-final-release` (pushed to origin)
 Date: 2026-08-25
 KiCad: 9.0.7 CLI, FreeRouting 2.2.4
