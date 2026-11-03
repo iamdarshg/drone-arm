@@ -2,7 +2,7 @@
 
 ## Current Rev-B Routing Progress (2026-11-03)
 
-The current main Rev-B board has **one open net, `/RF_MOSI`, and zero DRC violations** under KiCad 9.0.2. The baseline at `a007a13` had `/RF_GPIO2` and `/RF_MOSI` open; the GPIO2 route and independently replayable evidence are recorded in [`rf_gpio2_route_20261103/REPORT.md`](hardware/main/rev_b/reports/rf_gpio2_route_20261103/REPORT.md). The board remains incomplete and is **not fabrication-ready**. No solver, board-house process, physical test, or flight-readiness evidence is claimed here.
+The Rev-B routing candidate now has **zero unconnected items and zero native DRC violations** under KiCad 9.0.2. The final /RF_MOSI escape and source-pinned replay are documented in [rf_mosi_route_20261103/REPORT.md](hardware/main/rev_b/reports/rf_mosi_route_20261103/REPORT.md); prior GPIO2 routing evidence is in [rf_gpio2_route_20261103/REPORT.md](hardware/main/rev_b/reports/rf_gpio2_route_20261103/REPORT.md). This is an electrical-routing milestone. The board is **not fabrication-ready** pending board-house confirmation of stack-up, microvia/via-in-pad processing, RF impedance, and manufacturing tolerances. No physical test, solver, or flight-readiness evidence is claimed.
 
 The historical release snapshot below is retained for context and does not describe the current Rev-B DRC state.
 
