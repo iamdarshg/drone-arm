@@ -30,8 +30,14 @@ WSL reproduced those numbers. The first attempted PML sensitivity run was
 stopped because its override only applied during geometry generation, which
 that run skipped. `run_pml_v2.py` instead explicitly applies PML to the
 solver immediately before running; that separate trial is in progress and
-its result must be checked independently. The original solver's effective
-boundary needs independent verification.
+its result must be checked independently. Inspection of the installed wrapper
+shows it sets MUR only on the solver used for geometry creation; `-s` creates
+a new solver without setting its boundaries. The installed openEMS API
+documents PEC as the default. Thus the original runs used the default PEC
+boundary and modeled an artificial conducting enclosure. This is a plausible
+source of ringing, not proof that it explains all port inconsistencies.
+`boundary_audit.py` checks this against the installed code and API docs;
+`boundary_audit.json` records the hashes of both inspected wrapper files.
 Values from this run must not be used for matching, resonance, emissions or
 fabrication decisions. The raw `Sx0.csv` is retained so the failure can be
 inspected with `check.py`, which reproduces the original voltage-wave sum but

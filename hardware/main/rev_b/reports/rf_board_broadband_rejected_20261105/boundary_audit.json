@@ -1,0 +1,9 @@
+{
+  "wrapper_main_sha256": "223ef3d7d2f6cf4c1c47cc07154d030567b608ffaf360b5fcda7072c03f0c412",
+  "wrapper_simulation_sha256": "5fa6faafcdcb8a9d211172d6d61c0319a4266dd8ef9dd385cc5faba95047a557",
+  "geometry_sets_mur": true,
+  "simulate_constructs_new_solver": true,
+  "simulate_explicitly_sets_boundary": false,
+  "openems_api_default": "PEC",
+  "interpretation": "-s on fresh solver uses documented default; geometry-stage MUR setting does not carry to new fdtd instance"
+}

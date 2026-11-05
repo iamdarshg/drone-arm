@@ -16,7 +16,11 @@ S11 -21.61 dB and -18.90 dB, and S21 -0.216 dB and -0.148 dB, for the coarse
 and refined meshes respectively at 915 MHz. Their wave-power sums are 0.958
 and 0.979 under a single-incident-port assumption. No mesh-convergence
 criterion was specified. The sensitivity and model assumptions prevent
-treating these values as a verified 915 MHz match.
+treating these values as a verified 915 MHz match. The installed wrapper sets
+the boundary on a different solver instance from the one used to simulate;
+the actual solver therefore used openEMS's default PEC boundary, creating an
+artificial conducting enclosure. The reported energy decay does not correct
+this boundary error.
 
 The simulation omits the matching parts, powered RF devices, real antenna,
 enclosure, complete return path and blind microvias; the assumed power-plane
