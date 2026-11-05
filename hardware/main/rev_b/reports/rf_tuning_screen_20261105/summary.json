@@ -1,0 +1,21 @@
+{
+  "board_sha256": "b500f5fecd2299cdca0af12a05424e820ed845e1bb5ab35568e35cc38e826d43",
+  "model": "ideal lumped MATCH_A to ANT_915 two-port, 50-ohm ports; C91=3.3pF, L48=2.9nH, C95=7.5pF, L49=9.1nH, virtual C96=0.10-5.00pF, C94 DNP",
+  "range_mhz": [
+    850,
+    950
+  ],
+  "selected_915": {
+    "frequency_mhz": 915,
+    "optimal_ideal_C96_pF": 4.24,
+    "s11_db": -4.655146080252235,
+    "s21_db": -1.8201301535560006
+  },
+  "physical_tuner_installed": false,
+  "status": "exploratory circuit math only; no PCB hardware/firmware tuning implemented and no EM or measured validation",
+  "limitations": [
+    "C96 is DNP footprint, not adjustable capacitor",
+    "omits CC1190 complex source/load, receive branch, package/parasitics, diode bias, power handling, trace EM and antenna",
+    "arbitrary tuning range is not established"
+  ]
+}
