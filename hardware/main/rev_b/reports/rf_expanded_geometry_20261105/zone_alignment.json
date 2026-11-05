@@ -1,0 +1,106 @@
+{
+  "image": "(1600, 1320)",
+  "n_samples": 20000,
+  "method": "native F.Cu ground-zone point inclusion versus bitmap copper, random fixed-seed board points; other-net copper and raster discretization are confounders",
+  "top": [
+    {
+      "dx_mm": 0.07500000000000001,
+      "dy_mm": 0.05,
+      "zone_positive": 17875,
+      "zone_negative": 2125,
+      "recall": 0.9988251748251749,
+      "specificity": 0.6084705882352941,
+      "balanced_score": 0.8036478815302345
+    },
+    {
+      "dx_mm": 0.07500000000000001,
+      "dy_mm": 0.07500000000000001,
+      "zone_positive": 17875,
+      "zone_negative": 2125,
+      "recall": 0.9982657342657343,
+      "specificity": 0.6084705882352941,
+      "balanced_score": 0.8033681612505141
+    },
+    {
+      "dx_mm": 0.05,
+      "dy_mm": 0.07500000000000001,
+      "zone_positive": 17875,
+      "zone_negative": 2125,
+      "recall": 0.9982657342657343,
+      "specificity": 0.6061176470588235,
+      "balanced_score": 0.8021916906622789
+    },
+    {
+      "dx_mm": 0.07500000000000001,
+      "dy_mm": 0.025,
+      "zone_positive": 17875,
+      "zone_negative": 2125,
+      "recall": 0.9971468531468531,
+      "specificity": 0.6032941176470589,
+      "balanced_score": 0.800220485396956
+    },
+    {
+      "dx_mm": 0.05,
+      "dy_mm": 0.05,
+      "zone_positive": 17875,
+      "zone_negative": 2125,
+      "recall": 0.9988251748251749,
+      "specificity": 0.6014117647058823,
+      "balanced_score": 0.8001184697655286
+    },
+    {
+      "dx_mm": 0.1,
+      "dy_mm": 0.07500000000000001,
+      "zone_positive": 17875,
+      "zone_negative": 2125,
+      "recall": 0.9967552447552448,
+      "specificity": 0.6009411764705882,
+      "balanced_score": 0.7988482106129164
+    },
+    {
+      "dx_mm": 0.025,
+      "dy_mm": 0.07500000000000001,
+      "zone_positive": 17875,
+      "zone_negative": 2125,
+      "recall": 0.9972027972027973,
+      "specificity": 0.6,
+      "balanced_score": 0.7986013986013987
+    },
+    {
+      "dx_mm": 0.05,
+      "dy_mm": 0.025,
+      "zone_positive": 17875,
+      "zone_negative": 2125,
+      "recall": 0.9971468531468531,
+      "specificity": 0.5990588235294118,
+      "balanced_score": 0.7981028383381324
+    },
+    {
+      "dx_mm": 0.1,
+      "dy_mm": 0.05,
+      "zone_positive": 17875,
+      "zone_negative": 2125,
+      "recall": 0.9972587412587413,
+      "specificity": 0.5971764705882353,
+      "balanced_score": 0.7972176059234883
+    },
+    {
+      "dx_mm": 0.1,
+      "dy_mm": 0.025,
+      "zone_positive": 17875,
+      "zone_negative": 2125,
+      "recall": 0.9957482517482518,
+      "specificity": 0.5967058823529412,
+      "balanced_score": 0.7962270670505964
+    }
+  ],
+  "unshifted": {
+    "dx_mm": 0.0,
+    "dy_mm": 0.0,
+    "zone_positive": 17875,
+    "zone_negative": 2125,
+    "recall": 0.9941818181818182,
+    "specificity": 0.5769411764705883,
+    "balanced_score": 0.7855614973262033
+  }
+}

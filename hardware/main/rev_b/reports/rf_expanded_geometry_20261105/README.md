@@ -17,6 +17,20 @@ not independently verified. A coarse copper-pixel check finds copper at each
 candidate location on both outer layers, but also finds copper after shifts of
 0.15 mm, so it **does not establish accurate alignment**.
 
+A second check compared 20,000 fixed-seed KiCad ground-zone samples with the
+rasterized F.Cu image. The best match among 0.025 mm increments was shifted
+0.075 mm in X and 0.05 mm in Y relative to the first transform; other-net
+copper and pixelization limit this comparison. Inspecting the rasterizer showed
+that it crops to the edge center. Version 2 uses the edge-centered transform
+`x_local = x_board - 100`, `y_local = 78 - y_board` and shifts its port
+positions accordingly. It retains all 36 through-vias; precise port and via
+alignment still needs verification. See `zone_alignment.json`.
+
+`v2_inputs.tar.gz` preserves the version-2 geometry and the loss-adjusted
+copy prepared for a queued 915 MHz PML-boundary trial (SHA-256
+`d2855fce1a3a6be01ebf4700ea4b11321093b6d2cf2d007031e499c2763b8a11`).
+That trial has not yet produced a result.
+
 `evidence.tar.gz` contains the generated geometry, simulation inputs and
 audits (SHA-256
 `75cfc3dde1e6a91f68c9caf3ec29e0e02a248aae6b17d218220899fdf3077b5b`).

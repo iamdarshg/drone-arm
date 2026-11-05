@@ -41,6 +41,9 @@ boundary and modeled an artificial conducting enclosure. This is a plausible
 source of ringing, not proof that it explains all port inconsistencies.
 `boundary_audit.py` checks this against the installed code and API docs;
 `boundary_audit.json` records the hashes of both inspected wrapper files.
+Separate native-to-raster comparison suggests the original port coordinates
+may also be shifted by roughly 0.05–0.075 mm; the corrected-boundary retry
+retains those original port positions and does not resolve that concern.
 
 A live snapshot of the corrected PML run, truncated to common probe time
 3.134 ns, still has 107 frequencies above the 1.05 both-port diagnostic
