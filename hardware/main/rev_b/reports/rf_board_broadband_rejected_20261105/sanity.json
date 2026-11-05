@@ -1,0 +1,88 @@
+{
+  "header": "Frequency [MHz], re(S0-0), re(S1-0), im(S0-0), im(S1-0),",
+  "points": 1001,
+  "min_frequency_mhz": 100.0,
+  "max_frequency_mhz": 10000.0,
+  "worst_power_sum": {
+    "frequency_mhz": 9039.7,
+    "s11_db": 17.927864451791393,
+    "s21_db": 14.409046249504767,
+    "power_sum": 89.656097795801
+  },
+  "selected": [
+    {
+      "frequency_mhz": 100.0,
+      "s11_db": -2.6436337437962845,
+      "s21_db": -0.8582066944253836,
+      "power_sum": 1.36473761479
+    },
+    {
+      "frequency_mhz": 911.8,
+      "s11_db": -9.508962524919632,
+      "s21_db": -3.0057809137987794,
+      "power_sum": 0.612491078322
+    },
+    {
+      "frequency_mhz": 1832.5,
+      "s11_db": -13.214256610209771,
+      "s21_db": -3.548772863048617,
+      "power_sum": 0.4894013812262561
+    },
+    {
+      "frequency_mhz": 2743.3,
+      "s11_db": -17.6968821403956,
+      "s21_db": -3.943257804629381,
+      "power_sum": 0.4203373498919599
+    },
+    {
+      "frequency_mhz": 3664.0,
+      "s11_db": -28.97724410636159,
+      "s21_db": -4.1592594759154276,
+      "power_sum": 0.3850382169129701
+    },
+    {
+      "frequency_mhz": 4574.8,
+      "s11_db": -22.784935208086594,
+      "s21_db": -4.051655709156039,
+      "power_sum": 0.39866637729585996
+    },
+    {
+      "frequency_mhz": 5485.6,
+      "s11_db": -14.635831030756364,
+      "s21_db": -3.9058124660512927,
+      "power_sum": 0.441224207198
+    },
+    {
+      "frequency_mhz": 6406.3,
+      "s11_db": -10.212896369721477,
+      "s21_db": -3.927599672181692,
+      "power_sum": 0.500015655239
+    },
+    {
+      "frequency_mhz": 7317.1,
+      "s11_db": -5.054395990573413,
+      "s21_db": -5.283094280003574,
+      "power_sum": 0.608563645205
+    },
+    {
+      "frequency_mhz": 8237.8,
+      "s11_db": -0.48256398684812707,
+      "s21_db": -4.541280275609828,
+      "power_sum": 1.2462931340660002
+    },
+    {
+      "frequency_mhz": 9148.6,
+      "s11_db": -19.766270575582183,
+      "s21_db": -7.074744297291435,
+      "power_sum": 0.20667459161225
+    },
+    {
+      "frequency_mhz": 10000.0,
+      "s11_db": -10.653382130647998,
+      "s21_db": -3.170876006122274,
+      "power_sum": 0.5678829449632501
+    }
+  ],
+  "csv_sha256": "ae52c76ae241e527de221ddaac64b92c11e7b9dcb021b89afffd88a8360ef9dd",
+  "status": "Exploratory clipped board ROI only; full-band mesh sensitivity and port validity unverified; excludes nonlinear RF components and antenna. No harmonic emission or match conclusion."
+}

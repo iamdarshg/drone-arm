@@ -1,0 +1,28 @@
+{
+  "source_board_sha256": "b500f5fecd2299cdca0af12a05424e820ed845e1bb5ab35568e35cc38e826d43",
+  "roi_board_mm": {
+    "x": [
+      120,
+      140
+    ],
+    "y": [
+      56,
+      70
+    ]
+  },
+  "port_positions_board_mm": [
+    [
+      123.585,
+      62.5
+    ],
+    [
+      134.95,
+      62.5
+    ]
+  ],
+  "limitations": "Clipped ROI, manually placed ports and nominal stack; In1 is 3V3, treated as reference conductor; IC, passive components, antenna, enclosure, full-board return path and blind microvia drill files not modeled. Not validation.",
+  "net_selection": "/915 MHz RF/ANT_915",
+  "note": "X2 net attributes retained; ROI and component limitations unchanged",
+  "frequency_note": "Broadband passive linear ROI only. Includes neither RF IC nonlinearity nor matching components or antenna. Existing clipped and reference-plane limitations remain.",
+  "geometry_sha256": "a792ba9517538bb836f182f5774f529709db784e3c83a5eb30a71f48b5056126"
+}
