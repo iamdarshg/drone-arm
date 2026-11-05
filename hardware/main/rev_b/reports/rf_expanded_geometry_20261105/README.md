@@ -59,6 +59,9 @@ acceptance criterion: `check_fixed_duration.py` separately requires the
 completed duration to exceed three reported excitation lengths, the final
 logged energy decay to reach at least 60 dB, no unused primitive warnings,
 and a passing both-port diagnostic. Mesh and physical-model checks remain open.
+The log parser was exercised against the earlier run as a negative fixture;
+it detected that 103,599 steps were shorter than the 108,890-step excitation
+and counted the 21 unused via warnings (`check_duration_negative.py`).
 
 `evidence.tar.gz` contains the generated geometry, simulation inputs and
 audits (SHA-256
