@@ -17,6 +17,12 @@ appropriate hardware value. C96 is currently an unpopulated fixed-component
 footprint, not a variable capacitor. C94 is also an unpopulated matching
 position. Neither automatic nor user-adjustable tuning is implemented.
 
+`dual_cap_screen.py` additionally sweeps hypothetical values at both C94
+and C96 at 915 MHz under the same ideal 50-ohm assumptions. Its best grid
+point lies at the upper C94 sweep boundary, so it is only a bounded
+mathematical exploration. The omitted source impedance, receive branch,
+parasitics and antenna mean its numerical values are not a tuning recipe.
+
 The CC1190 specifies 850–950 MHz operation; the CC1121 specifies selected
 bands only. A matching component cannot turn this RF chain into a continuously
 operating 0.1–10 GHz radio. See the [CC1190 datasheet](https://www.ti.com/lit/ds/symlink/cc1190.pdf)

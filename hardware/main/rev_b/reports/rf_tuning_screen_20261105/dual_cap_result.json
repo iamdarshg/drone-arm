@@ -1,0 +1,21 @@
+{
+  "board_sha256": "b500f5fecd2299cdca0af12a05424e820ed845e1bb5ab35568e35cc38e826d43",
+  "frequency_hz": 915000000,
+  "ideal_50ohm_source_and_load": true,
+  "baseline_no_dnp_c94_c96": {
+    "s11_db": -1.8038284058104121,
+    "s21_db": -4.686632586780652
+  },
+  "grid_best": {
+    "virtual_c94_pf": 5.0,
+    "virtual_c96_pf": 3.95,
+    "s11_db": -8.23346638097005,
+    "s21_db": -0.7068034447143817
+  },
+  "grid_step_pf": 0.05,
+  "candidate_grid_range_pf": [
+    0,
+    5
+  ],
+  "limitation": "Pure idealized MATCH_A to ANT_915 50-ohm network, no actual CC1190 complex source impedance, receive branch, component parasitics, nonlinear power, traces or antenna. Not recommended component values; no physical tuning implemented."
+}
