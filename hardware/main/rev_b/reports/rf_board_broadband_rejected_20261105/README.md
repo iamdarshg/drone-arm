@@ -16,6 +16,11 @@ fabrication decisions. The raw `Sx0.csv` is retained so the failure can be
 independently checked with `check.py`. Exit code 0 from the simulation command
 did not establish a valid solution.
 
+A Hann-windowed FFT of the late-time port-voltage probes has its largest bin
+near 7.35 GHz, with about 0.41 GHz bin spacing (`tail_spectrum.json`). This is
+a diagnostic of residual model energy, not proof of a physical resonance or
+the cause of the invalid solution. The three source probe files are included.
+
 `geometry.xml` is the exact solver geometry (SHA-256
 `a792ba9517538bb836f182f5774f529709db784e3c83a5eb30a71f48b5056126`),
 `simulation.json` is the solver configuration, and `manifest.json` describes

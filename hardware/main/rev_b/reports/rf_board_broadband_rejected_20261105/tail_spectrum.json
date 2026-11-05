@@ -1,0 +1,35 @@
+{
+  "results": {
+    "port_ut_0A": {
+      "sample_count": 277,
+      "dt_seconds": 1.248736677000022e-11,
+      "time_span_s": 3.44651322912e-09,
+      "tail_from_s": 1e-09,
+      "dominant_tail_bin_hz": 7354371532.876497,
+      "nominal_bin_width_hz": 408576196.2709165,
+      "tail_peak_voltage": 2.4980265234083468e-06,
+      "overall_peak_voltage": 0.000225620933634
+    },
+    "port_ut_0B": {
+      "sample_count": 277,
+      "dt_seconds": 1.248736677000022e-11,
+      "time_span_s": 3.44651322912e-09,
+      "tail_from_s": 1e-09,
+      "dominant_tail_bin_hz": 7354371532.876497,
+      "nominal_bin_width_hz": 408576196.2709165,
+      "tail_peak_voltage": 2.52744802341695e-06,
+      "overall_peak_voltage": 0.000226882370043
+    },
+    "port_ut_1A": {
+      "sample_count": 277,
+      "dt_seconds": 1.248736677000022e-11,
+      "time_span_s": 3.44651322912e-09,
+      "tail_from_s": 1e-09,
+      "dominant_tail_bin_hz": 7354371532.876497,
+      "nominal_bin_width_hz": 408576196.2709165,
+      "tail_peak_voltage": 1.2020582849198945e-06,
+      "overall_peak_voltage": 0.000209245110455
+    }
+  },
+  "interpretation": "exploratory probe-tail spectrum; bin is resolution-limited and does not identify physical resonance or cause"
+}
