@@ -39,3 +39,9 @@ raw port probes are in `rf_port_probes.tar.gz` in the adjacent broadband
 failure report; extract them under `/work` to rerun `repost_50ohm.py`.
 The coarse geometry and clipped fabrication inputs are stored with the
 broadband failure report; geometry hashes are in the loss manifests.
+
+`ground_plane_audit.py` uses KiCad's native filled-zone query on the pinned
+board. At all 11 sampled antenna-feed centerline points it found the 3V3 plane
+on In1 and ground on B.Cu; it found no vias in the specified clipped ROI.
+Point containment does not establish the RF return path, which can also flow
+through nearby coplanar ground, vias and decoupling outside the ROI.
