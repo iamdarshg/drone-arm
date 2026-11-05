@@ -1,0 +1,52 @@
+{
+  "format_version": "1.2",
+  "frequency": {
+    "start": 100000000,
+    "stop": 10000000000
+  },
+  "pixel_size": 25,
+  "ports": [
+    {
+      "width": 350,
+      "length": 1000,
+      "impedance": 50,
+      "layer": 0,
+      "plane": 1,
+      "excite": true
+    },
+    {
+      "width": 350,
+      "length": 1000,
+      "impedance": 50,
+      "layer": 0,
+      "plane": 1,
+      "excite": false
+    }
+  ],
+  "traces": [
+    {
+      "start": 0,
+      "stop": 1,
+      "nets": [
+        "/915 MHz RF/ANT_915"
+      ]
+    }
+  ],
+  "grid": {
+    "inter_layers": 3,
+    "optimal": 50,
+    "diagonal": 100,
+    "perpendicular": 250,
+    "max": 500,
+    "margin": {
+      "xy": 2000,
+      "z": 5000,
+      "from_trace": true
+    },
+    "cell_ratio": {
+      "xy": 1.2,
+      "z": 1.5
+    }
+  },
+  "max_steps": 150000
+}

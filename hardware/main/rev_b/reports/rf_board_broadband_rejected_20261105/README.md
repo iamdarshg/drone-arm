@@ -24,7 +24,10 @@ outgoing-to-total-incident ratio exceeds 1.05 at 84 frequencies, with a
 maximum of 3.52. The extended 300,000-timestep run also failed to reach
 -60 dB, and the corresponding both-incident calculation exceeds 1.05 at
 88 frequencies. These checks flag inconsistent port/model results; they do
-not identify the underlying cause. See `both_incidents.json`.
+not identify the underlying cause. See `both_incidents.json`. Extracting the
+archived probes into a fresh workspace and rerunning `both_incidents.py` in
+WSL reproduced those numbers. A separate PML-boundary sensitivity run is in
+progress; its result must be checked independently.
 Values from this run must not be used for matching, resonance, emissions or
 fabrication decisions. The raw `Sx0.csv` is retained so the failure can be
 inspected with `check.py`, which reproduces the original voltage-wave sum but
