@@ -1,7 +1,7 @@
 from pathlib import Path
 import numpy as np,json
 from openEMS.ports import UI_data
-root=Path('/work/rf_gerber_roi_broadband_pml_v2_20261105');p=root/'ems/simulation/0';freq=np.linspace(100e6,10e9,1001);u=[];i=[]
+root=Path('/work/rf_gerber_roi_broadband_pml_v2_20261105');p=root/'ems/simulation/0';freq=np.unique(np.concatenate((np.linspace(100e6,10e9,1001),915e6*np.arange(1,11))));u=[];i=[]
 for n in [0,1]:
  u.append(UI_data([f'port_ut_{n}B'],str(p),freq,'pulse').ui_f_val[0]);z=UI_data([f'port_it_{n}A',f'port_it_{n}B'],str(p),freq,'pulse').ui_f_val;i.append(.5*(z[0]+z[1]))
 a0=.5*(u[0]+50*i[0]);a1=.5*(u[1]+50*i[1]);b0=.5*(u[0]-50*i[0]);b1=.5*(u[1]-50*i[1])
