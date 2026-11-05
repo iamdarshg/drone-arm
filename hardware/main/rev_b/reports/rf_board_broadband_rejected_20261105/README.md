@@ -32,8 +32,7 @@ archived probes into a fresh workspace and rerunning `both_incidents.py` in
 WSL reproduced those numbers. The first attempted PML sensitivity run was
 stopped because its override only applied during geometry generation, which
 that run skipped. `run_pml_v2.py` instead explicitly applies PML to the
-solver immediately before running; that separate trial is in progress and
-its result must be checked independently. Inspection of the installed wrapper
+solver immediately before running. Inspection of the installed wrapper
 shows it sets MUR only on the solver used for geometry creation; `-s` creates
 a new solver without setting its boundaries. The installed openEMS API
 documents PEC as the default. Thus the original runs used the default PEC
@@ -44,6 +43,15 @@ source of ringing, not proof that it explains all port inconsistencies.
 Separate native-to-raster comparison suggests the original port coordinates
 may also be shifted by roughly 0.05–0.075 mm; the corrected-boundary retry
 retains those original port positions and does not resolve that concern.
+
+The corrected PML retry reached its 150,000-timestep limit at -59.39 dB,
+short of the -60 dB energy criterion. Its explicit 50-ohm, both-incident
+diagnostic exceeded 1.05 at 109 of 1,011 samples. It is rejected; a zero solver
+exit code is not acceptance. `pml_finished_summary.json` and
+`pml_finished.tar.gz` preserve the calculation and raw probes; the archive
+SHA-256 is `29d6c12bc5bc77f58c5eaa331855cf14e465b55052c5e1190e92fb36eeea0eba`.
+The model still uses the original port positions and omits the antenna,
+matching parts, active devices and full return path.
 
 A live snapshot of the corrected PML run, truncated to common probe time
 3.134 ns, still has 107 frequencies above the 1.05 both-port diagnostic
