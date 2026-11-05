@@ -1,0 +1,8 @@
+{
+  "source_lossless_sha256": "3b462b9632fffa71bc28eb00048eaaec5b198ded068da83587af921e2eb3d4a3",
+  "patched_geometry_sha256": "811109648edae07731c30b629307ad9ddc4986d6738e904c302be8ad7f786a14",
+  "substrates": 3,
+  "kappa_S_per_m": 0.0042759141630861666,
+  "assumption": "constant conductivity fitted to FR4 loss tangent 0.02 at 915 MHz; no dispersion",
+  "reason": "gerber2ems create_materials ignored stackup loss tangent"
+}
