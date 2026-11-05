@@ -22,6 +22,12 @@ the actual solver therefore used openEMS's default PEC boundary, creating an
 artificial conducting enclosure. The reported energy decay does not correct
 this boundary error.
 
+A corrected PML-boundary run on the coarse ROI has been queued for after the
+broadband PML trial. `prepare_pml.py`, `pml_config.json`, and `check_pml.py`
+pin its preparation and the 50-ohm both-port diagnostic; its outcome and
+energy termination remain unknown. It will still lack the antenna, matching
+components and active transmitter.
+
 The simulation omits the matching parts, powered RF devices, real antenna,
 enclosure, complete return path and blind microvias; the assumed power-plane
 reference has not been validated. It cannot establish transmitter harmonics,
