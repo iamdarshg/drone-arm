@@ -9,11 +9,26 @@ the full return path and blind microvias. The power plane on In1 was used as
 the reference conductor; that assumption is not validated.
 
 The solver stopped at its 48,733-timestep limit before reaching its -60 dB
-energy criterion. The 1,001-point result also fails the passive energy check:
-the largest reflected-plus-transmitted power ratio is 89.66 near 9.04 GHz.
+energy criterion. The original report incorrectly treated the software's
+complex, frequency-dependent port references as real 50-ohm power-wave
+references: the 89.66 voltage-wave sum in `sanity.json` is not a valid passive
+power ratio. Reprocessing the saved voltages and currents with explicit real
+50-ohm wave references gives a maximum sum of 3.82 and 146 of 1,001 points
+above 1.05 (`postprocess_50ohm_summary.json`). This fails the expected
+single-incident-port power check; port excitation and reference-plane errors
+also need investigation. The unachieved energy criterion independently
+prevents accepting the run.
+
+A further calculation accounts for incident waves at both ports. Its
+outgoing-to-total-incident ratio exceeds 1.05 at 84 frequencies, with a
+maximum of 3.52. The extended 300,000-timestep run also failed to reach
+-60 dB, and the corresponding both-incident calculation exceeds 1.05 at
+88 frequencies. These checks flag inconsistent port/model results; they do
+not identify the underlying cause. See `both_incidents.json`.
 Values from this run must not be used for matching, resonance, emissions or
 fabrication decisions. The raw `Sx0.csv` is retained so the failure can be
-independently checked with `check.py`. Exit code 0 from the simulation command
+inspected with `check.py`, which reproduces the original voltage-wave sum but
+does not perform a valid 50-ohm passivity test. Exit code 0 from the simulation command
 did not establish a valid solution.
 
 A Hann-windowed FFT of the late-time port-voltage probes has its largest bin
@@ -30,6 +45,7 @@ To reproduce the solver inputs, extract that archive in a fresh working
 directory, copy `simulation.json` there, place `geometry.xml` in
 `ems/geometry/geometry.xml`, and run `gerber2ems -s` with the openEMS image
 identified in the adjacent broadband feed report. `prepare.py` records how
-the inputs were copied from the earlier workspace ROI. A longer run was
-started separately with a 300,000-timestep ceiling; its outcome must be
-evaluated independently.
+the inputs were copied from the earlier workspace ROI. `rf_port_probes.tar.gz`
+contains the raw probes from both broadband and both 915 MHz runs; extract it
+under `/work` to rerun the explicit 50-ohm postprocessing scripts. Its SHA-256
+is `2bb94e206e4c8fc772ad77bf86d6415085368a332502a027db576ef756c5169c`.

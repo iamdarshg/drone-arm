@@ -1,0 +1,18 @@
+[
+  {
+    "case": "rf_gerber_roi_broadband_20261105",
+    "max_out_over_total_incident": 3.5175623000200824,
+    "frequency_hz": 9049600000.0,
+    "total_incident_fail_points_above_1_05": 84,
+    "max_port2_incident_relative": 0.10998538840930366,
+    "interpretation": "uses both recorded port incident waves and explicit real 50-ohm references; fields remain non-converged"
+  },
+  {
+    "case": "rf_gerber_roi_broadband_long_20261105",
+    "max_out_over_total_incident": 5.3419320527697565,
+    "frequency_hz": 7416100000.0,
+    "total_incident_fail_points_above_1_05": 88,
+    "max_port2_incident_relative": 0.41986383720827575,
+    "interpretation": "uses both recorded port incident waves and explicit real 50-ohm references; fields remain non-converged"
+  }
+]

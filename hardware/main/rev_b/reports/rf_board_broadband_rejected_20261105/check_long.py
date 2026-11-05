@@ -1,16 +1,17 @@
-import csv,math,json,hashlib
 from pathlib import Path
-root=Path('/work/rf_gerber_roi_broadband_long_20261105')
-p=root/'ems/simulation/Sx0.csv'
-with p.open() as f:
- header=next(f).strip()
- rows=[[float(c.strip()) for c in row[:5]] for row in csv.reader(f) if row]
-assert rows and all(len(r)==5 and all(math.isfinite(x) for x in r) for r in rows)
-def summary(r):
- freq,a,b,c,d=r
- return {'frequency_mhz':freq,'s11_db':20*math.log10(max(abs(complex(a,c)),1e-15)),'s21_db':20*math.log10(max(abs(complex(b,d)),1e-15)),'power_sum':abs(complex(a,c))**2+abs(complex(b,d))**2}
-worst=max(rows,key=lambda r:summary(r)['power_sum'])
-selected=[summary(min(rows,key=lambda r:abs(r[0]-f))) for f in [100,915]+[915*i for i in range(2,11)]+[10000]]
-out={'header':header,'points':len(rows),'min_frequency_mhz':min(r[0] for r in rows),'max_frequency_mhz':max(r[0] for r in rows),'worst_power_sum':summary(worst),'selected':selected,'csv_sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'status':'Exploratory clipped board ROI only; full-band mesh sensitivity and port validity unverified; excludes nonlinear RF components and antenna. No harmonic emission or match conclusion.'}
-(root/'broadband_sanity.json').write_text(json.dumps(out,indent=2));print(json.dumps(out,indent=2))
-if out['worst_power_sum']['power_sum']>1.05:raise RuntimeError('Reject broadband ROI: passive energy balance')
+import numpy as np,json,csv,hashlib
+from openEMS.ports import UI_data
+root=Path('/work/rf_gerber_roi_broadband_long_20261105');p=root/'ems/simulation/0';freq=np.linspace(100e6,10e9,1001)
+u=[];i=[]
+for n in [0,1]:
+ v=UI_data([f'port_ut_{n}B'],str(p),freq,'pulse').ui_f_val[0]
+ z=UI_data([f'port_it_{n}A',f'port_it_{n}B'],str(p),freq,'pulse').ui_f_val
+ u.append(v);i.append(.5*(z[0]+z[1]))
+inc=.5*(u[0]+50*i[0]);s11=.5*(u[0]-50*i[0])/inc;s21=.5*(u[1]-50*i[1])/inc
+assert np.all(np.isfinite(s11)) and np.all(np.isfinite(s21))
+power=abs(s11)**2+abs(s21)**2
+np.savetxt(root/'sparams_50ohm_repost.csv',np.column_stack((freq,s11.real,s11.imag,s21.real,s21.imag,power)),delimiter=',',header='frequency_hz,s11_real,s11_imag,s21_real,s21_imag,power_sum',comments='')
+idx=int(np.argmax(power));idx915=int(np.argmin(abs(freq-915e6)))
+info={'reference_ohm':50,'method':'recomputed from openEMS port voltage B and average of currents A/B using UI_data and explicit real 50-ohm traveling-wave definitions; same FDTD outputs','max_power_sum':float(power[idx]),'max_frequency_hz':float(freq[idx]),'point_near_915_hz':float(freq[idx915]),'point_near_915_power_sum':float(power[idx915]),'points_over_1_05':int(np.sum(power>1.05)),'source_model_warning':'Inspect solver log for end criterion; re-normalization cannot cure missing antenna/devices/return path.'}
+(root/'postprocess_50ohm_summary.json').write_text(json.dumps(info,indent=2));print(json.dumps(info,indent=2))
+if np.max(power)>1.05: raise RuntimeError('Failed 50-ohm single-incident-port diagnostic')

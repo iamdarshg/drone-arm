@@ -1,0 +1,10 @@
+{
+  "reference_ohm": 50,
+  "method": "recomputed from openEMS port voltage B and average of currents A/B using UI_data and explicit real 50-ohm traveling-wave definitions; same FDTD outputs",
+  "max_power_sum": 7.5848161425515475,
+  "max_frequency_hz": 7416100000.0,
+  "point_near_915_hz": 911800000.0,
+  "point_near_915_power_sum": 0.9588138254010335,
+  "points_over_1_05": 146,
+  "source_model_warning": "Inspect solver log for end criterion; re-normalization cannot cure missing antenna/devices/return path."
+}
