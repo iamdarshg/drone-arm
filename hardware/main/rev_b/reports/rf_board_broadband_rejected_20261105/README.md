@@ -26,8 +26,12 @@ maximum of 3.52. The extended 300,000-timestep run also failed to reach
 88 frequencies. These checks flag inconsistent port/model results; they do
 not identify the underlying cause. See `both_incidents.json`. Extracting the
 archived probes into a fresh workspace and rerunning `both_incidents.py` in
-WSL reproduced those numbers. A separate PML-boundary sensitivity run is in
-progress; its result must be checked independently.
+WSL reproduced those numbers. The first attempted PML sensitivity run was
+stopped because its override only applied during geometry generation, which
+that run skipped. `run_pml_v2.py` instead explicitly applies PML to the
+solver immediately before running; that separate trial is in progress and
+its result must be checked independently. The original solver's effective
+boundary needs independent verification.
 Values from this run must not be used for matching, resonance, emissions or
 fabrication decisions. The raw `Sx0.csv` is retained so the failure can be
 inspected with `check.py`, which reproduces the original voltage-wave sum but
