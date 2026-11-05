@@ -1,0 +1,139 @@
+{
+  "board_sha256": "b500f5fecd2299cdca0af12a05424e820ed845e1bb5ab35568e35cc38e826d43",
+  "samples": [
+    {
+      "port": "SP1",
+      "x_mm": 123.585,
+      "y_mm": 62.5,
+      "matching_target_segments": 3
+    },
+    {
+      "port": "SP1",
+      "x_mm": 123.68499999999999,
+      "y_mm": 62.5,
+      "matching_target_segments": 2
+    },
+    {
+      "port": "SP1",
+      "x_mm": 123.785,
+      "y_mm": 62.5,
+      "matching_target_segments": 1
+    },
+    {
+      "port": "SP1",
+      "x_mm": 123.88499999999999,
+      "y_mm": 62.5,
+      "matching_target_segments": 1
+    },
+    {
+      "port": "SP1",
+      "x_mm": 123.985,
+      "y_mm": 62.5,
+      "matching_target_segments": 1
+    },
+    {
+      "port": "SP1",
+      "x_mm": 124.085,
+      "y_mm": 62.5,
+      "matching_target_segments": 1
+    },
+    {
+      "port": "SP1",
+      "x_mm": 124.18499999999999,
+      "y_mm": 62.5,
+      "matching_target_segments": 1
+    },
+    {
+      "port": "SP1",
+      "x_mm": 124.285,
+      "y_mm": 62.5,
+      "matching_target_segments": 1
+    },
+    {
+      "port": "SP1",
+      "x_mm": 124.38499999999999,
+      "y_mm": 62.5,
+      "matching_target_segments": 1
+    },
+    {
+      "port": "SP1",
+      "x_mm": 124.485,
+      "y_mm": 62.5,
+      "matching_target_segments": 1
+    },
+    {
+      "port": "SP1",
+      "x_mm": 124.585,
+      "y_mm": 62.5,
+      "matching_target_segments": 1
+    },
+    {
+      "port": "SP2",
+      "x_mm": 134.95,
+      "y_mm": 62.5,
+      "matching_target_segments": 1
+    },
+    {
+      "port": "SP2",
+      "x_mm": 134.85,
+      "y_mm": 62.5,
+      "matching_target_segments": 1
+    },
+    {
+      "port": "SP2",
+      "x_mm": 134.75,
+      "y_mm": 62.5,
+      "matching_target_segments": 1
+    },
+    {
+      "port": "SP2",
+      "x_mm": 134.64999999999998,
+      "y_mm": 62.5,
+      "matching_target_segments": 1
+    },
+    {
+      "port": "SP2",
+      "x_mm": 134.54999999999998,
+      "y_mm": 62.5,
+      "matching_target_segments": 1
+    },
+    {
+      "port": "SP2",
+      "x_mm": 134.45,
+      "y_mm": 62.5,
+      "matching_target_segments": 1
+    },
+    {
+      "port": "SP2",
+      "x_mm": 134.35,
+      "y_mm": 62.5,
+      "matching_target_segments": 1
+    },
+    {
+      "port": "SP2",
+      "x_mm": 134.25,
+      "y_mm": 62.5,
+      "matching_target_segments": 1
+    },
+    {
+      "port": "SP2",
+      "x_mm": 134.14999999999998,
+      "y_mm": 62.5,
+      "matching_target_segments": 1
+    },
+    {
+      "port": "SP2",
+      "x_mm": 134.04999999999998,
+      "y_mm": 62.5,
+      "matching_target_segments": 1
+    },
+    {
+      "port": "SP2",
+      "x_mm": 133.95,
+      "y_mm": 62.5,
+      "matching_target_segments": 1
+    }
+  ],
+  "all_samples_in_target_copper": true,
+  "scope": "native F.Cu segment centerline inclusion only; no ground reference, nearby copper clearance, multilayer connectivity or calibration"
+}

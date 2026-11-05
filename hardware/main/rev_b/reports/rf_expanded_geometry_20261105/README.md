@@ -26,6 +26,12 @@ that it crops to the edge center. Version 2 uses the edge-centered transform
 positions accordingly. It retains all 36 through-vias; precise port and via
 alignment still needs verification. See `zone_alignment.json`.
 
+The native-board port centerline check sampled 11 points along each proposed
+1 mm port and found all 22 on the target ANT_915 F.Cu track. This establishes
+only centerline inclusion in source CAD; it does not establish correct
+reference-terminal connection, clearance, raster alignment or calibrated
+port behavior. See `port_native_alignment.json`.
+
 `v2_inputs.tar.gz` preserves the version-2 geometry and the loss-adjusted
 copy prepared for a queued 915 MHz PML-boundary trial (SHA-256
 `d2855fce1a3a6be01ebf4700ea4b11321093b6d2cf2d007031e499c2763b8a11`).
