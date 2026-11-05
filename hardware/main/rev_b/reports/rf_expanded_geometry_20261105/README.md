@@ -35,7 +35,22 @@ port behavior. See `port_native_alignment.json`.
 `v2_inputs.tar.gz` preserves the version-2 geometry and the loss-adjusted
 copy prepared for a queued 915 MHz PML-boundary trial (SHA-256
 `d2855fce1a3a6be01ebf4700ea4b11321093b6d2cf2d007031e499c2763b8a11`).
-That trial has not yet produced a result.
+That trial reached the energy criterion after 103,599 timesteps, but openEMS
+reported 21 unused via-metal primitives. Its numerical 50-ohm port check did
+not flag an energy excess, but the missing via metal invalidates the intended
+return-path geometry. The run is rejected as an RF result. `finished_915.tar.gz`
+preserves the raw probes and calculations (SHA-256
+`72e883c2ddc4ac581104dad99c2ea034fb9c6e34884380e98740fb97ac197857`).
+
+To investigate the unused barrels, `solid_via_experiment.py` retains the
+36 via outer boundaries but replaces their hollow interiors with solid PEC.
+That is an explicitly approximate electromagnetic sensitivity model, not the
+physical plated-hole geometry. A 200-timestep setup trial reported no unused
+via primitives, compared with 21 in the hollow-barrel run. Its postprocessing
+exited with an index error because the intentionally short run did not produce
+enough probe samples; it provides no RF result. Both transcripts are saved.
+A full PML sensitivity run using the solid representation is in progress and
+still requires energy, port, mesh and physical-model checks.
 
 `evidence.tar.gz` contains the generated geometry, simulation inputs and
 audits (SHA-256
@@ -43,7 +58,7 @@ audits (SHA-256
 The scripts document the preparation and native selection. The full source
 Gerbers are in the neighboring broadband failure report's `fab.tar.gz`.
 
-No EM solve was performed on this geometry. Component through-holes,
+No accepted EM solve has been obtained on this geometry. Component through-holes,
 blind/buried vias, components, antenna, full return path and enclosure remain
 outside the model; via plating, actual layer connections and mesh resolution
 need validation. The geometry has not yet had the dielectric-loss patch

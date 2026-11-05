@@ -1,0 +1,68 @@
+﻿Explicit PML_8 applied to solver immediately before run
+ ----------------------------------------------------------------------
+ | openEMS 64bit -- version v0.0.36-142-g32c5c6b
+ | (C) 2010-2025 Thorsten Liebig <thorsten.liebig@gmx.de>  GPL license
+ ----------------------------------------------------------------------
+	Used external libraries:
+		CSXCAD -- Version: v0.6.3-100-gd7d70ef
+		hdf5   -- Version: 1.14.5
+		          compiled against: HDF5 library version: 1.14.5
+		tinyxml -- compiled against: 2.6.2
+		fparser
+		boost  -- compiled against: 1_83
+		vtk -- Version: 9.3.0
+		       compiled against: 9.3.0
+
+Create FDTD operator (compressed SSE + multi-threading)
+Operator::CalcGaussianPulsExcitation: Requested excitation pusle would be 108890 timesteps or 8.18512e-09 s long. Cutting to max number of timesteps!
+FDTD simulation size: 183x131x47 --> 1.12673e+06 FDTD cells
+FDTD timestep is: 7.51687e-14 s; Nyquist rate: 5116 timesteps @1.30018e+09 Hz
+openEMS::SetupFDTD: Warning, the timestep seems to be very small --> long simulation. Check your mesh!?
+Excitation signal length is: 200 timesteps (1.50337e-11s)
+Max. number of timesteps: 200 ( --> 1 * Excitation signal length)
+openEMS::SetupFDTD: Warning, max. number of timesteps is smaller than three times the excitation.
+	You may want to choose a higher number of max. timesteps...
+Create FDTD engine (compressed SSE + multi-threading)
+Warning: No primitives found in property: Plane!
+Warning: No primitives found in property: ViaFilling!
+Warning: No primitives found in property: Plane!
+Warning: No primitives found in property: Via!
+Warning: No primitives found in property: ViaFilling!
+Running FDTD engine... this may take a while... grab a cup of coffee?!?
+[@        6s] Timestep:          200 || Speed:   33.4 MC/s (3.374e-02 s/TS) || Energy: ~3.27e-24 (- 0.00dB)
+RunFDTD: Warning: Max. number of timesteps was reached before the end-criteria of -60dB was reached...
+	You may want to choose a higher number of max. timesteps...
+Time for 200 iterations with 1126731.00 cells : 6.75 sec
+Speed: 33.38 MCells/s
+[15:51:00][INFO] Parsing config
+[15:51:00][INFO] Loading config from /work/rf_solid_via_smoke/simulation.json
+[15:51:00][INFO] Running simulation
+[15:51:00][INFO] Loading geometry from /work/rf_solid_via_smoke/ems/geometry/geometry.xml
+[15:51:00][INFO] Simulating with excitation on port #0
+[15:51:00][INFO] Setting up ports
+[15:51:00][INFO] Adding perfectly matched layer boundary condition
+[15:51:00][INFO] Starting simulation
+[15:51:25][INFO] Adding virtual ports
+Traceback (most recent call last):
+  File "/work/run_rf_pml_v2.py", line 11, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/home/docker/opt/openEMS/venv/lib/python3.13/site-packages/gerber2ems/main.py", line 52, in main
+    simulate()
+    ~~~~~~~~^^
+  File "/home/docker/opt/openEMS/venv/lib/python3.13/site-packages/gerber2ems/main.py", line 105, in simulate
+    reflected, incident = sim.get_port_parameters(index, frequencies)
+                          ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/docker/opt/openEMS/venv/lib/python3.13/site-packages/gerber2ems/simulation.py", line 514, in get_port_parameters
+    port.CalcPort(str(result_path), frequencies)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/docker/opt/openEMS/venv/lib/python3.13/site-packages/openEMS/ports.py", line 116, in CalcPort
+    self.ReadUIData(sim_path, freq, signal_type)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/docker/opt/openEMS/venv/lib/python3.13/site-packages/openEMS/ports.py", line 320, in ReadUIData
+    self.u_data = UI_data(self.U_filenames, sim_path, freq, signal_type )
+                  ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/docker/opt/openEMS/venv/lib/python3.13/site-packages/openEMS/ports.py", line 44, in __init__
+    self.ui_time.append(tmp[:,0])
+                        ~~~^^^^^
+IndexError: too many indices for array: array is 1-dimensional, but 2 were indexed

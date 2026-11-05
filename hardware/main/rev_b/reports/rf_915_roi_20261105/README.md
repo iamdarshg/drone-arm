@@ -30,8 +30,9 @@ been corrected for that possible shift; their ports require further checking.
 The original coarse PML retry was removed from the queue after the coordinate
 concern was found. A replacement using the expanded version-2 geometry and
 explicit PML is queued after the broadband trial; see the adjacent expanded
-geometry report. It still lacks the antenna, matching components and active
-transmitter, and has not produced a result.
+geometry report. That run reached its energy criterion but is rejected because
+21 modeled via-metal primitives were unused. It still lacks the antenna,
+matching components and active transmitter.
 
 The simulation omits the matching parts, powered RF devices, real antenna,
 enclosure, complete return path and blind microvias; the assumed power-plane
