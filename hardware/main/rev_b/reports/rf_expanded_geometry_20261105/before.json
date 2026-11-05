@@ -1,0 +1,38 @@
+{
+  "geometry_sha256": "ae239308ef9c69c3a31f1ecf83c0b1f48484136d28555ba206bb0bf5b578e2cb",
+  "grid_lines": {
+    "XLines": 183,
+    "YLines": 130,
+    "ZLines": 47
+  },
+  "approximate_cells": 1079988,
+  "primitive_counts": {
+    "Plane": 0,
+    "Via": 0,
+    "ViaFilling": 0,
+    "Gerber_0": 78,
+    "Gerber_1": 66,
+    "Gerber_2": 63,
+    "Gerber_3": 17,
+    "Substrate_0": 1,
+    "Substrate_1": 1,
+    "Substrate_2": 1,
+    "Port_0": 1,
+    "port_ut_0A": 1,
+    "port_ut_0B": 1,
+    "port_ut_0C": 1,
+    "port_it_0A": 1,
+    "port_it_0B": 1,
+    "port_excite_0": 1,
+    "port_resist_0": 1,
+    "Port_1": 1,
+    "port_ut_1A": 1,
+    "port_ut_1B": 1,
+    "port_ut_1C": 1,
+    "port_it_1A": 1,
+    "port_it_1B": 1,
+    "port_excite_1": 1,
+    "port_resist_1": 1
+  },
+  "limitations": "geometry import check only, does not establish actual port positions or return continuity; loss tangent still needs patch; no EM solve"
+}

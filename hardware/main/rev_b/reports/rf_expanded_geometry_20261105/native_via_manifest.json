@@ -1,0 +1,307 @@
+{
+  "board_sha256": "b500f5fecd2299cdca0af12a05424e820ed845e1bb5ab35568e35cc38e826d43",
+  "selection": "actual through-vias within expanded rectangle; component through-holes, blind/buried vias and plating/microvia details excluded",
+  "transform": "local x=board x-100.075, local y=77.925-board y (mm); derived from prior port coordinate convention, independently verify against Gerber pixels",
+  "count": 36,
+  "net_counts": {
+    "/915 MHz RF/CC_LNA_N": 1,
+    "/RF_GPIO2": 1,
+    "/PA_EN": 1,
+    "/915 MHz RF/CC1190_BIAS": 2,
+    "/LNA_EN": 1,
+    "/HGM": 1,
+    "/GND": 28,
+    "/3V3": 1
+  },
+  "vias": [
+    {
+      "board_x_mm": 101.0,
+      "board_y_mm": 60.8,
+      "local_x_mm": 0.9249999999999972,
+      "local_y_mm": 17.125,
+      "drill_mm": 0.3,
+      "net": "/915 MHz RF/CC_LNA_N"
+    },
+    {
+      "board_x_mm": 101.0,
+      "board_y_mm": 56.0,
+      "local_x_mm": 0.9249999999999972,
+      "local_y_mm": 21.924999999999997,
+      "drill_mm": 0.3,
+      "net": "/RF_GPIO2"
+    },
+    {
+      "board_x_mm": 110.525,
+      "board_y_mm": 60.3875,
+      "local_x_mm": 10.450000000000003,
+      "local_y_mm": 17.537499999999994,
+      "drill_mm": 0.3,
+      "net": "/PA_EN"
+    },
+    {
+      "board_x_mm": 111.175,
+      "board_y_mm": 64.8,
+      "local_x_mm": 11.099999999999994,
+      "local_y_mm": 13.125,
+      "drill_mm": 0.3,
+      "net": "/915 MHz RF/CC1190_BIAS"
+    },
+    {
+      "board_x_mm": 111.2,
+      "board_y_mm": 57.3,
+      "local_x_mm": 11.125,
+      "local_y_mm": 20.625,
+      "drill_mm": 0.3,
+      "net": "/LNA_EN"
+    },
+    {
+      "board_x_mm": 111.5,
+      "board_y_mm": 67.2,
+      "local_x_mm": 11.424999999999997,
+      "local_y_mm": 10.724999999999994,
+      "drill_mm": 0.3,
+      "net": "/915 MHz RF/CC1190_BIAS"
+    },
+    {
+      "board_x_mm": 111.825,
+      "board_y_mm": 60.25,
+      "local_x_mm": 11.75,
+      "local_y_mm": 17.674999999999997,
+      "drill_mm": 0.3,
+      "net": "/HGM"
+    },
+    {
+      "board_x_mm": 101.0,
+      "board_y_mm": 74.0,
+      "local_x_mm": 0.9249999999999972,
+      "local_y_mm": 3.924999999999997,
+      "drill_mm": 0.35,
+      "net": "/GND"
+    },
+    {
+      "board_x_mm": 101.0,
+      "board_y_mm": 48.0,
+      "local_x_mm": 0.9249999999999972,
+      "local_y_mm": 29.924999999999997,
+      "drill_mm": 0.35,
+      "net": "/GND"
+    },
+    {
+      "board_x_mm": 103.015,
+      "board_y_mm": 69.1899,
+      "local_x_mm": 2.9399999999999977,
+      "local_y_mm": 8.735100000000003,
+      "drill_mm": 0.35,
+      "net": "/3V3"
+    },
+    {
+      "board_x_mm": 104.0,
+      "board_y_mm": 74.0,
+      "local_x_mm": 3.924999999999997,
+      "local_y_mm": 3.924999999999997,
+      "drill_mm": 0.35,
+      "net": "/GND"
+    },
+    {
+      "board_x_mm": 104.0,
+      "board_y_mm": 48.0,
+      "local_x_mm": 3.924999999999997,
+      "local_y_mm": 29.924999999999997,
+      "drill_mm": 0.35,
+      "net": "/GND"
+    },
+    {
+      "board_x_mm": 107.0,
+      "board_y_mm": 74.0,
+      "local_x_mm": 6.924999999999997,
+      "local_y_mm": 3.924999999999997,
+      "drill_mm": 0.35,
+      "net": "/GND"
+    },
+    {
+      "board_x_mm": 107.0,
+      "board_y_mm": 48.0,
+      "local_x_mm": 6.924999999999997,
+      "local_y_mm": 29.924999999999997,
+      "drill_mm": 0.35,
+      "net": "/GND"
+    },
+    {
+      "board_x_mm": 110.0,
+      "board_y_mm": 74.0,
+      "local_x_mm": 9.924999999999997,
+      "local_y_mm": 3.924999999999997,
+      "drill_mm": 0.35,
+      "net": "/GND"
+    },
+    {
+      "board_x_mm": 110.0,
+      "board_y_mm": 48.0,
+      "local_x_mm": 9.924999999999997,
+      "local_y_mm": 29.924999999999997,
+      "drill_mm": 0.35,
+      "net": "/GND"
+    },
+    {
+      "board_x_mm": 110.2699,
+      "board_y_mm": 65.9809,
+      "local_x_mm": 10.194900000000004,
+      "local_y_mm": 11.944099999999992,
+      "drill_mm": 0.35,
+      "net": "/GND"
+    },
+    {
+      "board_x_mm": 113.0,
+      "board_y_mm": 74.0,
+      "local_x_mm": 12.924999999999997,
+      "local_y_mm": 3.924999999999997,
+      "drill_mm": 0.35,
+      "net": "/GND"
+    },
+    {
+      "board_x_mm": 113.0,
+      "board_y_mm": 48.0,
+      "local_x_mm": 12.924999999999997,
+      "local_y_mm": 29.924999999999997,
+      "drill_mm": 0.35,
+      "net": "/GND"
+    },
+    {
+      "board_x_mm": 116.0,
+      "board_y_mm": 74.0,
+      "local_x_mm": 15.924999999999997,
+      "local_y_mm": 3.924999999999997,
+      "drill_mm": 0.35,
+      "net": "/GND"
+    },
+    {
+      "board_x_mm": 116.0,
+      "board_y_mm": 48.0,
+      "local_x_mm": 15.924999999999997,
+      "local_y_mm": 29.924999999999997,
+      "drill_mm": 0.35,
+      "net": "/GND"
+    },
+    {
+      "board_x_mm": 119.0,
+      "board_y_mm": 74.0,
+      "local_x_mm": 18.924999999999997,
+      "local_y_mm": 3.924999999999997,
+      "drill_mm": 0.35,
+      "net": "/GND"
+    },
+    {
+      "board_x_mm": 119.0,
+      "board_y_mm": 48.0,
+      "local_x_mm": 18.924999999999997,
+      "local_y_mm": 29.924999999999997,
+      "drill_mm": 0.35,
+      "net": "/GND"
+    },
+    {
+      "board_x_mm": 122.0,
+      "board_y_mm": 74.0,
+      "local_x_mm": 21.924999999999997,
+      "local_y_mm": 3.924999999999997,
+      "drill_mm": 0.35,
+      "net": "/GND"
+    },
+    {
+      "board_x_mm": 122.0,
+      "board_y_mm": 48.0,
+      "local_x_mm": 21.924999999999997,
+      "local_y_mm": 29.924999999999997,
+      "drill_mm": 0.35,
+      "net": "/GND"
+    },
+    {
+      "board_x_mm": 125.0,
+      "board_y_mm": 74.0,
+      "local_x_mm": 24.924999999999997,
+      "local_y_mm": 3.924999999999997,
+      "drill_mm": 0.35,
+      "net": "/GND"
+    },
+    {
+      "board_x_mm": 125.0,
+      "board_y_mm": 48.0,
+      "local_x_mm": 24.924999999999997,
+      "local_y_mm": 29.924999999999997,
+      "drill_mm": 0.35,
+      "net": "/GND"
+    },
+    {
+      "board_x_mm": 128.0,
+      "board_y_mm": 74.0,
+      "local_x_mm": 27.924999999999997,
+      "local_y_mm": 3.924999999999997,
+      "drill_mm": 0.35,
+      "net": "/GND"
+    },
+    {
+      "board_x_mm": 128.0,
+      "board_y_mm": 48.0,
+      "local_x_mm": 27.924999999999997,
+      "local_y_mm": 29.924999999999997,
+      "drill_mm": 0.35,
+      "net": "/GND"
+    },
+    {
+      "board_x_mm": 131.0,
+      "board_y_mm": 74.0,
+      "local_x_mm": 30.924999999999997,
+      "local_y_mm": 3.924999999999997,
+      "drill_mm": 0.35,
+      "net": "/GND"
+    },
+    {
+      "board_x_mm": 131.0,
+      "board_y_mm": 48.0,
+      "local_x_mm": 30.924999999999997,
+      "local_y_mm": 29.924999999999997,
+      "drill_mm": 0.35,
+      "net": "/GND"
+    },
+    {
+      "board_x_mm": 134.0,
+      "board_y_mm": 74.0,
+      "local_x_mm": 33.925,
+      "local_y_mm": 3.924999999999997,
+      "drill_mm": 0.35,
+      "net": "/GND"
+    },
+    {
+      "board_x_mm": 134.0,
+      "board_y_mm": 48.0,
+      "local_x_mm": 33.925,
+      "local_y_mm": 29.924999999999997,
+      "drill_mm": 0.35,
+      "net": "/GND"
+    },
+    {
+      "board_x_mm": 137.0,
+      "board_y_mm": 73.0,
+      "local_x_mm": 36.925,
+      "local_y_mm": 4.924999999999997,
+      "drill_mm": 0.35,
+      "net": "/GND"
+    },
+    {
+      "board_x_mm": 137.0,
+      "board_y_mm": 53.0,
+      "local_x_mm": 36.925,
+      "local_y_mm": 24.924999999999997,
+      "drill_mm": 0.35,
+      "net": "/GND"
+    },
+    {
+      "board_x_mm": 137.0,
+      "board_y_mm": 48.0,
+      "local_x_mm": 36.925,
+      "local_y_mm": 29.924999999999997,
+      "drill_mm": 0.35,
+      "net": "/GND"
+    }
+  ],
+  "excellon_sha256": "cea73872134257b726076278dfbac3873f7722766a8c35911d3a4be91abc3fad"
+}
