@@ -23,6 +23,15 @@ S11 difference is 3.61 dB there and up to 3.69 dB over the sampled sweep;
 see `mesh_comparison.json`. No convergence threshold was specified in advance,
 and this sensitivity prevents treating the reflection value as settled.
 
+As a postprocessing check, `check_through_ports.py` independently computed
+real 50-ohm port waves from the raw probes and reproduced the original openEMS
+S-parameter magnitudes to within 1.1e-16 over all 992 samples. The maximum
+outgoing-to-total-incident power ratio was 0.9941. This verifies the numerical
+extraction on this idealized through-line; it does not validate the actual
+board ports. To replay it, extract `probes.tar.gz` under `/work` and run the
+check with the openEMS image. The archive SHA-256 is
+`fed50ae39d6bd61bbbb70bfc42cc9483e91c7d9f85483e19182bf71d52183294`.
+
 This linear model does not create transmitter harmonics, measure radiated
 emissions, establish a tuned 915 MHz system or establish fabrication readiness.
 See the adjacent [matching screen](../rf_tuning_screen_20261105/README.md) for

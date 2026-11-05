@@ -23,8 +23,11 @@ A further calculation accounts for incident waves at both ports. Its
 outgoing-to-total-incident ratio exceeds 1.05 at 84 frequencies, with a
 maximum of 3.52. The extended 300,000-timestep run also failed to reach
 -60 dB, and the corresponding both-incident calculation exceeds 1.05 at
-88 frequencies. These checks flag inconsistent port/model results; they do
-not identify the underlying cause. See `both_incidents.json`. Extracting the
+88 frequencies. This calculation assumes correctly oriented, collocated port
+voltage and current signals; it needs a matched-through calibration before
+being treated as a physical power measurement. These checks flag inconsistent
+port/model results; they do not identify the underlying cause. See
+`both_incidents.json`. Extracting the
 archived probes into a fresh workspace and rerunning `both_incidents.py` in
 WSL reproduced those numbers. The first attempted PML sensitivity run was
 stopped because its override only applied during geometry generation, which
