@@ -1,0 +1,95 @@
+{
+  "points": 992,
+  "maximum_passive_power_sum": 0.9942336634194784,
+  "minimum_s11_db": -39.11973631394951,
+  "maximum_s11_db": -33.07384462837796,
+  "points_of_interest": [
+    {
+      "requested_hz": 100000000.0,
+      "sampled_hz": 100000000.0,
+      "s11_db": -38.139330596855054,
+      "s21_db": -0.02578585937593078,
+      "passive_power_sum": 0.9942336634194784
+    },
+    {
+      "requested_hz": 915000000.0,
+      "sampled_hz": 915000000.0,
+      "s11_db": -38.733506676647764,
+      "s21_db": -0.03190436129858813,
+      "passive_power_sum": 0.9928145266128071
+    },
+    {
+      "requested_hz": 1830000000.0,
+      "sampled_hz": 1830000000.0,
+      "s11_db": -34.45096429460851,
+      "s21_db": -0.03163894265369886,
+      "passive_power_sum": 0.9931001787561602
+    },
+    {
+      "requested_hz": 2745000000.0,
+      "sampled_hz": 2740000000.0,
+      "s11_db": -33.96759332423184,
+      "s21_db": -0.030166846156072624,
+      "passive_power_sum": 0.9934789847950556
+    },
+    {
+      "requested_hz": 3660000000.0,
+      "sampled_hz": 3660000000.0,
+      "s11_db": -36.03333273357193,
+      "s21_db": -0.031058399389073663,
+      "passive_power_sum": 0.9931233182146978
+    },
+    {
+      "requested_hz": 4575000000.0,
+      "sampled_hz": 4570000000.0,
+      "s11_db": -35.309060371870466,
+      "s21_db": -0.03026680732282717,
+      "passive_power_sum": 0.9933495444267936
+    },
+    {
+      "requested_hz": 5490000000.0,
+      "sampled_hz": 5490000000.0,
+      "s11_db": -33.913688075254164,
+      "s21_db": -0.030807818601377625,
+      "passive_power_sum": 0.9933374372767335
+    },
+    {
+      "requested_hz": 6405000000.0,
+      "sampled_hz": 6400000000.0,
+      "s11_db": -34.79743777781979,
+      "s21_db": -0.03198870834181546,
+      "passive_power_sum": 0.9929927143253577
+    },
+    {
+      "requested_hz": 7320000000.0,
+      "sampled_hz": 7320000000.0,
+      "s11_db": -35.41190516666204,
+      "s21_db": -0.03063757371732176,
+      "passive_power_sum": 0.9932578766025468
+    },
+    {
+      "requested_hz": 8235000000.0,
+      "sampled_hz": 8230000000.0,
+      "s11_db": -33.447593488768575,
+      "s21_db": -0.031267613595661124,
+      "passive_power_sum": 0.9932783275789788
+    },
+    {
+      "requested_hz": 9150000000.0,
+      "sampled_hz": 9150000000.0,
+      "s11_db": -33.655094840099366,
+      "s21_db": -0.033213298457019945,
+      "passive_power_sum": 0.9928125373828431
+    },
+    {
+      "requested_hz": 10000000000.0,
+      "sampled_hz": 10000000000.0,
+      "s11_db": -35.80175034222185,
+      "s21_db": -0.02814826129927303,
+      "passive_power_sum": 0.9938025029431696
+    }
+  ],
+  "csv_sha256": "8306607513b8a651b136f1931695ef04d5de8370298973f4757428bce8ea376c",
+  "interpretation": "linear idealized straight feed only; cannot predict transmitter-generated harmonics; no broadband mesh convergence or physical validation",
+  "caveats": "constant conductivity fitted at 915 MHz; no material dispersion, actual ground plane, components, nonlinear active device, antenna or enclosure"
+}

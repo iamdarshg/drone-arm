@@ -21,8 +21,22 @@ The CC1190 specifies 850–950 MHz operation; the CC1121 specifies selected
 bands only. A matching component cannot turn this RF chain into a continuously
 operating 0.1–10 GHz radio. See the [CC1190 datasheet](https://www.ti.com/lit/ds/symlink/cc1190.pdf)
 and [CC1121 datasheet](https://www.ti.com/lit/ds/symlink/cc1121.pdf). A
-wideband requirement requires a separate architecture and specified frequency,
-power, antenna, tuning-control and performance requirements.
+wideband *operating* requirement requires a separate architecture. The user
+subsequently clarified that the intended operation is 915 MHz; 0.1–10 GHz is
+the inspection range for unwanted harmonics and resonances, not an operating
+range requirement.
+
+Linear EM or S-parameter simulations can show transmission, reflection and
+coupling of modeled structures at each frequency. They do not generate PA
+harmonics or establish the power radiated by the active transmitter. Harmonics
+of 915 MHz in the requested range are 1.830, 2.745, 3.660, 4.575, 5.490,
+6.405, 7.320, 8.235 and 9.150 GHz; other spurious emissions may also occur.
+For context, the CC1190 datasheet reports +2.5 dBm second-harmonic power for
+its own reference design under its stated HGM=1 and input-power condition.
+That is not a prediction or measurement of this board. Nonlinear component
+models and actual load data, or future calibrated hardware measurements, are
+needed to establish transmitter emissions. No physical testing is authorized
+by this report.
 
 To reproduce in an isolated Linux environment, place the exact PCB at
 `/work/main_rev_b_source.kicad_pcb` and this script at
