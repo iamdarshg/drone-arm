@@ -19,8 +19,12 @@ did not establish a valid solution.
 `geometry.xml` is the exact solver geometry (SHA-256
 `a792ba9517538bb836f182f5774f529709db784e3c83a5eb30a71f48b5056126`),
 `simulation.json` is the solver configuration, and `manifest.json` describes
-the source and ports. `prepare.py` records how the inputs were copied from
-the earlier workspace ROI; that source ROI and the full fab export remain in
-`E:\1vm\TMP`, so the committed inputs alone do not yet reproduce its creation.
-A longer run was started separately with a 300,000-timestep ceiling; its
-outcome must be evaluated independently.
+the source and ports. `fab.tar.gz` contains the actual clipped input files
+(SHA-256 `2f44bc98f9e30a3ef43c4b1889c2c3216110069488821a11979d863669be6a22`).
+To reproduce the solver inputs, extract that archive in a fresh working
+directory, copy `simulation.json` there, place `geometry.xml` in
+`ems/geometry/geometry.xml`, and run `gerber2ems -s` with the openEMS image
+identified in the adjacent broadband feed report. `prepare.py` records how
+the inputs were copied from the earlier workspace ROI. A longer run was
+started separately with a 300,000-timestep ceiling; its outcome must be
+evaluated independently.
