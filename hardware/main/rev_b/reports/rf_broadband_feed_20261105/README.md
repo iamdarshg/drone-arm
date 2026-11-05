@@ -18,6 +18,10 @@ actual reference-plane geometry. It excludes the matching network, active
 transmitter, antenna, enclosure, other conductors and realistic material
 dispersion. Broadband mesh convergence has not been demonstrated. The
 modeled feed's 915 MHz S11 of -38.73 dB is not the actual antenna or PCB match.
+The finer model also completed, with S11 -35.12 dB at 915 MHz. The absolute
+S11 difference is 3.61 dB there and up to 3.69 dB over the sampled sweep;
+see `mesh_comparison.json`. No convergence threshold was specified in advance,
+and this sensitivity prevents treating the reflection value as settled.
 
 This linear model does not create transmitter harmonics, measure radiated
 emissions, establish a tuned 915 MHz system or establish fabrication readiness.
