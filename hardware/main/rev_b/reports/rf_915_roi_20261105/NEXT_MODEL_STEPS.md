@@ -5,6 +5,13 @@ centerline. It does not establish the actual return-current path. Keep these
 as distinct nets; do not relabel or short the power plane to ground merely to
 make a simulation pass.
 
+The native footprint inventory found no footprint with direct `/3V3` and
+`/GND` pads within 30 mm of the sampled feed segment. It did find nearby
+ground-referenced capacitors on other nets, including C115 on the radio's
+`VDD_CC119` net. See `return_candidates.json` and `near_ground_caps.json`;
+these are geometric/net inventories, not evidence that components are
+populated, or that a particular RF return path is continuous.
+
 For the next board model:
 
 1. Expand the imported region far enough to include the real ground and power

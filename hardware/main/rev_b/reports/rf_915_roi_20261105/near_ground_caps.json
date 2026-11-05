@@ -1,0 +1,782 @@
+{
+  "board_sha256": "b500f5fecd2299cdca0af12a05424e820ed845e1bb5ab35568e35cc38e826d43",
+  "search_radius_mm": 30,
+  "ground_referenced_capacitors": [
+    {
+      "reference": "C96",
+      "value": "2.7p DNP",
+      "position_mm": [
+        126.0,
+        65.0
+      ],
+      "distance_to_feed_mm": 2.5,
+      "pads": [
+        {
+          "pad": "1",
+          "net": "/915 MHz RF/ANT_915",
+          "position_mm": [
+            126.0,
+            65.48
+          ]
+        },
+        {
+          "pad": "2",
+          "net": "/GND",
+          "position_mm": [
+            126.0,
+            64.52
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C95",
+      "value": "7.5p C0G",
+      "position_mm": [
+        121.5,
+        65.0
+      ],
+      "distance_to_feed_mm": 3.2553379240871405,
+      "pads": [
+        {
+          "pad": "1",
+          "net": "/915 MHz RF/MATCH_B",
+          "position_mm": [
+            121.5,
+            65.48
+          ]
+        },
+        {
+          "pad": "2",
+          "net": "/GND",
+          "position_mm": [
+            121.5,
+            64.52
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C91",
+      "value": "3.3p C0G",
+      "position_mm": [
+        117.0,
+        67.5
+      ],
+      "distance_to_feed_mm": 8.268145197080171,
+      "pads": [
+        {
+          "pad": "1",
+          "net": "/915 MHz RF/MATCH_A",
+          "position_mm": [
+            117.0,
+            67.98
+          ]
+        },
+        {
+          "pad": "2",
+          "net": "/GND",
+          "position_mm": [
+            117.0,
+            67.02
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C115",
+      "value": "100n",
+      "position_mm": [
+        119.5,
+        70.0
+      ],
+      "distance_to_feed_mm": 8.540329326202823,
+      "pads": [
+        {
+          "pad": "1",
+          "net": "/915 MHz RF/VDD_CC119",
+          "position_mm": [
+            119.02,
+            70.0
+          ]
+        },
+        {
+          "pad": "2",
+          "net": "/GND",
+          "position_mm": [
+            119.98,
+            70.0
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C114",
+      "value": "1u",
+      "position_mm": [
+        117.0,
+        70.0
+      ],
+      "distance_to_feed_mm": 9.980592417286656,
+      "pads": [
+        {
+          "pad": "1",
+          "net": "/915 MHz RF/VDD_CC119",
+          "position_mm": [
+            116.225,
+            70.0
+          ]
+        },
+        {
+          "pad": "2",
+          "net": "/GND",
+          "position_mm": [
+            117.775,
+            70.0
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C113",
+      "value": "1n",
+      "position_mm": [
+        114.5,
+        70.0
+      ],
+      "distance_to_feed_mm": 11.780798996672504,
+      "pads": [
+        {
+          "pad": "1",
+          "net": "/915 MHz RF/VDD_CC119",
+          "position_mm": [
+            114.02,
+            70.0
+          ]
+        },
+        {
+          "pad": "2",
+          "net": "/GND",
+          "position_mm": [
+            114.98,
+            70.0
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C112",
+      "value": "47p",
+      "position_mm": [
+        112.0,
+        70.0
+      ],
+      "distance_to_feed_mm": 13.80080523013059,
+      "pads": [
+        {
+          "pad": "1",
+          "net": "/915 MHz RF/VDD_CC119",
+          "position_mm": [
+            111.52,
+            70.0
+          ]
+        },
+        {
+          "pad": "2",
+          "net": "/GND",
+          "position_mm": [
+            112.48,
+            70.0
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C89",
+      "value": "15p C0G",
+      "position_mm": [
+        109.5,
+        66.0
+      ],
+      "distance_to_feed_mm": 14.513346443877092,
+      "pads": [
+        {
+          "pad": "1",
+          "net": "/915 MHz RF/CC1190_VDD13",
+          "position_mm": [
+            109.5,
+            66.48
+          ]
+        },
+        {
+          "pad": "2",
+          "net": "/GND",
+          "position_mm": [
+            109.5,
+            65.52
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C111",
+      "value": "27p",
+      "position_mm": [
+        109.5,
+        70.0
+      ],
+      "distance_to_feed_mm": 15.95735645399951,
+      "pads": [
+        {
+          "pad": "1",
+          "net": "/915 MHz RF/VDD_CC119",
+          "position_mm": [
+            109.02,
+            70.0
+          ]
+        },
+        {
+          "pad": "2",
+          "net": "/GND",
+          "position_mm": [
+            109.98,
+            70.0
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C88",
+      "value": "0.8p C0G",
+      "position_mm": [
+        106.5,
+        59.0
+      ],
+      "distance_to_feed_mm": 17.43981722954687,
+      "pads": [
+        {
+          "pad": "1",
+          "net": "/915 MHz RF/SAW_PA",
+          "position_mm": [
+            106.5,
+            59.48
+          ]
+        },
+        {
+          "pad": "2",
+          "net": "/GND",
+          "position_mm": [
+            106.5,
+            58.52
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C110",
+      "value": "10u",
+      "position_mm": [
+        106.5,
+        70.0
+      ],
+      "distance_to_feed_mm": 18.658703733110716,
+      "pads": [
+        {
+          "pad": "1",
+          "net": "/915 MHz RF/VDD_CC119",
+          "position_mm": [
+            105.725,
+            70.0
+          ]
+        },
+        {
+          "pad": "2",
+          "net": "/GND",
+          "position_mm": [
+            107.275,
+            70.0
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C81",
+      "value": "10n",
+      "position_mm": [
+        98.75,
+        60.0
+      ],
+      "distance_to_feed_mm": 24.960513316035783,
+      "pads": [
+        {
+          "pad": "1",
+          "net": "/915 MHz RF/CC_DCPL_VCO",
+          "position_mm": [
+            98.27,
+            60.0
+          ]
+        },
+        {
+          "pad": "2",
+          "net": "/GND",
+          "position_mm": [
+            99.23,
+            60.0
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C82",
+      "value": "47n",
+      "position_mm": [
+        98.5,
+        55.5
+      ],
+      "distance_to_feed_mm": 26.043371997496784,
+      "pads": [
+        {
+          "pad": "1",
+          "net": "/915 MHz RF/CC_DCPL_PFD",
+          "position_mm": [
+            98.5,
+            55.98
+          ]
+        },
+        {
+          "pad": "2",
+          "net": "/GND",
+          "position_mm": [
+            98.5,
+            55.02
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C83",
+      "value": "47n",
+      "position_mm": [
+        96.5,
+        55.5
+      ],
+      "distance_to_feed_mm": 27.97493923139065,
+      "pads": [
+        {
+          "pad": "1",
+          "net": "/915 MHz RF/CC_DCPL_XOSC",
+          "position_mm": [
+            96.5,
+            55.98
+          ]
+        },
+        {
+          "pad": "2",
+          "net": "/GND",
+          "position_mm": [
+            96.5,
+            55.02
+          ]
+        }
+      ]
+    },
+    {
+      "reference": "C104",
+      "value": "47n",
+      "position_mm": [
+        94.5,
+        55.5
+      ],
+      "distance_to_feed_mm": 29.91550141648974,
+      "pads": [
+        {
+          "pad": "1",
+          "net": "/915 MHz RF/VDD_CC112",
+          "position_mm": [
+            94.5,
+            55.98
+          ]
+        },
+        {
+          "pad": "2",
+          "net": "/GND",
+          "position_mm": [
+            94.5,
+            55.02
+          ]
+        }
+      ]
+    }
+  ],
+  "candidate_vias": [
+    {
+      "net": "/GND",
+      "position_mm": [
+        137.0,
+        53.0
+      ],
+      "distance_to_feed_mm": 9.718667604152333
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        137.0,
+        73.0
+      ],
+      "distance_to_feed_mm": 10.69824752003804
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        125.0,
+        74.0
+      ],
+      "distance_to_feed_mm": 11.5
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        134.0,
+        74.0
+      ],
+      "distance_to_feed_mm": 11.5
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        128.0,
+        74.0
+      ],
+      "distance_to_feed_mm": 11.5
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        131.0,
+        74.0
+      ],
+      "distance_to_feed_mm": 11.5
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        122.0,
+        74.0
+      ],
+      "distance_to_feed_mm": 11.608713322328189
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        119.0,
+        74.0
+      ],
+      "distance_to_feed_mm": 12.380316029891965
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        110.2699,
+        65.9809
+      ],
+      "distance_to_feed_mm": 13.762577985973401
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        116.0,
+        74.0
+      ],
+      "distance_to_feed_mm": 13.776146957694662
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        128.0,
+        48.0
+      ],
+      "distance_to_feed_mm": 14.5
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        131.0,
+        48.0
+      ],
+      "distance_to_feed_mm": 14.5
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        134.0,
+        48.0
+      ],
+      "distance_to_feed_mm": 14.5
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        125.0,
+        48.0
+      ],
+      "distance_to_feed_mm": 14.5
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        122.0,
+        48.0
+      ],
+      "distance_to_feed_mm": 14.586371207397677
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        137.0,
+        48.0
+      ],
+      "distance_to_feed_mm": 14.644196802829441
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        119.0,
+        48.0
+      ],
+      "distance_to_feed_mm": 15.20763706168713
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        113.0,
+        74.0
+      ],
+      "distance_to_feed_mm": 15.629850447141196
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        137.0,
+        78.0
+      ],
+      "distance_to_feed_mm": 15.634976814821314
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        116.0,
+        48.0
+      ],
+      "distance_to_feed_mm": 16.36405282929629
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        110.0,
+        74.0
+      ],
+      "distance_to_feed_mm": 17.798938872865424
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        113.0,
+        48.0
+      ],
+      "distance_to_feed_mm": 17.952499129647656
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        137.0,
+        43.0
+      ],
+      "distance_to_feed_mm": 19.60746031489035
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        110.0,
+        48.0
+      ],
+      "distance_to_feed_mm": 19.86963072127914
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        107.0,
+        74.0
+      ],
+      "distance_to_feed_mm": 20.181977727665835
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        137.0,
+        83.0
+      ],
+      "distance_to_feed_mm": 20.602245023297826
+    },
+    {
+      "net": "/3V3",
+      "position_mm": [
+        103.015,
+        69.1899
+      ],
+      "distance_to_feed_mm": 21.630526161191725
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        107.0,
+        48.0
+      ],
+      "distance_to_feed_mm": 22.029803108516422
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        104.0,
+        74.0
+      ],
+      "distance_to_feed_mm": 22.711719992109796
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        104.0,
+        48.0
+      ],
+      "distance_to_feed_mm": 24.36846784268555
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        137.0,
+        38.0
+      ],
+      "distance_to_feed_mm": 24.58561571325803
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        101.0,
+        74.0
+      ],
+      "distance_to_feed_mm": 25.344274008146293
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        137.0,
+        88.0
+      ],
+      "distance_to_feed_mm": 25.582269250400756
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        134.0,
+        36.0
+      ],
+      "distance_to_feed_mm": 26.5
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        128.0,
+        36.0
+      ],
+      "distance_to_feed_mm": 26.5
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        125.0,
+        36.0
+      ],
+      "distance_to_feed_mm": 26.5
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        131.0,
+        36.0
+      ],
+      "distance_to_feed_mm": 26.5
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        122.0,
+        36.0
+      ],
+      "distance_to_feed_mm": 26.547358154814575
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        101.0,
+        48.0
+      ],
+      "distance_to_feed_mm": 26.83900566339967
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        119.0,
+        36.0
+      ],
+      "distance_to_feed_mm": 26.89372092143443
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        116.0,
+        36.0
+      ],
+      "distance_to_feed_mm": 27.56414745643333
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        98.0,
+        74.0
+      ],
+      "distance_to_feed_mm": 28.050708101579175
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        113.0,
+        36.0
+      ],
+      "distance_to_feed_mm": 28.53580601630169
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        98.0,
+        48.0
+      ],
+      "distance_to_feed_mm": 29.40819996191538
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        137.0,
+        33.0
+      ],
+      "distance_to_feed_mm": 29.57114302829703
+    },
+    {
+      "net": "/GND",
+      "position_mm": [
+        110.0,
+        36.0
+      ],
+      "distance_to_feed_mm": 29.779224721271703
+    }
+  ],
+  "scope": "geometric footprint and via inventory, not evidence of assembled components, actual connection paths, impedance, current or return continuity"
+}
