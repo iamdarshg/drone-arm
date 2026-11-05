@@ -41,6 +41,13 @@ boundary and modeled an artificial conducting enclosure. This is a plausible
 source of ringing, not proof that it explains all port inconsistencies.
 `boundary_audit.py` checks this against the installed code and API docs;
 `boundary_audit.json` records the hashes of both inspected wrapper files.
+
+A live snapshot of the corrected PML run, truncated to common probe time
+3.134 ns, still has 107 frequencies above the 1.05 both-port diagnostic
+threshold. The snapshot was captured before solver termination and must not
+be used as the final result. `aligned_snapshot.tar.gz` preserves the signals
+and provisional results (SHA-256
+`a7dbe7d677b3ae38c12019322aec3ce8939dae925d87024a0faacd5889724dc8`).
 Values from this run must not be used for matching, resonance, emissions or
 fabrication decisions. The raw `Sx0.csv` is retained so the failure can be
 inspected with `check.py`, which reproduces the original voltage-wave sum but
