@@ -36,7 +36,9 @@ port behavior. See `port_native_alignment.json`.
 copy prepared for a queued 915 MHz PML-boundary trial (SHA-256
 `d2855fce1a3a6be01ebf4700ea4b11321093b6d2cf2d007031e499c2763b8a11`).
 That trial reached the energy criterion after 103,599 timesteps, but openEMS
-reported 21 unused via-metal primitives. Its numerical 50-ohm port check did
+reported 21 unused via-metal primitives. It also stopped before the reported
+108,890-timestep excitation length, and its 300,000-step cap was below three
+times that length. Its numerical 50-ohm port check did
 not flag an energy excess, but the missing via metal invalidates the intended
 return-path geometry. The run is rejected as an RF result. `finished_915.tar.gz`
 preserves the raw probes and calculations (SHA-256
@@ -49,8 +51,14 @@ physical plated-hole geometry. A 200-timestep setup trial reported no unused
 via primitives, compared with 21 in the hollow-barrel run. Its postprocessing
 exited with an index error because the intentionally short run did not produce
 enough probe samples; it provides no RF result. Both transcripts are saved.
-A full PML sensitivity run using the solid representation is in progress and
-still requires energy, port, mesh and physical-model checks.
+The first full solid-via run was stopped early after discovering the
+premature-stop issue. A replacement 400,000-step PML run is in progress with
+automatic energy stopping disabled; a small separate openEMS probe confirmed
+that setting executes its full timestep count. This is not a relaxed
+acceptance criterion: `check_fixed_duration.py` separately requires the
+completed duration to exceed three reported excitation lengths, the final
+logged energy decay to reach at least 60 dB, no unused primitive warnings,
+and a passing both-port diagnostic. Mesh and physical-model checks remain open.
 
 `evidence.tar.gz` contains the generated geometry, simulation inputs and
 audits (SHA-256
