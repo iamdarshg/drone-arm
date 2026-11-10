@@ -1,0 +1,21 @@
+{
+  "reference_ohm": 50,
+  "results": [
+    {
+      "case": "rf_gerber_roi_v4_x2",
+      "frequency_hz": 915000000.0,
+      "s11_db": -21.61457928969357,
+      "s21_db": -0.21576920097121666,
+      "power_sum": 0.9584264264997812
+    },
+    {
+      "case": "rf_gerber_roi_v5_x2_refined",
+      "frequency_hz": 915000000.0,
+      "s11_db": -18.904324488057267,
+      "s21_db": -0.14820090460866184,
+      "power_sum": 0.9793208294080943
+    }
+  ],
+  "method": "explicit real 50-ohm reference from original probe signals, identical time-domain fields",
+  "limitations": "clipped ROI, uncertain launches and return geometry; no matching parts, antenna or active device"
+}

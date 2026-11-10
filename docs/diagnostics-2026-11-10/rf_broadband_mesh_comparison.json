@@ -1,0 +1,13 @@
+{
+  "source_csv_sha256": [
+    "8306607513b8a651b136f1931695ef04d5de8370298973f4757428bce8ea376c",
+    "7a1bcd7b81cf37c3557370b611a7ff0c5c552beb6efce80f244f4ef34735f33f"
+  ],
+  "frequencies": 992,
+  "worst_absolute_s11_difference_db": 3.681432939223072,
+  "worst_s11_difference_frequency_hz": 780000000.0,
+  "worst_absolute_s21_difference_db": 0.0038497451750310607,
+  "s11_difference_915_db": 3.6135496077662665,
+  "s21_difference_915_db": 0.0008998258125545375,
+  "limitations": "mesh sensitivity for ideal trace geometry only; no predefined convergence threshold, validation, real antenna or active RF"
+}
