@@ -1,0 +1,184 @@
+{
+ "drc_summary": {
+  "errors": 0,
+  "schematic_parity": 191,
+  "schematic_parity_by_type": {
+   "extra_footprint": 4,
+   "footprint_symbol_mismatch": 161,
+   "missing_footprint": 6,
+   "net_conflict": 20
+  },
+  "unconnected": 0,
+  "violations_by_type": {},
+  "warnings": 0
+ },
+ "drill": {
+  "board_npth_pad_holes": 6,
+  "board_pth_pad_holes": 22,
+  "board_total_holes": 369,
+  "board_vias_by_span": {
+   "F.Cu-B.Cu": 305,
+   "F.Cu-In1.Cu": 14,
+   "F.Cu-In2.Cu": 3,
+   "In1.Cu-B.Cu": 4,
+   "In1.Cu-In2.Cu": 10,
+   "In2.Cu-B.Cu": 5
+  },
+  "excellon": {
+   "main_rev_b-front-in1.drl": {
+    "hits": {
+     "T1": 14
+    },
+    "tools": {
+     "T1": 0.1
+    },
+    "total_hits": 14
+   },
+   "main_rev_b-front-in2.drl": {
+    "hits": {
+     "T1": 3
+    },
+    "tools": {
+     "T1": 0.1
+    },
+    "total_hits": 3
+   },
+   "main_rev_b-in1-back.drl": {
+    "hits": {
+     "T1": 4
+    },
+    "tools": {
+     "T1": 0.1
+    },
+    "total_hits": 4
+   },
+   "main_rev_b-in1-in2.drl": {
+    "hits": {
+     "T1": 10
+    },
+    "tools": {
+     "T1": 0.1
+    },
+    "total_hits": 10
+   },
+   "main_rev_b-in2-back.drl": {
+    "hits": {
+     "T1": 2,
+     "T2": 3
+    },
+    "tools": {
+     "T1": 0.1,
+     "T2": 0.3
+    },
+    "total_hits": 5
+   },
+   "main_rev_b.drl": {
+    "hits": {
+     "T1": 18,
+     "T2": 24,
+     "T3": 281,
+     "T4": 4,
+     "T5": 2,
+     "T6": 4
+    },
+    "tools": {
+     "T1": 0.2,
+     "T2": 0.3,
+     "T3": 0.35,
+     "T4": 0.6,
+     "T5": 0.65,
+     "T6": 4.3
+    },
+    "total_hits": 333
+   }
+  },
+  "excellon_total_hits": 369,
+  "hits_equal_board_holes": true
+ },
+ "outline": {
+  "board": "hardware/main/rev_b/main_rev_b.kicad_pcb",
+  "board_edge_cuts_centreline_mm": {
+   "h": 100.0,
+   "w": 140.0
+  },
+  "board_edge_cuts_line_widths_mm": [
+   0.15
+  ],
+  "board_edges_bbox_mm": {
+   "h": 100.15,
+   "w": 140.15,
+   "xmin": -0.075,
+   "ymin": -0.075
+  },
+  "board_sha256": "b500f5fecd2299cdca0af12a05424e820ed845e1bb5ab35568e35cc38e826d43",
+  "checks": {
+   "gerber_centreline_equals_board_edge_centreline": true,
+   "gerber_with_aperture_equals_board_bbox": true,
+   "job_layer_count_equals_board": true,
+   "job_size_equals_board_bbox": true,
+   "job_thickness_equals_board": true
+  },
+  "gerber_edge_cuts_extent_mm": {
+   "aperture_diameter_mm": 0.15,
+   "centreline": {
+    "h": 100.0,
+    "w": 140.0,
+    "xmax": 140.0,
+    "xmin": 0.0,
+    "ymax": 0.0,
+    "ymin": -100.0
+   },
+   "coordinate_count": 8,
+   "with_aperture": {
+    "h": 100.15,
+    "w": 140.15
+   }
+  },
+  "gerber_edge_cuts_file": "gerbers/main_rev_b-Edge_Cuts.gm1",
+  "job_size_mm": {
+   "X": 140.15,
+   "Y": 100.15
+  },
+  "stale_package_edge_cuts": {
+   "extent_mm": {
+    "aperture_diameter_mm": 0.4,
+    "centreline": {
+     "h": 204.238152,
+     "w": 288.39738,
+     "xmax": 287.0022,
+     "xmin": -1.39518,
+     "ymax": 4.230952,
+     "ymin": -200.0072
+    },
+    "coordinate_count": 18418,
+    "with_aperture": {
+     "h": 204.63815200000002,
+     "w": 288.79738
+    }
+   },
+   "file": "hardware/main/pcb-gerbers-1/main-Edge_Cuts.gbr",
+   "matches_board": false,
+   "sha256": "6b821ad19f0c9ac3159aea457286ea4eeaf6161e2c56624048f589e6140aba9c"
+  },
+  "tolerance_mm": 0.01
+ },
+ "positions": {
+  "board_footprints": 165,
+  "excluded_from_pos": [
+   "H1",
+   "H2",
+   "H3",
+   "H4"
+  ],
+  "pos_rows": 161,
+  "rows_equal_footprints_minus_excluded": true
+ },
+ "zone_fill": {
+  "changed": {},
+  "note": "refill done in memory on the loaded board; board file not saved",
+  "total_refilled_mm2": 37419.633,
+  "total_stored_mm2": 37419.633,
+  "zone_layers": 5,
+  "zone_layers_changed_gt_0p01mm2": 0
+ }
+}
