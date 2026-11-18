@@ -1,0 +1,1422 @@
+{
+ "board": "main_rev_b.kicad_pcb",
+ "board_sha256": "b500f5fecd2299cdca0af12a05424e820ed845e1bb5ab35568e35cc38e826d43",
+ "kicad": "9.0.7",
+ "stackup": {
+  "copper": {
+   "F.Cu": {
+    "z_top": 0.0,
+    "z_mid": 0.0175,
+    "z_bot": 0.035,
+    "t": 0.035
+   },
+   "In1.Cu": {
+    "z_top": 0.235,
+    "z_mid": 0.2525,
+    "z_bot": 0.27,
+    "t": 0.035
+   },
+   "In2.Cu": {
+    "z_top": 1.31,
+    "z_mid": 1.3275,
+    "z_bot": 1.345,
+    "t": 0.035
+   },
+   "B.Cu": {
+    "z_top": 1.545,
+    "z_mid": 1.5625,
+    "z_bot": 1.58,
+    "t": 0.035
+   }
+  },
+  "dielectrics": [
+   {
+    "z_top": 0.035,
+    "z_bot": 0.23500000000000001,
+    "t": 0.2,
+    "er": 4.2,
+    "name": "dielectric 1",
+    "type": "prepreg"
+   },
+   {
+    "z_top": 0.27,
+    "z_bot": 1.31,
+    "t": 1.04,
+    "er": 4.2,
+    "name": "dielectric 2",
+    "type": "core"
+   },
+   {
+    "z_top": 1.345,
+    "z_bot": 1.545,
+    "t": 0.2,
+    "er": 4.2,
+    "name": "dielectric 3",
+    "type": "prepreg"
+   }
+  ],
+  "total_mm": 1.58
+ },
+ "assumptions": [
+  "routed length = sum of track/arc lengths (all branches of the net) + via barrel between outermost connected copper layers (copper-centre to copper-centre)",
+  "outer-layer delay: quasi-static microstrip eps_eff (Hammerstad) per segment width and adjacent dielectric; solder mask, odd/even-mode split and dispersion ignored",
+  "inner-layer delay: eps_eff = er; via barrel delay: eps_eff = mean dielectric er",
+  "uncoupled length reported at two thresholds: same-layer edge gap > 2 x netclass diff_pair_gap, and > 1.0 mm; gap stats over samples whose same-layer partner is within 1.0 mm edge gap",
+  "series parts (resistors, ESD, chokes) are not part of any net length"
+ ],
+ "dru_diffpair_rules": [],
+ "netclass_diff_pair_settings": {
+  "Default": {
+   "diff_pair_gap": 0.25,
+   "diff_pair_width": 0.2
+  },
+  "CAN_DIFF": {
+   "diff_pair_gap": 0.25,
+   "diff_pair_width": 0.2
+  },
+  "CURRENT_SENSE": {
+   "diff_pair_gap": 0.25,
+   "diff_pair_width": 0.2
+  },
+  "GATE_DRIVE": {
+   "diff_pair_gap": 0.25,
+   "diff_pair_width": 0.2
+  },
+  "HIGH_CURRENT": {
+   "diff_pair_gap": 0.25,
+   "diff_pair_width": 0.2
+  },
+  "POWER": {
+   "diff_pair_gap": 0.25,
+   "diff_pair_width": 0.2
+  },
+  "RF_50R": {
+   "diff_pair_gap": 0.25,
+   "diff_pair_width": 0.2
+  }
+ },
+ "pairs": [
+  {
+   "name": "/915 MHz RF/CC_LNA_P / /915 MHz RF/CC_LNA_N",
+   "p": [
+    "/915 MHz RF/CC_LNA_P"
+   ],
+   "n": [
+    "/915 MHz RF/CC_LNA_N"
+   ],
+   "sources": [
+    "name: token _P/_N"
+   ],
+   "netclass": "RF_50R",
+   "status": "ROUTED",
+   "p_metrics": [
+    {
+     "net": "/915 MHz RF/CC_LNA_P",
+     "netclass": "RF_50R",
+     "track_mm": 4.9375,
+     "via_count": 0,
+     "via_barrel_mm": 0.0,
+     "routed_mm": 4.9375,
+     "delay_ps": 29.327237951372773,
+     "layers": {
+      "F.Cu": 4.9375
+     },
+     "vias": [],
+     "eps_eff_used": {
+      "F.Cu@w=0.350": {
+       "eps_eff": 3.1708,
+       "model": "microstrip (Hammerstad)",
+       "h_mm": 0.2,
+       "er": 4.2
+      }
+     },
+     "segments": 1,
+     "pads": 2,
+     "pad_to_pad": {
+      "U40.19-FL40.7": {
+       "length_mm": 4.9375,
+       "delay_ps": 29.327,
+       "refs": [
+        "FL40",
+        "U40"
+       ]
+      }
+     }
+    }
+   ],
+   "n_metrics": [
+    {
+     "net": "/915 MHz RF/CC_LNA_N",
+     "netclass": "RF_50R",
+     "track_mm": 5.303088504186714,
+     "via_count": 2,
+     "via_barrel_mm": 2.62,
+     "routed_mm": 7.9230885041867145,
+     "delay_ps": 51.05834558196726,
+     "layers": {
+      "F.Cu": 3.4631,
+      "In2.Cu": 1.84
+     },
+     "vias": [
+      {
+       "spans": [
+        "F.Cu-B.Cu"
+       ],
+       "connected_layers": [
+        "F.Cu",
+        "In2.Cu"
+       ],
+       "barrel_mm": 1.31,
+       "x": 101.0,
+       "y": 60.8
+      },
+      {
+       "spans": [
+        "F.Cu-B.Cu"
+       ],
+       "connected_layers": [
+        "F.Cu",
+        "In2.Cu"
+       ],
+       "barrel_mm": 1.31,
+       "x": 99.3,
+       "y": 61.0
+      }
+     ],
+     "eps_eff_used": {
+      "F.Cu@w=0.350": {
+       "eps_eff": 3.1708,
+       "model": "microstrip (Hammerstad)",
+       "h_mm": 0.2,
+       "er": 4.2
+      },
+      "In2.Cu@w=0.350": {
+       "eps_eff": 4.2,
+       "model": "stripline (eps_eff = er)",
+       "er": 4.2
+      }
+     },
+     "segments": 5,
+     "pads": 2,
+     "pad_to_pad": {
+      "U40.20-FL40.6": {
+       "length_mm": 7.4637,
+       "delay_ps": 47.933,
+       "refs": [
+        "FL40",
+        "U40"
+       ]
+      }
+     }
+    }
+   ],
+   "P": {
+    "track_mm": 4.9375,
+    "via_barrel_mm": 0.0,
+    "routed_mm": 4.9375,
+    "delay_ps": 29.3272,
+    "via_count": 0
+   },
+   "N": {
+    "track_mm": 5.3031,
+    "via_barrel_mm": 2.62,
+    "routed_mm": 7.9231,
+    "delay_ps": 51.0583,
+    "via_count": 2
+   },
+   "skew_mm": 2.9856,
+   "skew_track_only_mm": 0.3656,
+   "skew_ps": 21.731,
+   "layers_p": [
+    "F.Cu"
+   ],
+   "layers_n": [
+    "F.Cu",
+    "In2.Cu"
+   ],
+   "coupled_max_edge_gap_mm": 0.5,
+   "coupled_max_basis": "2 x netclass 'RF_50R' diff_pair_gap 0.25 mm",
+   "coupling_p": [
+    {
+     "coupled_mm": 3.94,
+     "uncoupled_mm": 0.997,
+     "uncoupled_at_1mm_mm": 0.0,
+     "gap_stats_mm": {
+      "min": 0.1506,
+      "median": 0.3273,
+      "p95": 0.7555,
+      "max": 0.8322
+     }
+    }
+   ],
+   "coupling_n": [
+    {
+     "coupled_mm": 3.317,
+     "uncoupled_mm": 1.986,
+     "uncoupled_at_1mm_mm": 1.84,
+     "gap_stats_mm": {
+      "min": 0.1559,
+      "median": 0.2871,
+      "p95": 0.4688,
+      "max": 0.5813
+     }
+    }
+   ],
+   "uncoupled_mm": {
+    "p": 0.997,
+    "n": 1.986
+   },
+   "uncoupled_at_1mm": {
+    "p": 0.0,
+    "n": 1.84
+   },
+   "pad_to_pad_skew": [
+    {
+     "refs": "FL40-U40",
+     "p_path": "U40.19-FL40.7",
+     "n_path": "U40.20-FL40.6",
+     "p_mm": 4.9375,
+     "n_mm": 7.4637,
+     "skew_mm": 2.5262,
+     "skew_ps": 18.606
+    }
+   ],
+   "limits": [],
+   "limit_verdicts": "no limit declared"
+  },
+  {
+   "name": "/RP2354B MCU/USB_DP_MCU / /RP2354B MCU/USB_DM_MCU",
+   "p": [
+    "/RP2354B MCU/USB_DP_MCU"
+   ],
+   "n": [
+    "/RP2354B MCU/USB_DM_MCU"
+   ],
+   "sources": [
+    "name: token DP/DM/DN"
+   ],
+   "netclass": "Default",
+   "status": "ROUTED",
+   "p_metrics": [
+    {
+     "net": "/RP2354B MCU/USB_DP_MCU",
+     "netclass": "Default",
+     "track_mm": 22.927213595499957,
+     "via_count": 4,
+     "via_barrel_mm": 2.62,
+     "routed_mm": 25.547213595499958,
+     "delay_ps": 173.01787149058524,
+     "layers": {
+      "F.Cu": 1.5972,
+      "In2.Cu": 21.33
+     },
+     "vias": [
+      {
+       "spans": [
+        "F.Cu-In1.Cu",
+        "In1.Cu-In2.Cu"
+       ],
+       "connected_layers": [
+        "F.Cu",
+        "In2.Cu"
+       ],
+       "barrel_mm": 1.31,
+       "x": 60.8,
+       "y": 44.1
+      },
+      {
+       "spans": [
+        "F.Cu-In1.Cu",
+        "In1.Cu-In2.Cu"
+       ],
+       "connected_layers": [
+        "F.Cu",
+        "In2.Cu"
+       ],
+       "barrel_mm": 1.31,
+       "x": 56.53,
+       "y": 37.1
+      }
+     ],
+     "eps_eff_used": {
+      "F.Cu@w=0.200": {
+       "eps_eff": 3.0438,
+       "model": "microstrip (Hammerstad)",
+       "h_mm": 0.2,
+       "er": 4.2
+      },
+      "In2.Cu@w=0.200": {
+       "eps_eff": 4.2,
+       "model": "stripline (eps_eff = er)",
+       "er": 4.2
+      }
+     },
+     "segments": 7,
+     "pads": 2,
+     "pad_to_pad": {
+      "R10.2-U10.67": {
+       "length_mm": 25.5472,
+       "delay_ps": 173.018,
+       "refs": [
+        "R10",
+        "U10"
+       ]
+      }
+     }
+    }
+   ],
+   "n_metrics": [
+    {
+     "net": "/RP2354B MCU/USB_DM_MCU",
+     "netclass": "Default",
+     "track_mm": 29.148625986968707,
+     "via_count": 2,
+     "via_barrel_mm": 2.62,
+     "routed_mm": 31.768625986968708,
+     "delay_ps": 203.3739483167607,
+     "layers": {
+      "F.Cu": 14.2073,
+      "In2.Cu": 14.9414
+     },
+     "vias": [
+      {
+       "spans": [
+        "F.Cu-B.Cu"
+       ],
+       "connected_layers": [
+        "F.Cu",
+        "In2.Cu"
+       ],
+       "barrel_mm": 1.31,
+       "x": 61.699,
+       "y": 49.054
+      },
+      {
+       "spans": [
+        "F.Cu-B.Cu"
+       ],
+       "connected_layers": [
+        "F.Cu",
+        "In2.Cu"
+       ],
+       "barrel_mm": 1.31,
+       "x": 47.596,
+       "y": 51.017
+      }
+     ],
+     "eps_eff_used": {
+      "F.Cu@w=0.250": {
+       "eps_eff": 3.0914,
+       "model": "microstrip (Hammerstad)",
+       "h_mm": 0.2,
+       "er": 4.2
+      },
+      "In2.Cu@w=0.250": {
+       "eps_eff": 4.2,
+       "model": "stripline (eps_eff = er)",
+       "er": 4.2
+      }
+     },
+     "segments": 9,
+     "pads": 2,
+     "pad_to_pad": {
+      "U10.66-R11.2": {
+       "length_mm": 31.602,
+       "delay_ps": 202.355,
+       "refs": [
+        "R11",
+        "U10"
+       ]
+      }
+     }
+    }
+   ],
+   "P": {
+    "track_mm": 22.9272,
+    "via_barrel_mm": 2.62,
+    "routed_mm": 25.5472,
+    "delay_ps": 173.0179,
+    "via_count": 4
+   },
+   "N": {
+    "track_mm": 29.1486,
+    "via_barrel_mm": 2.62,
+    "routed_mm": 31.7686,
+    "delay_ps": 203.3739,
+    "via_count": 2
+   },
+   "skew_mm": 6.2214,
+   "skew_track_only_mm": 6.2214,
+   "skew_ps": 30.356,
+   "layers_p": [
+    "F.Cu",
+    "In2.Cu"
+   ],
+   "layers_n": [
+    "F.Cu",
+    "In2.Cu"
+   ],
+   "coupled_max_edge_gap_mm": 0.5,
+   "coupled_max_basis": "2 x netclass 'Default' diff_pair_gap 0.25 mm",
+   "coupling_p": [
+    {
+     "coupled_mm": 1.006,
+     "uncoupled_mm": 21.921,
+     "uncoupled_at_1mm_mm": 21.33,
+     "gap_stats_mm": {
+      "min": 0.175,
+      "median": 0.3341,
+      "p95": 0.6941,
+      "max": 0.7142
+     }
+    }
+   ],
+   "coupling_n": [
+    {
+     "coupled_mm": 0.994,
+     "uncoupled_mm": 28.155,
+     "uncoupled_at_1mm_mm": 27.608,
+     "gap_stats_mm": {
+      "min": 0.175,
+      "median": 0.32,
+      "p95": 0.9133,
+      "max": 0.96
+     }
+    }
+   ],
+   "uncoupled_mm": {
+    "p": 21.921,
+    "n": 28.155
+   },
+   "uncoupled_at_1mm": {
+    "p": 21.33,
+    "n": 27.608
+   },
+   "pad_to_pad_skew": [
+    {
+     "refs": "single path each (refs differ)",
+     "p_path": "R10.2-U10.67",
+     "n_path": "U10.66-R11.2",
+     "p_mm": 25.5472,
+     "n_mm": 31.602,
+     "skew_mm": 6.0548,
+     "skew_ps": 29.337
+    }
+   ],
+   "limits": [],
+   "limit_verdicts": "no limit declared"
+  },
+  {
+   "name": "CAN connector pair skew",
+   "p": [
+    "/CANH"
+   ],
+   "n": [
+    "/CANL"
+   ],
+   "sources": [
+    "limits file: tools/hardware/audit_rev_b_pcb.py audit_main",
+    "name: CAN H/L",
+    "netclass: CAN_DIFF"
+   ],
+   "netclass": "CAN_DIFF",
+   "status": "ROUTED",
+   "p_metrics": [
+    {
+     "net": "/CANH",
+     "netclass": "CAN_DIFF",
+     "track_mm": 15.964113447039177,
+     "via_count": 0,
+     "via_barrel_mm": 0.0,
+     "routed_mm": 15.964113447039177,
+     "delay_ps": 93.62767501778957,
+     "layers": {
+      "F.Cu": 15.9641
+     },
+     "vias": [],
+     "eps_eff_used": {
+      "F.Cu@w=0.250": {
+       "eps_eff": 3.0914,
+       "model": "microstrip (Hammerstad)",
+       "h_mm": 0.2,
+       "er": 4.2
+      }
+     },
+     "segments": 5,
+     "pads": 3,
+     "pad_to_pad": {
+      "FL50.2-D50.1": {
+       "length_mm": 6.2142,
+       "delay_ps": 36.446,
+       "refs": [
+        "D50",
+        "FL50"
+       ]
+      },
+      "FL50.2-J2.3": {
+       "length_mm": 9.7499,
+       "delay_ps": 57.182,
+       "refs": [
+        "FL50",
+        "J2"
+       ]
+      },
+      "D50.1-J2.3": {
+       "length_mm": 15.9641,
+       "delay_ps": 93.628,
+       "refs": [
+        "D50",
+        "J2"
+       ]
+      }
+     }
+    }
+   ],
+   "n_metrics": [
+    {
+     "net": "/CANL",
+     "netclass": "CAN_DIFF",
+     "track_mm": 23.512043898024977,
+     "via_count": 0,
+     "via_barrel_mm": 0.0,
+     "routed_mm": 23.512043898024977,
+     "delay_ps": 137.89541225645507,
+     "layers": {
+      "F.Cu": 23.512
+     },
+     "vias": [],
+     "eps_eff_used": {
+      "F.Cu@w=0.250": {
+       "eps_eff": 3.0914,
+       "model": "microstrip (Hammerstad)",
+       "h_mm": 0.2,
+       "er": 4.2
+      }
+     },
+     "segments": 8,
+     "pads": 3,
+     "pad_to_pad": {
+      "FL50.4-D50.2": {
+       "length_mm": 12.9124,
+       "delay_ps": 75.73,
+       "refs": [
+        "D50",
+        "FL50"
+       ]
+      },
+      "FL50.4-J2.4": {
+       "length_mm": 13.8582,
+       "delay_ps": 81.276,
+       "refs": [
+        "FL50",
+        "J2"
+       ]
+      },
+      "D50.2-J2.4": {
+       "length_mm": 20.2535,
+       "delay_ps": 118.784,
+       "refs": [
+        "D50",
+        "J2"
+       ]
+      }
+     }
+    }
+   ],
+   "P": {
+    "track_mm": 15.9641,
+    "via_barrel_mm": 0.0,
+    "routed_mm": 15.9641,
+    "delay_ps": 93.6277,
+    "via_count": 0
+   },
+   "N": {
+    "track_mm": 23.512,
+    "via_barrel_mm": 0.0,
+    "routed_mm": 23.512,
+    "delay_ps": 137.8954,
+    "via_count": 0
+   },
+   "skew_mm": 7.5479,
+   "skew_track_only_mm": 7.5479,
+   "skew_ps": 44.268,
+   "layers_p": [
+    "F.Cu"
+   ],
+   "layers_n": [
+    "F.Cu"
+   ],
+   "coupled_max_edge_gap_mm": 0.5,
+   "coupled_max_basis": "2 x netclass 'CAN_DIFF' diff_pair_gap 0.25 mm",
+   "coupling_p": [
+    {
+     "coupled_mm": 0.0,
+     "uncoupled_mm": 15.964,
+     "uncoupled_at_1mm_mm": 0.0,
+     "gap_stats_mm": {
+      "min": 0.5777,
+      "median": 0.7311,
+      "p95": 1.0,
+      "max": 1.0
+     }
+    }
+   ],
+   "coupling_n": [
+    {
+     "coupled_mm": 0.0,
+     "uncoupled_mm": 23.512,
+     "uncoupled_at_1mm_mm": 4.663,
+     "gap_stats_mm": {
+      "min": 0.5777,
+      "median": 0.7311,
+      "p95": 1.0,
+      "max": 1.0
+     }
+    }
+   ],
+   "uncoupled_mm": {
+    "p": 15.964,
+    "n": 23.512
+   },
+   "uncoupled_at_1mm": {
+    "p": 0.0,
+    "n": 4.663
+   },
+   "pad_to_pad_skew": [
+    {
+     "refs": "D50-FL50",
+     "p_path": "FL50.2-D50.1",
+     "n_path": "FL50.4-D50.2",
+     "p_mm": 6.2142,
+     "n_mm": 12.9124,
+     "skew_mm": 6.6982,
+     "skew_ps": 39.284
+    },
+    {
+     "refs": "FL50-J2",
+     "p_path": "FL50.2-J2.3",
+     "n_path": "FL50.4-J2.4",
+     "p_mm": 9.7499,
+     "n_mm": 13.8582,
+     "skew_mm": 4.1083,
+     "skew_ps": 24.094
+    },
+    {
+     "refs": "D50-J2",
+     "p_path": "D50.1-J2.3",
+     "n_path": "D50.2-J2.4",
+     "p_mm": 15.9641,
+     "n_mm": 20.2535,
+     "skew_mm": 4.2894,
+     "skew_ps": 25.156
+    }
+   ],
+   "limits": [
+    {
+     "source": "tools/hardware/audit_rev_b_pcb.py audit_main",
+     "max_skew_mm": 2.0,
+     "require_equal_vias": false
+    }
+   ],
+   "limit_verdicts": [
+    {
+     "source": "tools/hardware/audit_rev_b_pcb.py audit_main",
+     "max_skew_mm": 2.0,
+     "pass_track_only": false,
+     "pass_with_via_barrels": false
+    }
+   ]
+  },
+  {
+   "name": "CAN transceiver pair skew",
+   "p": [
+    "/CAN interface/U50_CANH"
+   ],
+   "n": [
+    "/CAN interface/U50_CANL"
+   ],
+   "sources": [
+    "limits file: tools/hardware/audit_rev_b_pcb.py audit_main",
+    "name: CAN H/L",
+    "netclass: CAN_DIFF"
+   ],
+   "netclass": "CAN_DIFF",
+   "status": "ROUTED",
+   "p_metrics": [
+    {
+     "net": "/CAN interface/U50_CANH",
+     "netclass": "CAN_DIFF",
+     "track_mm": 19.047105207582284,
+     "via_count": 0,
+     "via_barrel_mm": 0.0,
+     "routed_mm": 19.047105207582284,
+     "delay_ps": 111.70906435370593,
+     "layers": {
+      "F.Cu": 19.0471
+     },
+     "vias": [],
+     "eps_eff_used": {
+      "F.Cu@w=0.250": {
+       "eps_eff": 3.0914,
+       "model": "microstrip (Hammerstad)",
+       "h_mm": 0.2,
+       "er": 4.2
+      }
+     },
+     "segments": 12,
+     "pads": 3,
+     "pad_to_pad": {
+      "FL50.1-U50.7": {
+       "length_mm": 13.014,
+       "delay_ps": 76.326,
+       "refs": [
+        "FL50",
+        "U50"
+       ]
+      },
+      "FL50.1-R122.1": {
+       "length_mm": 18.4002,
+       "delay_ps": 107.915,
+       "refs": [
+        "FL50",
+        "R122"
+       ]
+      },
+      "U50.7-R122.1": {
+       "length_mm": 5.3862,
+       "delay_ps": 31.589,
+       "refs": [
+        "R122",
+        "U50"
+       ]
+      }
+     }
+    }
+   ],
+   "n_metrics": [
+    {
+     "net": "/CAN interface/U50_CANL",
+     "netclass": "CAN_DIFF",
+     "track_mm": 10.160260453828041,
+     "via_count": 0,
+     "via_barrel_mm": 0.0,
+     "routed_mm": 10.160260453828041,
+     "delay_ps": 59.58874991855829,
+     "layers": {
+      "F.Cu": 10.1603
+     },
+     "vias": [],
+     "eps_eff_used": {
+      "F.Cu@w=0.250": {
+       "eps_eff": 3.0914,
+       "model": "microstrip (Hammerstad)",
+       "h_mm": 0.2,
+       "er": 4.2
+      }
+     },
+     "segments": 4,
+     "pads": 3,
+     "pad_to_pad": {
+      "FL50.3-U50.6": {
+       "length_mm": 5.929,
+       "delay_ps": 34.773,
+       "refs": [
+        "FL50",
+        "U50"
+       ]
+      },
+      "FL50.3-R122.2": {
+       "length_mm": 3.6062,
+       "delay_ps": 21.15,
+       "refs": [
+        "FL50",
+        "R122"
+       ]
+      },
+      "U50.6-R122.2": {
+       "length_mm": 9.5353,
+       "delay_ps": 55.923,
+       "refs": [
+        "R122",
+        "U50"
+       ]
+      }
+     }
+    }
+   ],
+   "P": {
+    "track_mm": 19.0471,
+    "via_barrel_mm": 0.0,
+    "routed_mm": 19.0471,
+    "delay_ps": 111.7091,
+    "via_count": 0
+   },
+   "N": {
+    "track_mm": 10.1603,
+    "via_barrel_mm": 0.0,
+    "routed_mm": 10.1603,
+    "delay_ps": 59.5887,
+    "via_count": 0
+   },
+   "skew_mm": 8.8868,
+   "skew_track_only_mm": 8.8868,
+   "skew_ps": 52.12,
+   "layers_p": [
+    "F.Cu"
+   ],
+   "layers_n": [
+    "F.Cu"
+   ],
+   "coupled_max_edge_gap_mm": 0.5,
+   "coupled_max_basis": "2 x netclass 'CAN_DIFF' diff_pair_gap 0.25 mm",
+   "coupling_p": [
+    {
+     "coupled_mm": 1.519,
+     "uncoupled_mm": 17.528,
+     "uncoupled_at_1mm_mm": 12.173,
+     "gap_stats_mm": {
+      "min": 0.385,
+      "median": 0.7384,
+      "p95": 0.9906,
+      "max": 0.9983
+     }
+    }
+   ],
+   "coupling_n": [
+    {
+     "coupled_mm": 1.346,
+     "uncoupled_mm": 8.814,
+     "uncoupled_at_1mm_mm": 7.375,
+     "gap_stats_mm": {
+      "min": 0.385,
+      "median": 0.524,
+      "p95": 0.9629,
+      "max": 0.9979
+     }
+    }
+   ],
+   "uncoupled_mm": {
+    "p": 17.528,
+    "n": 8.814
+   },
+   "uncoupled_at_1mm": {
+    "p": 12.173,
+    "n": 7.375
+   },
+   "pad_to_pad_skew": [
+    {
+     "refs": "FL50-U50",
+     "p_path": "FL50.1-U50.7",
+     "n_path": "FL50.3-U50.6",
+     "p_mm": 13.014,
+     "n_mm": 5.929,
+     "skew_mm": 7.085,
+     "skew_ps": 41.553
+    },
+    {
+     "refs": "FL50-R122",
+     "p_path": "FL50.1-R122.1",
+     "n_path": "FL50.3-R122.2",
+     "p_mm": 18.4002,
+     "n_mm": 3.6062,
+     "skew_mm": 14.794,
+     "skew_ps": 86.765
+    },
+    {
+     "refs": "R122-U50",
+     "p_path": "U50.7-R122.1",
+     "n_path": "U50.6-R122.2",
+     "p_mm": 5.3862,
+     "n_mm": 9.5353,
+     "skew_mm": 4.1491,
+     "skew_ps": 24.334
+    }
+   ],
+   "limits": [
+    {
+     "source": "tools/hardware/audit_rev_b_pcb.py audit_main",
+     "max_skew_mm": 2.0,
+     "require_equal_vias": false
+    }
+   ],
+   "limit_verdicts": [
+    {
+     "source": "tools/hardware/audit_rev_b_pcb.py audit_main",
+     "max_skew_mm": 2.0,
+     "pass_track_only": false,
+     "pass_with_via_barrels": false
+    }
+   ]
+  },
+  {
+   "name": "USB MCU-side pair skew",
+   "p": [
+    "/USB_DP"
+   ],
+   "n": [
+    "/USB_DM"
+   ],
+   "sources": [
+    "limits file: tools/hardware/audit_rev_b_pcb.py audit_main",
+    "name: token DP/DM/DN"
+   ],
+   "netclass": "Default",
+   "status": "ROUTED",
+   "p_metrics": [
+    {
+     "net": "/USB_DP",
+     "netclass": "Default",
+     "track_mm": 56.929510491797465,
+     "via_count": 2,
+     "via_barrel_mm": 0.47,
+     "routed_mm": 57.399510491797464,
+     "delay_ps": 387.27905905275065,
+     "layers": {
+      "F.Cu": 5.2574,
+      "In1.Cu": 51.6721
+     },
+     "vias": [
+      {
+       "spans": [
+        "F.Cu-B.Cu"
+       ],
+       "connected_layers": [
+        "F.Cu",
+        "In1.Cu"
+       ],
+       "barrel_mm": 0.235,
+       "x": 52.163,
+       "y": 38.78
+      },
+      {
+       "spans": [
+        "F.Cu-B.Cu"
+       ],
+       "connected_layers": [
+        "F.Cu",
+        "In1.Cu"
+       ],
+       "barrel_mm": 0.235,
+       "x": 19.308,
+       "y": 76.843
+      }
+     ],
+     "eps_eff_used": {
+      "F.Cu@w=0.250": {
+       "eps_eff": 3.0914,
+       "model": "microstrip (Hammerstad)",
+       "h_mm": 0.2,
+       "er": 4.2
+      },
+      "In1.Cu@w=0.250": {
+       "eps_eff": 4.2,
+       "model": "stripline (eps_eff = er)",
+       "er": 4.2
+      }
+     },
+     "segments": 7,
+     "pads": 2,
+     "pad_to_pad": {
+      "U1.4-R10.1": {
+       "length_mm": 57.0956,
+       "delay_ps": 385.349,
+       "refs": [
+        "R10",
+        "U1"
+       ]
+      }
+     }
+    }
+   ],
+   "n_metrics": [
+    {
+     "net": "/USB_DM",
+     "netclass": "Default",
+     "track_mm": 32.82499275747777,
+     "via_count": 0,
+     "via_barrel_mm": 0.0,
+     "routed_mm": 32.82499275747777,
+     "delay_ps": 192.51477788316691,
+     "layers": {
+      "F.Cu": 32.825
+     },
+     "vias": [],
+     "eps_eff_used": {
+      "F.Cu@w=0.250": {
+       "eps_eff": 3.0914,
+       "model": "microstrip (Hammerstad)",
+       "h_mm": 0.2,
+       "er": 4.2
+      }
+     },
+     "segments": 4,
+     "pads": 2,
+     "pad_to_pad": {
+      "U1.6-R11.1": {
+       "length_mm": 32.825,
+       "delay_ps": 192.515,
+       "refs": [
+        "R11",
+        "U1"
+       ]
+      }
+     }
+    }
+   ],
+   "P": {
+    "track_mm": 56.9295,
+    "via_barrel_mm": 0.47,
+    "routed_mm": 57.3995,
+    "delay_ps": 387.2791,
+    "via_count": 2
+   },
+   "N": {
+    "track_mm": 32.825,
+    "via_barrel_mm": 0.0,
+    "routed_mm": 32.825,
+    "delay_ps": 192.5148,
+    "via_count": 0
+   },
+   "skew_mm": 24.5745,
+   "skew_track_only_mm": 24.1045,
+   "skew_ps": 194.764,
+   "layers_p": [
+    "F.Cu",
+    "In1.Cu"
+   ],
+   "layers_n": [
+    "F.Cu"
+   ],
+   "coupled_max_edge_gap_mm": 0.5,
+   "coupled_max_basis": "2 x netclass 'Default' diff_pair_gap 0.25 mm",
+   "coupling_p": [
+    {
+     "coupled_mm": 0.0,
+     "uncoupled_mm": 56.93,
+     "uncoupled_at_1mm_mm": 56.93,
+     "gap_stats_mm": null
+    }
+   ],
+   "coupling_n": [
+    {
+     "coupled_mm": 0.0,
+     "uncoupled_mm": 32.825,
+     "uncoupled_at_1mm_mm": 32.825,
+     "gap_stats_mm": null
+    }
+   ],
+   "uncoupled_mm": {
+    "p": 56.93,
+    "n": 32.825
+   },
+   "uncoupled_at_1mm": {
+    "p": 56.93,
+    "n": 32.825
+   },
+   "pad_to_pad_skew": [
+    {
+     "refs": "single path each (refs differ)",
+     "p_path": "U1.4-R10.1",
+     "n_path": "U1.6-R11.1",
+     "p_mm": 57.0956,
+     "n_mm": 32.825,
+     "skew_mm": 24.2706,
+     "skew_ps": 192.834
+    }
+   ],
+   "limits": [
+    {
+     "source": "tools/hardware/audit_rev_b_pcb.py audit_main",
+     "max_skew_mm": 0.5,
+     "require_equal_vias": false
+    }
+   ],
+   "limit_verdicts": [
+    {
+     "source": "tools/hardware/audit_rev_b_pcb.py audit_main",
+     "max_skew_mm": 0.5,
+     "pass_track_only": false,
+     "pass_with_via_barrels": false
+    }
+   ]
+  },
+  {
+   "name": "USB connector-side pair skew",
+   "p": [
+    "/Power and USB/USB_DP_CONN"
+   ],
+   "n": [
+    "/Power and USB/USB_DN_CONN"
+   ],
+   "sources": [
+    "limits file: tools/hardware/audit_rev_b_pcb.py audit_main",
+    "name: token DP/DM/DN"
+   ],
+   "netclass": "Default",
+   "status": "ROUTED",
+   "p_metrics": [
+    {
+     "net": "/Power and USB/USB_DP_CONN",
+     "netclass": "Default",
+     "track_mm": 15.537055025781475,
+     "via_count": 2,
+     "via_barrel_mm": 2.62,
+     "routed_mm": 18.157055025781474,
+     "delay_ps": 120.36758614786424,
+     "layers": {
+      "F.Cu": 3.8661,
+      "In2.Cu": 11.6709
+     },
+     "vias": [
+      {
+       "spans": [
+        "F.Cu-B.Cu"
+       ],
+       "connected_layers": [
+        "F.Cu",
+        "In2.Cu"
+       ],
+       "barrel_mm": 1.31,
+       "x": 14.771,
+       "y": 76.479
+      },
+      {
+       "spans": [
+        "F.Cu-B.Cu"
+       ],
+       "connected_layers": [
+        "F.Cu",
+        "In2.Cu"
+       ],
+       "barrel_mm": 1.31,
+       "x": 3.38,
+       "y": 75.804
+      }
+     ],
+     "eps_eff_used": {
+      "F.Cu@w=0.250": {
+       "eps_eff": 3.0914,
+       "model": "microstrip (Hammerstad)",
+       "h_mm": 0.2,
+       "er": 4.2
+      },
+      "In2.Cu@w=0.250": {
+       "eps_eff": 4.2,
+       "model": "stripline (eps_eff = er)",
+       "er": 4.2
+      }
+     },
+     "segments": 11,
+     "pads": 3,
+     "pad_to_pad": {
+      "U1.3-J1.A6": {
+       "length_mm": 15.3683,
+       "delay_ps": 104.012,
+       "refs": [
+        "J1",
+        "U1"
+       ]
+      },
+      "U1.3-J1.B6": {
+       "length_mm": 15.2903,
+       "delay_ps": 103.555,
+       "refs": [
+        "J1",
+        "U1"
+       ]
+      }
+     }
+    }
+   ],
+   "n_metrics": [
+    {
+     "net": "/Power and USB/USB_DN_CONN",
+     "netclass": "Default",
+     "track_mm": 28.79202446754674,
+     "via_count": 2,
+     "via_barrel_mm": 3.09,
+     "routed_mm": 31.88202446754674,
+     "delay_ps": 189.98521815078317,
+     "layers": {
+      "B.Cu": 4.978,
+      "F.Cu": 23.8141
+     },
+     "vias": [
+      {
+       "spans": [
+        "F.Cu-B.Cu"
+       ],
+       "connected_layers": [
+        "F.Cu",
+        "B.Cu"
+       ],
+       "barrel_mm": 1.545,
+       "x": 1.5,
+       "y": 75.75
+      },
+      {
+       "spans": [
+        "F.Cu-B.Cu"
+       ],
+       "connected_layers": [
+        "F.Cu",
+        "B.Cu"
+       ],
+       "barrel_mm": 1.545,
+       "x": 5.0,
+       "y": 77.933
+      }
+     ],
+     "eps_eff_used": {
+      "F.Cu@w=0.250": {
+       "eps_eff": 3.0914,
+       "model": "microstrip (Hammerstad)",
+       "h_mm": 0.2,
+       "er": 4.2
+      },
+      "B.Cu@w=0.250": {
+       "eps_eff": 3.0914,
+       "model": "microstrip (Hammerstad)",
+       "h_mm": 0.2,
+       "er": 4.2
+      }
+     },
+     "segments": 16,
+     "pads": 3,
+     "pad_to_pad": {
+      "U1.1-J1.A7": {
+       "length_mm": 27.7837,
+       "delay_ps": 165.949,
+       "refs": [
+        "J1",
+        "U1"
+       ]
+      },
+      "U1.1-J1.B7": {
+       "length_mm": 22.4196,
+       "delay_ps": 131.488,
+       "refs": [
+        "J1",
+        "U1"
+       ]
+      }
+     }
+    }
+   ],
+   "P": {
+    "track_mm": 15.5371,
+    "via_barrel_mm": 2.62,
+    "routed_mm": 18.1571,
+    "delay_ps": 120.3676,
+    "via_count": 2
+   },
+   "N": {
+    "track_mm": 28.792,
+    "via_barrel_mm": 3.09,
+    "routed_mm": 31.882,
+    "delay_ps": 189.9852,
+    "via_count": 2
+   },
+   "skew_mm": 13.725,
+   "skew_track_only_mm": 13.255,
+   "skew_ps": 69.618,
+   "layers_p": [
+    "F.Cu",
+    "In2.Cu"
+   ],
+   "layers_n": [
+    "B.Cu",
+    "F.Cu"
+   ],
+   "coupled_max_edge_gap_mm": 0.5,
+   "coupled_max_basis": "2 x netclass 'Default' diff_pair_gap 0.25 mm",
+   "coupling_p": [
+    {
+     "coupled_mm": 1.121,
+     "uncoupled_mm": 14.416,
+     "uncoupled_at_1mm_mm": 12.53,
+     "gap_stats_mm": {
+      "min": 0.1654,
+      "median": 0.5699,
+      "p95": 0.9523,
+      "max": 0.9973
+     }
+    }
+   ],
+   "coupling_n": [
+    {
+     "coupled_mm": 2.024,
+     "uncoupled_mm": 26.768,
+     "uncoupled_at_1mm_mm": 24.589,
+     "gap_stats_mm": {
+      "min": 0.1652,
+      "median": 0.5097,
+      "p95": 0.9296,
+      "max": 0.984
+     }
+    }
+   ],
+   "uncoupled_mm": {
+    "p": 14.416,
+    "n": 26.768
+   },
+   "uncoupled_at_1mm": {
+    "p": 12.53,
+    "n": 24.589
+   },
+   "pad_to_pad_skew": [
+    {
+     "refs": "J1-U1",
+     "p_path": "U1.3-J1.A6",
+     "n_path": "U1.1-J1.A7",
+     "p_mm": 15.3683,
+     "n_mm": 27.7837,
+     "skew_mm": 12.4154,
+     "skew_ps": 61.937
+    },
+    {
+     "refs": "J1-U1",
+     "p_path": "U1.3-J1.A6",
+     "n_path": "U1.1-J1.B7",
+     "p_mm": 15.3683,
+     "n_mm": 22.4196,
+     "skew_mm": 7.0513,
+     "skew_ps": 27.476
+    },
+    {
+     "refs": "J1-U1",
+     "p_path": "U1.3-J1.B6",
+     "n_path": "U1.1-J1.A7",
+     "p_mm": 15.2903,
+     "n_mm": 27.7837,
+     "skew_mm": 12.4934,
+     "skew_ps": 62.394
+    },
+    {
+     "refs": "J1-U1",
+     "p_path": "U1.3-J1.B6",
+     "n_path": "U1.1-J1.B7",
+     "p_mm": 15.2903,
+     "n_mm": 22.4196,
+     "skew_mm": 7.1293,
+     "skew_ps": 27.933
+    }
+   ],
+   "limits": [
+    {
+     "source": "tools/hardware/audit_rev_b_pcb.py audit_main",
+     "max_skew_mm": 0.5,
+     "require_equal_vias": false
+    }
+   ],
+   "limit_verdicts": [
+    {
+     "source": "tools/hardware/audit_rev_b_pcb.py audit_main",
+     "max_skew_mm": 0.5,
+     "pass_track_only": false,
+     "pass_with_via_barrels": false
+    }
+   ]
+  }
+ ]
+}

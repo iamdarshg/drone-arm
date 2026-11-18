@@ -1,0 +1,52 @@
+{
+ "pairs": [
+  {
+   "name": "USB connector-side pair skew",
+   "p": [
+    "/Power and USB/USB_DP_CONN"
+   ],
+   "n": [
+    "/Power and USB/USB_DN_CONN"
+   ],
+   "max_skew_mm": 0.5,
+   "source": "tools/hardware/audit_rev_b_pcb.py audit_main",
+   "require_equal_vias": false
+  },
+  {
+   "name": "USB MCU-side pair skew",
+   "p": [
+    "/USB_DP"
+   ],
+   "n": [
+    "/USB_DM"
+   ],
+   "max_skew_mm": 0.5,
+   "source": "tools/hardware/audit_rev_b_pcb.py audit_main",
+   "require_equal_vias": false
+  },
+  {
+   "name": "CAN connector pair skew",
+   "p": [
+    "/CANH"
+   ],
+   "n": [
+    "/CANL"
+   ],
+   "max_skew_mm": 2.0,
+   "source": "tools/hardware/audit_rev_b_pcb.py audit_main",
+   "require_equal_vias": false
+  },
+  {
+   "name": "CAN transceiver pair skew",
+   "p": [
+    "/CAN interface/U50_CANH"
+   ],
+   "n": [
+    "/CAN interface/U50_CANL"
+   ],
+   "max_skew_mm": 2.0,
+   "source": "tools/hardware/audit_rev_b_pcb.py audit_main",
+   "require_equal_vias": false
+  }
+ ]
+}
